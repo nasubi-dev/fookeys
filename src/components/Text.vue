@@ -1,12 +1,12 @@
 <template>
 	<div>
-		{{ message }}
+		{{ props.message }}
 		<br />
-		{{ content }}
+		{{ props.content }}
 	</div>
 </template>
 <script setup lang="ts">
-defineProps({
+const props=defineProps({
 	message: {
 		type: String,
 		required: true
