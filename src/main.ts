@@ -2,9 +2,9 @@ import { createApp } from "vue";
 import "./main.css";
 import App from "./App.vue";
 import router from "./router";
-import { VueFire } from "vuefire";
-import { initializeApp } from 'firebase/app'
-import { getFirestore, collection } from 'firebase/firestore'
+// import { VueFire } from "vuefire";
+// import { initializeApp } from 'firebase/app'
+// import { getFirestore, collection } from 'firebase/firestore'
 
 // export const firebaseApp = initializeApp({
 //   apiKey: import.meta.env.VITE_API_KEY,
