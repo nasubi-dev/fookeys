@@ -1,19 +1,19 @@
 <template>
 	<div>
-		{{ props.message }}
+		{{ props.msg }}
 		<br />
 		{{ props.content }}
 	</div>
 </template>
 <script setup lang="ts">
 const props=defineProps({
-	message: {
+	msg: {
 		type: String,
 		required: true
 	},
 	content: {
       type: Array,
-      default: () => [],
+      default: () => ['a', 'b', 'c'],
 			
 	}
 });
