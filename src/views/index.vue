@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Ref } from 'vue';
 import Text from '../components/Text.vue';
-const message:Ref<string> = ref('');
+const message= ref(<string>'');
 </script>
 <template>
 	<h1>Home</h1>
