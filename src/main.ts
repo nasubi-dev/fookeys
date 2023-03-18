@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import "./main.css";
-import './firebase';
 import App from "./App.vue";
 import router from "./router";
 
@@ -19,7 +18,6 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_APP_ID,
 };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
