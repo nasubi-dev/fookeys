@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import Text from '../components/Text.vue';
-const message= ref(<string>'');
+import { registerUser, updateMatchStatus } from '../composables/match/userID';
+
+const message = ref(<string>'unti');
+const registerID = await registerUser(message.value);
+console.log(registerID)
+
 </script>
+
 <template>
-	<h1>Home</h1>
-	<input type="text" v-model="message"
-		class=" hover:bg-gray-100 active:bg-gray-200 border border-gray-300 font-semibold text-center rounded-lg" />
-	<Text :msg="message" />
+	<div>
+		<h1>Home</h1>
+		<div>
+			<span>your name:</span>
+			<input type="text" v-model="message" />
+			<button @click="$event => registerUser(message)">ユーザー登録</button>
+		</div><br />
+		<button @click="$event => updateMatchStatus(registerID, 0)">マッチングしない </button>
+		<button @click="$event => updateMatchStatus(registerID, 1)">マッチングする </button>
+	</div>
 </template>
