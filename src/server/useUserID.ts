@@ -1,10 +1,10 @@
 import { db } from "./firebase";
 import {
   collection,
+  doc,
   addDoc,
   setDoc,
-  doc,
-  getDoc,
+  deleteDoc,
   getDocs,
   query,
   where,
@@ -12,18 +12,17 @@ import {
 
 //Collectionの参照
 const usersRef = collection(db, "users");
-const gamesRef = collection(db, "games");
 
 const newUser: User = {
   name: "No name",
-  match: 0
+  match: 0,
 };
+
 //ユーザー登録
-export async function registerUser(name: string): Promise<string> {
-  newUser.name = name;
+export async function registerUser(): Promise<string> {
   try {
     const docRef = await addDoc(usersRef, newUser);
-    console.log("Your ID: ", docRef.id);
+    console.log("Create Your ID: ", docRef.id);
     return docRef.id;
   } catch (error) {
     console.error("Error adding document: ", error);
@@ -31,20 +30,31 @@ export async function registerUser(name: string): Promise<string> {
   }
 }
 
+//ユーザー削除
+export async function deleteUser(userID: string): Promise<void> {
+  try {
+    await deleteDoc(doc(usersRef, userID));
+    console.log("User deleted: ", userID);
+  } catch (error) {
+    console.error("Error deleting user: ", error);
+  }
+}
+
 //名前の変更
 export async function updateUserName(
   userID: string,
   newName: string
-): Promise<void> {
+): Promise<string> {
   const userRef = doc(usersRef, userID);
   try {
     await setDoc(userRef, { name: newName }, { merge: true });
     console.log("Name updated for user: ", userID);
+    return newName;
   } catch (error) {
     console.error("Error updating name: ", error);
+    return "";
   }
 }
-
 
 //ユーザー情報の取得
 export async function updateMatchStatus(
@@ -85,31 +95,12 @@ export async function startMatchmaking(userID: string): Promise<string | null> {
       updateMatchStatus(waitingUser, -1),
       //addGame()みかん誠意
     ]);
-    console.log("Match started between: あなた:", userID, " and 相手:", waitingUser);
+    console.log(
+      "Match started between: あなた:",
+      userID,
+      " and 相手:",
+      waitingUser
+    );
     return waitingUser;
-  }
-}
-
-// ゲームを作成する
-export async function addGame() {
-  const newGame: Game = {
-    turn: 1,
-    players: {
-      player1: {
-        name: "player1",id: "player1_id",hand: [],board: [],
-        status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
-      },
-      player2: {
-        name: "player2",id: "player2_id",hand: [],board: [],
-        status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
-      },
-    },
-  };
-  
-  try {
-    const docRef = await addDoc(gamesRef, newGame);
-    console.log("Document written with ID: ", docRef.id);
-  } catch (error) {
-    console.error("Error adding document: ", error);
   }
 }
