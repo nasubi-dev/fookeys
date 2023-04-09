@@ -30,11 +30,7 @@ interface Player {
     mdef: number;
   };
 }
-
 interface Game {
   turn: number;
-  players: {
-    player1: Player;
-    player2: Player;
-  };
+  players: { player1: Player; player2: Player };
 }
