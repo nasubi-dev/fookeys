@@ -95,12 +95,7 @@ export async function startMatchmaking(userID: string): Promise<string | null> {
       updateMatchStatus(waitingUser, -1),
       //addGame()みかん誠意
     ]);
-    console.log(
-      "Match started between: あなた:",
-      userID,
-      " and 相手:",
-      waitingUser
-    );
+    console.log("Match started between: あなた:",userID," and 相手:",waitingUser);
     return waitingUser;
   }
 }

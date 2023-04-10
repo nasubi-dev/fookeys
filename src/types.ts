@@ -19,6 +19,8 @@ type Deck = Card[];
 interface Player {
   name: string;
   id: string;
+  character: number;
+  gift: number;
   hand: Card[];
   board: Card[];
   status: {

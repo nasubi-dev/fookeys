@@ -22,6 +22,8 @@ export async function addGame() {
       player1: {
         name: "player1",
         id: "player1_id",
+        character: 0,
+        gift: 0,
         hand: [],
         board: [],
         status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
@@ -29,6 +31,8 @@ export async function addGame() {
       player2: {
         name: "player2",
         id: "player2_id",
+        character: 0,
+        gift: 0,
         hand: [],
         board: [],
         status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
