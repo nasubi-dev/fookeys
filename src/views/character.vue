@@ -8,7 +8,7 @@ const cards = [
 	{
 		id: 0,
 		name: 'character 0',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 0;
@@ -17,7 +17,7 @@ const cards = [
 	{
 		id: 1,
 		name: 'character 1',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 1;
@@ -27,7 +27,7 @@ const cards = [
 	{
 		id: 2,
 		name: 'character 2',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 2;
@@ -36,7 +36,7 @@ const cards = [
 	{
 		id: 3,
 		name: 'character 3',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 3;
@@ -45,7 +45,7 @@ const cards = [
 	{
 		id: 4,
 		name: 'character 4',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 4;
@@ -54,7 +54,7 @@ const cards = [
 	{
 		id: 5,
 		name: 'character 5',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 5;
@@ -63,7 +63,7 @@ const cards = [
 	{
 		id: 6,
 		name: 'character 6',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 6;
@@ -72,7 +72,7 @@ const cards = [
 	{
 		id: 7,
 		name: 'character 7',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.character = 7

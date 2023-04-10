@@ -8,7 +8,7 @@ const cards = [
 	{
 		id: 0,
 		name: 'gift 0',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 0;
@@ -17,7 +17,7 @@ const cards = [
 	{
 		id: 1,
 		name: 'gift 1',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 1;
@@ -26,7 +26,7 @@ const cards = [
 	{
 		id: 2,
 		name: 'gift 2',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 2;
@@ -35,7 +35,7 @@ const cards = [
 	{
 		id: 3,
 		name: 'gift 3',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 3;
@@ -44,7 +44,7 @@ const cards = [
 	{
 		id: 4,
 		name: 'gift 4',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 4;
@@ -53,7 +53,7 @@ const cards = [
 	{
 		id: 5,
 		name: 'gift 5',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 5;
@@ -62,7 +62,7 @@ const cards = [
 	{
 		id: 6,
 		name: 'gift 6',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 6;
@@ -71,7 +71,7 @@ const cards = [
 	{
 		id: 7,
 		name: 'gift 7',
-		image: './src/assets/nasubi.png',
+		image: './public/nasubi.png',
 		description: 'test test test test',
 		action: () => {
 			userInfo.gift = 7;

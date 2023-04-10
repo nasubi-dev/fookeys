@@ -34,7 +34,7 @@ async function startMatch() {
 
 		<div class="flex flex-1">
 			<div class="w-1/2 flex items-center justify-center">
-				<img src="../assets/nasubi.png" class="max-h-full max-w-full">
+				<img src="../../public/nasubi.png" class="max-h-full max-w-full">
 			</div>
 
 			<div class="w-1/2 p-8 flex flex-col justify-center">
