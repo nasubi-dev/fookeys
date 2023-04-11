@@ -1,4 +1,5 @@
 interface User {
+  enemyId: string;
   name: string;
   match: -1 | 0 | 1;
 }

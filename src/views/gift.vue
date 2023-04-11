@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useUserStore } from '@/store';
 
-const userInfo = useUserStore();
+const userStore = useUserStore();
 
 const cards = [
 	{
@@ -11,7 +10,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 0;
+			userStore.gift = 0;
 		},
 	},
 	{
@@ -20,7 +19,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 1;
+			userStore.gift = 1;
 		},
 	},
 	{
@@ -29,7 +28,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 2;
+			userStore.gift = 2;
 		},
 	},
 	{
@@ -38,7 +37,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 3;
+			userStore.gift = 3;
 		},
 	},
 	{
@@ -47,7 +46,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 4;
+			userStore.gift = 4;
 		},
 	},
 	{
@@ -56,7 +55,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 5;
+			userStore.gift = 5;
 		},
 	},
 	{
@@ -65,7 +64,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 6;
+			userStore.gift = 6;
 		},
 	},
 	{
@@ -74,7 +73,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.gift = 7;
+			userStore.gift = 7;
 		},
 	},
 ]
@@ -91,7 +90,7 @@ const cards = [
 	<div class="mt-8 mx-4 grid grid-cols-4 gap-2">
 		<div v-for="card in cards" :key="card.id">
 			<div class="bg-white rounded-lg shadow-md overflow-hidden">
-				<button @click="card.action">
+				<button @click="card.action" class="btn-pop">
 					<img :src="card.image" class="w-full h-64 object-cover">
 					<div class="px-4 py-2">
 						<h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>

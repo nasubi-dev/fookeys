@@ -4,7 +4,7 @@ import { createPinia, defineStore } from "pinia";
 export const useUserStore = defineStore("userInfo", {
   state: () => ({
     id: ref(""),
-    name: ref(""),
+    name: ref("No name"),
     character: ref(0),
     gift: ref(0),
   }),

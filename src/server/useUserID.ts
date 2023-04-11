@@ -14,6 +14,7 @@ import {
 const usersRef = collection(db, "users");
 
 const newUser: User = {
+  enemyId:"",
   name: "No name",
   match: 0,
 };
@@ -56,7 +57,7 @@ export async function updateUserName(
   }
 }
 
-//ユーザー情報の取得
+//ユーザーのマッチング情報の更新
 export async function updateMatchStatus(
   userID: string,
   matchStatus: -1 | 0 | 1
@@ -84,7 +85,7 @@ export async function findWaitingUser(): Promise<string | null> {
 export async function startMatchmaking(userID: string): Promise<string | null> {
   // マッチング待機中のユーザーを検索する
   const waitingUser = await findWaitingUser();
-  if (!waitingUser) {
+  if (!waitingUser||waitingUser==userID) {
     // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
     await updateMatchStatus(userID, 1);
     return null;
@@ -93,7 +94,7 @@ export async function startMatchmaking(userID: string): Promise<string | null> {
     await Promise.all([
       updateMatchStatus(userID, -1),
       updateMatchStatus(waitingUser, -1),
-      //addGame()みかん誠意
+      setDoc(doc(usersRef, userID), { enemyId: waitingUser }, { merge: true }),
     ]);
     console.log("Match started between: あなた:",userID," and 相手:",waitingUser);
     return waitingUser;

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useUserStore } from '@/store';
 
-const userInfo = useUserStore();
+const userStore = useUserStore();
 
 const cards = [
 	{
@@ -11,7 +11,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 0;
+			userStore.character = 0;
 		},
 	},
 	{
@@ -20,7 +20,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 1;
+			userStore.character = 1;
 
 		},
 	},
@@ -30,7 +30,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 2;
+			userStore.character = 2;
 		},
 	},
 	{
@@ -39,7 +39,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 3;
+			userStore.character = 3;
 		},
 	},
 	{
@@ -48,7 +48,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 4;
+			userStore.character = 4;
 		},
 	},
 	{
@@ -57,7 +57,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 5;
+			userStore.character = 5;
 		},
 	},
 	{
@@ -66,7 +66,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 6;
+			userStore.character = 6;
 		},
 	},
 	{
@@ -75,7 +75,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userInfo.character = 7
+			userStore.character = 7
 		},
 	},
 ]
@@ -93,7 +93,7 @@ const cards = [
 	<div class="mt-8 mx-4 grid grid-cols-4 gap-2">
 		<div v-for="card in cards" :key="card.id">
 			<div class="bg-white rounded-lg shadow-md overflow-hidden">
-				<button @click="card.action">
+				<button @click="card.action" class="btn-pop">
 					<img :src="card.image" class="w-full h-64 object-cover">
 					<div class="px-4 py-2">
 						<h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>

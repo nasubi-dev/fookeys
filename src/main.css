@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn-pop {
+  transition: all 0.3s ease;
+}
+.btn-pop:hover {
+  transform: translateY(-2px);
+}
+.btn-pop:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}

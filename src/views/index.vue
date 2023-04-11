@@ -1,31 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { registerUser, deleteUser, updateUserName } from '@/server/useUserID';
+import { updateUserName } from '@/server/useUserID';
 import { useUserStore } from '@/store';
 
-const userInfo = useUserStore();
-
-//アプリが起動したらユーザーIDを取得する
-//合ってるかわからん
-window.addEventListener("load", async () => {
-	userInfo.id = await registerUser();
-	console.log('アプリが起動しました')
-})
-
-//アプリが終了したらユーザーIDを削除する
-window.addEventListener("beforeunload", async () => {
-	console.log('アプリが終了しました')
-	await deleteUser(userInfo.id);
-});
+const userStore = useUserStore();
 
 //ユーザー名を変更する
 const newName = ref("No name");
 async function updateName() {
-	if (!userInfo.id) {
+	if (!userStore.id) {
 		alert('ユーザーIDがありません');
 		return;
 	}
-	newName.value = await updateUserName(userInfo.id, userInfo.name);
+	newName.value = await updateUserName(userStore.id, userStore.name);
 }
 </script>
 
@@ -36,9 +23,9 @@ async function updateName() {
 		<form class="flex flex-col items-center" @submit.prevent="updateName">
 			<label class="mb-2">
 				<input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name"
-					v-model="userInfo.name" />
+					v-model="userStore.name" />
 			</label>
-			<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2" type="submit">
+			<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop" type="submit">
 				Rename
 			</button>
 		</form>
@@ -46,7 +33,7 @@ async function updateName() {
 		<div class="mt-4">
 			<div>
 				<span class="text-xl font-bold">Your ID:</span>
-				<span class="text-xl">{{ userInfo.id }}</span>
+				<span class="text-xl">{{ userStore.id }}</span>
 			</div>
 			<div>
 				<span class="text-xl font-bold">Your Name:</span>
@@ -55,7 +42,7 @@ async function updateName() {
 		</div>
 
 		<router-link to="/menu" class="mt-4">
-			<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2">
+			<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop">
 				Menu
 			</button>
 		</router-link>
