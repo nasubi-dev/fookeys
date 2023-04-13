@@ -41,10 +41,8 @@ async function updateName() {
 			</div>
 		</div>
 
-		<router-link to="/menu" class="mt-4">
-			<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop">
-				Menu
-			</button>
+		<router-link to="/menu" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop">
+			<button> Menu</button>
 		</router-link>
 	</div>
 </template>
