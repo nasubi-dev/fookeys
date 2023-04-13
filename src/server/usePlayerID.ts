@@ -18,6 +18,7 @@ const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
 const newPlayer: Player = {
+  id: "",
   enemyId: "",
   name: "No name",
   match: 0,
@@ -157,35 +158,34 @@ export async function addGame(
   const player2Data = await getPlayer(player2).then((player) => player.data);
   const newGame = {
     turn: 1,
-    players: {},
-  };
-  const player1Seq: Player = {
-    enemyId: player2,
-    name: player1Data.name,
-    match: -1,
-    character: player1Data.character,
-    gift: player1Data.gift,
-    hand: [],
-    board: [],
-    status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
-  };
-  const player2Seq: Player = {
-    enemyId: player1,
-    name: player2Data.name,
-    match: -1,
-    character: player2Data.character,
-    gift: player2Data.gift,
-    hand: [],
-    board: [],
-    status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
+    players: {
+      player1: {
+        id: player1,
+        enemyId: player2,
+        name: player1Data.name,
+        match: -1,
+        character: player1Data.character,
+        gift: player1Data.gift,
+        hand: [],
+        board: [],
+        status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
+      },
+      player2: {
+        id: player2,
+        enemyId: player1,
+        name: player2Data.name,
+        match: -1,
+        character: player2Data.character,
+        gift: player2Data.gift,
+        hand: [],
+        board: [],
+        status: { atk: 0, def: 0, hp: 400, hungry: 0, matk: 0, mdef: 0 },
+      },
+    },
   };
 
   try {
     const docRef = await addDoc(gamesRef, newGame);
-    await Promise.all([
-      setDoc(docRef, { players: { [player1]: player1Seq } }, { merge: true }),
-      setDoc(docRef, { players: { [player2]: player2Seq } }, { merge: true }),
-    ]);
     console.log("games Document ID: ", docRef.id);
     if (docRef.id) {
       return docRef.id;

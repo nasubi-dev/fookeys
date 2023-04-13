@@ -12,6 +12,7 @@ interface Card {
 type Deck = Card[];
 
 interface Player {
+  id:string;
   enemyId: string;
   name: string;
   match: -1 | 0 | 1;
