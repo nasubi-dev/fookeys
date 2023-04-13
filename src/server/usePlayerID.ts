@@ -68,7 +68,7 @@ export async function getPlayer(
     return { id: docSnap.id, data: docSnap.data() as Player };
   } else {
     console.log("No such document!");
-    return { id: "", data: newPlayer }; //修正します5日
+    return { id: "", data: newPlayer }; //!修正します5日
   }
 }
 
@@ -121,7 +121,7 @@ export async function startMatchmaking(
 ): Promise<string | null> {
   // マッチング待機中のユーザーを検索する
   const waitingPlayerID = await findWaitingPlayer();
-  if (!waitingPlayerID || waitingPlayerID == playerID) {
+  if (!waitingPlayerID) {
     // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
     await updateMatchStatus(playerID, 1);
     return null;
