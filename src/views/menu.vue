@@ -29,9 +29,12 @@ async function startMatch() {
 			</button>
 		</router-link>
 
+		{{ playerStore }}
 
 		<div class="flex flex-1">
-
+			<div class="w-1/2 flex items-center justify-center">
+				<img src="@/assets/nasubi.png" class="max-h-full max-w-full">
+			</div>
 
 			<div class="w-1/2 p-8 flex flex-col justify-center">
 				<button class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop"
