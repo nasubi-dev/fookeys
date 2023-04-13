@@ -13,6 +13,9 @@ async function updateName() {
 		return;
 	}
 	newName.value = await updatePlayerName(playerStore.id, playerStore.name);
+	console.log(JSON.stringify({
+		newName: newName.value
+	}));
 }
 </script>
 
