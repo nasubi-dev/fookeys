@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useUserStore } from '@/store';
+import { usePlayerStore } from '@/store';
 
-const userStore = useUserStore();
+const playerStore = usePlayerStore();
 
 const cards = [
 	{
@@ -10,7 +10,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 0;
+			playerStore.gift = 0;
 		},
 	},
 	{
@@ -19,7 +19,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 1;
+			playerStore.gift = 1;
 		},
 	},
 	{
@@ -28,7 +28,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 2;
+			playerStore.gift = 2;
 		},
 	},
 	{
@@ -37,7 +37,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 3;
+			playerStore.gift = 3;
 		},
 	},
 	{
@@ -46,7 +46,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 4;
+			playerStore.gift = 4;
 		},
 	},
 	{
@@ -55,7 +55,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 5;
+			playerStore.gift = 5;
 		},
 	},
 	{
@@ -64,7 +64,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 6;
+			playerStore.gift = 6;
 		},
 	},
 	{
@@ -73,7 +73,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.gift = 7;
+			playerStore.gift = 7;
 		},
 	},
 ]

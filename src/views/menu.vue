@@ -1,26 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { startMatchmaking } from '@/server/useUserID';
-import { useUserStore } from '@/store';
+import { startMatchmaking } from '@/server/usePlayerID';
+import { usePlayerStore } from '@/store';
 
-const userStore = useUserStore();
+const playerStore = usePlayerStore();
 
 //マッチングを開始する
 async function startMatch() {
-	if (userStore.id == null) {
+	if (playerStore.id == null) {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}
-
-	const waitingUser = await startMatchmaking(userStore.id)
-	if (waitingUser) {
-		console.log('マッチ成功!相手ID:', waitingUser)
-		//waitingUserのIDのユーザーはマッチ成功というログが出ない。ここ関数作る？
+	const waitingPlayer = await startMatchmaking(playerStore.id)
+	if (waitingPlayer) {
+		console.log('マッチ成功!相手ID:', waitingPlayer)
+		//waitingPlayerのIDのユーザーはマッチ成功というログが出ない。ここ関数作る？
 	} else {
 		console.log('マッチング待機中...')
-		setTimeout(() => {
-			startMatch();
-		}, 3000);
+		//再起して待機
 	}
 }
 </script>
@@ -33,7 +29,7 @@ async function startMatch() {
 			</button>
 		</router-link>
 
-		{{ userStore }}
+		{{ playerStore }}
 
 		<div class="flex flex-1">
 			<div class="w-1/2 flex items-center justify-center">

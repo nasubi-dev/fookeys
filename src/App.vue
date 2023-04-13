@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { registerUser, deleteUser } from '@/server/useUserID';
-import { useUserStore } from '@/store';
+import { registerPlayer, deletePlayer } from '@/server/usePlayerID';
+import { usePlayerStore } from '@/store';
 
-const userStore = useUserStore();
+const PlayerStore = usePlayerStore();
 
 //アプリが起動したらユーザーIDを取得する
 window.onload = async () => {
-	userStore.id = await registerUser();
+	PlayerStore.id = await registerPlayer();
 	console.log('アプリが起動しました')
 }
 
-//アプリが終了したらユーザーIDを削除する
-window.onunload = async () => {
+//アプリが閉じられたらユーザーIDを削除する
+window.onbeforeunload = async () => {
+	window.onbeforeunload = () => {};
 	console.log('アプリが終了しました')
-	await deleteUser(userStore.id);
+	await deletePlayer(PlayerStore.id);
 }
 </script>
 

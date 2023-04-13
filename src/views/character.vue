@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useUserStore } from '@/store';
+import { usePlayerStore } from '@/store';
 
-const userStore = useUserStore();
+const playerStore = usePlayerStore();
 
 const cards = [
 	{
@@ -11,7 +10,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 0;
+			playerStore.character = 0;
 		},
 	},
 	{
@@ -20,7 +19,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 1;
+			playerStore.character = 1;
 
 		},
 	},
@@ -30,7 +29,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 2;
+			playerStore.character = 2;
 		},
 	},
 	{
@@ -39,7 +38,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 3;
+			playerStore.character = 3;
 		},
 	},
 	{
@@ -48,7 +47,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 4;
+			playerStore.character = 4;
 		},
 	},
 	{
@@ -57,7 +56,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 5;
+			playerStore.character = 5;
 		},
 	},
 	{
@@ -66,7 +65,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 6;
+			playerStore.character = 6;
 		},
 	},
 	{
@@ -75,7 +74,7 @@ const cards = [
 		image: './src/assets/nasubi.png',
 		description: 'test test test test',
 		action: () => {
-			userStore.character = 7
+			playerStore.character = 7
 		},
 	},
 ]

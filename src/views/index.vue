@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { updateUserName } from '@/server/useUserID';
-import { useUserStore } from '@/store';
+import { updatePlayerName } from '@/server/usePlayerID';
+import { usePlayerStore } from '@/store';
 
-const userStore = useUserStore();
+const playerStore = usePlayerStore();
 
 //ユーザー名を変更する
 const newName = ref("No name");
 async function updateName() {
-	if (!userStore.id) {
+	if (!playerStore.id) {
 		alert('ユーザーIDがありません');
 		return;
 	}
-	newName.value = await updateUserName(userStore.id, userStore.name);
+	newName.value = await updatePlayerName(playerStore.id, playerStore.name);
 }
 </script>
 
@@ -23,7 +23,7 @@ async function updateName() {
 		<form class="flex flex-col items-center" @submit.prevent="updateName">
 			<label class="mb-2">
 				<input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name"
-					v-model="userStore.name" />
+					v-model="playerStore.name" />
 			</label>
 			<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop" type="submit">
 				Rename
@@ -33,7 +33,7 @@ async function updateName() {
 		<div class="mt-4">
 			<div>
 				<span class="text-xl font-bold">Your ID:</span>
-				<span class="text-xl">{{ userStore.id }}</span>
+				<span class="text-xl">{{ playerStore.id }}</span>
 			</div>
 			<div>
 				<span class="text-xl font-bold">Your Name:</span>

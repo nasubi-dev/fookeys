@@ -1,9 +1,3 @@
-interface User {
-  enemyId: string;
-  name: string;
-  match: -1 | 0 | 1;
-}
-
 interface Card {
   name: string;
   waste: number;
@@ -18,8 +12,9 @@ interface Card {
 type Deck = Card[];
 
 interface Player {
+  enemyId: string;
   name: string;
-  id: string;
+  match: -1 | 0 | 1;
   character: number;
   gift: number;
   hand: Card[];
