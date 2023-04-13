@@ -22,5 +22,22 @@ async function startMatch() {
 </script>
 
 <template>
-<h1>menu</h1>
+	<div class="h-screen flex flex-col">
+		<router-link to="/">
+			<button class="p-4 absolute top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md btn-pop">
+				戻る
+			</button>
+		</router-link>
+
+		{{ playerStore }}
+
+		<div class="flex flex-1">
+			<div class="w-1/2 flex items-center justify-center">
+				<img src="../assets/nasubi.png" class="max-h-full max-w-full">
+			</div>
+
+
+		</div>
+
+	</div>
 </template>
