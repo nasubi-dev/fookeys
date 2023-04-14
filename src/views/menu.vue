@@ -6,12 +6,12 @@ import { usePlayerStore } from '@/store';
 const playerStore = usePlayerStore();
 
 //マッチングを開始する
-async function startMatch() {
-	if (playerStore.id == null) {
+async function startMatch(PlayerID: string): Promise<void> {
+	if (PlayerID == null) {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}
-	const waitingPlayer = await startMatchmaking(playerStore.id)
+	const waitingPlayer = await startMatchmaking(PlayerID)
 	if (waitingPlayer) {
 		console.log('マッチ成功!相手ID:', waitingPlayer)
 		//waitingPlayerのIDのユーザーはマッチ成功というログが出ない。ここ関数作る？
@@ -39,7 +39,7 @@ async function startMatch() {
 
 			<div class="w-1/2 p-8 flex flex-col justify-center">
 				<button class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop"
-					@click="startMatch">エントリー</button>
+					@click="startMatch(playerStore.id)">エントリー</button>
 
 				<router-link to="/character" class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop">
 					<button class=" text-white rounded-md">キャラ選択</button>
