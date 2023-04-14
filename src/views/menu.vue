@@ -6,7 +6,7 @@ import { usePlayerStore } from '@/store';
 const playerStore = usePlayerStore();
 
 //マッチングを開始する
-async function startMatch(PlayerID:string): Promise<void> {
+async function startMatch(PlayerID: string): Promise<void> {
 	if (PlayerID == null) {
 		alert('ユーザーIDが取得できていません。')
 		return
@@ -29,8 +29,13 @@ async function startMatch(PlayerID:string): Promise<void> {
 				戻る
 			</button>
 		</router-link>
-<!-- 
-		{{ playerStore }} -->
+
+		<div class="">
+			<span>id:{{ playerStore.id }}</span>
+			<span>name:{{ playerStore.name }}</span>
+			<span>character:{{ playerStore.character }}</span>
+			<span>gift:{{ playerStore.gift }}</span>
+		</div>
 
 		<div class="flex flex-1">
 			<div class="w-1/2 flex items-center justify-center">
