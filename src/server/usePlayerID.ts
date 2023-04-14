@@ -18,7 +18,6 @@ import { db } from "./firebase";
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
-
 //ユーザー登録
 export async function registerPlayer(): Promise<string> {
   const newPlayer: Player = {
@@ -148,9 +147,9 @@ export async function startMatchmaking(
   }
 }
 
-// マッチングをキャンセルする
+//マッチングをキャンセルする
 
-// ゲームを作成する
+//ゲームを作成する
 export async function addGame(
   player1: string,
   player2: string
@@ -198,3 +197,5 @@ export async function addGame(
   }
   return null;
 }
+
+//ゲームを削除する

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import  Select  from '@/components/select.vue'
+import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
 
 const playerStore = usePlayerStore();
@@ -8,7 +9,7 @@ const gift = [
 	{
 		id: 0,
 		name: 'gift 0',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 0;
@@ -17,7 +18,7 @@ const gift = [
 	{
 		id: 1,
 		name: 'gift 1',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 1;
@@ -26,7 +27,7 @@ const gift = [
 	{
 		id: 2,
 		name: 'gift 2',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 2;
@@ -35,7 +36,7 @@ const gift = [
 	{
 		id: 3,
 		name: 'gift 3',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 3;
@@ -44,7 +45,7 @@ const gift = [
 	{
 		id: 4,
 		name: 'gift 4',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 4;
@@ -53,7 +54,7 @@ const gift = [
 	{
 		id: 5,
 		name: 'gift 5',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 5;
@@ -62,7 +63,7 @@ const gift = [
 	{
 		id: 6,
 		name: 'gift 6',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 6;
@@ -71,7 +72,7 @@ const gift = [
 	{
 		id: 7,
 		name: 'gift 7',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.gift = 7;

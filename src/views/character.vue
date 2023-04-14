@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import  Select  from '@/components/select.vue'
+import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
 
 const playerStore = usePlayerStore();
@@ -8,7 +9,7 @@ const character = [
 	{
 		id: 0,
 		name: 'character 0',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 0;
@@ -17,7 +18,7 @@ const character = [
 	{
 		id: 1,
 		name: 'character 1',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 1;
@@ -27,7 +28,7 @@ const character = [
 	{
 		id: 2,
 		name: 'character 2',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 2;
@@ -36,7 +37,7 @@ const character = [
 	{
 		id: 3,
 		name: 'character 3',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 3;
@@ -45,7 +46,7 @@ const character = [
 	{
 		id: 4,
 		name: 'character 4',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 4;
@@ -54,7 +55,7 @@ const character = [
 	{
 		id: 5,
 		name: 'character 5',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 5;
@@ -63,7 +64,7 @@ const character = [
 	{
 		id: 6,
 		name: 'character 6',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 6;
@@ -72,7 +73,7 @@ const character = [
 	{
 		id: 7,
 		name: 'character 7',
-		image: './src/assets/nasubi.png',
+		image: nasubi,
 		description: 'test test test test',
 		action: () => {
 			playerStore.character = 7

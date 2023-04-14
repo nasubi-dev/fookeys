@@ -3,6 +3,7 @@ import Home from "../views/index.vue";
 import Menu from "../views/menu.vue";
 import Character from "../views/character.vue";
 import Gift from "../views/gift.vue";
+import Battle from "../views/battle.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: "/gift",
       name: "gift",
       component: Gift,
+    },
+    {
+      path: "/battle",
+      name: "battle",
+      component: Battle,
     },
   ],
 });
