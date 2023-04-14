@@ -10,6 +10,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import type { Player } from "@/types";
 
 import { db } from "./firebase";
 
@@ -17,27 +18,27 @@ import { db } from "./firebase";
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
-const newPlayer: Player = {
-  id: "",
-  enemyId: "",
-  name: "No name",
-  match: 0,
-  character: 0,
-  gift: 0,
-  hand: [],
-  board: [],
-  status: {
-    atk: 0,
-    def: 0,
-    hp: 0,
-    hungry: 0,
-    matk: 0,
-    mdef: 0,
-  },
-};
 
 //ユーザー登録
 export async function registerPlayer(): Promise<string> {
+  const newPlayer: Player = {
+    id: "",
+    enemyId: "",
+    name: "No name",
+    match: 0,
+    character: 0,
+    gift: 0,
+    hand: [],
+    board: [],
+    status: {
+      atk: 0,
+      def: 0,
+      hp: 0,
+      hungry: 0,
+      matk: 0,
+      mdef: 0,
+    },
+  };
   try {
     const docRef = await addDoc(playersRef, newPlayer);
     console.log("Create Your ID: ", docRef.id);
@@ -68,7 +69,7 @@ export async function getPlayer(
     return { id: docSnap.id, data: docSnap.data() as Player };
   } else {
     console.log("No such document!");
-    return { id: "", data: newPlayer }; //!修正します5日
+    return { id: "", data: docSnap.data() as Player }; //!修正します5日
   }
 }
 

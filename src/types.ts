@@ -1,4 +1,4 @@
-interface Card {
+export interface Card {
   name: string;
   waste: number;
   hungry: number;
@@ -9,9 +9,9 @@ interface Card {
   special?: () => void;
 }
 
-type Deck = Card[];
+export type Deck = Card[];
 
-interface Player {
+export interface Player {
   id:string;
   enemyId: string;
   name: string;
@@ -29,7 +29,7 @@ interface Player {
     mdef: number;
   };
 }
-interface Game {
+export interface Game {
   turn: number;
   players: { player1: Player; player2: Player };
 }

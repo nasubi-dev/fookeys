@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { startMatchmaking } from '@/server/usePlayerID';
-// import nasubi from '@/assets/nasubi.png';
+import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
 
 const playerStore = usePlayerStore();
 
 //マッチングを開始する
-async function startMatch(PlayerID: string): Promise<void> {
+async function startMatch(PlayerID:string): Promise<void> {
 	if (PlayerID == null) {
 		alert('ユーザーIDが取得できていません。')
 		return
@@ -34,7 +34,7 @@ async function startMatch(PlayerID: string): Promise<void> {
 
 		<div class="flex flex-1">
 			<div class="w-1/2 flex items-center justify-center">
-				<!-- <img :src=nasubi class="max-h-full max-w-full" /> -->
+				<img :src=nasubi class="max-h-full max-w-full" />
 			</div>
 
 			<div class="w-1/2 p-8 flex flex-col justify-center">

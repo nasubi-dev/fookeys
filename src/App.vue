@@ -13,14 +13,14 @@ window.onload = async () => {
 
 //アプリが閉じられたらユーザーIDを削除する
 window.onbeforeunload = async () => {
-	window.onbeforeunload = () => {};
+	window.onbeforeunload = () => { };
 	console.log('アプリが終了しました')
 	await deletePlayer(PlayerStore.id);
 }
 </script>
 
 <template>
-  <div class="bg-gray-600 h-screen">
-  <RouterView />
-  </div>
+	<div class="bg-gray-600 h-screen">
+		<RouterView />
+	</div>
 </template>
