@@ -29,7 +29,7 @@ const router = createRouter({
       component: Gift,
     },
     {
-      path: "/battle",
+      path: "/battle/:gameID",
       name: "battle",
       component: Battle,
     },

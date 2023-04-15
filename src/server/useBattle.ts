@@ -12,7 +12,6 @@ import {
 
 import { db } from "./firebase";
 
-
 //Collectionの参照
 const gamesRef = collection(db, "games");
 const playersRef = collection(db, "players");
@@ -28,18 +27,16 @@ const deckRef = collection(db, "deck");
 
 //カードを一枚引く
 export async function drawCard() {
-	const deckSnap = await getDocs(deckRef);
-	const deck = deckSnap.docs.map((doc) => doc.data());
-	const selectCard = Math.floor(Math.random() * deck.length);
-	return deck[selectCard];
+  const deckSnap = await getDocs(deckRef);
+  const deck = deckSnap.docs.map((doc) => doc.data());
+  const selectCard = Math.floor(Math.random() * deck.length);
+  return deck[selectCard];
 }
 
 //ギフトを使用する
 
 //カードを選択して場に出す
-export async function playCard(playerID:string,cardID:number) {
-	
-}
+export async function playCard(playerID: string, cardID: number) {}
 
 //ステータスを変更する 増減値を引数に
 

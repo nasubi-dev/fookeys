@@ -95,14 +95,14 @@ export async function updatePlayerName(
 //マッチングを開始する
 export async function startMatchmaking(
   playerID: string
-): Promise<string | null> {
+): Promise<[string | null, string | null]> {
   // マッチング待機中のユーザーを検索する
   const waitingPlayerID = await findWaitingPlayer();
 
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
   if (!waitingPlayerID) {
     await updatePlayerField(playerID, "match", 1);
-    return null;
+    return [null, null];
   } else {
     // マッチング待機中のユーザーがいる場合は、対戦状態に更新する
     await Promise.all([
@@ -113,7 +113,7 @@ export async function startMatchmaking(
     ]);
     console.log("Match started あなた:", playerID, "相手:", waitingPlayerID);
     gameID.value = await addGame(playerID, waitingPlayerID);
-    return waitingPlayerID;
+    return [waitingPlayerID, gameID.value];
   }
 }
 
