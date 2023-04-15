@@ -13,9 +13,9 @@ export type Deck = Card[];
 
 export interface Player {
   id:string;
-  enemyId: string;
+  enemyID: string;
   name: string;
-  match: -1 | 0 | 1;
+  match: MatchStatus;
   character: number;
   gift: number;
   hand: Card[];
@@ -29,6 +29,10 @@ export interface Player {
     mdef: number;
   };
 }
+
+//-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
+export type MatchStatus = -1 | 0 | 1;
+
 export interface Game {
   turn: number;
   players: { player1: Player; player2: Player };

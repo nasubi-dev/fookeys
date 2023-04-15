@@ -3,14 +3,14 @@ import {
   collection,
   doc,
   addDoc,
-  setDoc,
   getDoc,
+  updateDoc,
   deleteDoc,
   getDocs,
   query,
   where,
 } from "firebase/firestore";
-import type { Player } from "@/types";
+import type { MatchStatus, Player } from "@/types";
 
 import { db } from "./firebase";
 
@@ -18,11 +18,13 @@ import { db } from "./firebase";
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
+const gameID = ref<string | null>(null);
+
 //ユーザー登録
 export async function registerPlayer(): Promise<string> {
   const newPlayer: Player = {
     id: "",
-    enemyId: "",
+    enemyID: "",
     name: "No name",
     match: 0,
     character: 0,
@@ -41,7 +43,8 @@ export async function registerPlayer(): Promise<string> {
   try {
     const docRef = await addDoc(playersRef, newPlayer);
     console.log("Create Your ID: ", docRef.id);
-    return docRef.id;
+    const playerId = docRef.id;
+    return playerId;
   } catch (error) {
     console.error("Error adding document: ", error);
     return "";
@@ -59,11 +62,12 @@ export async function deletePlayer(playerID: string): Promise<void> {
 }
 
 //ユーザー情報の取得
-export async function getPlayer(
+async function getPlayer(
   playerID: string
 ): Promise<{ id: string; data: Player }> {
   const docRef = doc(playersRef, playerID);
   const docSnap = await getDoc(docRef);
+
   if (docSnap.exists()) {
     return { id: docSnap.id, data: docSnap.data() as Player };
   } else {
@@ -79,7 +83,7 @@ export async function updatePlayerName(
 ): Promise<string> {
   const playerRef = doc(playersRef, playerID);
   try {
-    await setDoc(playerRef, { name: newName }, { merge: true });
+    await updateDoc(playerRef, { name: newName });
     console.log("Name updated for player: ", playerID);
     return newName;
   } catch (error) {
@@ -88,58 +92,24 @@ export async function updatePlayerName(
   }
 }
 
-//ユーザーのマッチング情報の更新
-export async function updateMatchStatus(
-  playerID: string,
-  matchStatus: -1 | 0 | 1
-): Promise<void> {
-  const playerRef = doc(playersRef, playerID);
-  try {
-    await setDoc(playerRef, { match: matchStatus }, { merge: true });
-    console.log("Match status updated for player: ", playerID);
-  } catch (error) {
-    console.error("Error updating match status: ", error);
-  }
-}
-
-//マッチング待機中のユーザーを検索する
-export async function findWaitingPlayer(): Promise<string | null> {
-  const querySnapshot = await getDocs(
-    query(playersRef, where("match", "==", 1))
-  );
-  if (querySnapshot.size === 0) {
-    return null;
-  }
-  const players = querySnapshot.docs.map((doc) => doc.id);
-  return players[Math.floor(Math.random() * players.length)];
-}
-
 //マッチングを開始する
-const gameID = ref(<string | null>"");
 export async function startMatchmaking(
   playerID: string
 ): Promise<string | null> {
   // マッチング待機中のユーザーを検索する
   const waitingPlayerID = await findWaitingPlayer();
+
+  // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
   if (!waitingPlayerID) {
-    // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
-    await updateMatchStatus(playerID, 1);
+    await updatePlayerField(playerID, "match", 1);
     return null;
   } else {
     // マッチング待機中のユーザーがいる場合は、対戦状態に更新する
     await Promise.all([
-      updateMatchStatus(playerID, -1),
-      updateMatchStatus(waitingPlayerID, -1),
-      setDoc(
-        doc(playersRef, playerID),
-        { enemyId: waitingPlayerID },
-        { merge: true }
-      ),
-      setDoc(
-        doc(playersRef, waitingPlayerID),
-        { enemyId: playerID },
-        { merge: true }
-      ),
+      updatePlayerField(playerID, "match", -1),
+      updatePlayerField(waitingPlayerID, "match", -1),
+      updatePlayerField(playerID, "enemyID", waitingPlayerID),
+      updatePlayerField(waitingPlayerID, "enemyID", playerID),
     ]);
     console.log("Match started あなた:", playerID, "相手:", waitingPlayerID);
     gameID.value = await addGame(playerID, waitingPlayerID);
@@ -147,10 +117,35 @@ export async function startMatchmaking(
   }
 }
 
-//マッチングをキャンセルする
+//マッチング待機中のユーザーを検索する
+async function findWaitingPlayer(): Promise<string | null> {
+  const querySnapshot = await getDocs(
+    query(playersRef, where("match", "==", 1))
+  );
+  if (querySnapshot.empty) {
+    return null;
+  }
+  const players = querySnapshot.docs.map((doc) => doc.id);
+  return players[Math.floor(Math.random() * players.length)];
+}
+
+//ユーザーのフィールド名を更新する
+async function updatePlayerField(
+  playerID: string,
+  playerUpdateField: string,
+  field: string | MatchStatus
+): Promise<void> {
+  const playerRef = doc(playersRef, playerID);
+  try {
+    await updateDoc(playerRef, { [playerUpdateField]: field });
+    console.log("Match status updated for player: ", playerID);
+  } catch (error) {
+    console.error("Error updating match status: ", error);
+  }
+}
 
 //ゲームを作成する
-export async function addGame(
+async function addGame(
   player1: string,
   player2: string
 ): Promise<string | null> {

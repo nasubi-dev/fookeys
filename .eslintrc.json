@@ -2,7 +2,10 @@
   "root": true,
   "extends": ["plugin:vue/essential", "eslint:recommended"],
   "plugins": ["@typescript-eslint"],
-  "env": { "browser": true },
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "globals": {},
   "parser": "vue-eslint-parser",
   "parserOptions": {
