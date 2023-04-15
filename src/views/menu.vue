@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { startMatchmaking } from '@/server/usePlayerID';
+import { useRouter } from 'vue-router';
 import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
+import { startMatchmaking } from '@/server/usePlayerID';
 
 const playerStore = usePlayerStore();
 
@@ -11,15 +12,18 @@ async function startMatch(PlayerID: string): Promise<void> {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}
-	const waitingPlayer = await startMatchmaking(PlayerID)
+	const waitingPlayer = await startMatchmaking(PlayerID);
 	if (waitingPlayer) {
 		console.log('マッチ成功!相手ID:', waitingPlayer)
+		router.push({ name: 'battle' });
 		//waitingPlayerのIDのユーザーはマッチ成功というログが出ない。ここ関数作る？
 	} else {
 		console.log('マッチング待機中...')
 		//再起して待機を作る？
 	}
 }
+
+const router = useRouter();
 </script>
 
 <template>
