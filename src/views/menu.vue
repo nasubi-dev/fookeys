@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
 import { startMatchmaking } from '@/server/usePlayerID';
@@ -15,11 +14,7 @@ async function startMatch(PlayerID: string): Promise<void> {
 	}
 	const gameID =await startMatchmaking(PlayerID);
 	console.log("gameID:",gameID);
-
-	// router.push({ name: 'game', params: { gameID: gameID} })
 }
-
-const router = useRouter();
 </script>
 
 <template>

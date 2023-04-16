@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import { router } from '@/router';
-import { useRouter } from 'vue-router'
 import {
   collection,
   doc,
@@ -106,22 +105,25 @@ export async function startMatchmaking(
 
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
   if (waitingPlayerID.value) {
-    await Promise.all([
-      updatePlayerField(waitingPlayerID.value, "enemyID", playerID),
-      updatePlayerField(playerID, "enemyID", waitingPlayerID.value),
-    ]);
     gameID.value = await addGame(playerID, waitingPlayerID.value);
+    //プレイヤーの情報を更新する
     await Promise.all([
-      updatePlayerField(waitingPlayerID.value, "gameID", gameID.value),
-      updatePlayerField(playerID, "gameID", gameID.value),
+      updatePlayerFields(waitingPlayerID.value, [
+        { field: "enemyID", value: playerID },
+        { field: "gameID", value: gameID.value },
+        { field: "match", value: -1 },
+      ]),
+      updatePlayerFields(playerID, [
+        { field: "enemyID", value: waitingPlayerID.value },
+        { field: "gameID", value: gameID.value },
+        { field: "match", value: -1 },
+      ]),
     ]);
-    await Promise.all([
-      updatePlayerField(waitingPlayerID.value, "match", -1),
-      updatePlayerField(playerID, "match", -1),
-    ]);
+    //画面遷移
     console.log('マッチ成功!相手ID:', waitingPlayerID.value, 'ゲームID:', gameID.value);
     const gameName=gameID.value;
     router.push({ name: 'battle', params: { gameID: gameName} });
+    return gameID.value;
   } else {
     console.log('マッチング待機中...');
     const unsubscribe = onSnapshot(doc(playersRef, playerID), (doc) => {
@@ -138,13 +140,14 @@ export async function startMatchmaking(
         console.log("gameID: ", gameID.value);
         // 監視を解除
         unsubscribe();
+        //画面遷移
         console.log('マッチ成功!相手ID:', waitingPlayerID.value, 'ゲームID:', gameID.value);
         const gameName=gameID.value;
         router.push({ name: 'battle', params: { gameID: gameName} });
       }
     });
+    return null;
   }
-  return gameID.value;
 }
 
 //マッチング待機中のユーザーを検索する
@@ -168,22 +171,26 @@ async function findWaitingPlayer(playerID: string): Promise<string | null> {
   return player;
 }
 
+//ユーザーのフィールド名を複数更新する
+async function updatePlayerFields(
+  playerID: string,
+  updates: Array<{ field: keyof Player; value: string | MatchStatus | null }>
+): Promise<void> {
+  updates.forEach((update) => {
+    updatePlayerField(playerID, update.field, update.value);
+  });
+}
+
 //ユーザーのフィールド名を更新する
 async function updatePlayerField(
   playerID: string,
-  playerUpdateField: string,
+  playerUpdateField: keyof Player,
   field: string | MatchStatus | null
 ): Promise<void> {
   const playerRef = doc(playersRef, playerID);
   try {
     await updateDoc(playerRef, { [playerUpdateField]: field });
-    console.log(
-      playerUpdateField,
-      "updated: ",
-      field,
-      " for player: ",
-      playerID
-    );
+    console.log(playerUpdateField,"updated: ",field," for player: ",playerID);
   } catch (error) {
     console.error("Error updating match status: ", error);
   }
