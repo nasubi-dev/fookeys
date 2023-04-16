@@ -14,6 +14,7 @@ export type Deck = Card[];
 export interface Player {
   id:string;
   enemyID: string;
+  gameID: string;
   name: string;
   match: MatchStatus;
   character: number;

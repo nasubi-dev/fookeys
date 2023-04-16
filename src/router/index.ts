@@ -5,7 +5,7 @@ import Character from "../views/character.vue";
 import Gift from "../views/gift.vue";
 import Battle from "../views/battle.vue";
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {

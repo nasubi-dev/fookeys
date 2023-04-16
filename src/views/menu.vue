@@ -13,15 +13,10 @@ async function startMatch(PlayerID: string): Promise<void> {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}
-	const [waitingPlayer, gameID] = await startMatchmaking(PlayerID);
-	if (waitingPlayer && gameID) {
-		console.log('マッチ成功!相手ID:', waitingPlayer)
-		router.push({ name: 'battle', params: { gameID } });
-		//waitingPlayerのIDのユーザーはマッチ成功というログが出ない。ここ関数作る？
-	} else {
-		console.log('マッチング待機中...')
-		//再起して待機を作る？
-	}
+	const gameID =await startMatchmaking(PlayerID);
+	console.log("gameID:",gameID);
+
+	// router.push({ name: 'game', params: { gameID: gameID} })
 }
 
 const router = useRouter();
