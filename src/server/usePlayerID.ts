@@ -9,6 +9,7 @@ import {
   getDocs,
   query,
   where,
+  onSnapshot,
 } from "firebase/firestore";
 import type { MatchStatus, Player } from "@/types";
 
@@ -19,7 +20,7 @@ const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
 const gameID = ref<string | null>(null);
-
+const waitingPlayerID = ref<string | null>(null);
 //ユーザー登録
 export async function registerPlayer(): Promise<string> {
   const newPlayer: Player = {
@@ -97,35 +98,30 @@ export async function startMatchmaking(
   playerID: string
 ): Promise<[string | null, string | null]> {
   // マッチング待機中のユーザーを検索する
-  const waitingPlayerID = await findWaitingPlayer();
-
+  waitingPlayerID.value = await findWaitingPlayer(playerID);
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
-  if (!waitingPlayerID) {
-    await updatePlayerField(playerID, "match", 1);
-    return [null, null];
-  } else {
-    // マッチング待機中のユーザーがいる場合は、対戦状態に更新する
+  if (waitingPlayerID.value) {
     await Promise.all([
       updatePlayerField(playerID, "match", -1),
-      updatePlayerField(waitingPlayerID, "match", -1),
-      updatePlayerField(playerID, "enemyID", waitingPlayerID),
-      updatePlayerField(waitingPlayerID, "enemyID", playerID),
+      updatePlayerField(waitingPlayerID.value, "match", -1),
+      updatePlayerField(playerID, "enemyID", waitingPlayerID.value),
+      updatePlayerField(waitingPlayerID.value, "enemyID", playerID),
     ]);
-    console.log("Match started あなた:", playerID, "相手:", waitingPlayerID);
-    gameID.value = await addGame(playerID, waitingPlayerID);
-    return [waitingPlayerID, gameID.value];
+    gameID.value = await addGame(playerID, waitingPlayerID.value);
+    return [waitingPlayerID.value, gameID.value];
   }
+  // マッチング待機中のユーザーがいる場合は、対戦状態に更新する
+  await updatePlayerField(playerID, "match", 1);
+  return [null, null];
 }
 
 //マッチング待機中のユーザーを検索する
-async function findWaitingPlayer(): Promise<string | null> {
-  const querySnapshot = await getDocs(
-    query(playersRef, where("match", "==", 1))
-  );
-  if (querySnapshot.empty) {
-    return null;
-  }
+async function findWaitingPlayer(playerID: string): Promise<string | null> {
+  const querySnapshot = await getDocs(query(playersRef, where("match", "==", 1)));
+  if (querySnapshot.empty) return null;
   const players = querySnapshot.docs.map((doc) => doc.id);
+  // 自分自身を除外する
+  players.splice(players.indexOf(playerID), 1);
   return players[Math.floor(Math.random() * players.length)];
 }
 
