@@ -98,7 +98,9 @@ export async function startMatchmaking(
   playerID: string
 ): Promise<[string | null, string | null]> {
   // マッチング待機中のユーザーを検索する
+  await updatePlayerField(playerID, "match", 1);
   waitingPlayerID.value = await findWaitingPlayer(playerID);
+  
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
   if (waitingPlayerID.value) {
     await Promise.all([
@@ -110,19 +112,26 @@ export async function startMatchmaking(
     gameID.value = await addGame(playerID, waitingPlayerID.value);
     return [waitingPlayerID.value, gameID.value];
   }
-  // マッチング待機中のユーザーがいる場合は、対戦状態に更新する
-  await updatePlayerField(playerID, "match", 1);
   return [null, null];
 }
 
 //マッチング待機中のユーザーを検索する
-async function findWaitingPlayer(playerID: string): Promise<string | null> {
+async function findWaitingPlayer(playerID:string): Promise<string | null> {
   const querySnapshot = await getDocs(query(playersRef, where("match", "==", 1)));
-  if (querySnapshot.empty) return null;
   const players = querySnapshot.docs.map((doc) => doc.id);
-  // 自分自身を除外する
+  console.log("Found players: ", players);
+  if (players.length < 2) {
+    console.log("Not enough players to start a game");
+    return null;
+  }
+  
+  // 自分を除外する
   players.splice(players.indexOf(playerID), 1);
-  return players[Math.floor(Math.random() * players.length)];
+
+  // ランダムに選択する
+  const player =players[Math.floor(Math.random() * players.length)];
+  console.log("Found player: ", player);
+  return player;
 }
 
 //ユーザーのフィールド名を更新する
@@ -134,7 +143,7 @@ async function updatePlayerField(
   const playerRef = doc(playersRef, playerID);
   try {
     await updateDoc(playerRef, { [playerUpdateField]: field });
-    console.log("Match status updated for player: ", playerID);
+    console.log(playerUpdateField,"updated: ",field," for player: ", playerID);
   } catch (error) {
     console.error("Error updating match status: ", error);
   }
