@@ -25,7 +25,7 @@ async function registerPlayer(): Promise<string> {
     idEnemy: "",
     idGame: "",
     name: "No name",
-    match: 0,
+    match: "nothing",
     character: 0,
     gift: 0,
   };
@@ -75,7 +75,7 @@ async function updatePlayerName(playerID: string, newName: string): Promise<stri
 
 //マッチング待機中のuserを検索する
 async function findWaitingPlayer(playerID: string): Promise<string | undefined> {
-  const players = (await getDocs(query(playersRef, where("match", "==", 1)))).docs.map(
+  const players = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map(
     (doc) => doc.id
   );
   console.log("Found players: ", players);
@@ -85,7 +85,7 @@ async function findWaitingPlayer(playerID: string): Promise<string | undefined> 
   }
 
   // 自分を除外する
-  players.splice(players.indexOf(playerID), 1);
+  players.splice(players.indexOf(playerID), 1, "waiting");
 
   // ランダムに選択する
   const player = players[Math.floor(Math.random() * players.length)];
@@ -143,7 +143,7 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
 //マッチングを開始する
 async function startMatchmaking(ownPlayerID: string): Promise<string | undefined> {
   // マッチング待機中のユーザーを検索する
-  await updatePlayerField(ownPlayerID, "match", 1);
+  await updatePlayerField(ownPlayerID, "match", "waiting");
   const waitingPlayerID = await findWaitingPlayer(ownPlayerID);
 
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
@@ -158,12 +158,12 @@ async function startMatchmaking(ownPlayerID: string): Promise<string | undefined
       updatePlayerFields(waitingPlayerID, [
         { field: "idEnemy", value: ownPlayerID },
         { field: "idGame", value: idGame },
-        { field: "match", value: -1 },
+        { field: "match", value: "matching" },
       ]),
       updatePlayerFields(ownPlayerID, [
         { field: "idEnemy", value: waitingPlayerID },
         { field: "idGame", value: idGame },
-        { field: "match", value: -1 },
+        { field: "match", value: "matching" },
       ]),
     ]);
     //画面遷移
@@ -190,7 +190,7 @@ async function addGame(player1: string, player2: string): Promise<string | undef
         gift: player1Data.gift,
         hand: [],
         board: [],
-        status: { hp: 400, hungry: 0, contribution: 0, priority: 0 },
+        status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
       },
       {
         id: player2,

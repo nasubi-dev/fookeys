@@ -36,7 +36,7 @@ type Mission = {
 type Missions = Mission[];
 
 //-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
-type MatchStatus = -1 | 0 | 1;
+type MatchStatus = "matching" | "nothing" | "waiting";
 type PlayerData = {
   id: string;
   name: string;
