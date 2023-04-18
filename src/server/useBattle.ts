@@ -128,3 +128,5 @@ export async function endGame(playerID: string) {}
 
 //!すべてのフェーズ管理
 export async function useBattle(playerID: string) {}
+
+//!export5日まとめる

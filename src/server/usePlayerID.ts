@@ -19,7 +19,7 @@ const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
 //user登録
-export async function registerPlayer(): Promise<string> {
+async function registerPlayer(): Promise<string> {
   const newPlayer: Player = {
     id: "",
     idEnemy: "",
@@ -41,7 +41,7 @@ export async function registerPlayer(): Promise<string> {
 }
 
 //user削除
-export async function deletePlayer(playerID: string): Promise<void> {
+async function deletePlayer(playerID: string): Promise<void> {
   try {
     await deleteDoc(doc(playersRef, playerID));
     console.log("Player deleted: ", playerID);
@@ -62,7 +62,7 @@ async function getPlayer(playerID: string): Promise<{ id: string; data: Player }
 }
 
 //nameの変更
-export async function updatePlayerName(playerID: string, newName: string): Promise<string> {
+async function updatePlayerName(playerID: string, newName: string): Promise<string> {
   try {
     await updateDoc(doc(playersRef, playerID), { name: newName });
     console.log("Name updated for player: ", playerID);
@@ -141,7 +141,7 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
 }
 
 //マッチングを開始する
-export async function startMatchmaking(ownPlayerID: string): Promise<string | undefined> {
+async function startMatchmaking(ownPlayerID: string): Promise<string | undefined> {
   // マッチング待機中のユーザーを検索する
   await updatePlayerField(ownPlayerID, "match", 1);
   const waitingPlayerID = await findWaitingPlayer(ownPlayerID);
@@ -222,3 +222,6 @@ async function addGame(player1: string, player2: string): Promise<string | undef
 }
 
 //gameを削除する
+async function deleteGame(gameID: string): Promise<void> {}
+
+export { registerPlayer, deletePlayer, updatePlayerName, startMatchmaking };

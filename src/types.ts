@@ -1,4 +1,4 @@
-export type Card = {
+type Card = {
   name: string;
   waste: number;
   hungry: number;
@@ -8,36 +8,45 @@ export type Card = {
   def?: number;
   tech?: number;
   special?: () => void;
-}
-export type Deck = Card[];
+};
+type Deck = Card[];
 
-export type Character = {
+type Character = {
   name: string;
   description: string;
   image: string;
   company: string;
   action: () => void;
-}
-export type Characters= Character[];
+};
+type Characters = Character[];
 
-export type Gift = {
+type Gift = {
   name: string;
   description: string;
   image: string;
   action: () => void;
-}
-export type Gifts = Gift[];
+};
+type Gifts = Gift[];
 
-export type Mission = {
+type Mission = {
   name: string;
   description: string;
   action: () => void;
-}
-export type Missions = Mission[];
+};
+type Missions = Mission[];
 
 //-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
-export type MatchStatus = -1 | 0 | 1;
-export interface Player {
+type MatchStatus = -1 | 0 | 1;
+type PlayerData = {
+  id: string;
+  name: string;
+  match: MatchStatus;
+  character: number;
+  gift: number;
+  idEnemy: string;
+  idGame: string;
+};
+interface Player {
   id: string;
   idEnemy: string;
   idGame: string;
@@ -47,15 +56,25 @@ export interface Player {
   gift: number;
   hand?: Card[];
   board?: Card[];
-  status?: {
-    hp: number;
-    hungry: number;
-    contribution: number;
-    priority: number;
-  };  
-}  
+  status?: { hp: number; hungry: number; contribution: number; priority: number };
+}
 
-export type Game = {
+type Game = {
   turn: number;
   players: [Player, Player];
-}
+};
+
+export type {
+  Card,
+  Deck,
+  Character,
+  Characters,
+  Gift,
+  Gifts,
+  Mission,
+  Missions,
+  MatchStatus,
+  PlayerData,
+  Player,
+  Game,
+};
