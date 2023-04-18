@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   where,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import type { Game } from "@/types";
@@ -121,3 +122,9 @@ export async function endActionPhase(playerID: string) {}
 
 //?mainフェーズ終了時の処理
 export async function endMainPhase(playerID: string) {}
+
+//?game終了時の処理
+export async function endGame(playerID: string) {}
+
+//!すべてのフェーズ管理
+export async function useBattle(playerID: string) {}

@@ -11,7 +11,7 @@ export type Card = {
 }
 export type Deck = Card[];
 
-type Character = {
+export type Character = {
   name: string;
   description: string;
   image: string;
@@ -20,7 +20,7 @@ type Character = {
 }
 export type Characters= Character[];
 
-type Gift = {
+export type Gift = {
   name: string;
   description: string;
   image: string;
@@ -28,14 +28,15 @@ type Gift = {
 }
 export type Gifts = Gift[];
 
-type Mission = {
+export type Mission = {
   name: string;
   description: string;
   action: () => void;
 }
 export type Missions = Mission[];
 
-
+//-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
+export type MatchStatus = -1 | 0 | 1;
 export interface Player {
   id: string;
   idEnemy: string;
@@ -51,11 +52,8 @@ export interface Player {
     hungry: number;
     contribution: number;
     priority: number;
-  };
-}
-
-//-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
-export type MatchStatus = -1 | 0 | 1;
+  };  
+}  
 
 export type Game = {
   turn: number;

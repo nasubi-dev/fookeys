@@ -11,9 +11,8 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-import type { Game, MatchStatus, Player } from "@/types";
-
 import { db } from "./firebase";
+import type { Game, MatchStatus, Player } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
