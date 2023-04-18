@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { router } from "@/router";
 import {
   collection,
@@ -20,15 +19,12 @@ import { db } from "./firebase";
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
-const gameID = ref<string | undefined>(undefined);
-const waitingPlayerID = ref<string | undefined>(undefined);
-
-//ユーザー登録
+//user登録
 export async function registerPlayer(): Promise<string> {
   const newPlayer: Player = {
     id: "",
-    enemyID: "",
-    gameID: "",
+    idEnemy: "",
+    idGame: "",
     name: "No name",
     match: 0,
     character: 0,
@@ -37,15 +33,15 @@ export async function registerPlayer(): Promise<string> {
   try {
     const docRef = await addDoc(playersRef, newPlayer);
     console.log("Create Your ID: ", docRef.id);
-    const playerId = docRef.id;
-    return playerId;
+    const playerID = docRef.id;
+    return playerID;
   } catch (error) {
     console.error("Error adding document: ", error);
     return "";
   }
 }
 
-//ユーザー削除
+//user削除
 export async function deletePlayer(playerID: string): Promise<void> {
   try {
     await deleteDoc(doc(playersRef, playerID));
@@ -55,7 +51,7 @@ export async function deletePlayer(playerID: string): Promise<void> {
   }
 }
 
-//ユーザー情報の取得
+//user情報の取得
 async function getPlayer(playerID: string): Promise<{ id: string; data: Player }> {
   const docSnap = await getDoc(doc(playersRef, playerID));
   if (docSnap.exists()) {
@@ -66,7 +62,7 @@ async function getPlayer(playerID: string): Promise<{ id: string; data: Player }
   }
 }
 
-//名前の変更
+//nameの変更
 export async function updatePlayerName(playerID: string, newName: string): Promise<string> {
   try {
     await updateDoc(doc(playersRef, playerID), { name: newName });
@@ -78,9 +74,11 @@ export async function updatePlayerName(playerID: string, newName: string): Promi
   }
 }
 
-//マッチング待機中のユーザーを検索する
+//マッチング待機中のuserを検索する
 async function findWaitingPlayer(playerID: string): Promise<string | undefined> {
-  const players = (await getDocs(query(playersRef, where("match", "==", 1)))).docs.map((doc) => doc.id);
+  const players = (await getDocs(query(playersRef, where("match", "==", 1)))).docs.map(
+    (doc) => doc.id
+  );
   console.log("Found players: ", players);
   if (players.length < 2) {
     console.log("Not enough players to start a game");
@@ -96,7 +94,7 @@ async function findWaitingPlayer(playerID: string): Promise<string | undefined> 
   return player;
 }
 
-//ユーザーのフィールド名を更新する
+//userのフィールド名を更新する
 async function updatePlayerField(
   playerID: string,
   playerUpdateField: keyof Player,
@@ -110,7 +108,7 @@ async function updatePlayerField(
   }
 }
 
-//ユーザーのフィールド名を複数更新する
+//userのフィールド名を複数更新する
 async function updatePlayerFields(
   playerID: string,
   updates: Array<{ field: keyof Player; value: string | MatchStatus | undefined }>
@@ -120,7 +118,7 @@ async function updatePlayerFields(
   });
 }
 
-//matchの値が-1に変更されたら検知して、ゲームを開始する
+//matchの値が-1に変更されたら検知して、gameを開始する
 async function watchMatchField(ownPlayerID: string): Promise<void> {
   const unsubscribe = onSnapshot(doc(playersRef, ownPlayerID), (doc) => {
     const data = doc.data();
@@ -129,16 +127,16 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
     if (data.match === -1) {
       console.log("matchが", -1, "に変更されました");
       //waitingPlayerIDを入手する
-      waitingPlayerID.value = data.enemyID;
-      console.log("waitingPlayerID: ", waitingPlayerID.value);
+      const waitingPlayerID = data.idEnemy;
+      console.log("waitingPlayerID: ", waitingPlayerID);
       //gameIDを入手する
-      gameID.value = data.gameID;
-      console.log("gameID: ", gameID.value);
+      const idGame = data.idGame;
+      console.log("idGame: ", idGame);
       // 監視を解除
       unsubscribe();
       //画面遷移
-      console.log("マッチ成功!相手ID:", waitingPlayerID.value, "ゲームID:", gameID.value);
-      router.push({ name: "battle", params: { gameID: gameID.value } });
+      console.log("マッチ成功!相手ID:", waitingPlayerID, "ゲームID:", idGame);
+      router.push({ name: "battle", params: { idGame: idGame } });
     }
   });
 }
@@ -147,36 +145,36 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
 export async function startMatchmaking(ownPlayerID: string): Promise<string | undefined> {
   // マッチング待機中のユーザーを検索する
   await updatePlayerField(ownPlayerID, "match", 1);
-  waitingPlayerID.value = await findWaitingPlayer(ownPlayerID);
+  const waitingPlayerID = await findWaitingPlayer(ownPlayerID);
 
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
-  if (!waitingPlayerID.value) {
+  if (!waitingPlayerID) {
     console.log("マッチング待機中...");
     await watchMatchField(ownPlayerID);
     return undefined;
   } else {
-    gameID.value = await addGame(ownPlayerID, waitingPlayerID.value);
+    const idGame = await addGame(ownPlayerID, waitingPlayerID);
     //プレイヤーの情報を更新する
     await Promise.all([
-      updatePlayerFields(waitingPlayerID.value, [
-        { field: "enemyID", value: ownPlayerID },
-        { field: "gameID", value: gameID.value },
+      updatePlayerFields(waitingPlayerID, [
+        { field: "idEnemy", value: ownPlayerID },
+        { field: "idGame", value: idGame },
         { field: "match", value: -1 },
       ]),
       updatePlayerFields(ownPlayerID, [
-        { field: "enemyID", value: waitingPlayerID.value },
-        { field: "gameID", value: gameID.value },
+        { field: "idEnemy", value: waitingPlayerID },
+        { field: "idGame", value: idGame },
         { field: "match", value: -1 },
       ]),
     ]);
     //画面遷移
-    console.log("マッチ成功!相手ID:", waitingPlayerID.value, "ゲームID:", gameID.value);
-    router.push({ name: "battle", params: { gameID: gameID.value } });
-    return gameID.value;
+    console.log("マッチ成功!相手ID:", waitingPlayerID, "ゲームID:", idGame);
+    router.push({ name: "battle", params: { idGame: idGame } });
+    return idGame;
   }
 }
 
-//ゲームを作成する
+//gameを作成する
 async function addGame(player1: string, player2: string): Promise<string | undefined> {
   const player1Data = await getPlayer(player1).then((player) => player.data);
   const player2Data = await getPlayer(player2).then((player) => player.data);
@@ -185,27 +183,27 @@ async function addGame(player1: string, player2: string): Promise<string | undef
     players: [
       {
         id: player1,
-        enemyID: player2,
-        gameID: player1Data.gameID,
+        idEnemy: player2,
+        idGame: player1Data.idGame,
         name: player1Data.name,
         match: player1Data.match,
         character: player1Data.character,
         gift: player1Data.gift,
         hand: [],
         board: [],
-        status: { hp: 400, hungry: 0 },
+        status: { hp: 400, hungry: 0, contribution: 0, priority: 0 },
       },
       {
         id: player2,
-        enemyID: player1,
-        gameID: player2Data.gameID,
+        idEnemy: player1,
+        idGame: player2Data.idGame,
         name: player2Data.name,
         match: player2Data.match,
         character: player2Data.character,
         gift: player2Data.gift,
         hand: [],
         board: [],
-        status: { hp: 400, hungry: 0 },
+        status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
       },
     ],
   };
@@ -224,4 +222,4 @@ async function addGame(player1: string, player2: string): Promise<string | undef
   return undefined;
 }
 
-//ゲームを削除する
+//gameを削除する

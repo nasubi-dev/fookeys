@@ -2,79 +2,80 @@
 import  Select  from '@/components/select.vue'
 import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
+import type { Characters } from '@/types';
 
 const playerStore = usePlayerStore();
 
-const character = [
+const character:Characters = [
 	{
-		id: 0,
 		name: 'character 0',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 0;
 		},
 	},
 	{
-		id: 1,
 		name: 'character 1',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 1;
 
 		},
 	},
 	{
-		id: 2,
 		name: 'character 2',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 2;
 		},
 	},
 	{
-		id: 3,
 		name: 'character 3',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 3;
 		},
 	},
 	{
-		id: 4,
 		name: 'character 4',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 4;
 		},
 	},
 	{
-		id: 5,
 		name: 'character 5',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 5;
 		},
 	},
 	{
-		id: 6,
 		name: 'character 6',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 6;
 		},
 	},
 	{
-		id: 7,
 		name: 'character 7',
-		image: nasubi,
 		description: 'test test test test',
+		image: nasubi,
+		company: 'test',
 		action: () => {
 			playerStore.character = 7
 		},
@@ -84,5 +85,5 @@ const character = [
 </script>
 
 <template>
-	<Select :cards=character />
+	<Select :cards="character" />
 </template>

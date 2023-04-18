@@ -12,8 +12,8 @@ async function startMatch(PlayerID: string): Promise<void> {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}
-	const gameID =await startMatchmaking(PlayerID);
-	console.log("gameID:",gameID);
+	const idGame =await startMatchmaking(PlayerID);
+	console.log("idGame:",idGame);
 }
 </script>
 

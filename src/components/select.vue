@@ -2,7 +2,6 @@
 
 defineProps<{
 	cards: {
-		id: number;
 		name: string;
 		description: string;
 		image: string;
@@ -23,7 +22,7 @@ defineProps<{
 			</router-link>
 		</div>
 		<div class="mt-8 mx-4 grid grid-cols-4 gap-2">
-			<div v-for="card in cards" :key="card.id">
+			<div v-for="card in cards" :key="card.name">
 				<div class="bg-white rounded-lg shadow-md overflow-hidden">
 					<button @click="card.action" class="btn-pop">
 						<img :src="card.image" class="w-full h-64 object-cover">

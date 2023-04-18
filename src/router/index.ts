@@ -29,7 +29,7 @@ export const router = createRouter({
       component: Gift,
     },
     {
-      path: "/battle/:gameID",
+      path: "/battle/:idGame",
       name: "battle",
       component: Battle,
     },

@@ -1,20 +1,45 @@
-export interface Card {
+export type Card = {
   name: string;
   waste: number;
   hungry: number;
-  atk?: number;
+  company: string;
+  description: string;
+  pow?: number;
   def?: number;
-  matk?: number;
-  mdef?: number;
+  tech?: number;
   special?: () => void;
 }
-
 export type Deck = Card[];
 
+type Character = {
+  name: string;
+  description: string;
+  image: string;
+  company: string;
+  action: () => void;
+}
+export type Characters= Character[];
+
+type Gift = {
+  name: string;
+  description: string;
+  image: string;
+  action: () => void;
+}
+export type Gifts = Gift[];
+
+type Mission = {
+  name: string;
+  description: string;
+  action: () => void;
+}
+export type Missions = Mission[];
+
+
 export interface Player {
-  id:string;
-  enemyID: string;
-  gameID: string;
+  id: string;
+  idEnemy: string;
+  idGame: string;
   name: string;
   match: MatchStatus;
   character: number;
@@ -24,13 +49,15 @@ export interface Player {
   status?: {
     hp: number;
     hungry: number;
+    contribution: number;
+    priority: number;
   };
 }
 
 //-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
 export type MatchStatus = -1 | 0 | 1;
 
-export interface Game {
+export type Game = {
   turn: number;
-  players: [ player1: Player, player2: Player ];
+  players: [Player, Player];
 }
