@@ -8,7 +8,7 @@ const playerStore = usePlayerStore();
 //マッチングを開始する
 //マッチングが成功したら後で押したほうがPlayer1､Player2
 async function startMatch(PlayerID: string): Promise<void> {
-	if (PlayerID == null) {
+	if (PlayerID == undefined) {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}

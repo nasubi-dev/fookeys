@@ -19,15 +19,11 @@ export interface Player {
   match: MatchStatus;
   character: number;
   gift: number;
-  hand: Card[];
-  board: Card[];
-  status: {
-    atk: number;
-    def: number;
+  hand?: Card[];
+  board?: Card[];
+  status?: {
     hp: number;
     hungry: number;
-    matk: number;
-    mdef: number;
   };
 }
 
@@ -36,5 +32,5 @@ export type MatchStatus = -1 | 0 | 1;
 
 export interface Game {
   turn: number;
-  players: { player1: Player; player2: Player };
+  players: [ player1: Player, player2: Player ];
 }
