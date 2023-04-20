@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import nasubi from '@/assets/nasubi.png';
+import { startMatchmaking } from '@/server/useMatchMaking';
 import { usePlayerStore } from '@/store';
-import { startMatchmaking } from '@/server/usePlayerID';
+
 
 const playerStore = usePlayerStore();
 
@@ -12,8 +13,7 @@ async function startMatch(PlayerID: string): Promise<void> {
 		alert('ユーザーIDが取得できていません。')
 		return
 	}
-	const idGame =await startMatchmaking(PlayerID);
-	console.log("idGame:",idGame);
+	playerStore.idGame = await startMatchmaking(PlayerID);
 }
 </script>
 
