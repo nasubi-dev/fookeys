@@ -29,6 +29,7 @@ async function getPlayer(GameID:string): Promise<{ id: string; data: Game }> {
   }
 }
 
+
 //両プレイヤーがturn終了ボタンを押した時の処理
 export async function endTurn(playerID: string) {}
 
