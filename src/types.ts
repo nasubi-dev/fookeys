@@ -47,14 +47,14 @@ type PlayerData = {
 };
 interface Player {
   id: string;
-  idEnemy: string;
   name: string;
   match: MatchStatus;
   character: number;
   gift: number;
-  hand?: Card[];
-  board?: Card[];
-  status?: { hp: number; hungry: number; contribution: number; priority: number };
+  check: boolean;
+  hand: Card[];
+  board: Card[];
+  status: { hp: number; hungry: number; contribution: number; priority: number };
 }
 
 type Game = {

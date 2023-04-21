@@ -1,7 +1,7 @@
 import { router } from "@/router";
 import { collection, doc, addDoc, getDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Game, MatchStatus, Player } from "@/types";
+import type { Game, MatchStatus, Player, PlayerData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
@@ -39,7 +39,7 @@ async function findWaitingPlayer(playerID: string): Promise<string | undefined> 
 //playerのフィールド名を更新する
 async function updatePlayerField(
   playerID: string,
-  playerUpdateField: keyof Player,
+  playerUpdateField: keyof PlayerData,
   field: string | MatchStatus | undefined
 ): Promise<void> {
   try {
@@ -53,7 +53,7 @@ async function updatePlayerField(
 //playerのフィールド名を複数更新する
 async function updatePlayerFields(
   playerID: string,
-  updates: Array<{ field: keyof Player; value: string | MatchStatus | undefined }>
+  updates: Array<{ field: keyof PlayerData; value: string | MatchStatus | undefined }>
 ): Promise<void> {
   updates.forEach((update) => {
     updatePlayerField(playerID, update.field, update.value);
@@ -72,7 +72,7 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
       const waitingPlayerID = data.idEnemy;
       console.log("waitingPlayerID: ", waitingPlayerID);
       //gameIDを入手する
-      const idGame = data.idGame;
+      const idGame = doc.id;
       console.log("idGame: ", idGame);
       // 監視を解除
       unsubscribe();
@@ -100,10 +100,12 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
     await Promise.all([
       updatePlayerFields(waitingPlayerID, [
         { field: "idEnemy", value: ownPlayerID },
+        { field: "idGame", value: idGame },
         { field: "match", value: "matching" },
       ]),
       updatePlayerFields(ownPlayerID, [
         { field: "idEnemy", value: waitingPlayerID },
+        { field: "idGame", value: idGame },
         { field: "match", value: "matching" },
       ]),
     ]);
@@ -125,22 +127,22 @@ async function addGame(player1: string, player2: string): Promise<string> {
     players: [
       {
         id: player1,
-        idEnemy: player2,
         name: player1Data.name,
         match: player1Data.match,
         character: player1Data.character,
         gift: player1Data.gift,
+        check: false,
         hand: [],
         board: [],
         status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
       },
       {
         id: player2,
-        idEnemy: player1,
         name: player2Data.name,
         match: player2Data.match,
         character: player2Data.character,
         gift: player2Data.gift,
+        check: false,
         hand: [],
         board: [],
         status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
