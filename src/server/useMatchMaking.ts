@@ -100,12 +100,10 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
     await Promise.all([
       updatePlayerFields(waitingPlayerID, [
         { field: "idEnemy", value: ownPlayerID },
-        { field: "idGame", value: idGame },
         { field: "match", value: "matching" },
       ]),
       updatePlayerFields(ownPlayerID, [
         { field: "idEnemy", value: waitingPlayerID },
-        { field: "idGame", value: idGame },
         { field: "match", value: "matching" },
       ]),
     ]);
@@ -120,15 +118,14 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
 
 //gameを作成する
 async function addGame(player1: string, player2: string): Promise<string> {
-  const player1Data = await getPlayer(player1).then((player) => player.data);
-  const player2Data = await getPlayer(player2).then((player) => player.data);
+  const player1Data = (await getPlayer(player1)).data;
+  const player2Data = (await getPlayer(player2)).data;
   const newGame: Game = {
     turn: 1,
     players: [
       {
         id: player1,
         idEnemy: player2,
-        idGame: player1Data.idGame,
         name: player1Data.name,
         match: player1Data.match,
         character: player1Data.character,
@@ -140,7 +137,6 @@ async function addGame(player1: string, player2: string): Promise<string> {
       {
         id: player2,
         idEnemy: player1,
-        idGame: player2Data.idGame,
         name: player2Data.name,
         match: player2Data.match,
         character: player2Data.character,

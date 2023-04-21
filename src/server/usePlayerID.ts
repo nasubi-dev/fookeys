@@ -6,18 +6,17 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Player } from "@/types";
+import type { PlayerData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
 
 //player登録
 async function registerPlayer(): Promise<string> {
-  const newPlayer: Player = {
-    id: "",
+  const newPlayer: PlayerData = {
+    name: "No name",
     idEnemy: "",
     idGame: "",
-    name: "No name",
     match: "nothing",
     character: 0,
     gift: 0,

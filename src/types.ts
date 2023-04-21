@@ -38,18 +38,16 @@ type Missions = Mission[];
 //-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
 type MatchStatus = "matching" | "nothing" | "waiting";
 type PlayerData = {
-  id: string;
   name: string;
+  idEnemy: string;
+  idGame: string;
   match: MatchStatus;
   character: number;
   gift: number;
-  idEnemy: string;
-  idGame: string;
 };
 interface Player {
   id: string;
   idEnemy: string;
-  idGame: string;
   name: string;
   match: MatchStatus;
   character: number;
