@@ -1,20 +1,20 @@
 import { router } from "@/router";
 import { collection, doc, addDoc, getDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Game, MatchStatus, Player, PlayerData } from "@/types";
+import type { Game, MatchStatus,PlayerData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
 //player情報の取得
-async function getPlayerData(playerID: string): Promise<{ id: string; data: Player }> {
+async function getPlayerData(playerID: string): Promise<{ id: string; data: PlayerData }> {
   const docSnap = await getDoc(doc(playersRef, playerID));
   if (docSnap.exists()) {
-    return { id: docSnap.id, data: docSnap.data() as Player };
+    return { id: docSnap.id, data: docSnap.data() as PlayerData };
   } else {
     console.log("No such document!");
-    return { id: "", data: docSnap.data() as Player }; //!修正します5日
+    return { id: "", data: docSnap.data() as PlayerData }; //!修正します5日
   }
 }
 
