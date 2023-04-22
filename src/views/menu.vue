@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import nasubi from "@/assets/nasubi.png";
-import PlayerData from "@/components/playerData.vue";
 import { startMatchmaking } from "@/server/useMatchMaking";
 import { usePlayerStore } from "@/store";
+import PlayerData from "@/components/playerData.vue";
+import nasubi from "@/assets/nasubi.png";
 
 const playerStore = usePlayerStore();
 

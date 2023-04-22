@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import PlayerData from "@/components/playerData.vue";
+import { onMounted } from "vue";
 import { getPlayerData } from "@/server/useMatchMaking";
 import { useBattle } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
+import PlayerData from "@/components/playerData.vue";
 
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
 
 //入場したらPlayer型としてIDが保管される
-//Mountedに将来的に変える
-async function battle() {
+onMounted(async () => {
   const playerData = (await getPlayerData(playerStore.id)).data;
   if (playerData) {
     playerStore.idGame = playerData.idGame;
@@ -19,7 +19,8 @@ async function battle() {
     gameStore.players = gameData.players;
     console.log("test", gameData);
   }
-}
+});
+
 //表示するデータをplayer1,2で分ける
 //onSnapshotの中でGameのplayer1,2の順番を入れ替える?
 </script>
@@ -27,7 +28,6 @@ async function battle() {
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
     <h1>Battle</h1>
-    <button @click="battle()">Battle</button>
     <div class="flex justify-end">
       <ul class="divide-x divide-gray-200">
         <li class="py-4">

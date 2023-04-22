@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import  Select  from '@/components/select.vue'
-import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
 import type { Characters } from '@/types';
+import  Select  from '@/components/select.vue'
+import nasubi from '@/assets/nasubi.png';
 
 const playerStore = usePlayerStore();
 
