@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from "vue";
+import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { registerPlayer, deletePlayer } from "@/server/usePlayerID";
 import { usePlayerStore } from "@/store";
@@ -14,13 +14,11 @@ onMounted(async () => {
 });
 
 //アプリが閉じられたらユーザーIDを削除する
-function handleWindowUnload() {
-  deletePlayer(PlayerStore.id);
+window.onbeforeunload = async () => {
+	window.onbeforeunload = () => { };
+	console.log('アプリが終了しました')
+	await deletePlayer(PlayerStore.id);
 }
-window.addEventListener("beforeunload", handleWindowUnload);
-onBeforeUnmount(() => {
-  window.removeEventListener("beforeunload", handleWindowUnload);
-});
 </script>
 
 <template>

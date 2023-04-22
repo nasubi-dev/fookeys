@@ -4,6 +4,7 @@ import { getPlayerData } from "@/server/useMatchMaking";
 import { useBattle } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
 import PlayerData from "@/components/playerData.vue";
+import Status from "@/components/status.vue";
 
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
@@ -13,11 +14,10 @@ onMounted(async () => {
   const playerData = (await getPlayerData(playerStore.id)).data;
   if (playerData) {
     playerStore.idGame = playerData.idGame;
-    playerStore.name = playerData.name;
     const gameData = await useBattle(playerStore.idGame);
-    gameStore.turn = gameData.turn; //まとめ方がわからない
+  gameStore.turn = gameData.turn; //!まとめ方がわからない
     gameStore.players = gameData.players;
-    console.log("test", gameData);
+    console.log("gameData: ", gameData);
   }
 });
 
@@ -28,33 +28,8 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
     <h1>Battle</h1>
-    <div class="flex justify-end">
-      <ul class="divide-x divide-gray-200">
-        <li class="py-4">
-          <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
-        </li>
-        <li class="py-4">
-          <p class="text-sm font-medium text-gray-900 truncate">name:{{ gameStore.players[0].name }}</p>
-        </li>
-        <li class="py-4">
-          <p class="text-sm font-medium text-gray-900 truncate">HP❤:{{ gameStore.players[0].status.hp }}</p>
-        </li>
-        <li class="py-4">
-          <p class="text-sm font-medium text-gray-900 truncate">hungry🍖:{{ gameStore.players[0].status.hungry }}</p>
-        </li>
-        <li class="py-4">
-          <p class="text-sm font-medium text-gray-900 truncate">
-            contribution🪙:{{ gameStore.players[0].status.contribution }}
-          </p>
-        </li>
-        <li class="py-4">
-          <p class="text-sm font-medium text-gray-900 truncate">
-            priority🦶:{{ gameStore.players[0].status.priority }}
-          </p>
-        </li>
-      </ul>
-    </div>
-
+    <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
+    <Status />
     <PlayerData />
   </div>
 </template>
