@@ -128,7 +128,6 @@ async function addGame(player1: string, player2: string): Promise<string> {
       {
         id: player1,
         name: player1Data.name,
-        match: player1Data.match,
         character: player1Data.character,
         gift: player1Data.gift,
         check: false,
@@ -139,7 +138,6 @@ async function addGame(player1: string, player2: string): Promise<string> {
       {
         id: player2,
         name: player2Data.name,
-        match: player2Data.match,
         character: player2Data.character,
         gift: player2Data.gift,
         check: false,

@@ -6,7 +6,7 @@ import { usePlayerStore } from '@/store';
 const PlayerStore = usePlayerStore();
 
 //アプリが起動したらユーザーIDを取得する
-//入場したらPlayer型としてIDが保管される
+//入場したらPlayerData型としてIDが保管される
 window.onload = async () => {
 	PlayerStore.id = await registerPlayer();
 	console.log('アプリが起動しました')

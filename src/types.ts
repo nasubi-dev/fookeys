@@ -48,7 +48,6 @@ type PlayerData = {
 interface Player {
   id: string;
   name: string;
-  match: MatchStatus;
   character: number;
   gift: number;
   check: boolean;

@@ -4,11 +4,10 @@ import type { Game } from "@/types";
 
 //Collectionの参照
 const gamesRef = collection(db, "games");
-const playersRef = collection(db, "players");
 const deckRef = collection(db, "deck");
 
 //Game情報を取得
-async function getPlayer(GameID: string): Promise<{ id: string; data: Game }> {
+async function getGameData(GameID: string): Promise<{ id: string; data: Game }> {
   const docSnap = await getDoc(doc(gamesRef, GameID));
   if (docSnap.exists()) {
     return { id: docSnap.id, data: docSnap.data() as Game };
@@ -85,7 +84,7 @@ async function completeMission(playerID: string, missionID: number) {}
 
 //missionを入れ替える
 async function changeMission(playerID: string, missionID: number) {
-  const gameData = await getPlayer(playerID).then((game) => game.data);
+  const gameData = await getGameData(playerID).then((game) => game.data);
   if (gameData.turn % 4 == 0) {
     return;
   }
@@ -114,7 +113,7 @@ async function endGame(playerID: string) {}
 
 //!すべてのフェーズ管理
 export async function useBattle(GameID: string): Promise<Game|undefined> {
-  const gameData = (await getPlayer(GameID)).data;
+  const gameData = (await getGameData(GameID)).data;
   //?初回のみの処理
   if (gameData.turn == 1) {
     
@@ -123,7 +122,7 @@ export async function useBattle(GameID: string): Promise<Game|undefined> {
   }
   console.log("fin");
   
-  return undefined;
+  return gameData;
 }
 
 //!export5日まとめる
