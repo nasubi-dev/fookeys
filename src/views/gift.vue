@@ -2,10 +2,11 @@
 import  Select  from '@/components/select.vue'
 import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
+import type { Gifts } from '@/types/Gifts';
 
 const playerStore = usePlayerStore();
 
-const gift = [
+const gifts:Gifts = [
 	{
 		name: 'gift 0',
 		description: 'test test test test',
@@ -74,5 +75,5 @@ const gift = [
 </script>
 
 <template>
-	<Select :cards=gift />
+	<Select :cards=gifts />
 </template>

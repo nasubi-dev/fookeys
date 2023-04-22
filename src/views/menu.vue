@@ -3,7 +3,6 @@ import nasubi from '@/assets/nasubi.png';
 import { startMatchmaking } from '@/server/useMatchMaking';
 import { usePlayerStore } from '@/store';
 
-
 const playerStore = usePlayerStore();
 
 //マッチングを開始する

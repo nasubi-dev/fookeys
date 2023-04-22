@@ -8,7 +8,7 @@ const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
 //player情報の取得
-async function getPlayer(playerID: string): Promise<{ id: string; data: Player }> {
+async function getPlayerData(playerID: string): Promise<{ id: string; data: Player }> {
   const docSnap = await getDoc(doc(playersRef, playerID));
   if (docSnap.exists()) {
     return { id: docSnap.id, data: docSnap.data() as Player };
@@ -67,7 +67,7 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
     if (!data) return;
     // 監視対象のフィールドが指定した値になった場合に実行される処理
     if (data.match === "matching") {
-      console.log("matchが", "matching", "に変更されました");
+      console.log("matchが", data.match, "に変更されました");
       //waitingPlayerIDを入手する
       const waitingPlayerID = data.idEnemy;
       console.log("waitingPlayerID: ", waitingPlayerID);
@@ -120,8 +120,8 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
 
 //gameを作成する
 async function addGame(player1: string, player2: string): Promise<string> {
-  const player1Data = (await getPlayer(player1)).data;
-  const player2Data = (await getPlayer(player2)).data;
+  const player1Data = (await getPlayerData(player1)).data;
+  const player2Data = (await getPlayerData(player2)).data;
   const newGame: Game = {
     turn: 1,
     players: [
