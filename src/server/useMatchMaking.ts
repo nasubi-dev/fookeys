@@ -1,7 +1,7 @@
 import { router } from "@/router";
 import { collection, doc, addDoc, getDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Game, MatchStatus,PlayerData } from "@/types";
+import type { GameData, MatchStatus, PlayerData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
@@ -26,10 +26,8 @@ async function findWaitingPlayer(playerID: string): Promise<string | undefined> 
     console.log("Not enough players to start a game");
     return undefined;
   }
-
   // 自分を除外する
   players.splice(players.indexOf(playerID), 1);
-
   // ランダムに選択する
   const player = players[Math.floor(Math.random() * players.length)];
   console.log("Found player: ", player);
@@ -40,7 +38,7 @@ async function findWaitingPlayer(playerID: string): Promise<string | undefined> 
 async function updatePlayerField(
   playerID: string,
   playerUpdateField: keyof PlayerData,
-  field: string | MatchStatus | undefined
+  field: string | MatchStatus
 ): Promise<void> {
   try {
     await updateDoc(doc(playersRef, playerID), { [playerUpdateField]: field });
@@ -53,7 +51,7 @@ async function updatePlayerField(
 //playerのフィールド名を複数更新する
 async function updatePlayerFields(
   playerID: string,
-  updates: Array<{ field: keyof PlayerData; value: string | MatchStatus | undefined }>
+  updates: Array<{ field: keyof PlayerData; value: string | MatchStatus }>
 ): Promise<void> {
   updates.forEach((update) => {
     updatePlayerField(playerID, update.field, update.value);
@@ -72,7 +70,7 @@ async function watchMatchField(ownPlayerID: string): Promise<void> {
       const waitingPlayerID = data.idEnemy;
       console.log("waitingPlayerID: ", waitingPlayerID);
       //gameIDを入手する
-      const idGame = doc.id;
+      const idGame = data.idGame;
       console.log("idGame: ", idGame);
       // 監視を解除
       unsubscribe();
@@ -122,11 +120,10 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
 async function addGame(player1: string, player2: string): Promise<string> {
   const player1Data = (await getPlayerData(player1)).data;
   const player2Data = (await getPlayerData(player2)).data;
-  const newGame: Game = {
+  const newGame: GameData = {
     turn: 1,
     players: [
       {
-        id: player1,
         name: player1Data.name,
         character: player1Data.character,
         gift: player1Data.gift,
@@ -136,7 +133,6 @@ async function addGame(player1: string, player2: string): Promise<string> {
         status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
       },
       {
-        id: player2,
         name: player2Data.name,
         character: player2Data.character,
         gift: player2Data.gift,
@@ -165,4 +161,4 @@ async function addGame(player1: string, player2: string): Promise<string> {
 //gameを削除する
 async function deleteGame(gameID: string): Promise<void> {}
 
-export { getPlayerData,startMatchmaking };
+export { getPlayerData, startMatchmaking };

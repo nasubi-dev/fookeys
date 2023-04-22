@@ -1,19 +1,19 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Game } from "@/types";
+import type { GameData } from "@/types";
 
 //Collectionの参照
 const gamesRef = collection(db, "games");
 const deckRef = collection(db, "deck");
 
 //Game情報を取得
-async function getGameData(GameID: string): Promise<{ id: string; data: Game }> {
+async function getGameData(GameID: string): Promise<GameData> {
   const docSnap = await getDoc(doc(gamesRef, GameID));
   if (docSnap.exists()) {
-    return { id: docSnap.id, data: docSnap.data() as Game };
+    return docSnap.data() as GameData;
   } else {
     console.log("No such document!");
-    return { id: "", data: docSnap.data() as Game }; //!修正します5日
+    return docSnap.data() as GameData ; //!修正します5日
   }
 }
 
@@ -84,7 +84,7 @@ async function completeMission(playerID: string, missionID: number) {}
 
 //missionを入れ替える
 async function changeMission(playerID: string, missionID: number) {
-  const gameData = await getGameData(playerID).then((game) => game.data);
+  const gameData = await getGameData(playerID);
   if (gameData.turn % 4 == 0) {
     return;
   }
@@ -112,17 +112,16 @@ async function endMainPhase(playerID: string) {}
 async function endGame(playerID: string) {}
 
 //!すべてのフェーズ管理
-export async function useBattle(GameID: string): Promise<Game|undefined> {
-  const gameData = (await getGameData(GameID)).data;
+export async function useBattle(gameID: string): Promise<GameData> {
+  const gameData = await getGameData(gameID);
   //?初回のみの処理
   if (gameData.turn == 1) {
-    
     console.log("turn:" + gameData.turn);
-    return gameData;
+    return gameData as GameData;
   }
   console.log("fin");
   
-  return gameData;
+  return gameData as GameData;//!修正します5日
 }
 
 //!export5日まとめる

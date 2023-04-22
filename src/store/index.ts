@@ -1,14 +1,47 @@
-import { ref } from "vue";
 import { createPinia, defineStore } from "pinia";
+import type { MatchStatus, Player, PlayerData,GameData } from "@/types";
 
-export const usePlayerStore = defineStore("playerData", {
-  state: () => ({
-    id: ref(""),//･ﾟ･(｡>ω<｡)･ﾟ･
-    idGame: ref(""),
-    name: ref(""),
-    character: ref(0),
-    gift: ref(0),
-  }),
+class PlayerDataStore implements PlayerData {
+  id = "";
+  name = "";
+  idEnemy = "";
+  idGame = "";
+  match: MatchStatus = "nothing";
+  character = 0;
+  gift = 0;
+}
+
+const usePlayerStore = defineStore("playerData", {
+  state: () => new PlayerDataStore(),
 });
 
-export const pinia = createPinia();
+class GameDataStore implements GameData {
+  turn = 1;
+  players:[Player,Player] = [
+    {
+      name: "",
+      character: 0,
+      gift: 0,
+      check: false,
+      hand: [],
+      board: [],
+      status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
+    },
+    {
+      name: "",
+      character: 0,
+      gift: 0,
+      check: false,
+      hand: [],
+      board: [],
+      status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
+    },
+  ];
+}
+
+const useGameStore = defineStore("gameData", {
+  state: () => new GameDataStore(),
+});
+
+const pinia = createPinia();
+export { usePlayerStore, useGameStore, pinia };

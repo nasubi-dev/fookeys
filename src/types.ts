@@ -46,7 +46,6 @@ type PlayerData = {
   gift: number;
 };
 interface Player {
-  id: string;
   name: string;
   character: number;
   gift: number;
@@ -56,9 +55,9 @@ interface Player {
   status: { hp: number; hungry: number; contribution: number; priority: number };
 }
 
-type Game = {
+type GameData = {
   turn: number;
-  players: [Player, Player];
+  players: [Player,Player];
 };
 
 export type {
@@ -73,5 +72,5 @@ export type {
   MatchStatus,
   PlayerData,
   Player,
-  Game,
+  GameData,
 };
