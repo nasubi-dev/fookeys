@@ -1,6 +1,6 @@
-import { router } from "@/router";
 import { collection, doc, addDoc, getDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
+import { router } from "@/router";
 import type { GameData, MatchStatus, PlayerData } from "@/types";
 
 //Collectionの参照

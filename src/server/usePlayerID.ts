@@ -1,10 +1,4 @@
-import {
-  collection,
-  doc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import type { PlayerData } from "@/types";
 
