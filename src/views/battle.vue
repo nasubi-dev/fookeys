@@ -12,7 +12,7 @@ async function battle() {
 	if (playerData) {
 		playerStore.idGame = playerData.idGame;
 		playerStore.name = playerData.name;
-		const battleData = await useBattle(playerData);
+		const battleData = await useBattle(playerStore.idGame);
 		console.log(battleData);
 	}
 }
