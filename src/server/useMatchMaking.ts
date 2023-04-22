@@ -165,4 +165,4 @@ async function addGame(player1: string, player2: string): Promise<string> {
 //gameを削除する
 async function deleteGame(gameID: string): Promise<void> {}
 
-export { startMatchmaking };
+export { getPlayerData,startMatchmaking };

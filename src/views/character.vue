@@ -2,7 +2,7 @@
 import  Select  from '@/components/select.vue'
 import nasubi from '@/assets/nasubi.png';
 import { usePlayerStore } from '@/store';
-import type { Characters } from '@/types/Character';
+import type { Characters } from '@/types';
 
 const playerStore = usePlayerStore();
 

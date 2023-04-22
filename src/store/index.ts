@@ -3,8 +3,7 @@ import { createPinia, defineStore } from "pinia";
 
 export const usePlayerStore = defineStore("playerData", {
   state: () => ({
-    id: ref(""),
-    idEnemy: ref(""),
+    id: ref(""),//･ﾟ･(｡>ω<｡)･ﾟ･
     idGame: ref(""),
     name: ref(""),
     character: ref(0),
