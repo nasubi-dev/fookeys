@@ -35,9 +35,12 @@ type Mission = {
 };
 type Missions = Mission[];
 
-//-1 = 対戦中, 0 = マッチング待機中, 1 = 対戦終了
 type MatchStatus = "matching" | "nothing" | "waiting";
+//-1 = 値なし, 0 = player1, 1 = player2
+type PlayerNumber = -1 | 0 | 1;
 type PlayerData = {
+  id: string;
+  num: PlayerNumber;
   name: string;
   idEnemy: string;
   idGame: string;
@@ -46,6 +49,7 @@ type PlayerData = {
   gift: number;
 };
 interface Player {
+  id: string;
   name: string;
   character: number;
   gift: number;
@@ -57,7 +61,7 @@ interface Player {
 
 type GameData = {
   turn: number;
-  players: [Player,Player];
+  players: [Player, Player];
 };
 
 export type {
@@ -70,6 +74,7 @@ export type {
   Mission,
   Missions,
   MatchStatus,
+  PlayerNumber,
   PlayerData,
   Player,
   GameData,

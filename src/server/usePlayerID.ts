@@ -8,6 +8,8 @@ const playersRef = collection(db, "players");
 //player登録
 async function registerPlayer(): Promise<string> {
   const newPlayer: PlayerData = {
+    id: "",
+    num: -1,
     name: "No name",
     idEnemy: "",
     idGame: "",

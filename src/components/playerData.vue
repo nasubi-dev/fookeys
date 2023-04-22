@@ -10,6 +10,9 @@ const playerStore = usePlayerStore();
 					<p class="text-sm font-medium text-gray-900 truncate">id:{{ playerStore.id }}</p>
 				</li>
 				<li class="py-4">
+					<p class="text-sm font-medium text-gray-900 truncate">idEnemy:{{ playerStore.idEnemy }}</p>
+				</li>
+				<li class="py-4">
 					<p class="text-sm font-medium text-gray-900 truncate">idGame:{{ playerStore.idGame }}</p>
 				</li>
 				<li class="py-4">

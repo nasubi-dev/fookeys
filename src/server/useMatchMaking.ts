@@ -124,6 +124,7 @@ async function addGame(player1: string, player2: string): Promise<string> {
     turn: 1,
     players: [
       {
+        id: player1,
         name: player1Data.name,
         character: player1Data.character,
         gift: player1Data.gift,
@@ -133,6 +134,7 @@ async function addGame(player1: string, player2: string): Promise<string> {
         status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
       },
       {
+        id: player2,
         name: player2Data.name,
         character: player2Data.character,
         gift: player2Data.gift,

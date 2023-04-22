@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 defineProps<{
 	cards: {
 		name: string;
@@ -8,8 +7,6 @@ defineProps<{
 		action: () => void;
 	}[];
 }>();
-
-
 </script>
 
 <template>

@@ -1,8 +1,9 @@
 import { createPinia, defineStore } from "pinia";
-import type { MatchStatus, Player, PlayerData,GameData } from "@/types";
+import type { MatchStatus, Player, PlayerData, PlayerNumber, GameData } from "@/types";
 
 class PlayerDataStore implements PlayerData {
   id = "";
+  num: PlayerNumber = -1;
   name = "";
   idEnemy = "";
   idGame = "";
@@ -17,8 +18,9 @@ const usePlayerStore = defineStore("playerData", {
 
 class GameDataStore implements GameData {
   turn = 1;
-  players:[Player,Player] = [
+  players: [Player, Player] = [
     {
+      id: "",
       name: "",
       character: 0,
       gift: 0,
@@ -28,6 +30,7 @@ class GameDataStore implements GameData {
       status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
     },
     {
+      id: "",
       name: "",
       character: 0,
       gift: 0,
