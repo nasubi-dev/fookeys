@@ -15,6 +15,12 @@ const props = defineProps<{
         <p class="text-sm font-medium text-gray-900 truncate">name:{{ gameStore.players[props.id].name }}</p>
       </li>
       <li class="py-4">
+        <p class="text-sm font-medium text-gray-900 truncate">character:{{ gameStore.players[props.id].character }}</p>
+      </li>
+      <li class="py-4">
+        <p class="text-sm font-medium text-gray-900 truncate">gift:{{ gameStore.players[props.id].gift }}</p>
+      </li>
+      <li class="py-4">
         <p class="text-sm font-medium text-gray-900 truncate">HP❤:{{ gameStore.players[props.id].status.hp }}</p>
       </li>
       <li class="py-4">

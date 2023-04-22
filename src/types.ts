@@ -36,11 +36,10 @@ type Mission = {
 type Missions = Mission[];
 
 type MatchStatus = "matching" | "nothing" | "waiting";
-//-1 = 値なし, 0 = player1, 1 = player2
-type PlayerNumber = -1 | 0 | 1;
+//0 = player1, 1 = player2
 type PlayerData = {
   id: string;
-  num: PlayerNumber;
+  num: 0 | 1;
   name: string;
   idEnemy: string;
   idGame: string;
@@ -74,7 +73,6 @@ export type {
   Mission,
   Missions,
   MatchStatus,
-  PlayerNumber,
   PlayerData,
   Player,
   GameData,

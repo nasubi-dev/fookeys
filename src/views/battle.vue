@@ -3,7 +3,6 @@ import { onMounted } from "vue";
 import { getPlayerData } from "@/server/useMatchMaking";
 import { useBattle } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
-import PlayerData from "@/components/playerData.vue";
 import Status from "@/components/status.vue";
 
 const playerStore = usePlayerStore();
@@ -21,7 +20,7 @@ onMounted(async () => {
   const gameData = await useBattle(playerStore.idGame);
   gameStore.turn = gameData.turn; //!まとめ方がわからない
   gameStore.players = gameData.players;
-  playerStore.id !== gameStore.players[0].id ? (playerStore.num = 0) : (playerStore.num = 1);
+  playerStore.id !== gameStore.players[0].id ? (playerStore.num = 1) : (playerStore.num = 0);
 });
 </script>
 
@@ -30,7 +29,6 @@ onMounted(async () => {
     <h1>Battle</h1>
     {{ playerStore.num }}
     <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
-    <Status :id="0" />
-    <PlayerData />
+    <Status :id="playerStore.num" />
   </div>
 </template>

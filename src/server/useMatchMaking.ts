@@ -38,7 +38,7 @@ async function findWaitingPlayer(playerID: string): Promise<string | undefined> 
 async function updatePlayerField(
   playerID: string,
   playerUpdateField: keyof PlayerData,
-  field: string | MatchStatus
+  field: string | MatchStatus | number
 ): Promise<void> {
   try {
     await updateDoc(doc(playersRef, playerID), { [playerUpdateField]: field });
@@ -163,4 +163,4 @@ async function addGame(player1: string, player2: string): Promise<string> {
 //gameを削除する
 async function deleteGame(gameID: string): Promise<void> {}
 
-export { getPlayerData, startMatchmaking };
+export { getPlayerData, updatePlayerField, startMatchmaking };

@@ -1,9 +1,9 @@
 import { createPinia, defineStore } from "pinia";
-import type { MatchStatus, Player, PlayerData, PlayerNumber, GameData } from "@/types";
+import type { MatchStatus, Player, PlayerData, GameData } from "@/types";
 
 class PlayerDataStore implements PlayerData {
   id = "";
-  num: PlayerNumber = -1;
+  num: 0 | 1 = 0;
   name = "";
   idEnemy = "";
   idGame = "";
