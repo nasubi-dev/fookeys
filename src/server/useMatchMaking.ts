@@ -8,13 +8,13 @@ const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 
 //player情報の取得
-async function getPlayerData(playerID: string): Promise<{ id: string; data: PlayerData }> {
+async function getPlayerData(playerID: string): Promise<PlayerData> {
   const docSnap = await getDoc(doc(playersRef, playerID));
   if (docSnap.exists()) {
-    return { id: docSnap.id, data: docSnap.data() as PlayerData };
+    return docSnap.data() as PlayerData;
   } else {
     console.log("No such document!");
-    return { id: "", data: docSnap.data() as PlayerData }; //!修正します5日
+    return docSnap.data() as PlayerData; //!修正します5日
   }
 }
 
@@ -118,8 +118,8 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
 
 //gameを作成する
 async function addGame(player1: string, player2: string): Promise<string> {
-  const player1Data = (await getPlayerData(player1)).data;
-  const player2Data = (await getPlayerData(player2)).data;
+  const player1Data = await getPlayerData(player1);
+  const player2Data = await getPlayerData(player2);
   const newGame: GameData = {
     turn: 1,
     players: [
