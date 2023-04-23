@@ -1,34 +1,47 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { getPlayerData } from "@/server/useMatchMaking";
-import { useBattle } from "@/server/useBattle";
+import { useBattle, setHand } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
 import type { Hand } from "@/types";
 import Status from "@/components/status.vue";
 import HandCom from "@/components/hand.vue";
 
+//Collectionの参照
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
 
+const keep = ref(<string>"");
+const hand = ref(<Hand>[]);
+
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
-  const keep = playerStore.id;
-  (playerStore.$state = await getPlayerData(playerStore.id)),
-    (playerStore.id = keep),
-    (gameStore.$state = await useBattle(playerStore.idGame)),
-    playerStore.id == gameStore.players[0].id ? (playerStore.num = 0) : (playerStore.num = 1);
-  //animation?????
+  keep.value = playerStore.id;
+  playerStore.$state = await getPlayerData(playerStore.id);
+  playerStore.id = keep.value;
+  gameStore.$state = await useBattle(playerStore.idGame);
+  playerStore.id == gameStore.players[0].id ? (playerStore.num = 0) : (playerStore.num = 1);
 });
+async function gameStart() {
+  hand.value = await setHand(playerStore.idGame, playerStore.num);
+}
 </script>
 
 <template>
-  <div>
-    <div class="flex flex-col items-center justify-center h-screen">
-      <h1>Battle</h1>
-      {{ playerStore.num + 1 }}
-      <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
-      <Status :id="playerStore.num" />
+  <div class="flex flex-col items-center justify-center h-screen">
+    <h1>Battle</h1>
+    <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
+    {{ "Player" + (playerStore.num + 1) }}
+    <button @click="gameStart">gameStart</button>
+    <div class="flex flex-1">
+      <div class="w-1/3 flex items-center justify-center">
+        <h1>Status</h1>
+        <Status :id="playerStore.num" />
+      </div>
+      <div class="w-1/3 flex items-center justify-center">
+        <h1>Hand</h1>
+        <HandCom :hand="hand" />
+      </div>
     </div>
-    <HandCom :hand="gameStore.players[playerStore.num].hand" />
   </div>
 </template>

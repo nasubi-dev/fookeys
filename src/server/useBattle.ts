@@ -1,7 +1,7 @@
 import { reactive, ref } from "vue";
 import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-import type { GameData, Card } from "@/types";
+import type { GameData, Card, Hand } from "@/types";
 
 //Collectionの参照
 const gamesRef = collection(db, "games");
@@ -26,13 +26,15 @@ async function drawCard(): Promise<Card> {
 }
 
 //cardをHandに6枚セットする
-async function setHand(gameData: GameData): Promise<void> {
+export async function setHand(gameID: string, playerID: number): Promise<Hand> {
+  const gameData = await getGameData(gameID);
   for (let i = 0; i < 6; i++) {
-    gameData.players[0].hand.push(await drawCard());
-    gameData.players[1].hand.push(await drawCard());
+    const card = await drawCard();
+    gameData.players[playerID].hand.push(card);
+    updateDoc(doc(gamesRef, gameID), { players: gameData.players });
   }
-  console.log("player1 hand: ", gameData.players[0].hand);
-  console.log("player2 hand: ", gameData.players[1].hand);
+  console.log("player", playerID, " hand: ", gameData.players[playerID].hand);
+  return gameData.players[playerID].hand;
 }
 //!すべてのフェーズ管理
 export async function useBattle(gameID: string): Promise<GameData> {
@@ -45,7 +47,6 @@ export async function useBattle(gameID: string): Promise<GameData> {
   //     console.log(card);
   //   });
   // });
-  setHand(gameData);
   return gameData as GameData;
 }
 //!export5日まとめる

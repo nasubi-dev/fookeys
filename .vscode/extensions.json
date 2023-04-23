@@ -3,6 +3,7 @@
     "vue.vscode-typescript-vue-plugin",
     "esbenp.prettier-vscode",
     "aaron-bond.better-comments",
-    "vue.volar"
+    "vue.volar",
+    "bradlc.vscode-tailwindcss"
   ]
 }

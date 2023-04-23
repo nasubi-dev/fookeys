@@ -1,17 +1,31 @@
 <script setup lang="ts">
 import type { Hand } from "@/types";
 
-const props = defineProps<{
+defineProps<{
   hand: Hand;
 }>();
 </script>
 
 <template>
   <div>
-    <ul class="divide-x divide-gray-200">
-      <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">{{ props.hand[0] }}</p>
-      </li>
+    <ul class="text-xs">
+      <div v-for="card in hand" :key="card.id">
+        <li>
+          ID:{{ card.id }} name:{{ card.name }} company:{{ card.company }} waste:{{ card.waste }} hungry:{{
+            card.hungry
+          }}
+          <div v-if="card.pow">
+            {{ "pow:" + card.pow }}
+          </div>
+          <div v-if="card.def">
+            {{ "def:" + card.def }}
+          </div>
+          <div v-if="card.tech">
+            {{ "tech:" + card.tech }}
+          </div>
+          <div>------</div>
+        </li>
+      </div>
     </ul>
   </div>
 </template>
