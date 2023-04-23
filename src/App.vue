@@ -10,8 +10,6 @@ const PlayerStore = usePlayerStore();
 //入場したらPlayerData型としてIDが保管される
 onMounted(async () => {
   PlayerStore.id = await registerPlayer();
-  console.log(PlayerStore.id);
-  
   console.log("マウントされました");
 });
 

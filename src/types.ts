@@ -1,4 +1,5 @@
 type Card = {
+  id: number;
   name: string;
   waste: number;
   hungry: number;
@@ -10,6 +11,7 @@ type Card = {
   special?: () => void;
 };
 type Deck = Card[];
+type Hand = Card[];
 
 type Character = {
   name: string;
@@ -66,6 +68,7 @@ type GameData = {
 export type {
   Card,
   Deck,
+  Hand,
   Character,
   Characters,
   Gift,

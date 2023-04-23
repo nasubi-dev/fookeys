@@ -93,7 +93,7 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
     await watchMatchField(ownPlayerID);
     return "";
   } else {
-    const idGame = await addGame(ownPlayerID, waitingPlayerID);
+    const idGame = await addGame(waitingPlayerID, ownPlayerID);
     //プレイヤーの情報を更新する
     await Promise.all([
       updatePlayerFields(waitingPlayerID, [

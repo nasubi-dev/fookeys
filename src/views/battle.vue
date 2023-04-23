@@ -3,7 +3,9 @@ import { onMounted } from "vue";
 import { getPlayerData } from "@/server/useMatchMaking";
 import { useBattle } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
+import type { Hand } from "@/types";
 import Status from "@/components/status.vue";
+import HandCom from "@/components/hand.vue";
 
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
@@ -14,19 +16,19 @@ onMounted(async () => {
   (playerStore.$state = await getPlayerData(playerStore.id)),
     (playerStore.id = keep),
     (gameStore.$state = await useBattle(playerStore.idGame)),
-    playerStore.id == gameStore.players[0].id ? (playerStore.num = 1) : (playerStore.num = 0);
+    playerStore.id == gameStore.players[0].id ? (playerStore.num = 0) : (playerStore.num = 1);
   //animation?????
 });
 </script>
 
 <template>
   <div>
-  <div class="flex flex-col items-center justify-center h-screen">
-    <h1>Battle</h1>
-    {{ playerStore.num + 1 }}
-    <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
-    <Status :id="playerStore.num" />
+    <div class="flex flex-col items-center justify-center h-screen">
+      <h1>Battle</h1>
+      {{ playerStore.num + 1 }}
+      <p class="text-sm font-medium text-gray-900 truncate">turn:{{ gameStore.turn }}</p>
+      <Status :id="playerStore.num" />
+    </div>
+    <HandCom :hand="gameStore.players[playerStore.num].hand" />
   </div>
-  
-</div>
 </template>
