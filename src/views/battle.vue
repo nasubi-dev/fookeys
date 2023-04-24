@@ -6,12 +6,13 @@ import { usePlayerStore, useGameStore } from "@/store";
 import type { Hand } from "@/types";
 import Status from "@/components/status.vue";
 import HandCom from "@/components/hand.vue";
+import Mission from "@/components/mission.vue"
 
 //Collectionの参照
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
 
-const keep = ref(<string>"");
+const keep = ref("");
 const hand = ref(<Hand>[]);
 
 //入場したらPlayer型としてIDが保管される
@@ -22,8 +23,10 @@ onMounted(async () => {
   gameStore.$state = await useBattle(playerStore.idGame);
   playerStore.id == gameStore.players[0].id ? (playerStore.num = 0) : (playerStore.num = 1);
 });
+
 async function gameStart() {
   hand.value = await setHand(playerStore.idGame, playerStore.num);
+  //setMissionは最終的にturn開始時の関数に統合する
 }
 </script>
 
@@ -41,6 +44,9 @@ async function gameStart() {
       <div class="w-1/3 flex items-center justify-center">
         <h1>Hand</h1>
         <HandCom :hand="hand" />
+      </div>
+      <div class="w-1/3 flex items-center justify-center">
+        <h1>Mission</h1>
       </div>
     </div>
   </div>

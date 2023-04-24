@@ -20,29 +20,29 @@ async function getPlayerData(playerID: string): Promise<PlayerData> {
 
 //マッチング待機中のplayerを検索する
 async function findWaitingPlayer(playerID: string): Promise<string | undefined> {
-  const players = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
-  console.log("Found players: ", players);
-  if (players.length < 2) {
+  const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
+  console.log("Found players: ", waitingPlayers);
+  if (waitingPlayers.length < 2) {
     console.log("Not enough players to start a game");
     return undefined;
   }
   // 自分を除外する
-  players.splice(players.indexOf(playerID), 1);
+  waitingPlayers.splice(waitingPlayers.indexOf(playerID), 1);
   // ランダムに選択する
-  const player = players[Math.floor(Math.random() * players.length)];
-  console.log("Found player: ", player);
-  return player;
+  const waitingPlayer = waitingPlayers[Math.floor(Math.random() * waitingPlayers.length)];
+  console.log("Found player: ", waitingPlayer);
+  return waitingPlayer;
 }
 
 //playerのフィールド名を更新する
 async function updatePlayerField(
   playerID: string,
-  playerUpdateField: keyof PlayerData,
-  field: string | MatchStatus | number
+  field: keyof PlayerData,
+  value: string | MatchStatus | number
 ): Promise<void> {
   try {
-    await updateDoc(doc(playersRef, playerID), { [playerUpdateField]: field });
-    console.log(playerUpdateField, "updated: ", field, " for player: ", playerID);
+    await updateDoc(doc(playersRef, playerID), { [field]: value });
+    console.log(field, "updated: ", value, " for player: ", playerID);
   } catch (error) {
     console.error("Error updating match status: ", error);
   }

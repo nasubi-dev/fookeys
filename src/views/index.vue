@@ -6,11 +6,8 @@ const playerStore = usePlayerStore();
 
 //ユーザー名を変更する ユーザー名が空の場合はNo name
 async function updateName() {
-  if (playerStore.name === "") {
-    playerStore.name = await updatePlayerName(playerStore.id, "No name");
-  } else {
-    playerStore.name = await updatePlayerName(playerStore.id, playerStore.name);
-  }
+  if (playerStore.name === "") playerStore.name = await updatePlayerName(playerStore.id, "No name");
+  else playerStore.name = await updatePlayerName(playerStore.id, playerStore.name);
 }
 </script>
 

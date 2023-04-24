@@ -36,6 +36,10 @@ export async function setHand(gameID: string, playerID: number): Promise<Hand> {
   console.log("player", playerID, " hand: ", gameData.players[playerID].hand);
   return gameData.players[playerID].hand;
 }
+
+//missionを3つセットする
+
+
 //!すべてのフェーズ管理
 export async function useBattle(gameID: string): Promise<GameData> {
   const gameData = await getGameData(gameID);
