@@ -15,10 +15,10 @@ onMounted(async () => {
 
 //アプリが閉じられたらユーザーIDを削除する
 window.onbeforeunload = async () => {
-	window.onbeforeunload = () => { };
-	console.log('アプリが終了しました')
-	await deletePlayer(PlayerStore.id);
-}
+  window.onbeforeunload = () => {};
+  console.log("アプリが終了しました");
+  await deletePlayer(PlayerStore.id);
+};
 </script>
 
 <template>

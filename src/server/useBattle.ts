@@ -1,8 +1,7 @@
-import { reactive, ref } from "vue";
-import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-import { getPlayerData } from "./useMatchMaking";
-import type { GameData, Card, Hand, PlayerData } from "@/types";
+import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { getPlayerData } from "./usePlayerID";
+import type { GameData, Card, Hand } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
@@ -14,7 +13,7 @@ async function getGameData(GameID: string): Promise<GameData> {
   const docSnap = await getDoc(doc(gamesRef, GameID));
   if (docSnap.exists()) {
     console.log("GameDocument data:", docSnap.data());
-    
+
     return docSnap.data() as GameData;
   } else {
     console.log("No such GameDocument!");
@@ -35,13 +34,12 @@ export async function setHand(playerID: string): Promise<Hand> {
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
     player.hand.push(card);
-    updateDoc(doc(playersRef,playerID), { hand: player.hand });
+    updateDoc(doc(playersRef, playerID), { hand: player.hand });
   }
   return player.hand;
 }
 
 //missionを3つセットする
-
 
 //!すべてのフェーズ管理
 export async function useBattle(gameID: string): Promise<GameData> {

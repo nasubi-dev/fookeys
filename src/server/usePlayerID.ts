@@ -1,5 +1,5 @@
-import { collection, doc, addDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import { collection, doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import type { PlayerData, Character, Gift } from "@/types";
 
 //Collectionの参照
@@ -10,7 +10,6 @@ const giftsRef = collection(db, "gifts");
 //player登録
 async function registerPlayer(): Promise<string> {
   const newPlayer: PlayerData = {
-    id: "",
     sign: 0,
     name: "No name",
     idEnemy: "",
@@ -29,7 +28,7 @@ async function registerPlayer(): Promise<string> {
     const playerID = docRef.id;
     return playerID;
   } catch (error) {
-    console.error("Error adding document: ", error);
+    console.error("Error adding Your ID: ", error);
     return "";
   }
 }
@@ -56,6 +55,17 @@ async function updatePlayerName(playerID: string, newName: string): Promise<stri
   }
 }
 
+//player情報の取得
+async function getPlayerData(playerID: string): Promise<PlayerData> {
+  const docSnap = await getDoc(doc(playersRef, playerID));
+  if (docSnap.exists()) {
+    return docSnap.data() as PlayerData;
+  } else {
+    console.log("No such PlayerDocument!");
+    return docSnap.data() as PlayerData; //!修正します5日
+  }
+}
+
 //characterの取得
 async function getCharacterData(): Promise<Character[]> {
   return (await getDocs(charactersRef)).docs.map((doc) => doc.data()) as Character[];
@@ -66,4 +76,4 @@ async function getGiftData(): Promise<Gift[]> {
   return (await getDocs(giftsRef)).docs.map((doc) => doc.data()) as Gift[];
 }
 
-export { registerPlayer, deletePlayer, updatePlayerName, getCharacterData, getGiftData };
+export { registerPlayer, deletePlayer, updatePlayerName, getPlayerData, getCharacterData, getGiftData };

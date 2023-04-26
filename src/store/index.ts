@@ -23,7 +23,7 @@ const usePlayerStore = defineStore("playerData", {
 class GameDataStore implements GameData {
   turn = 1;
   players: string[] = [];
-  missions:Mission[] = [];
+  missions: Mission[] = [];
 }
 
 const useGameStore = defineStore("gameData", {

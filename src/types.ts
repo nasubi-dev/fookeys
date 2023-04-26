@@ -36,7 +36,6 @@ type Mission = {
 
 type MatchStatus = "matching" | "nothing" | "waiting";
 type PlayerData = {
-  id: string;
   idEnemy: string;
   idGame: string;
   name: string;
@@ -48,22 +47,12 @@ type PlayerData = {
   hand: Card[];
   board: Card[];
   status: { hp: number; hungry: number; contribution: number; priority: number };
-}
+};
 
 type GameData = {
   turn: number;
   players: string[];
-  missions:Mission[];
+  missions: Mission[];
 };
 
-export type {
-  Card,
-  Deck,
-  Hand,
-  Character,
-  Gift,
-  Mission,
-  MatchStatus,
-  PlayerData,
-  GameData,
-};
+export type { Card, Deck, Hand, Character, Gift, Mission, MatchStatus, PlayerData, GameData };

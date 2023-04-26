@@ -1,22 +1,12 @@
-import { collection, doc, addDoc, getDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-import { router } from "@/router";
+import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
+import { getPlayerData } from "./usePlayerID";
 import type { GameData, MatchStatus, PlayerData } from "@/types";
+import { router } from "@/router";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
-
-//player情報の取得
-async function getPlayerData(playerID: string): Promise<PlayerData> {
-  const docSnap = await getDoc(doc(playersRef, playerID));
-  if (docSnap.exists()) {
-    return docSnap.data() as PlayerData;
-  } else {
-    console.log("No such document!");
-    return docSnap.data() as PlayerData; //!修正します5日
-  }
-}
 
 //マッチング待機中のplayerを検索する
 async function findWaitingPlayer(playerID: string): Promise<string | undefined> {
@@ -130,7 +120,7 @@ async function addGame(player1: string, player2: string): Promise<string> {
     if (docRef.id) {
       return docRef.id;
     } else {
-      console.log("No such games document!");
+      console.log("No such gameDocument!");
     }
   } catch (error) {
     console.error("Error adding games document: ", error);

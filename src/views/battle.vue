@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getPlayerData } from "@/server/useMatchMaking";
+import { getPlayerData } from "@/server/usePlayerID";
 import { useBattle, setHand } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
 import type { Hand } from "@/types";
@@ -32,7 +32,6 @@ onMounted(async () => {
 async function gameStart() {
   hand.value = await setHand(playerStore.id);
   console.log("hand: ", hand.value);
-  
 }
 </script>
 
