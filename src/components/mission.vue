@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Missions } from "@/types";
+import type { Mission } from "@/types";
 
 defineProps<{
-	missions: Missions;
+	missions: Mission[];
 }>();
 </script>
 

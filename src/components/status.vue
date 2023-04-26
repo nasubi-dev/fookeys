@@ -1,42 +1,31 @@
 <script setup lang="ts">
-import { useGameStore } from "@/store";
-
-const gameStore = useGameStore();
-
-const props = defineProps<{
-  id: 0 | 1;
-}>();
+import { usePlayerStore } from "@/store";
+const playerStore = usePlayerStore();
 </script>
 
 <template>
   <div class="flex justify-end">
     <ul class="divide-x divide-gray-200">
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">name:{{ gameStore.players[props.id].name }}</p>
+        <p class="text-sm font-medium text-gray-900 truncate">name:{{ playerStore.name }}</p>
       </li>
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">character:{{ gameStore.players[props.id].character }}</p>
+        <p class="text-sm font-medium text-gray-900 truncate">character:{{ playerStore.character }}</p>
       </li>
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">gift:{{ gameStore.players[props.id].gift }}</p>
+        <p class="text-sm font-medium text-gray-900 truncate">gift:{{ playerStore.gift }}</p>
       </li>
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">HP❤:{{ gameStore.players[props.id].status.hp }}</p>
+        <p class="text-sm font-medium text-gray-900 truncate">HP❤:{{ playerStore.status.hp }}</p>
       </li>
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">
-          hungry🍖:{{ gameStore.players[props.id].status.hungry }}
-        </p>
+        <p class="text-sm font-medium text-gray-900 truncate">hungry🍖:{{ playerStore.status.hungry }}</p>
       </li>
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">
-          contribution🪙:{{ gameStore.players[props.id].status.contribution }}
-        </p>
+        <p class="text-sm font-medium text-gray-900 truncate">contribution🪙:{{ playerStore.status.contribution }}</p>
       </li>
       <li class="py-4">
-        <p class="text-sm font-medium text-gray-900 truncate">
-          priority🦶:{{ gameStore.players[props.id].status.priority }}
-        </p>
+        <p class="text-sm font-medium text-gray-900 truncate">priority🦶:{{ playerStore.status.priority }}</p>
       </li>
     </ul>
   </div>

@@ -12,21 +12,27 @@ import Mission from "@/components/mission.vue";
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
 
-const keep = ref("");
 const hand = ref(<Hand>[]);
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
-  keep.value = playerStore.id;
-  playerStore.$state = await getPlayerData(playerStore.id);
-  playerStore.id = keep.value;
+  playerStore.idGame = (await getPlayerData(playerStore.id)).idGame;
   gameStore.$state = await useBattle(playerStore.idGame);
-  playerStore.id == gameStore.players[0].id ? (playerStore.sign = 0) : (playerStore.sign = 1);
+  if (playerStore.id == gameStore.players[0]) {
+    playerStore.sign = 0;
+    playerStore.idEnemy = gameStore.players[1];
+  } else {
+    playerStore.sign = 1;
+    playerStore.idEnemy = gameStore.players[0];
+  }
+  console.log("playerStore", playerStore.$state);
 });
 
+//この関数は最終的にonMountedに統合する
 async function gameStart() {
-  hand.value = await setHand(playerStore.idGame, playerStore.sign);
-  //setMissionは最終的にturn開始時の関数に統合する
+  hand.value = await setHand(playerStore.id);
+  console.log("hand: ", hand.value);
+  
 }
 </script>
 

@@ -20,7 +20,6 @@ type Character = {
   company: string;
   action: () => void;
 };
-type Characters = Character[];
 
 type Gift = {
   name: string;
@@ -28,29 +27,21 @@ type Gift = {
   image: string;
   action: () => void;
 };
-type Gifts = Gift[];
 
 type Mission = {
   name: string;
   description: string;
   action: () => void;
 };
-type Missions = Mission[];
 
 type MatchStatus = "matching" | "nothing" | "waiting";
 type PlayerData = {
   id: string;
-  sign: 0 | 1;
-  name: string;
   idEnemy: string;
   idGame: string;
-  match: MatchStatus;
-  character: number;
-  gift: number;
-};
-interface Player {
-  id: string;
   name: string;
+  sign: 0 | 1;
+  match: MatchStatus;
   character: number;
   gift: number;
   check: boolean;
@@ -61,7 +52,8 @@ interface Player {
 
 type GameData = {
   turn: number;
-  players: [Player, Player];
+  players: string[];
+  missions:Mission[];
 };
 
 export type {
@@ -69,13 +61,9 @@ export type {
   Deck,
   Hand,
   Character,
-  Characters,
   Gift,
-  Gifts,
   Mission,
-  Missions,
   MatchStatus,
   PlayerData,
-  Player,
   GameData,
 };

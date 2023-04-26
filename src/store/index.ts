@@ -1,5 +1,5 @@
 import { createPinia, defineStore } from "pinia";
-import type { MatchStatus, Player, PlayerData, GameData } from "@/types";
+import type { MatchStatus, PlayerData, GameData, Mission } from "@/types";
 
 class PlayerDataStore implements PlayerData {
   id = "";
@@ -10,6 +10,10 @@ class PlayerDataStore implements PlayerData {
   match: MatchStatus = "nothing";
   character = 0;
   gift = 0;
+  check = false;
+  hand = [];
+  board = [];
+  status = { hp: 0, hungry: 0, contribution: 0, priority: 0 };
 }
 
 const usePlayerStore = defineStore("playerData", {
@@ -18,28 +22,8 @@ const usePlayerStore = defineStore("playerData", {
 
 class GameDataStore implements GameData {
   turn = 1;
-  players: [Player, Player] = [
-    {
-      id: "",
-      name: "",
-      character: 0,
-      gift: 0,
-      check: false,
-      hand: [],
-      board: [],
-      status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
-    },
-    {
-      id: "",
-      name: "",
-      character: 0,
-      gift: 0,
-      check: false,
-      hand: [],
-      board: [],
-      status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
-    },
-  ];
+  players: string[] = [];
+  missions:Mission[] = [];
 }
 
 const useGameStore = defineStore("gameData", {

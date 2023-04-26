@@ -1,9 +1,11 @@
-import { collection, doc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, addDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
-import type { PlayerData } from "@/types";
+import type { PlayerData, Character, Gift } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
+const charactersRef = collection(db, "characters");
+const giftsRef = collection(db, "gifts");
 
 //player登録
 async function registerPlayer(): Promise<string> {
@@ -16,6 +18,10 @@ async function registerPlayer(): Promise<string> {
     match: "nothing",
     character: 0,
     gift: 0,
+    check: false,
+    hand: [],
+    board: [],
+    status: { hp: 0, hungry: 0, contribution: 0, priority: 0 },
   };
   try {
     const docRef = await addDoc(playersRef, newPlayer);
@@ -50,4 +56,14 @@ async function updatePlayerName(playerID: string, newName: string): Promise<stri
   }
 }
 
-export { registerPlayer, deletePlayer, updatePlayerName };
+//characterの取得
+async function getCharacterData(): Promise<Character[]> {
+  return (await getDocs(charactersRef)).docs.map((doc) => doc.data()) as Character[];
+}
+
+//giftの取得
+async function getGiftData(): Promise<Gift[]> {
+  return (await getDocs(giftsRef)).docs.map((doc) => doc.data()) as Gift[];
+}
+
+export { registerPlayer, deletePlayer, updatePlayerName, getCharacterData, getGiftData };

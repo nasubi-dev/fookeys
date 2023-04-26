@@ -118,32 +118,10 @@ async function startMatchmaking(ownPlayerID: string): Promise<string> {
 
 //gameを作成する
 async function addGame(player1: string, player2: string): Promise<string> {
-  const player1Data = await getPlayerData(player1);
-  const player2Data = await getPlayerData(player2);
   const newGame: GameData = {
     turn: 1,
-    players: [
-      {
-        id: player1,
-        name: player1Data.name,
-        character: player1Data.character,
-        gift: player1Data.gift,
-        check: false,
-        hand: [],
-        board: [],
-        status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
-      },
-      {
-        id: player2,
-        name: player2Data.name,
-        character: player2Data.character,
-        gift: player2Data.gift,
-        check: false,
-        hand: [],
-        board: [],
-        status: { hp: 600, hungry: 0, contribution: 0, priority: 0 },
-      },
-    ],
+    players: [player1, player2],
+    missions: [],
   };
 
   try {
