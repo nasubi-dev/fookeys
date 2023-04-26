@@ -9,7 +9,7 @@ const playersRef = collection(db, "players");
 async function registerPlayer(): Promise<string> {
   const newPlayer: PlayerData = {
     id: "",
-    num: 0,
+    sign: false,
     name: "No name",
     idEnemy: "",
     idGame: "",

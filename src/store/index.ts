@@ -3,7 +3,7 @@ import type { MatchStatus, Player, PlayerData, GameData } from "@/types";
 
 class PlayerDataStore implements PlayerData {
   id = "";
-  num: 0 | 1 = 0;
+  sign = false;
   name = "";
   idEnemy = "";
   idGame = "";
