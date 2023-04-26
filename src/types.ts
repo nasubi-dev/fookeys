@@ -40,11 +40,7 @@ type Missions = Mission[];
 type MatchStatus = "matching" | "nothing" | "waiting";
 type PlayerData = {
   id: string;
-<<<<<<< HEAD
   sign: 0 | 1;
-=======
-  sign: boolean;
->>>>>>> 7656693697aedb701353660336f5b54f30a9920d
   name: string;
   idEnemy: string;
   idGame: string;
