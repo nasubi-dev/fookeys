@@ -1,22 +1,22 @@
 import { createPinia, defineStore } from "pinia";
-import type { MatchStatus, PlayerData, GameData, Mission } from "@/types";
+import type { MatchStatus, PlayerData, GameData, Card, Mission } from "@/types";
 
 class PlayerDataStore implements PlayerData {
   id = "";
-  sign: 0 | 1 = 0;
-  name = "";
   idEnemy = "";
   idGame = "";
+  name = "";
   match: MatchStatus = "nothing";
+  check = false;
+  sign: 0 | 1 = 0;
   character = 0;
   gift = 0;
-  check = false;
-  hand = [];
-  board = [];
+  hand: Card[] = [];
+  board: Card[] = [];
   status = { hp: 0, hungry: 0, contribution: 0, priority: 0 };
 }
 
-const usePlayerStore = defineStore("playerData", {
+const usePlayerStore = defineStore<string, PlayerDataStore>("playerData", {
   state: () => new PlayerDataStore(),
 });
 

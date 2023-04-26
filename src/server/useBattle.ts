@@ -1,9 +1,10 @@
 import { db } from "./firebase";
 import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { getPlayerData } from "./usePlayerID";
-import type { GameData, Card, Hand } from "@/types";
+import type { GameData, Card, Mission } from "@/types";
 
 //Collectionの参照
+const missionsRef = collection(db, "missions");
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 const deckRef = collection(db, "deck");
@@ -29,17 +30,29 @@ async function drawCard(): Promise<Card> {
 }
 
 //cardをHandに6枚セットする
-export async function setHand(playerID: string): Promise<Hand> {
+export async function setHand(playerID: string): Promise<Card[]> {
   const player = await getPlayerData(playerID);
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
     player.hand.push(card);
+    //updateDocはonSnapShotを使うようになったら消す
     updateDoc(doc(playersRef, playerID), { hand: player.hand });
   }
   return player.hand;
 }
 
 //missionを3つセットする
+export async function setMissions(gameID: string): Promise<Mission[]> {
+  const gameData = await getGameData(gameID);
+  const missions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
+  for (let i = 0; i < 3; i++) {
+    const selectMission = missions[Math.floor(Math.random() * missions.length)];
+    gameData.missions.push(selectMission as Mission);
+    //updateDocはonSnapShotを使うようになったら消す 特にmissionは共有の情報なので
+    updateDoc(doc(gamesRef, gameID), { missions: gameData.missions });
+  }
+  return gameData.missions;
+}
 
 //!すべてのフェーズ管理
 export async function useBattle(gameID: string): Promise<GameData> {

@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { getPlayerData } from "@/server/usePlayerID";
-import { useBattle, setHand } from "@/server/useBattle";
+import { useBattle, setHand, setMissions } from "@/server/useBattle";
 import { usePlayerStore, useGameStore } from "@/store";
-import type { Hand } from "@/types";
 import Status from "@/components/status.vue";
-import HandCom from "@/components/hand.vue";
+import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
+import { storeToRefs } from "pinia";
 
 //Collectionの参照
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
-
-const hand = ref(<Hand>[]);
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -26,12 +24,17 @@ onMounted(async () => {
     playerStore.idEnemy = gameStore.players[0];
   }
   console.log("playerStore", playerStore.$state);
+  console.log("gameStore", gameStore.$state);
 });
 
 //この関数は最終的にonMountedに統合する
 async function gameStart() {
-  hand.value = await setHand(playerStore.id);
-  console.log("hand: ", hand.value);
+  playerStore.hand = await setHand(playerStore.id);
+  console.log("hand: ", playerStore.hand);
+  console.log(gameStore.$state);
+  
+  gameStore.missions = await setMissions(playerStore.idGame);
+  console.log("missions: ", gameStore.missions);
 }
 </script>
 
@@ -48,10 +51,11 @@ async function gameStart() {
       </div>
       <div class="w-1/3 flex items-center justify-center">
         <h1>Hand</h1>
-        <HandCom :hand="hand" />
+        <Hand :hand="playerStore.hand" />
       </div>
       <div class="w-1/3 flex items-center justify-center">
         <h1>Mission</h1>
+        <Mission :missions="gameStore.missions" />
       </div>
     </div>
   </div>

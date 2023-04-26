@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Hand } from "@/types";
+import type { Card } from "@/types";
 
 defineProps<{
-  hand: Hand;
+  hand: Card[];
 }>();
 </script>
 

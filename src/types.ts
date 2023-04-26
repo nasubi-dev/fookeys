@@ -10,8 +10,6 @@ type Card = {
   tech?: number;
   special?: () => void;
 };
-type Deck = Card[];
-type Hand = Card[];
 
 type Character = {
   name: string;
@@ -39,11 +37,11 @@ type PlayerData = {
   idEnemy: string;
   idGame: string;
   name: string;
-  sign: 0 | 1;
   match: MatchStatus;
+  check: boolean;
+  sign: 0 | 1;
   character: number;
   gift: number;
-  check: boolean;
   hand: Card[];
   board: Card[];
   status: { hp: number; hungry: number; contribution: number; priority: number };
@@ -55,4 +53,4 @@ type GameData = {
   missions: Mission[];
 };
 
-export type { Card, Deck, Hand, Character, Gift, Mission, MatchStatus, PlayerData, GameData };
+export type { Card, Character, Gift, Mission, MatchStatus, PlayerData, GameData };
