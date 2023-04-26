@@ -41,7 +41,7 @@ type MatchStatus = "matching" | "nothing" | "waiting";
 //0 = player1, 1 = player2
 type PlayerData = {
   id: string;
-  num: 0 | 1;
+  sign: 0 | 1;
   name: string;
   idEnemy: string;
   idGame: string;
