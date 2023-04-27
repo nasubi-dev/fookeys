@@ -34,5 +34,17 @@ const useGameStore = defineStore("gameData", {
   state: () => new GameDataStore(),
 });
 
+const useTestStore = defineStore("test", {
+  state: () => ({
+    test: "test",
+  }),
+  actions: {
+    updateTest() {
+      this.test = "updated";
+      console.log(this.test);
+    }
+  }
+});
+
 const pinia = createPinia();
-export { usePlayerStore, useGameStore, pinia };
+export { usePlayerStore, useGameStore,useTestStore, pinia };
