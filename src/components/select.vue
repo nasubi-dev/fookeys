@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import type { Character, Gift } from "@/types";
 import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
   cards: (Character | Gift)[];
   selectType: string;
 }>();
 
+const { character, gift } = storeToRefs(playerStore);
+
 function selectCard(card: Character | Gift, selectType: string) {
-  if (!selectType) return;
-  if (selectType == "character") playerStore.character = card as Character;
-  console.log("character: " + playerStore.character?.name);
-  if (selectType == "gift") playerStore.gift.push(card as Gift);
-  console.log("gift: " + playerStore.gift[0]?.name + " " + playerStore.gift[1]?.name + " " + playerStore.gift[2]?.name);
+  if (selectType == "character") {
+    character.value = card as Character;
+    console.log("character: " + character.value?.name);
+  }
+  if (selectType == "gift") {
+    gift.value.unshift(card as Gift);
+    gift.value = gift.value.slice(0, 3);
+    console.log("gift: ", gift.value);
+  }
 }
 </script>
 

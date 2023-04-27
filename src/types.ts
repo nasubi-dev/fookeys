@@ -8,7 +8,7 @@ type Card = {
   pow?: number;
   def?: number;
   tech?: number;
-  special?: () => void;
+  // special?: () => void;
 };
 
 type Character = {
@@ -16,20 +16,20 @@ type Character = {
   description: string;
   image: string;
   company: string;
-  action?: () => void;
+  // action?: () => void;
 };
 
 type Gift = {
   name: string;
   description: string;
   image: string;
-  action?: () => void;
+  // action?: () => void;
 };
 
 type Mission = {
   name: string;
   description: string;
-  action?: () => void;
+  // action?: () => void;
 };
 
 type MatchStatus = "matching" | "nothing" | "waiting";
@@ -42,7 +42,7 @@ type PlayerData = {
   match: MatchStatus;
   check: boolean;
   sign: PlayerSign;
-  character: Character;
+  character: Character | null;
   gift: [Gift, Gift, Gift];
   hand: Card[];
   board: Card[];

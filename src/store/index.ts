@@ -11,12 +11,8 @@ const usePlayerStore = defineStore("playerData", () => {
   const match: Ref<MatchStatus> = ref("nothing");
   const check = ref(false);
   const sign: Ref<PlayerSign> = ref(0);
-  const character: Ref<Character> = ref({ name: "", description: "", image: "", company: "" });
-  const gift: Ref<Gift[]> = ref([
-    { name: "", description: "", image: "" },
-    { name: "", description: "", image: "" },
-    { name: "", description: "", image: "" },
-  ]);
+  const character: Ref<Character | null> = ref(null);
+  const gift: Ref<Gift[]> = ref([]);
   const hand: Ref<Card[]> = ref([]);
   const board: Ref<Card[]> = ref([]);
   const status: Ref<Status> = ref({ hp: 0, hungry: 0, contribution: 0, priority: 0 });
