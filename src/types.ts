@@ -16,20 +16,20 @@ type Character = {
   description: string;
   image: string;
   company: string;
-  action: () => void;
+  action?: () => void;
 };
 
 type Gift = {
   name: string;
   description: string;
   image: string;
-  action: () => void;
+  action?: () => void;
 };
 
 type Mission = {
   name: string;
   description: string;
-  action: () => void;
+  action?: () => void;
 };
 
 type MatchStatus = "matching" | "nothing" | "waiting";
@@ -40,8 +40,8 @@ type PlayerData = {
   match: MatchStatus;
   check: boolean;
   sign: 0 | 1;
-  character: Character|undefined;
-  gift: Gift[];
+  character: Character;
+  gift: [Gift,Gift,Gift];
   hand: Card[];
   board: Card[];
   status: { hp: number; hungry: number; contribution: number; priority: number };

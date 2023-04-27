@@ -3,18 +3,17 @@ import type { Character, Gift } from "@/types";
 import { usePlayerStore } from "@/store";
 
 const playerStore = usePlayerStore();
-defineProps<{
-  cards: Character[] | Gift[];
+const props = defineProps<{
+  cards: (Character | Gift)[];
   selectType: string;
 }>();
-let selectType:string;
-let cards: Character[] | Gift[];
 
-function selectCard(card: Character | Gift) {
+function selectCard(card: Character | Gift, selectType: string) {
+  if (!selectType) return;
   if (selectType == "character") playerStore.character = card as Character;
-  console.log("character: " + playerStore.character);
+  console.log("character: " + playerStore.character?.name);
   if (selectType == "gift") playerStore.gift.push(card as Gift);
-  console.log("gift: " + playerStore.gift);
+  console.log("gift: " + playerStore.gift[0]?.name + " " + playerStore.gift[1]?.name + " " + playerStore.gift[2]?.name);
 }
 </script>
 
@@ -26,9 +25,9 @@ function selectCard(card: Character | Gift) {
       </router-link>
     </div>
     <div class="mt-8 mx-4 grid grid-cols-4 gap-2">
-      <div v-for="card in cards" :key="card.name">
+      <div v-for="card in props.cards" :key="card.name">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <button @click="selectCard(card)" class="btn-pop">
+          <button @click="selectCard(card, props.selectType)" class="btn-pop">
             <img :src="card.image" class="w-full h-64 object-cover" />
             <div class="px-4 py-2">
               <h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>

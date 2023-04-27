@@ -7,6 +7,8 @@ import Select from "@/components/select.vue";
 const characters = ref<Character[]>([]);
 onMounted(async () => {
   characters.value = await getCharacterData();
+  console.log(characters.value);
+  
 });
 </script>
 
