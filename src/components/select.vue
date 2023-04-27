@@ -1,20 +1,19 @@
 <script setup lang="ts">
+import type { Character, Gift } from "@/types";
 import { usePlayerStore } from "@/store";
 
 const playerStore = usePlayerStore();
 defineProps<{
-  cards: {
-    name: string;
-    description: string;
-    image: string;
-    company?: string;
-  }[];
-  type: string;
+  cards: Character[] | Gift[];
+  selectType: string;
 }>();
-function selectCard(index: number, type: string) {
-  if (type == "character") playerStore.character = index;
+let selectType:string;
+let cards: Character[] | Gift[];
+
+function selectCard(card: Character | Gift) {
+  if (selectType == "character") playerStore.character = card as Character;
   console.log("character: " + playerStore.character);
-  if (type == "gift") playerStore.gift = index;
+  if (selectType == "gift") playerStore.gift.push(card as Gift);
   console.log("gift: " + playerStore.gift);
 }
 </script>
@@ -27,9 +26,9 @@ function selectCard(index: number, type: string) {
       </router-link>
     </div>
     <div class="mt-8 mx-4 grid grid-cols-4 gap-2">
-      <div v-for="(card, index) in cards" :key="card.name">
+      <div v-for="card in cards" :key="card.name">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <button @click="selectCard(index, type)" class="btn-pop">
+          <button @click="selectCard(card)" class="btn-pop">
             <img :src="card.image" class="w-full h-64 object-cover" />
             <div class="px-4 py-2">
               <h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>

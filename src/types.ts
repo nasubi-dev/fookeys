@@ -40,8 +40,8 @@ type PlayerData = {
   match: MatchStatus;
   check: boolean;
   sign: 0 | 1;
-  character: number;
-  gift: number;
+  character: Character|undefined;
+  gift: Gift[];
   hand: Card[];
   board: Card[];
   status: { hp: number; hungry: number; contribution: number; priority: number };

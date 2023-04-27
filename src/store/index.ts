@@ -1,5 +1,13 @@
 import { createPinia, defineStore } from "pinia";
-import type { MatchStatus, PlayerData, GameData, Card, Mission } from "@/types";
+import type {
+  MatchStatus,
+  PlayerData,
+  GameData,
+  Card,
+  Character,
+  Gift,
+  Mission,
+} from "@/types";
 
 class PlayerDataStore implements PlayerData {
   id = "";
@@ -9,8 +17,8 @@ class PlayerDataStore implements PlayerData {
   match: MatchStatus = "nothing";
   check = false;
   sign: 0 | 1 = 0;
-  character = 0;
-  gift = 0;
+  character: Character | undefined = undefined;
+  gift: Gift[] = [];
   hand: Card[] = [];
   board: Card[] = [];
   status = { hp: 0, hungry: 0, contribution: 0, priority: 0 };

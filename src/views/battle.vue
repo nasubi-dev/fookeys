@@ -6,7 +6,6 @@ import { usePlayerStore, useGameStore } from "@/store";
 import Status from "@/components/status.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
-import { storeToRefs } from "pinia";
 
 //Collectionの参照
 const playerStore = usePlayerStore();
