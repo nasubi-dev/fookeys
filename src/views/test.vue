@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useTestStore } from "@/store";
+import { testStore } from "@/main";
 import { storeToRefs } from "pinia";
-const testStore = useTestStore();
 const { test } = storeToRefs(testStore);
 </script>
 

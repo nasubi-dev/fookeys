@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { usePlayerStore } from "@/store";
+import { playerStore } from "@/main";
 
-const playerStore = usePlayerStore();
 </script>
 <template>
   <div class="flex justify-end">

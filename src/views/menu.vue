@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { startMatchmaking } from "@/server/useMatchMaking";
-import { usePlayerStore } from "@/store";
+import { playerStore } from "@/main";
 import PlayerData from "@/components/playerData.vue";
 import nasubi from "@/assets/nasubi.png";
-
-const playerStore = usePlayerStore();
 
 //マッチングを開始する
 //マッチングが成功したら後で押したほうがPlayer1､Player2

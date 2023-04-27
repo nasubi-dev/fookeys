@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { updatePlayerName } from "@/server/usePlayerID";
-import { usePlayerStore } from "@/store";
-
-const playerStore = usePlayerStore();
+import { playerStore } from "@/main";
 
 //ユーザー名を変更する ユーザー名が空の場合はNo name
 async function updateName() {

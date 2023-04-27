@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { createPinia, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import type { MatchStatus, PlayerSign, Status, Card, Character, Gift, Mission } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
@@ -21,16 +21,16 @@ const usePlayerStore = defineStore("playerData", () => {
   const board: Ref<Card[]> = ref([]);
   const status: Ref<Status> = ref({ hp: 0, hungry: 0, contribution: 0, priority: 0 });
 
-  // function setPlayerID(newID: string) {
-  //   id.value = newID;
-  //   console.log(id.value);
-  // }
+  function setPlayerID(newID: string) {
+    id.value = newID;
+    console.log("test", id.value);
+  }
   // function updatePlayerName(newName: string) {
   //   name.value = newName;
   //   console.log(name.value);
   // }
 
-  return { id, idEnemy, idGame, name, match, check, sign, character, gift, hand, board, status };
+  return { id, idEnemy, idGame, name, match, check, sign, character, gift, hand, board, status, setPlayerID };
 });
 
 const useGameStore = defineStore("gameData", () => {
@@ -50,5 +50,4 @@ const useTestStore = defineStore("test", () => {
   return { test, updateTest };
 });
 
-const pinia = createPinia();
-export { usePlayerStore, useGameStore, useTestStore, pinia };
+export { usePlayerStore, useGameStore, useTestStore };

@@ -2,14 +2,10 @@
 import { onMounted } from "vue";
 import { getPlayerData } from "@/server/usePlayerID";
 import { useBattle, setHand, setMissions } from "@/server/useBattle";
-import { usePlayerStore, useGameStore } from "@/store";
+import { playerStore, gameStore } from "@/main";
 import Status from "@/components/status.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
-
-//Collectionの参照
-const playerStore = usePlayerStore();
-const gameStore = useGameStore();
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {

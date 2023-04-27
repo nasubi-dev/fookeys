@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { Character, Gift } from "@/types";
-import { usePlayerStore } from "@/store";
+import { playerStore } from "@/main";
 
-const playerStore = usePlayerStore();
 const props = defineProps<{
   cards: (Character | Gift)[];
   selectType: string;
