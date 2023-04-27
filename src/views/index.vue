@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { updatePlayerName } from "@/server/usePlayerID";
+import { ref } from "vue";
+import { registerPlayer } from "@/server/usePlayerID";
 import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 
-//ユーザー名を変更する ユーザー名が空の場合はNo name
-async function updateName() {
-  if (playerStore.name === "") playerStore.name = await updatePlayerName(playerStore.id, "No name");
-  else playerStore.name = await updatePlayerName(playerStore.id, playerStore.name);
+//storeの参照
+const { id,name } = storeToRefs(playerStore);
+
+const newName = ref("");
+//アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name
+async function register() {
+  newName.value === "" ? (name.value = "No name") : (name.value = newName.value);
+  id.value == "" ? await registerPlayer() : console.log("既に登録されています");
 }
 </script>
 
@@ -14,7 +20,7 @@ async function updateName() {
     <h1 class="text-4xl font-bold mb-4">Home</h1>
 
     <div class="mt-4">
-      <span class="text-xl font-bold">Your ID:{{ playerStore.id }}</span>
+      <span class="text-xl font-bold">Your ID:{{ id }}</span>
     </div>
 
     <form class="flex flex-col items-center">
@@ -22,11 +28,11 @@ async function updateName() {
         class="border border-gray-400 rounded-lg p-2 w-64"
         type="text"
         placeholder="please name"
-        v-model="playerStore.name"
+        v-model="newName"
       />
       <router-link
         to="/menu"
-        @click="updateName"
+        @click="register"
         type="button"
         class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop"
       >

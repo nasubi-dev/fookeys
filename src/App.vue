@@ -1,22 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
-import { registerPlayer, deletePlayer } from "@/server/usePlayerID";
-import { usePlayerStore } from "@/store";
+import { deletePlayer } from "@/server/usePlayerID";
 
-const PlayerStore = usePlayerStore();
 
-//アプリが起動したらユーザーIDを取得する
-//入場したらPlayerData型としてIDが保管される
 onMounted(async () => {
-  await registerPlayer();
   console.log("マウントされました");
 });
 
 //アプリが閉じられたらユーザーIDを削除する
 window.onbeforeunload = async () => {
   window.onbeforeunload = null;
-  await deletePlayer(PlayerStore.id);
+  await deletePlayer();
   console.log("アプリが終了しました");
 };
 </script>

@@ -1,61 +1,32 @@
 import { db } from "./firebase";
-import { collection, doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 import type { PlayerData, Character, Gift } from "@/types";
+import { playerStore } from "@/main";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
 const charactersRef = collection(db, "characters");
 const giftsRef = collection(db, "gifts");
 
+//piniaの参照
+
 //player登録
-async function registerPlayer(): Promise<string> {
-  const newPlayer: PlayerData = {
-    sign: 0,
-    name: "No name",
-    idEnemy: "",
-    idGame: "",
-    match: "nothing",
-    character: { name: "", description: "", image: "", company: "" },
-    gift: [
-      { name: "", description: "", image: "" },
-      { name: "", description: "", image: "" },
-      { name: "", description: "", image: "" },
-    ],
-    check: false,
-    hand: [],
-    board: [],
-    status: { hp: 0, hungry: 0, contribution: 0, priority: 0 },
-  };
+async function registerPlayer(): Promise<void> {
   try {
-    const docRef = await addDoc(playersRef, newPlayer);
-    console.log("Create Your ID: ", docRef.id);
-    const playerID = docRef.id;
-    return playerID;
+    playerStore.id = (await addDoc(playersRef, playerStore.newPlayer)).id;
+    console.log("Create Your ID: ", playerStore.id);
   } catch (error) {
     console.error("Error adding Your ID: ", error);
-    return "";
   }
 }
 
 //player削除
-async function deletePlayer(playerID: string): Promise<void> {
+async function deletePlayer(): Promise<void> {
   try {
-    await deleteDoc(doc(playersRef, playerID));
-    console.log("Player deleted: ", playerID);
+    await deleteDoc(doc(playersRef, playerStore.id));
+    console.log("Player deleted: ", playerStore.id);
   } catch (error) {
     console.error("Error deleting player: ", error);
-  }
-}
-
-//nameの変更
-async function updatePlayerName(playerID: string, newName: string): Promise<string> {
-  try {
-    await updateDoc(doc(playersRef, playerID), { name: newName });
-    console.log("Name updated for player: ", playerID);
-    return newName;
-  } catch (error) {
-    console.error("Error updating name: ", error);
-    return "";
   }
 }
 
@@ -80,4 +51,4 @@ async function getGiftData(): Promise<Gift[]> {
   return (await getDocs(giftsRef)).docs.map((doc) => doc.data()) as Gift[];
 }
 
-export { registerPlayer, deletePlayer, updatePlayerName, getPlayerData, getCharacterData, getGiftData };
+export { registerPlayer, deletePlayer, getPlayerData, getCharacterData, getGiftData };
