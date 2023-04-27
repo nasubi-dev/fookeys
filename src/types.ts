@@ -33,18 +33,20 @@ type Mission = {
 };
 
 type MatchStatus = "matching" | "nothing" | "waiting";
+type PlayerSign = 0 | 1;
+type Status = { hp: number; hungry: number; contribution: number; priority: number };
 type PlayerData = {
   idEnemy: string;
   idGame: string;
   name: string;
   match: MatchStatus;
   check: boolean;
-  sign: 0 | 1;
+  sign: PlayerSign;
   character: Character;
-  gift: [Gift,Gift,Gift];
+  gift: [Gift, Gift, Gift];
   hand: Card[];
   board: Card[];
-  status: { hp: number; hungry: number; contribution: number; priority: number };
+  status: Status;
 };
 
 type GameData = {
@@ -53,4 +55,4 @@ type GameData = {
   missions: Mission[];
 };
 
-export type { Card, Character, Gift, Mission, MatchStatus, PlayerData, GameData };
+export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, GameData };

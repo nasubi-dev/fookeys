@@ -1,50 +1,54 @@
+import { ref } from "vue";
+import type { Ref } from "vue";
 import { createPinia, defineStore } from "pinia";
-import type { MatchStatus, PlayerData, GameData, Card, Character, Gift, Mission } from "@/types";
+import type { MatchStatus, PlayerSign, Status, Card, Character, Gift, Mission } from "@/types";
 
-class PlayerDataStore implements PlayerData {
-  id = "";
-  idEnemy = "";
-  idGame = "";
-  name = "";
-  match: MatchStatus = "nothing";
-  check = false;
-  sign: 0 | 1 = 0;
-  character: Character = { name: "", description: "", image: "", company: "" };
-  gift: [Gift, Gift, Gift] = [
+const usePlayerStore = defineStore("playerData", () => {
+  const id = ref("");
+  const idEnemy = ref("");
+  const idGame = ref("");
+  const name = ref("");
+  const match: Ref<MatchStatus> = ref("nothing");
+  const check = ref(false);
+  const sign: Ref<PlayerSign> = ref(0);
+  const character: Ref<Character> = ref({ name: "", description: "", image: "", company: "" });
+  const gift: Ref<Gift[]> = ref([
     { name: "", description: "", image: "" },
     { name: "", description: "", image: "" },
     { name: "", description: "", image: "" },
-  ];
-  hand: Card[] = [];
-  board: Card[] = [];
-  status = { hp: 0, hungry: 0, contribution: 0, priority: 0 };
-}
+  ]);
+  const hand: Ref<Card[]> = ref([]);
+  const board: Ref<Card[]> = ref([]);
+  const status: Ref<Status> = ref({ hp: 0, hungry: 0, contribution: 0, priority: 0 });
 
-const usePlayerStore = defineStore<string, PlayerDataStore>("playerData", {
-  state: () => new PlayerDataStore(),
+  // function setPlayerID(newID: string) {
+  //   id.value = newID;
+  //   console.log(id.value);
+  // }
+  // function updatePlayerName(newName: string) {
+  //   name.value = newName;
+  //   console.log(name.value);
+  // }
+
+  return { id, idEnemy, idGame, name, match, check, sign, character, gift, hand, board, status };
 });
 
-class GameDataStore implements GameData {
-  turn = 1;
-  players: string[] = [];
-  missions: Mission[] = [];
-}
+const useGameStore = defineStore("gameData", () => {
+  const turn = ref(1);
+  const players = ref<string[]>([]);
+  const missions = ref<Mission[]>([]);
 
-const useGameStore = defineStore("gameData", {
-  state: () => new GameDataStore(),
+  return { turn, players, missions };
 });
 
-const useTestStore = defineStore("test", {
-  state: () => ({
-    test: "test",
-  }),
-  actions: {
-    updateTest() {
-      this.test = "updated";
-      console.log(this.test);
-    }
+const useTestStore = defineStore("test", () => {
+  const test = ref("test");
+  function updateTest() {
+    test.value = "updated";
+    console.log(test.value);
   }
+  return { test, updateTest };
 });
 
 const pinia = createPinia();
-export { usePlayerStore, useGameStore,useTestStore, pinia };
+export { usePlayerStore, useGameStore, useTestStore, pinia };
