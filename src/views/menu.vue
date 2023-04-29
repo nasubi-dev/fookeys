@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { startMatchmaking } from "@/server/useMatchMaking";
-import { playerStore } from "@/main";
 import PlayerData from "@/components/playerData.vue";
 import nasubi from "@/assets/nasubi.png";
 
 //マッチングを開始する
 //マッチングが成功したら後で押したほうがPlayer1､Player2
-async function startMatch(PlayerID: string): Promise<void> {
-  if (PlayerID == undefined) {
-    alert("ユーザーIDが取得できていません。");
-    return;
-  }
-  playerStore.idGame = await startMatchmaking(PlayerID);
+async function startMatch(): Promise<void> {
+  await startMatchmaking();
 }
 </script>
 
@@ -31,10 +26,7 @@ async function startMatch(PlayerID: string): Promise<void> {
       </div>
 
       <div class="w-1/2 p-8 flex flex-col justify-center">
-        <button
-          class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop"
-          @click="startMatch(playerStore.id)"
-        >
+        <button class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop" @click="startMatch">
           エントリー
         </button>
 

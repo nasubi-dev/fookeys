@@ -1,9 +1,10 @@
 import { ref, computed } from "vue";
 import type { Ref } from "vue";
 import { defineStore } from "pinia";
-import type { MatchStatus, PlayerSign, PlayerData, Status, Card, Character, Gift, Mission } from "@/types";
+import type { MatchStatus, PlayerSign, PlayerData, Status, Card, Character, Gift, Mission, GameData } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
+  //?Const/State
   const id = ref("");
   const idEnemy = ref("");
   const idGame = ref("");
@@ -16,7 +17,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const hand: Ref<Card[]> = ref([]);
   const board: Ref<Card[]> = ref([]);
   const status: Ref<Status> = ref({ hp: 0, hungry: 0, contribution: 0, priority: 0 });
-  ////////////////////////////////////////////////////////////////////////////////
+  //?Computed/Getter
   const newPlayer = computed(() => {
     const newPlayer = {
       idEnemy: idEnemy.value,
@@ -33,55 +34,28 @@ const usePlayerStore = defineStore("playerData", () => {
     } as PlayerData;
     return newPlayer;
   });
-  ////////////////////////////////////////////////////////////////////////////////
-  const setPlayerID = (newID: string) => {
-    id.value = newID;
-    console.log("test", id.value);
-  };
-  const getPlayerID = () => {
-    console.log("test", id.value);
-    return id.value;
-  };
-  // function updatePlayerName(newName: string) {
-  //   name.value = newName;
-  //   console.log(name.value);
-  // }
-  ////////////////////////////////////////////////////////////////////////////////
+  //?function/actions
 
-  return {
-    id,
-    idEnemy,
-    idGame,
-    name,
-    match,
-    check,
-    sign,
-    character,
-    gift,
-    hand,
-    board,
-    status,
-    newPlayer,
-    setPlayerID,
-    getPlayerID,
-  };
+  return { id, idEnemy, idGame, name, match, check, sign, character, gift, hand, board, status, newPlayer, };
 });
 
 const useGameStore = defineStore("gameData", () => {
+  //?Const/State
   const turn = ref(1);
   const players = ref<string[]>([]);
   const missions = ref<Mission[]>([]);
+  //?Computed/Getter
+  const newGame = computed(() => {
+    const newGame = {
+      turn: turn.value,
+      players: players.value,
+      missions: missions.value,
+    } as GameData;
+    return newGame;
+  });
+  ///?function/actions
 
-  return { turn, players, missions };
+  return { turn, players, missions, newGame };
 });
 
-const useTestStore = defineStore("test", () => {
-  const test = ref("test");
-  function updateTest() {
-    test.value = "updated";
-    console.log(test.value);
-  }
-  return { test, updateTest };
-});
-
-export { usePlayerStore, useGameStore, useTestStore };
+export { usePlayerStore, useGameStore };

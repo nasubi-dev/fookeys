@@ -19,10 +19,6 @@ async function register() {
   <div class="flex flex-col items-center justify-center h-screen">
     <h1 class="text-4xl font-bold mb-4">Home</h1>
 
-    <div class="mt-4">
-      <span class="text-xl font-bold">Your ID:{{ id }}</span>
-    </div>
-
     <form class="flex flex-col items-center">
       <input
         class="border border-gray-400 rounded-lg p-2 w-64"

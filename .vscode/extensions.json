@@ -4,6 +4,7 @@
     "esbenp.prettier-vscode",
     "aaron-bond.better-comments",
     "vue.volar",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "oderwat.indent-rainbow"
   ]
 }

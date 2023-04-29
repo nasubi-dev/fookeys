@@ -3,13 +3,12 @@ import "./main.css";
 import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
-import { usePlayerStore, useGameStore, useTestStore } from "./store";
+import { usePlayerStore, useGameStore } from "./store";
 const pinia = createPinia();
 
 createApp(App).use(router).use(pinia).mount("#app");
 
 const playerStore = usePlayerStore();
 const gameStore = useGameStore();
-const testStore = useTestStore();
 
-export { playerStore, gameStore, testStore };
+export { playerStore, gameStore };
