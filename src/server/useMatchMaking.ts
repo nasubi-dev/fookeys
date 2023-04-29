@@ -106,13 +106,10 @@ async function startMatchmaking(): Promise<void> {
 //gameを作成する
 async function addGame(): Promise<string> {
   try {
-    const docRef = await addDoc(gamesRef, gameStore.newGame);
-    if (docRef.id) {
-      console.log("games Document ID: ", docRef.id);
-      return docRef.id;
-    } else {
-      console.log("No such gameDocument!");
-    }
+    const docId = (await addDoc(gamesRef, gameStore.newGame)).id;
+    console.log("games Document ID: ", docId);
+    await updateDoc(doc(gamesRef, docId), { players: [playerStore.id, playerStore.idEnemy] });
+    return docId;
   } catch (error) {
     console.error("Error adding games document: ", error);
   }

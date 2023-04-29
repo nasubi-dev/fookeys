@@ -1,7 +1,7 @@
 import { db } from "./firebase";
 import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
-import { getPlayerData } from "./usePlayerID";
 import type { GameData, Card, Mission } from "@/types";
+import { playerStore, gameStore } from "@/main";
 
 //Collectionの参照
 const missionsRef = collection(db, "missions");
@@ -14,7 +14,6 @@ async function getGameData(GameID: string): Promise<GameData> {
   const docSnap = await getDoc(doc(gamesRef, GameID));
   if (docSnap.exists()) {
     console.log("GameDocument data:", docSnap.data());
-
     return docSnap.data() as GameData;
   } else {
     console.log("No such GameDocument!");
@@ -30,33 +29,30 @@ async function drawCard(): Promise<Card> {
 }
 
 //cardをHandに6枚セットする
-export async function setHand(playerID: string): Promise<Card[]> {
-  const player = await getPlayerData(playerID);
+export async function setHand(): Promise<void> {
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
-    player.hand.push(card);
+    playerStore.hand.push(card as Card);
     //updateDocはonSnapShotを使うようになったら消す
-    updateDoc(doc(playersRef, playerID), { hand: player.hand });
+    updateDoc(doc(playersRef, playerStore.id), { hand: playerStore.hand });
   }
-  return player.hand;
 }
 
 //missionを3つセットする
-export async function setMissions(gameID: string): Promise<Mission[]> {
-  const gameData = await getGameData(gameID);
+export async function setMissions(): Promise<void> {
   const missions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
   for (let i = 0; i < 3; i++) {
     const selectMission = missions[Math.floor(Math.random() * missions.length)];
-    gameData.missions.push(selectMission as Mission);
+    gameStore.missions.push(selectMission as Mission);
     //updateDocはonSnapShotを使うようになったら消す 特にmissionは共有の情報なので
-    updateDoc(doc(gamesRef, gameID), { missions: gameData.missions });
+    updateDoc(doc(gamesRef, playerStore.idGame), { missions: gameStore.missions });
   }
-  return gameData.missions;
 }
 
 //!すべてのフェーズ管理
-export async function useBattle(gameID: string): Promise<GameData> {
-  const gameData = await getGameData(gameID);
+export async function useBattle(): Promise<void> {
+  gameStore.$state = await getGameData(playerStore.idGame);
+  //TODO onSnapShotをここに書く
   // const unsubscribe = onSnapshot(doc(gamesRef, gameID), (doc) => {
   //   const gameDataSnap = doc.data();
   //   if (!gameDataSnap) return;
@@ -64,6 +60,5 @@ export async function useBattle(gameID: string): Promise<GameData> {
   //     console.log(card);
   //   });
   // });
-  return gameData as GameData;
 }
 //!export5日まとめる

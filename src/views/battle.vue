@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { getPlayerData } from "@/server/usePlayerID";
 import { useBattle, setHand, setMissions } from "@/server/useBattle";
 import { playerStore, gameStore } from "@/main";
 import Status from "@/components/status.vue";
@@ -9,26 +8,16 @@ import Mission from "@/components/mission.vue";
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
-  playerStore.idGame = (await getPlayerData(playerStore.id)).idGame;
-  gameStore.$state = await useBattle(playerStore.idGame);
-  if (playerStore.id == gameStore.players[0]) {
-    playerStore.sign = 0;
-    playerStore.idEnemy = gameStore.players[1];
-  } else {
-    playerStore.sign = 1;
-    playerStore.idEnemy = gameStore.players[0];
-  }
-  console.log("playerStore", playerStore.$state);
-  console.log("gameStore", gameStore.$state);
+  await useBattle();
+  playerStore.id == gameStore.players[0] ? playerStore.sign = 0 : playerStore.sign = 1;
+  console.log("gameStore: ", gameStore.players, gameStore.turn, gameStore.missions);
 });
 
 //この関数は最終的にonMountedに統合する
 async function gameStart() {
-  playerStore.hand = await setHand(playerStore.id);
+  await setHand();
   console.log("hand: ", playerStore.hand);
-  console.log(gameStore.$state);
-  
-  gameStore.missions = await setMissions(playerStore.idGame);
+  await setMissions();
   console.log("missions: ", gameStore.missions);
 }
 </script>
