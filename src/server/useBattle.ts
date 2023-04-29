@@ -40,6 +40,7 @@ export async function setHand(): Promise<void> {
 
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
+  if (playerStore.sign == 0) return;
   const missions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
   for (let i = 0; i < 3; i++) {
     const selectMission = missions[Math.floor(Math.random() * missions.length)];

@@ -6,6 +6,9 @@ PiniaはServerフォルダ内で参照しない
 Player1側でもbattle.vueに遷移させる
 ルールが確定したら型を再構築する
 Pinia上のNameが最初何もない
+cardをセット
+missionをセット
+?初回限定の処理
 
 作成順序
 battleの関数
@@ -26,12 +29,6 @@ try/catchを活用したい
 
 
 Battleの未実装要素
-両playerの決定を取得
-statusを変更 増減値を引数
-
-cardをセット
-missionをセット
-?初回限定の処理
 
 giftを使用
 ?shopフェーズ開始時の処理

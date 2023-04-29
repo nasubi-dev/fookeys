@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 const { id, idEnemy, idGame, name, character, gift } = storeToRefs(playerStore);
 </script>
 <template>
-  <div class="flex justify-end">
+  <div class="flex justify-start">
     <ul class="divide-y divide-gray-200">
       <li class="py-4">
         <p class="text-sm font-medium text-gray-900 truncate">id:{{ id }}</p>

@@ -24,7 +24,7 @@ async function startMatch(): Promise<void> {
       <div class="w-1/2 flex items-center justify-center">
         <img :src="nasubi" class="max-h-full max-w-full" />
       </div>
-
+<!-- TODO キャラとギフト選択を押した場合このコンポーネントを入れ替える -->
       <div class="w-1/2 p-8 flex flex-col justify-center">
         <button class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop" @click="startMatch">
           エントリー
