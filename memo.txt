@@ -34,10 +34,8 @@ giftを使用
 ?shopフェーズ開始時の処理
 
 cardを選択して場に出す
-?shopフェーズ開始時の処理
-
 使用したgiftを公開
-?battleフェーズ終了時の処理
+?shopフェーズ終了時の処理
 
 どちらが先に攻撃するのか判定
 cardの攻撃力を計算
@@ -46,6 +44,7 @@ cardの防御力を計算
 cardの特殊効果を実行
 hungryを計算 上限を超えたら行動不能
 damage計算の結果を出力
+
 missionを達成した時の処理
 missionを入れ替える
 async function changeMission(playerID: string, missionID: number) {
@@ -54,11 +53,14 @@ async function changeMission(playerID: string, missionID: number) {
 		return;
 	}
 }
+
 勝敗判断 死亡判断から呼び出す
 死亡判断
 ↑2回繰り返す
+
 wasteを減少
 wasteが0になった時の処理
+
 turnを進める 増減値を引数
 ?battleフェーズ終了時の処理
 

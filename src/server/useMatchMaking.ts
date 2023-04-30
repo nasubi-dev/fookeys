@@ -84,6 +84,7 @@ async function startMatchmaking(): Promise<void> {
   } else {
     playerStore.idGame = await addGame();
     //プレイヤーの情報を更新する
+    //実はここ結構気に入ってるんよね
     await Promise.all([
       updatePlayerFields(playerStore.idEnemy, [
         { field: "idEnemy", value: playerStore.id },

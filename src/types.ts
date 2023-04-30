@@ -10,6 +10,13 @@ type Card = {
   tech?: number;
   // special?: () => void;
 };
+type Result = {
+  pow: number;
+  def: number;
+  tech: number;
+  waste: number;
+  hungry: number;
+};
 
 type Character = {
   name: string;
@@ -45,7 +52,7 @@ type PlayerData = {
   character: Character | null;
   gift: [Gift, Gift, Gift];
   hand: Card[];
-  board: Card[];
+  field: Card[];
   status: Status;
 };
 
@@ -53,6 +60,7 @@ type GameData = {
   turn: number;
   players: string[];
   missions: Mission[];
+  resultEnemy: Result;
 };
 
-export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, GameData };
+export type { Card, Result, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, GameData };
