@@ -1,6 +1,6 @@
 import { db } from "./firebase";
 import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
-import type { GameData, Card, Mission, Result } from "@/types";
+import type { GameData, Card, Mission } from "@/types";
 import { playerStore, gameStore } from "@/main";
 
 //Collectionの参照
@@ -21,7 +21,34 @@ async function getGameData(GameID: string): Promise<GameData> {
   }
 }
 
-//cardを一枚引く
+//checkの値の監視
+export async function watchCheckField(): Promise<void> {
+  playerStore.check = true;
+  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
+  console.log("check: " + playerStore.check);
+  const enemyCheck = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.check;
+  if (enemyCheck === true) {
+    battleCalc();
+  } else {
+    const unsubscribe = onSnapshot(doc(playersRef, playerStore.idEnemy), (doc) => {
+      const data = doc.data();
+      if (!data) return;
+      if (data.check == true) {
+        battleCalc();
+        //監視を解除する
+        unsubscribe();
+        console.log("監視を解除しました");
+      }
+    });
+  }
+}
+
+//battleの計算
+export async function battleCalc(): Promise<void> {
+  console.log("battleCalcを実行しました");
+}
+
+//cardをランダムに一枚引く
 async function drawCard(): Promise<Card> {
   const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
   const selectCard = deck[Math.floor(Math.random() * deck.length)];
@@ -36,6 +63,8 @@ export async function setHand(): Promise<void> {
     updateDoc(doc(playersRef, playerStore.id), { hand: playerStore.hand });
   }
 }
+
+//指定のcardを一枚引く
 
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
@@ -57,34 +86,16 @@ export async function setMissions(): Promise<void> {
   //updateDocはonSnapShotを使うようになったら消す 特にmissionは共有の情報なので
   updateDoc(doc(gamesRef, playerStore.idGame), { missions: gameStore.missions });
 }
-//
-const calcDamage = (result: Result): void => {
-  //自分のatkと相手のdefを比較してダメージを計算する
-};
+
+//fieldのカードを取得する
+export async function getFieldCards(): Promise<void> {
+  updateDoc(doc(playersRef, playerStore.id), { field: playerStore.field });
+  return;
+}
 
 //cardのダメージ計算
-export async function cardCalc(): Promise<void> {
-  //FirestoreにCardの情報を保存する
-  updateDoc(doc(playersRef, playerStore.id), { field: playerStore.field });
-  //自分と相手がFieldに出したカードを取得する
-  const myField = (await getDoc(doc(playersRef, playerStore.id))).data()?.field;
-  myField.forEach((card: Card) => {
-    //自分がFieldに出したカードの値を計算する(atk,def,tech) 今はとりあえず特殊効果なし
-    playerStore.sumFieldValue(card);
-    console.log(playerStore.result);
-  });
-  const test = updateDoc(doc(gamesRef, playerStore.idGame), { result: playerStore.result });
-  //両プレイヤーの処理が終わったら次の処理に移る
-  test.then(async () => {
-    //相手のResultを取得する
-    const enemyResult = (await getDoc(doc(gamesRef, playerStore.idGame))).data()?.result as Result;
-    //値を比較してダメージを計算する
-    calcDamage(enemyResult);
-  });
-
-  //ダメージをFirestoreに保存する
-  //その値が正しいか確認する
-}
+//ダメージをFirestoreに保存する
+//その値が正しいか確認する
 
 //!すべてのターン管理(最終的な形は未定)
 export async function useBattle(): Promise<void> {

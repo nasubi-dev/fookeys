@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import type { Ref } from "vue";
 import { defineStore } from "pinia";
-import type { MatchStatus, PlayerSign, PlayerData, Status, Card, Character, Gift, Mission, GameData, Result } from "@/types";
+import type { MatchStatus, PlayerSign, PlayerData, Status, Card, Character, Gift, Mission, GameData } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -34,16 +34,6 @@ const usePlayerStore = defineStore("playerData", () => {
     } as PlayerData;
     return newPlayer;
   });
-  const result = computed(() => {
-    const result = {
-      pow: 0,
-      def: 0,
-      tech: 0,
-      waste: 0,
-      hungry: 0,
-    } as Result;
-    return result;
-  });
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す
   const handClick = (index: number) => {
@@ -59,12 +49,11 @@ const usePlayerStore = defineStore("playerData", () => {
     field.value.splice(index, 1);
     console.log("hand: ", hand.value);
   };
-  const sumFieldValue = (card: Card) => {
-    result.value.pow += card.pow ? card.pow : 0;
-    result.value.def += card.def ? card.def : 0;
-    result.value.tech += card.tech ? card.tech : 0;
-    result.value.waste += card.waste ? card.waste : 0;
-    result.value.hungry += card.hungry ? card.hungry : 0;
+  //ターン終了時に、Fieldのカードを捨てる
+  const fieldDelete= () => {
+    console.log("fieldDelete");
+    field.value.splice(0, field.value.length);
+    console.log("field: ", field.value);
   };
   return {
     id,
@@ -80,10 +69,9 @@ const usePlayerStore = defineStore("playerData", () => {
     field,
     status,
     newPlayer,
-    result,
     handClick,
     fieldClick,
-    sumFieldValue,
+    fieldDelete,
   };
 });
 
@@ -92,20 +80,18 @@ const useGameStore = defineStore("gameData", () => {
   const turn = ref(1);
   const players = ref<string[]>([]);
   const missions = ref<Mission[]>([]);
-  const resultEnemy = ref({ pow: 0, def: 0, tech: 0, waste: 0, hungry: 0 });
   //?Computed/Getter
   const newGame = computed(() => {
     const newGame = {
       turn: turn.value,
       players: players.value,
       missions: missions.value,
-      resultEnemy: resultEnemy.value,
     } as GameData;
     return newGame;
   });
   ///?function/actions
 
-  return { turn, players, missions, resultEnemy, newGame };
+  return { turn, players, missions, newGame };
 });
 
 export { usePlayerStore, useGameStore };
