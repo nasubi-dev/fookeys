@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useBattle, setHand, setMissions, watchCheckField } from "@/server/useBattle";
+import { useBattle, setHand, setMissions, watchTurnEnd } from "@/server/useBattle";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import Status from "@/components/status.vue";
@@ -23,9 +23,12 @@ onMounted(async () => {
 //ターンを終了時
 const turnEnd = async () => {
   console.log("turnEnd");
-  await watchCheckField();
-  //処理が終了したらFieldを削除
-  // fieldDelete();
+  Promise.all([
+    await watchTurnEnd(),
+  ]).then(() => {
+    //処理が終了したらFieldを削除
+    // fieldDelete();
+  });
 };
 
 </script>
