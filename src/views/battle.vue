@@ -8,7 +8,7 @@ import Cards from "@/components/cards.vue";
 import Mission from "@/components/mission.vue";
 
 const { turn, players, missions } = storeToRefs(gameStore);
-const { id, sign, hand, field } = storeToRefs(playerStore);
+const { id, sign, hand, field, character, gift, status,idGame } = storeToRefs(playerStore);
 const { fieldClick, handClick } = playerStore;
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -16,9 +16,17 @@ onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   await setHand();
   await setMissions();
-  console.log("gameStore: ", players.value, turn.value, missions.value);
+
+  console.log("gameInfo");
+  console.log("gameId: ", idGame.value);
+  console.log("player1: ", players.value[0], "player2: ", players.value[1]);
+  console.log("your id: ", id.value, "your sign: ", sign.value);
+  console.log("character: ", character.value);
+  console.log("gift: ", gift.value[0], gift.value[1], gift.value[2]);
+  console.log("status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution, "priority: ", status.value.priority);
   console.log("hand: ", hand.value);
-  console.log("missions: ", missions.value);
+  console.log("mission: ", missions.value[0], missions.value[1], missions.value[2]);
+  console.log("turn: ", turn.value);
 });
 //ターンを終了時
 const turnEnd = async () => {

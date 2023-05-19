@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, arrayUnion } from "firebase/firestore";
 import type { GameData, Card, Mission } from "@/types";
 import { playerStore, gameStore } from "@/main";
 
@@ -13,7 +13,6 @@ const deckRef = collection(db, "deck");
 async function getGameData(GameID: string): Promise<GameData> {
   const docSnap = await getDoc(doc(gamesRef, GameID));
   if (docSnap.exists()) {
-    console.log("GameDocument data:", docSnap.data());
     return docSnap.data() as GameData;
   } else {
     console.log("No such GameDocument!");
@@ -54,10 +53,10 @@ export async function setMissions(): Promise<void> {
     gameStore.missions.push(selectMission);
     //選ばれたミッションはmissionsから削除する
     allMissions.splice(allMissions.indexOf(selectMission), 1);
+    //Firestoreにmissionsを保存する
+    //arrayUnionを使うと、配列に要素を追加できる(arrayRemoveで削除もできる)
+    await updateDoc(doc(gamesRef, playerStore.idGame), { missions: arrayUnion(selectMission) });
   }
-  //Firestoreにmissionsを保存する
-  //updateDocはonSnapShotを使うようになったら消す 特にmissionは共有の情報なので
-  updateDoc(doc(gamesRef, playerStore.idGame), { missions: gameStore.missions });
 }
 
 //checkの値の監視

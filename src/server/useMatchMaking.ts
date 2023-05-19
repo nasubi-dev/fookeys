@@ -55,12 +55,8 @@ async function watchMatchField(): Promise<void> {
     // 監視対象のフィールドが指定した値になった場合に実行される処理
     if (data.match === "matching") {
       console.log("matchが", data.match, "に変更されました");
-      //waitingPlayerIDを入手する
       playerStore.idEnemy = data.idEnemy;
-      console.log("waitingPlayerID: ", playerStore.idEnemy);
-      //gameIDを入手する
       playerStore.idGame = data.idGame;
-      console.log("idGame: ", playerStore.idGame);
       // 監視を解除
       unsubscribe();
       //画面遷移
