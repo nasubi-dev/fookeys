@@ -2,7 +2,7 @@ import { db } from "./firebase";
 import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, arrayUnion } from "firebase/firestore";
 import type { GameData, Card, Mission } from "@/types";
 import { playerStore, gameStore } from "@/main";
-
+import { e, s, i } from "@/log";
 //Collectionの参照
 const missionsRef = collection(db, "missions");
 const playersRef = collection(db, "players");
@@ -15,18 +15,16 @@ async function getGameData(GameID: string): Promise<GameData> {
   if (docSnap.exists()) {
     return docSnap.data() as GameData;
   } else {
-    console.log("No such GameDocument!");
+    console.log(e, "No such GameDocument!");
     return docSnap.data() as GameData; //!修正します5日
   }
 }
-
 //cardをランダムに一枚引く
 async function drawCard(): Promise<Card> {
   const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
   const selectCard = deck[Math.floor(Math.random() * deck.length)];
   return selectCard as Card;
 }
-
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
   for (let i = 0; i < 6; i++) {
@@ -35,9 +33,7 @@ export async function setHand(): Promise<void> {
     updateDoc(doc(playersRef, playerStore.id), { hand: playerStore.hand });
   }
 }
-
 //指定のcardを一枚引く
-
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
   if (playerStore.sign == 0) {
@@ -55,78 +51,97 @@ export async function setMissions(): Promise<void> {
     allMissions.splice(allMissions.indexOf(selectMission), 1);
     //Firestoreにmissionsを保存する
     //arrayUnionを使うと、配列に要素を追加できる(arrayRemoveで削除もできる)
+    //TODO: 一つづつ追加するのではなく、一度に追加するか悩み中
     await updateDoc(doc(gamesRef, playerStore.idGame), { missions: arrayUnion(selectMission) });
   }
 }
-
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
   playerStore.check = true;
   await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
-  console.log("check: " + playerStore.check);
+  console.log(i, "check: " + playerStore.check);
   const enemyCheck = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.check as boolean;
   if (enemyCheck === true) {
-    calcDamage();
+    battle();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, playerStore.idEnemy), (doc) => {
       const data = doc.data();
       if (!data) return;
       if (data.check == true) {
-        calcDamage();
+        battle();
         //監視を解除する
         unsubscribe();
-        console.log("監視を解除しました");
+        console.log(i, "監視を解除しました");
       }
     });
   }
 }
+//hungryの値が上限を超えていないか確認する
+export async function checkHungry(): Promise<void> {
+  if (playerStore.sumAllField.hungry > 10) {
+    //hungryが上限を超えていたら、hungryを最大値上限にする
+    playerStore.status.hungry = 10;
+    // await updateDoc(doc(playersRef, playerStore.id), { status: playerStore.status });
+
+  }
+}
+//寄付ならば先に処理を行う
 //Priorityの比較
-export async function comparePriority(order: number): Promise<number> {
-  console.log("実行: comparePriorityを実行しました");
+export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
+  console.log(s, "comparePriorityを実行しました");
   const enemyPriority = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.status.priority as number;
-  if (!enemyPriority) console.log("Error: enemyPriorityが取得できませんでした");
   //priorityが大きい方が優先
   if (playerStore.status.priority > enemyPriority) {
-    return playerStore.sign === 0 ? 0 : 1;
+    return firstAtkPlayerSign === 0 ? 0 : 1;
   } else if (playerStore.status.priority < enemyPriority) {
-    return playerStore.sign === 0 ? 1 : 0;
+    return firstAtkPlayerSign === 0 ? 1 : 0;
+  } else {
+    return firstAtkPlayerSign;
   }
-  return order;
 }
-//hungryの比較
-export async function compareHungry(order: number): Promise<number> {
-  console.log("実行: compareHungryを実行しました");
+//hungryの比較//!これ間違えてるわ ステータスじゃなくてカードのHungryを比較する
+export async function compareHungry(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
+  console.log(s, "compareHungryを実行しました");
   const enemyHungry = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.status.hungry as number;
-  if (!enemyHungry) console.log("Error: enemyHungryが取得できませんでした");
   //hungryが小さい方が優先
   if (playerStore.status.hungry > enemyHungry) {
-    return playerStore.sign === 0 ? 1 : 0;
+    return firstAtkPlayerSign === 0 ? 1 : 0;
   } else if (playerStore.status.hungry < enemyHungry) {
-    return playerStore.sign === 0 ? 0 : 1;
+    return firstAtkPlayerSign === 0 ? 0 : 1;
+  } else {
+    return playerStore.sign;
   }
-  return order;
 }
 //処理の順番を決める
-export async function decideProcessOrder(): Promise<void> {
-  console.log("実行: decideProcessOrderを実行しました");
+export async function decideFirstAtkPlayer(): Promise<0 | 1> {
+  console.log(s, "decideFirstAtkPlayerを実行しました");
   //順番はPriorityの値を優先する
-  let order = 0;
-  //!これ間違えてるわ ステータスじゃなくてカードのHungryを比較する
-  order = await compareHungry(order);
-  order = await comparePriority(order);
-  console.log("order: " + order);
-}
-//ダメージを計算する
-export async function calcDamage(): Promise<void> {
-  console.log("実行: calcDamageを実行しました");
-  decideProcessOrder();
+  let firstAtkPlayerSign: 0 | 1 = 0;
+  firstAtkPlayerSign = await compareHungry(firstAtkPlayerSign);
+  firstAtkPlayerSign = await comparePriority(firstAtkPlayerSign);
+  console.log(i, "firstAtkPlayerSign: " + firstAtkPlayerSign);
+  return firstAtkPlayerSign;
 }
 //ダメージを計算する
 //ダメージをFirestoreに保存する
 //その値が正しいか確認する
 
+//戦闘処理を統括する
+export async function battle(): Promise<void> {
+  console.log(s, "calcDamageを実行しました");
+  //hungryの値が上限を超えていないか確認する//?ここでやるべきか
+  await checkHungry();
+  //寄付ならば先に処理を行う
+  //先行後攻を決める
+  const firstAtkPlayerSign = await decideFirstAtkPlayer();
+  //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
+  //ダメージを計算する
+  //missionを達成しているか確認する
+  //死亡判断を行う
+}
+
 //!すべてのターン管理(最終的な形は未定)
-export async function useBattle(): Promise<void> {
+export async function startGame(): Promise<void> {
   gameStore.$state = await getGameData(playerStore.idGame);
 }
 //!export5日まとめる

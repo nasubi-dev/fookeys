@@ -8,6 +8,7 @@ const gifts = ref<Gift[]>([]);
 onMounted(async () => {
   gifts.value = await getGiftData();
 });
+//! 同じgiftを選択できないようにする
 </script>
 
 <template>

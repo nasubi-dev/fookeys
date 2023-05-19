@@ -3,6 +3,7 @@ import { db } from "./firebase";
 import { collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 import type { PlayerData, Character, Gift } from "@/types";
 import { playerStore } from "@/main";
+import { e, s, i } from "@/log";
 // import { storeToRefs } from "pinia";
 
 //Collectionの参照
@@ -20,9 +21,9 @@ onMounted(async () => {
 async function registerPlayer(): Promise<void> {
   try {
     playerStore.id = (await addDoc(playersRef, playerStore.newPlayer)).id;
-    console.log("Create Your ID: ", playerStore.id);
+    console.log(i,"Create Your ID: ", playerStore.id);
   } catch (error) {
-    console.error("Error adding Your ID: ", error);
+    console.error(e,"Error adding Your ID: ", error);
   }
 }
 
@@ -31,9 +32,9 @@ async function deletePlayer(): Promise<void> {
   try {
     if (!playerStore.id) return;
     await deleteDoc(doc(playersRef, playerStore.id));
-    console.log("Player deleted: ", playerStore.id);
+    console.log(i,"Player deleted: ", playerStore.id);
   } catch (error) {
-    console.error("Error deleting player: ", error);
+    console.error(e,"Error deleting player: ", error);
   }
 }
 
