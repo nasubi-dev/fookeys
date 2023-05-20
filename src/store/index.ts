@@ -38,7 +38,7 @@ const usePlayerStore = defineStore("playerData", () => {
   });
   //Fieldに出ているカードの値を合計する
   const sumAllField = computed(() => {
-    let SumAllField = {
+    let sumAllField = {
       hungry: 0,
       waste: 0,
       pow: 0,
@@ -46,29 +46,29 @@ const usePlayerStore = defineStore("playerData", () => {
       def: 0,
     };
     field.value.forEach((card) => {
-      SumAllField.hungry += card.hungry ? card.hungry : 0;
-      SumAllField.waste += card.waste ? card.waste : 0;
-      SumAllField.pow += card.pow ? card.pow : 0;
-      SumAllField.tech += card.tech ? card.tech : 0;
-      SumAllField.def += card.def ? card.def : 0;
+      sumAllField.hungry += card.hungry ? card.hungry : 0;
+      sumAllField.waste += card.waste ? card.waste : 0;
+      sumAllField.pow += card.pow ? card.pow : 0;
+      sumAllField.tech += card.tech ? card.tech : 0;
+      sumAllField.def += card.def ? card.def : 0;
     });
-    return SumAllField;
+    return sumAllField;
   });
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す
-  const ClickHand = (index: number) => {
+  const clickHand = (index: number) => {
     field.value.push(hand.value[index]);
     hand.value.splice(index, 1);
     console.log(i, "handClick: ", index, "field: ", field.value);
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
-  const ClickField = (index: number) => {
+  const clickField = (index: number) => {
     hand.value.push(field.value[index]);
     field.value.splice(index, 1);
     console.log(i, "fieldClick: ", index, "hand: ", hand.value);
   };
   //ターン終了時に、Fieldのカードを捨てる
-  const DeleteField = () => {
+  const deleteField = () => {
     field.value.splice(0, field.value.length);
     console.log(i, "fieldDelete: ", "field: ", field.value);
   };
@@ -87,9 +87,9 @@ const usePlayerStore = defineStore("playerData", () => {
     status,
     newPlayer,
     sumAllField,
-    ClickHand,
-    ClickField,
-    DeleteField,
+    clickHand,
+    clickField,
+    deleteField,
   };
 });
 

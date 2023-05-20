@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { startGame, setHand, setMissions, watchTurnEnd } from "@/server/useBattle";
+import { startGame, setHand, setMissions, watchTurnEnd,nextTurn } from "@/server/useBattle";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { e, s, i } from "@/log";
@@ -10,7 +10,7 @@ import Mission from "@/components/mission.vue";
 
 const { turn, players, missions } = storeToRefs(gameStore);
 const { id, sign, hand, field, character, gift, status, idGame } = storeToRefs(playerStore);
-const { ClickHand,ClickField,DeleteField } = playerStore;
+const { clickHand,clickField,deleteField } = playerStore;
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   await startGame();
@@ -35,10 +35,11 @@ const turnEnd = async () => {
     await watchTurnEnd(),
   ]).then(() => {
     //処理が終了したらFieldを削除
-    DeleteField();
+    deleteField();
     //handのカードのwasteの値を-1する
     //腐っていれば腐ったカードに入れ替える
     //ターンを進める
+    nextTurn();
   });
 };
 
@@ -61,14 +62,14 @@ const turnEnd = async () => {
         </div>
         <div>
           <h1>Field</h1>
-          <Cards :cards="field" @sendText="ClickField" />
+          <Cards :cards="field" @sendText="clickField" />
         </div>
         <div class="flex flex-col justify-end">
           <button @click="turnEnd">ターン終了ボタン</button>
         </div>
         <div>
           <h1>Hand</h1>
-          <Cards :cards="hand" @sendText="ClickHand" />
+          <Cards :cards="hand" @sendText="clickHand" />
         </div>
       </div>
     </div>

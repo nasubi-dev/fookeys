@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, arrayUnion } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, arrayUnion, increment } from "firebase/firestore";
 import type { GameData, Card, Mission } from "@/types";
 import { playerStore, gameStore } from "@/main";
 import { e, s, i } from "@/log";
@@ -76,17 +76,13 @@ export async function watchTurnEnd(): Promise<void> {
     });
   }
 }
-//hungryの値が上限を超えていないか確認する
-export async function checkHungry(): Promise<void> {
-  if (playerStore.sumAllField.hungry > 10) {
-    //hungryが上限を超えていたら、hungryを最大値上限にする
-    playerStore.status.hungry = 10;
-    // await updateDoc(doc(playersRef, playerStore.id), { status: playerStore.status });
-
-  }
-}
 //寄付ならば先に処理を行う
-//Priorityの比較
+export async function donate(): Promise<void> {
+  console.log(s, "donateを実行しました");
+  //TODO: 寄付の処理を書く
+}
+
+//Priorityの比較//!これ間違えてるわ ステータスじゃなくてカードのPriorityを比較する
 export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "comparePriorityを実行しました");
   const enemyPriority = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.status.priority as number;
@@ -129,15 +125,40 @@ export async function decideFirstAtkPlayer(): Promise<0 | 1> {
 //戦闘処理を統括する
 export async function battle(): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  //hungryの値が上限を超えていないか確認する//?ここでやるべきか
-  await checkHungry();
+  //checkの値がtrueになっていたら､行動済みとする
+  playerStore.check = false;
+  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
   //寄付ならば先に処理を行う
+  //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
+  //!これじゃ敵の寄付は処理されないし､
+  if (playerStore.field[0].name === "寄付") {
+    await donate();
+    //寄付の処理が終わったら、checkの値をtrueにする
+    playerStore.check = true;
+    await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
+  }
   //先行後攻を決める
   const firstAtkPlayerSign = await decideFirstAtkPlayer();
-  //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
-  //ダメージを計算する
-  //missionを達成しているか確認する
-  //死亡判断を行う
+  //攻撃を行う
+  while (firstAtkPlayerSign === 0) {
+    //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
+    //ダメージを計算する
+    //missionを達成しているか確認する
+    //死亡判断を行う
+    if(playerStore.status.hp <= 0) {
+      console.log(i, "you died");
+      // finishGame();
+    }
+  }
+}
+//turnを進める
+export async function nextTurn(): Promise<void> {
+  console.log(s, "nextTurnを実行しました");
+  gameStore.turn++;
+  playerStore.check = false;
+  //incrementを使うと、値を1増やすことができる
+  await updateDoc(doc(gamesRef, playerStore.idGame), { turn: increment(1) });
+  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
 }
 
 //!すべてのターン管理(最終的な形は未定)
