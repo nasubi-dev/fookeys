@@ -14,7 +14,7 @@
     "@typescript-eslint/parser": "^5.58.0",
     "eslint": "^8.38.0",
     "eslint-plugin-vue": "^9.10.0",
-    "firebase": "^9.18.0",
+    "firebase": "^9.22.0",
     "pinia": "^2.0.34",
     "vue": "^3.3.3",
     "vue-router": "^4.1.6"
