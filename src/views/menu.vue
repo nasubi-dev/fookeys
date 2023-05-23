@@ -2,7 +2,6 @@
 import { startMatchmaking } from "@/server/useMatchMaking";
 import PlayerData from "@/components/playerData.vue";
 import nasubi from "@/assets/nasubi.png";
-
 //マッチングを開始する
 //マッチングが成功したら後で押したほうがPlayer1､Player2
 async function startMatch(): Promise<void> {
@@ -22,20 +21,22 @@ async function startMatch(): Promise<void> {
 
     <div class="flex flex-1">
       <div class="w-1/2 flex items-center justify-center">
-        <img :src="nasubi" class="max-h-full max-w-full" />
+        <img :src="nasubi" class="w-1/2" />
       </div>
-<!-- TODO キャラとギフト選択を押した場合このコンポーネントを入れ替える -->
+      <!-- TODO キャラとギフト選択を押した場合このコンポーネントを入れ替える -->
       <div class="w-1/2 p-8 flex flex-col justify-center">
-        <button class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop" @click="startMatch">
-          エントリー
+        <button class="btn-pop" @click="startMatch">
+            <img src="@/assets/matchMaking.png" class="w-1/2" />
         </button>
-
-        <router-link to="/character" class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop">
-          <button class="text-white rounded-md">キャラ選択</button>
+        <router-link to="/character" class="btn-pop">
+          <button class="text-white rounded-md">
+            <img src="@/assets/charaChange.png" class="w-1/2" />
+          </button>
         </router-link>
-
-        <router-link to="/gift" class="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-4 btn-pop">
-          <button class="text-white rounded-md">ギフト選択</button>
+        <router-link to="/gift" class="btn-pop">
+          <button class="text-white rounded-md">
+            <img src="@/assets/giftChange.png" class="w-1/2" />
+          </button>
         </router-link>
       </div>
     </div>
