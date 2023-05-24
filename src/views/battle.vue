@@ -38,11 +38,11 @@ const turnEnd = async () => {
     await watchTurnEnd(),
   ]).then(() => {
     //処理が終了したらFieldを削除
-    deleteField();
+    // deleteField();
     //handのカードのwasteの値を-1する
     //腐っていれば腐ったカードに入れ替える
     //ターンを進める
-    nextTurn();
+    // nextTurn();
   });
 };
 

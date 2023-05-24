@@ -30,7 +30,7 @@ async function startMatch(): Promise<void> {
         </button>
         <router-link to="/character" class="btn-pop">
           <button class="text-white rounded-md">
-            <img src="@/assets/charaChange.png" class="w-1/2" />
+            <img src="@/assets/characterChange.png" class="w-1/2" />
           </button>
         </router-link>
         <router-link to="/gift" class="btn-pop">

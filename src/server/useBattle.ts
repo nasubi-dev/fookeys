@@ -80,16 +80,11 @@ export async function watchTurnEnd(): Promise<void> {
     });
   }
 }
-//寄付ならば先に処理を行う
-export async function donate(): Promise<void> {
-  console.log(s, "donateを実行しました");
-  //TODO: 寄付の処理を書く
-}
 
 //Priorityの比較//!これ間違えてるわ ステータスじゃなくてカードのPriorityを比較する
 export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "comparePriorityを実行しました");
-  const { id, data } = storeToRefs(playerStore);
+  const { data } = storeToRefs(playerStore);
   const { idEnemy, status } = toRefs(data.value);
 
   const enemyPriority = (await getDoc(doc(playersRef, idEnemy.value))).data()?.status.priority as number;
@@ -105,7 +100,7 @@ export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1>
 //hungryの比較//!これ間違えてるわ ステータスじゃなくてカードのHungryを比較する
 export async function compareHungry(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "compareHungryを実行しました");
-  const { id, data } = storeToRefs(playerStore);
+  const { data } = storeToRefs(playerStore);
   const { idEnemy, status, sign } = toRefs(data.value);
 
   const enemyHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.status.hungry as number;
@@ -127,6 +122,11 @@ export async function decideFirstAtkPlayer(): Promise<0 | 1> {
   firstAtkPlayerSign = await comparePriority(firstAtkPlayerSign);
   console.log(i, "firstAtkPlayerSign: " + firstAtkPlayerSign);
   return firstAtkPlayerSign;
+}
+//寄付ならば先に処理を行う
+export async function donate(): Promise<void> {
+  console.log(s, "donateを実行しました");
+  //TODO: 寄付の処理を書く
 }
 //ダメージを計算する
 //ダメージをFirestoreに保存する
@@ -161,6 +161,7 @@ export async function battle(): Promise<void> {
     if (status.value.hp <= 0) {
       console.log(i, "you died");
       // finishGame();
+      return;
     }
   }
 }

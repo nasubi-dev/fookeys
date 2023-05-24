@@ -49,15 +49,15 @@ const usePlayerStore = defineStore("playerData", () => {
   //Handのカードをクリックしたら、そのカードをFieldに出す
   const clickHand = (index: number): void => {
     const { field, hand } = data.value;
+    field.push(hand[index]);
     hand.splice(index, 1);
-    field.push(hand[0]);
     console.log(i, "handClick: ", index, "field: ", field);
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
   const clickField = (index: number): void => {
     const { field, hand } = data.value;
+    hand.push(field[index]);
     field.splice(index, 1);
-    hand.push(field[0]);
     console.log(i, "fieldClick: ", index, "hand: ", hand);
   };
   //ターン終了時に、Fieldのカードを捨てる
