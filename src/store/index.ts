@@ -26,40 +26,42 @@ const usePlayerStore = defineStore("playerData", () => {
   });
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
-  const sumAllField = computed(() => {
-    let sumAllField = {
-      hungry: 0,
-      waste: 0,
-      pow: 0,
-      tech: 0,
-      def: 0,
-    };
-    data.value.field.forEach((card) => {
-      sumAllField.hungry += card.hungry ? card.hungry : 0;
-      sumAllField.waste += card.waste ? card.waste : 0;
-      sumAllField.pow += card.pow ? card.pow : 0;
-      sumAllField.tech += card.tech ? card.tech : 0;
-      sumAllField.def += card.def ? card.def : 0;
-    });
-    return sumAllField;
-  });
+  const sumAllField = computed<{
+    waste: number;
+    hungry: number;
+    pow: number;
+    def: number;
+    tech: number;
+  }>(() =>
+    data.value.field.reduce(
+      (acc, cur) => {
+        acc.waste += cur.waste;
+        acc.hungry += cur.hungry;
+        acc.pow += cur.pow || 0;
+        acc.def += cur.def || 0;
+        acc.tech += cur.tech || 0;
+        return acc;
+      },
+      { waste: 0, hungry: 0, pow: 0, def: 0, tech: 0 }
+    )
+  );
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す
-  const clickHand = (index: number) => {
+  const clickHand = (index: number): void => {
     const { field, hand } = data.value;
-    field.push(hand[index]);
     hand.splice(index, 1);
+    field.push(hand[0]);
     console.log(i, "handClick: ", index, "field: ", field);
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
-  const clickField = (index: number) => {
+  const clickField = (index: number): void => {
     const { field, hand } = data.value;
-    hand.push(field[index]);
     field.splice(index, 1);
+    hand.push(field[0]);
     console.log(i, "fieldClick: ", index, "hand: ", hand);
   };
   //ターン終了時に、Fieldのカードを捨てる
-  const deleteField = () => {
+  const deleteField = (): void => {
     const { field } = data.value;
     field.splice(0, field.length);
     console.log(i, "fieldDelete: ", "field: ", field.every.name);
@@ -76,26 +78,15 @@ const usePlayerStore = defineStore("playerData", () => {
 
 const useGameStore = defineStore("gameData", () => {
   //?Const/State
-  const game= ref<GameData>({
+  const game = ref<GameData>({
     turn: 1,
     players: [],
     missions: [],
   });
-  const turn = ref(1);
-  const players = ref<string[]>([]);
-  const missions = ref<Mission[]>([]);
   //?Computed/Getter
-  const newGame = computed(() => {
-    const newGame = {
-      turn: turn.value,
-      players: players.value,
-      missions: missions.value,
-    } as GameData;
-    return newGame;
-  });
   ///?function/actions
 
-  return { game,turn, players, missions, newGame };
+  return { game };
 });
 
 export { usePlayerStore, useGameStore };
