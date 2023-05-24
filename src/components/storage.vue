@@ -18,7 +18,9 @@ getDownloadURL(nasubiRef).then((url) => {
   images.push(url);
   console.log(i, "newImageUrl: ", url);
 });
+
 </script>
+
 <template>
   <div>
     <div v-if="images[0]">

@@ -23,6 +23,7 @@ function selectCard(card: Character | Gift, selectType: string) {
     console.log("gift: ", gift.value);
   }
 }
+
 </script>
 
 <template>

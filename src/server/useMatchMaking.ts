@@ -1,12 +1,12 @@
+import { toRefs } from "vue";
 import { db } from "./firebase";
 import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { getPlayerData } from "./usePlayerID";
-import type { MatchStatus, PlayerData } from "@/types";
+import { e, s, i } from "@/log";
 import { router } from "@/router";
+import type { MatchStatus, PlayerData } from "@/types";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { toRefs } from "vue";
-import { e, s, i } from "@/log";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
@@ -63,8 +63,10 @@ async function watchMatchField(): Promise<void> {
       idGame.value = data.idGame;
       // 監視を解除
       unsubscribe();
+      //両プレイヤーのIDをgameに追加する
+      gameStore.game.players = [idEnemy.value, id.value];
       //画面遷移
-      console.log(s, "マッチ成功!相手ID:", playerStore.data.idEnemy, "ゲームID:", idGame.value);
+      console.log(s, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
       router.push({ name: "battle", params: { idGame: idGame.value } });
     }
   });

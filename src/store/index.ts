@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
-import { defineStore } from "pinia";
 import { e, s, i } from "@/log";
-import type { PlayerData, Mission, GameData } from "@/types";
+import type { PlayerData, GameData } from "@/types";
+import { defineStore } from "pinia";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -64,7 +64,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const deleteField = (): void => {
     const { field } = data.value;
     field.splice(0, field.length);
-    console.log(i, "fieldDelete: ", "field: ", field.every.name);
+    console.log(i, "fieldDelete: ", "field: ", field.map((card) => card.name));
   };
   return {
     id,

@@ -1,9 +1,9 @@
 import { db } from "./firebase";
 import { collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { e, s, i } from "@/log";
 import type { PlayerData, Character, Gift } from "@/types";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { e, s, i } from "@/log";
 
 //Collectionの参照
 const playersRef = collection(db, "players");

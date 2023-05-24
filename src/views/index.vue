@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref,toRefs } from "vue";
-import { registerPlayer } from "@/server/usePlayerID";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { registerPlayer } from "@/server/usePlayerID";
 import Storage from "@/components/storage.vue";
 
 //storeの参照

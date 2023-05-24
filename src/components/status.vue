@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+
 const { data } = storeToRefs(playerStore);
 const { name, character, gift, status } = data.value;
+
 </script>
 
 <template>

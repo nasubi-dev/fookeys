@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, toRefs } from "vue";
-import { startGame, setHand, setMissions, watchTurnEnd, nextTurn } from "@/server/useBattle";
+import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { e, s, i } from "@/log";
+import { startGame, setHand, setMissions, watchTurnEnd, nextTurn } from "@/server/useBattle";
 import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
 import Mission from "@/components/mission.vue";

@@ -4,6 +4,7 @@ import type { Mission } from "@/types";
 defineProps<{
   missions: Mission[];
 }>();
+
 </script>
 
 <template>

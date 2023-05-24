@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+
 const { id, data } = storeToRefs(playerStore);
 const { idEnemy, idGame, name, character, gift } = data.value;
+
 </script>
 <template>
   <div class="flex justify-start">

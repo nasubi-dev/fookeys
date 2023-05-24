@@ -1,26 +1,17 @@
+import { toRefs } from "vue";
 import { db } from "./firebase";
 import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, arrayUnion, increment } from "firebase/firestore";
-import type { GameData, Card, Mission } from "@/types";
+import { e, s, i } from "@/log";
+import type { Card, Mission } from "@/types";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { toRefs } from "vue";
-import { e, s, i } from "@/log";
+
 //Collectionの参照
 const missionsRef = collection(db, "missions");
 const playersRef = collection(db, "players");
 const gamesRef = collection(db, "games");
 const deckRef = collection(db, "deck");
 
-//Game情報を取得
-async function getGameData(GameID: string): Promise<GameData> {
-  const docSnap = await getDoc(doc(gamesRef, GameID));
-  if (docSnap.exists()) {
-    return docSnap.data() as GameData;
-  } else {
-    console.log(e, "No such GameDocument!");
-    return docSnap.data() as GameData; //!修正します5日
-  }
-}
 //cardをランダムに一枚引く
 async function drawCard(): Promise<Card> {
   const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
@@ -153,7 +144,7 @@ export async function battle(): Promise<void> {
   //寄付ならば先に処理を行う
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   //!これじゃ敵の寄付は処理されないし､
-  if (field.value[0].name === "寄付") {
+  if (field.value[0].name === "foodBank") {
     await donate();
     //寄付の処理が終わったら、checkの値をtrueにする
     check.value = true;
@@ -179,9 +170,8 @@ export async function nextTurn(): Promise<void> {
   const { id, data } = storeToRefs(playerStore);
   const { idGame, check } = toRefs(data.value);
   const { game } = storeToRefs(gameStore);
-  const { turn } = toRefs(game.value);
 
-  turn.value++;
+  game.value.turn++;
   check.value = false;
   //incrementを使うと、値を1増やすことができる
   await updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
@@ -190,6 +180,6 @@ export async function nextTurn(): Promise<void> {
 
 //!すべてのターン管理(最終的な形は未定)
 export async function startGame(): Promise<void> {
-  // gameStore.$state = await getGameData(playerStore.data.idGame);
+  console.log(s, "startGameを実行しました");
 }
 //!export5日まとめる
