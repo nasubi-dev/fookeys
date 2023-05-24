@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted,toRefs } from "vue";
 import { startGame, setHand, setMissions, watchTurnEnd,nextTurn } from "@/server/useBattle";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -9,7 +9,8 @@ import Cards from "@/components/cards.vue";
 import Mission from "@/components/mission.vue";
 
 const { turn, players, missions } = storeToRefs(gameStore);
-const { id, sign, hand, field, character, gift, status, idGame } = storeToRefs(playerStore);
+const { id, data } = storeToRefs(playerStore);
+const { idGame, character, gift, status, hand, field, sign } = toRefs(data.value);
 const { clickHand,clickField,deleteField } = playerStore;
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -50,7 +51,7 @@ const turnEnd = async () => {
     <div class="flex flex-col items-center justify-center h-screen">
       <h1>Battle</h1>
       <p class="text-sm font-medium text-gray-900 truncate">turn:{{ turn }}</p>
-      {{ "Player: " + (playerStore.sign + 1) }}
+      {{ "Player: " + (sign + 1) }}
       <div class="max-w-7xl mx-auto">
         <div>
           <h1>Mission</h1>

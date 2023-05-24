@@ -29,16 +29,16 @@ async function drawCard(): Promise<Card> {
 export async function setHand(): Promise<void> {
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
-    playerStore.hand.push(card as Card);
-    updateDoc(doc(playersRef, playerStore.id), { hand: playerStore.hand });
+    playerStore.data.hand.push(card as Card);
+    updateDoc(doc(playersRef, playerStore.id), { hand: playerStore.data.hand });
   }
 }
 //指定のcardを一枚引く
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
-  if (playerStore.sign == 0) {
+  if (playerStore.data.sign == 0) {
     //!onSnapshotを覚えたい
-    const unsubscribe = onSnapshot(doc(gamesRef, playerStore.idGame), (doc) => {
+    const unsubscribe = onSnapshot(doc(gamesRef, playerStore.data.idGame), (doc) => {
       gameStore.missions = doc.data()?.missions;
     });
     return;
@@ -52,19 +52,19 @@ export async function setMissions(): Promise<void> {
     //Firestoreにmissionsを保存する
     //arrayUnionを使うと、配列に要素を追加できる(arrayRemoveで削除もできる)
     //TODO: 一つづつ追加するのではなく、一度に追加するか悩み中
-    await updateDoc(doc(gamesRef, playerStore.idGame), { missions: arrayUnion(selectMission) });
+    await updateDoc(doc(gamesRef, playerStore.data.idGame), { missions: arrayUnion(selectMission) });
   }
 }
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
-  playerStore.check = true;
-  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
-  console.log(i, "check: " + playerStore.check);
-  const enemyCheck = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.check as boolean;
+  playerStore.data.check = true;
+  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.data.check });
+  console.log(i, "check: " + playerStore.data.check);
+  const enemyCheck = (await getDoc(doc(playersRef, playerStore.data.idEnemy))).data()?.check as boolean;
   if (enemyCheck === true) {
     battle();
   } else {
-    const unsubscribe = onSnapshot(doc(playersRef, playerStore.idEnemy), (doc) => {
+    const unsubscribe = onSnapshot(doc(playersRef, playerStore.data.idEnemy), (doc) => {
       const data = doc.data();
       if (!data) return;
       if (data.check == true) {
@@ -85,11 +85,11 @@ export async function donate(): Promise<void> {
 //Priorityの比較//!これ間違えてるわ ステータスじゃなくてカードのPriorityを比較する
 export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "comparePriorityを実行しました");
-  const enemyPriority = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.status.priority as number;
+  const enemyPriority = (await getDoc(doc(playersRef, playerStore.data.idEnemy))).data()?.status.priority as number;
   //priorityが大きい方が優先
-  if (playerStore.status.priority > enemyPriority) {
+  if (playerStore.data.status.priority > enemyPriority) {
     return firstAtkPlayerSign === 0 ? 0 : 1;
-  } else if (playerStore.status.priority < enemyPriority) {
+  } else if (playerStore.data.status.priority < enemyPriority) {
     return firstAtkPlayerSign === 0 ? 1 : 0;
   } else {
     return firstAtkPlayerSign;
@@ -98,14 +98,14 @@ export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1>
 //hungryの比較//!これ間違えてるわ ステータスじゃなくてカードのHungryを比較する
 export async function compareHungry(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "compareHungryを実行しました");
-  const enemyHungry = (await getDoc(doc(playersRef, playerStore.idEnemy))).data()?.status.hungry as number;
+  const enemyHungry = (await getDoc(doc(playersRef, playerStore.data.idEnemy))).data()?.status.hungry as number;
   //hungryが小さい方が優先
-  if (playerStore.status.hungry > enemyHungry) {
+  if (playerStore.data.status.hungry > enemyHungry) {
     return firstAtkPlayerSign === 0 ? 1 : 0;
-  } else if (playerStore.status.hungry < enemyHungry) {
+  } else if (playerStore.data.status.hungry < enemyHungry) {
     return firstAtkPlayerSign === 0 ? 0 : 1;
   } else {
-    return playerStore.sign;
+    return playerStore.data.sign;
   }
 }
 //処理の順番を決める
@@ -126,16 +126,16 @@ export async function decideFirstAtkPlayer(): Promise<0 | 1> {
 export async function battle(): Promise<void> {
   console.log(s, "calcDamageを実行しました");
   //checkの値がtrueになっていたら､行動済みとする
-  playerStore.check = false;
-  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
+  playerStore.data.check = false;
+  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.data.check });
   //寄付ならば先に処理を行う
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   //!これじゃ敵の寄付は処理されないし､
-  if (playerStore.field[0].name === "寄付") {
+  if (playerStore.data.field[0].name === "寄付") {
     await donate();
     //寄付の処理が終わったら、checkの値をtrueにする
-    playerStore.check = true;
-    await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
+    playerStore.data.check = true;
+    await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.data.check });
   }
   //先行後攻を決める
   const firstAtkPlayerSign = await decideFirstAtkPlayer();
@@ -145,7 +145,7 @@ export async function battle(): Promise<void> {
     //ダメージを計算する
     //missionを達成しているか確認する
     //死亡判断を行う
-    if(playerStore.status.hp <= 0) {
+    if(playerStore.data.status.hp <= 0) {
       console.log(i, "you died");
       // finishGame();
     }
@@ -155,14 +155,14 @@ export async function battle(): Promise<void> {
 export async function nextTurn(): Promise<void> {
   console.log(s, "nextTurnを実行しました");
   gameStore.turn++;
-  playerStore.check = false;
+  playerStore.data.check = false;
   //incrementを使うと、値を1増やすことができる
-  await updateDoc(doc(gamesRef, playerStore.idGame), { turn: increment(1) });
-  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.check });
+  await updateDoc(doc(gamesRef, playerStore.data.idGame), { turn: increment(1) });
+  await updateDoc(doc(playersRef, playerStore.id), { check: playerStore.data.check });
 }
 
 //!すべてのターン管理(最終的な形は未定)
 export async function startGame(): Promise<void> {
-  gameStore.$state = await getGameData(playerStore.idGame);
+  // gameStore.$state = await getGameData(playerStore.data.idGame);
 }
 //!export5日まとめる

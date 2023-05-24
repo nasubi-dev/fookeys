@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,toRefs } from "vue";
 import { registerPlayer } from "@/server/usePlayerID";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import Storage from "@/components/storage.vue";
 
 //storeの参照
-const { id, name } = storeToRefs(playerStore);
+const { id, data } = storeToRefs(playerStore);
+const { name } = toRefs(data.value);
 
 const newName = ref("");
 //アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name

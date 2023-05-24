@@ -43,7 +43,7 @@ type PlayerData = {
   check: boolean;
   sign: PlayerSign;
   character: Character | null;
-  gift: [Gift, Gift, Gift];
+  gift: Gift[];
   hand: Card[];
   field: Card[];
   status: Status;

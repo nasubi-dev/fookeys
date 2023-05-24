@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toRefs } from "vue";
 import type { Character, Gift } from "@/types";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -8,7 +9,8 @@ const props = defineProps<{
   selectType: string;
 }>();
 
-const { character, gift } = storeToRefs(playerStore);
+const { data } = storeToRefs(playerStore);
+const { character, gift } = toRefs(data.value);
 
 function selectCard(card: Character | Gift, selectType: string) {
   if (selectType == "character") {

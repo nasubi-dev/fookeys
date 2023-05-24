@@ -1,40 +1,35 @@
-import { onMounted } from "vue";
 import { db } from "./firebase";
 import { collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 import type { PlayerData, Character, Gift } from "@/types";
 import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 import { e, s, i } from "@/log";
-// import { storeToRefs } from "pinia";
 
 //Collectionの参照
 const playersRef = collection(db, "players");
 const charactersRef = collection(db, "characters");
 const giftsRef = collection(db, "gifts");
 
-//piniaの参照
-onMounted(async () => {
-  //!どうにかしてplayerStoreのidを取得したい
-  // const { id } = storeToRefs(playerStore);
-});
-
 //player登録
 async function registerPlayer(): Promise<void> {
+  const { id, data } = storeToRefs(playerStore);
   try {
-    playerStore.id = (await addDoc(playersRef, playerStore.newPlayer)).id;
-    console.log(i,"Create Your ID: ", playerStore.id);
+    id.value = (await addDoc(playersRef, data.value)).id;
+    console.log(i, "Create Your ID: ", id.value);
   } catch (error) {
-    console.error(e,"Error adding Your ID: ", error);
+    console.error(e, "Error adding Your ID: ", error);
   }
 }
 
 //player削除
 async function deletePlayer(): Promise<void> {
+  const { id } = storeToRefs(playerStore);
   try {
-    if (!playerStore.id) return;
-    await deleteDoc(doc(playersRef, playerStore.id));
-    console.log(i,"Player deleted: ", playerStore.id);
+    if (!id.value) return;
+    await deleteDoc(doc(playersRef, id.value));
+    console.log(i, "Player deleted: ", id.value);
   } catch (error) {
-    console.error(e,"Error deleting player: ", error);
+    console.error(e, "Error deleting player: ", error);
   }
 }
 

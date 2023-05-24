@@ -1,41 +1,30 @@
 import { ref, computed } from "vue";
-import type { Ref } from "vue";
 import { defineStore } from "pinia";
 import { e, s, i } from "@/log";
-import type { MatchStatus, PlayerSign, PlayerData, Status, Card, Character, Gift, Mission, GameData } from "@/types";
+import type { PlayerData, Mission, GameData } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
   const id = ref("");
-  const idEnemy = ref("");
-  const idGame = ref("");
-  const name = ref("");
-  const match: Ref<MatchStatus> = ref("nothing");
-  const check = ref(false);
-  const sign: Ref<PlayerSign> = ref(0);
-  const character: Ref<Character | null> = ref(null);
-  const gift: Ref<Gift[]> = ref([]);
-  const hand: Ref<Card[]> = ref([]);
-  const field: Ref<Card[]> = ref([]);
-  const status: Ref<Status> = ref({ hp: 0, hungry: 0, contribution: 0, priority: 0 });
-  //?Computed/Getter
-  //Firestoreに保存するデータ
-  const newPlayer = computed(() => {
-    const newPlayer = {
-      idEnemy: idEnemy.value,
-      idGame: idGame.value,
-      name: name.value,
-      match: match.value,
-      check: check.value,
-      sign: sign.value,
-      character: character.value,
-      gift: gift.value,
-      hand: hand.value,
-      field: field.value,
-      status: status.value,
-    } as PlayerData;
-    return newPlayer;
+  const data = ref<PlayerData>({
+    idEnemy: "",
+    idGame: "",
+    name: "",
+    match: "nothing",
+    check: false,
+    sign: 0,
+    character: null,
+    gift: [],
+    hand: [],
+    field: [],
+    status: {
+      hp: 0,
+      hungry: 0,
+      contribution: 0,
+      priority: 0,
+    },
   });
+  //?Computed/Getter
   //Fieldに出ているカードの値を合計する
   const sumAllField = computed(() => {
     let sumAllField = {
@@ -45,7 +34,7 @@ const usePlayerStore = defineStore("playerData", () => {
       tech: 0,
       def: 0,
     };
-    field.value.forEach((card) => {
+    data.value.field.forEach((card) => {
       sumAllField.hungry += card.hungry ? card.hungry : 0;
       sumAllField.waste += card.waste ? card.waste : 0;
       sumAllField.pow += card.pow ? card.pow : 0;
@@ -57,35 +46,27 @@ const usePlayerStore = defineStore("playerData", () => {
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す
   const clickHand = (index: number) => {
-    field.value.push(hand.value[index]);
-    hand.value.splice(index, 1);
-    console.log(i, "handClick: ", index, "field: ", field.value);
+    const { field, hand } = data.value;
+    field.push(hand[index]);
+    hand.splice(index, 1);
+    console.log(i, "handClick: ", index, "field: ", field);
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
   const clickField = (index: number) => {
-    hand.value.push(field.value[index]);
-    field.value.splice(index, 1);
-    console.log(i, "fieldClick: ", index, "hand: ", hand.value);
+    const { field, hand } = data.value;
+    hand.push(field[index]);
+    field.splice(index, 1);
+    console.log(i, "fieldClick: ", index, "hand: ", hand);
   };
   //ターン終了時に、Fieldのカードを捨てる
   const deleteField = () => {
-    field.value.splice(0, field.value.length);
-    console.log(i, "fieldDelete: ", "field: ", field.value);
+    const { field } = data.value;
+    field.splice(0, field.length);
+    console.log(i, "fieldDelete: ", "field: ", field.every.name);
   };
   return {
     id,
-    idEnemy,
-    idGame,
-    name,
-    match,
-    check,
-    sign,
-    character,
-    gift,
-    hand,
-    field,
-    status,
-    newPlayer,
+    data,
     sumAllField,
     clickHand,
     clickField,
@@ -95,6 +76,11 @@ const usePlayerStore = defineStore("playerData", () => {
 
 const useGameStore = defineStore("gameData", () => {
   //?Const/State
+  const game= ref<GameData>({
+    turn: 1,
+    players: [],
+    missions: [],
+  });
   const turn = ref(1);
   const players = ref<string[]>([]);
   const missions = ref<Mission[]>([]);
@@ -109,7 +95,7 @@ const useGameStore = defineStore("gameData", () => {
   });
   ///?function/actions
 
-  return { turn, players, missions, newGame };
+  return { game,turn, players, missions, newGame };
 });
 
 export { usePlayerStore, useGameStore };
