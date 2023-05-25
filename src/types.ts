@@ -32,7 +32,7 @@ type Mission = {
   // action?: () => void;
 };
 
-type MatchStatus = "matching" | "nothing" | "waiting";
+type MatchStatus = "matching" | "nothing" | "waiting"| "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number; priority: number };
 type PlayerData = {

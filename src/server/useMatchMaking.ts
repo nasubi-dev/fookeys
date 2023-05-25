@@ -25,6 +25,7 @@ async function findWaitingPlayer(): Promise<void> {
   // 自分を除外する
   waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
   // ランダムに選択する
+  if(waitingPlayers.length == 0) return;
   idEnemy.value = waitingPlayers[Math.floor(Math.random() * waitingPlayers.length)];
   console.log(i, "Found player: ", idEnemy.value);
 }
@@ -65,6 +66,9 @@ async function watchMatchField(): Promise<void> {
       unsubscribe();
       //両プレイヤーのIDをgameに追加する
       gameStore.game.players = [idEnemy.value, id.value];
+      //プレイヤーのマッチング状況を更新する
+      player.value.match = "battle";
+      updatePlayerField(id.value, "match", "battle");
       //画面遷移
       console.log(s, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
       router.push({ name: "battle", params: { idGame: idGame.value } });
@@ -78,6 +82,7 @@ async function startMatchmaking(): Promise<void> {
   const { idEnemy, idGame } = toRefs(player.value);
 
   // マッチング待機中のユーザーを検索する
+  player.value.match = "waiting";
   await updatePlayerField(id.value, "match", "waiting");
   await findWaitingPlayer();
 
