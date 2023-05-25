@@ -7,11 +7,11 @@ import { i } from "../log";
 
 const props = defineProps<{
   image: string;
-  file?: string;
+  folder?: string;
 }>();
 
 let images: string[] = reactive([]);
-const nasubiRef = ref(storage, (props.file === undefined ? "" : props.file + "/") + props.image + ".png");
+const nasubiRef = ref(storage, (props.folder === undefined ? "" : props.folder + "/") + props.image + ".png");
 console.log(i, nasubiRef.name);
 
 getDownloadURL(nasubiRef).then((url) => {
