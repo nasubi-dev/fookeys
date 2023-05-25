@@ -7,6 +7,7 @@ import { startGame, setHand, setMissions, watchTurnEnd, nextTurn } from "@/serve
 import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
 import Mission from "@/components/mission.vue";
+import Turn from "@/components/turn.vue";
 
 const { id, data } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(data.value);
@@ -42,9 +43,10 @@ const turnEnd = async () => {
     //handのカードのwasteの値を-1する
     //腐っていれば腐ったカードに入れ替える
     //ターンを進める
-    // nextTurn();
+    nextTurn();
   });
 };
+
 
 </script>
 
@@ -52,6 +54,9 @@ const turnEnd = async () => {
   <div>
     <div class="flex flex-col items-center justify-center h-screen">
       <h1>Battle</h1>
+      <div>
+        <turn></turn>
+      </div>
       <p class="text-sm font-medium text-gray-900 truncate">turn:{{ turn }}</p>
       {{ "Player: " + (sign + 1) }}
       <div class="max-w-7xl mx-auto">
