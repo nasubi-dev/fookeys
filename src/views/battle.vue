@@ -8,6 +8,7 @@ import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
 import Mission from "@/components/mission.vue";
 import Turn from "@/components/turn.vue";
+import End from "@/components/end.vue";
 
 const { id, data } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(data.value);
@@ -75,6 +76,11 @@ const turnEnd = async () => {
         <div class="flex flex-col justify-end">
           <button @click="turnEnd">ターン終了ボタン</button>
         </div>
+
+        <div>
+          <End></End>
+        </div>
+
         <div>
           <h1>Hand</h1>
           <Cards :cards="hand" @sendText="clickHand" />
