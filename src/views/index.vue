@@ -6,8 +6,8 @@ import { registerPlayer } from "@/server/usePlayerID";
 import Storage from "@/components/storage.vue";
 
 //storeの参照
-const { id, data } = storeToRefs(playerStore);
-const { name } = toRefs(data.value);
+const { id,  player } = storeToRefs(playerStore);
+const { name } = toRefs(player.value);
 
 const newName = ref("");
 //アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name

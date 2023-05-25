@@ -12,9 +12,9 @@ const giftsRef = collection(db, "gifts");
 
 //player登録
 async function registerPlayer(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   try {
-    id.value = (await addDoc(playersRef, data.value)).id;
+    id.value = (await addDoc(playersRef, player.value)).id;
     console.log(i, "Create Your ID: ", id.value);
   } catch (error) {
     console.error(e, "Error adding Your ID: ", error);

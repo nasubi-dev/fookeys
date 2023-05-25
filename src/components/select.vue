@@ -9,8 +9,8 @@ const props = defineProps<{
   selectType: string;
 }>();
 
-const { data } = storeToRefs(playerStore);
-const { character, gift } = toRefs(data.value);
+const { player } = storeToRefs(playerStore);
+const { character, gift } = toRefs(player.value);
 
 function selectCard(card: Character | Gift, selectType: string) {
   if (selectType == "character") {

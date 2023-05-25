@@ -2,8 +2,8 @@
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
-const { data } = storeToRefs(playerStore);
-const { name, character, gift, status } = data.value;
+const {  player } = storeToRefs(playerStore);
+const { name, character, gift, status } = player.value;
 
 </script>
 

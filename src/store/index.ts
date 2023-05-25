@@ -6,7 +6,7 @@ import { defineStore } from "pinia";
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
   const id = ref("");
-  const data = ref<PlayerData>({
+  const player = ref<PlayerData>({
     idEnemy: "",
     idGame: "",
     name: "",
@@ -33,7 +33,7 @@ const usePlayerStore = defineStore("playerData", () => {
     def: number;
     tech: number;
   }>(() =>
-    data.value.field.reduce(
+    player.value.field.reduce(
       (acc, cur) => {
         acc.waste += cur.waste;
         acc.hungry += cur.hungry;
@@ -48,27 +48,27 @@ const usePlayerStore = defineStore("playerData", () => {
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す
   const clickHand = (index: number): void => {
-    const { field, hand } = data.value;
+    const { field, hand } = player.value;
     field.push(hand[index]);
     hand.splice(index, 1);
     console.log(i, "handClick: ", index, "field: ", field);
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
   const clickField = (index: number): void => {
-    const { field, hand } = data.value;
+    const { field, hand } = player.value;
     hand.push(field[index]);
     field.splice(index, 1);
     console.log(i, "fieldClick: ", index, "hand: ", hand);
   };
   //ターン終了時に、Fieldのカードを捨てる
   const deleteField = (): void => {
-    const { field } = data.value;
+    const { field } = player.value;
     field.splice(0, field.length);
     console.log(i, "fieldDelete: ", "field: ", field.map((card) => card.name));
   };
   return {
     id,
-    data,
+    player,
     sumAllField,
     clickHand,
     clickField,

@@ -8,8 +8,8 @@ import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
 import Mission from "@/components/mission.vue";
 
-const { id, data } = storeToRefs(playerStore);
-const { idGame, character, gift, status, hand, field, sign } = toRefs(data.value);
+const { id, player } = storeToRefs(playerStore);
+const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
 const { clickHand, clickField, deleteField } = playerStore;
 
 const { game } = storeToRefs(gameStore);

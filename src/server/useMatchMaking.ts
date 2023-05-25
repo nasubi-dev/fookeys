@@ -14,8 +14,8 @@ const gamesRef = collection(db, "games");
 
 //マッチング待機中のplayerを検索する
 async function findWaitingPlayer(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { idEnemy } = toRefs(player.value);
 
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
@@ -50,8 +50,8 @@ async function updatePlayerFields(
 
 //matchの値が-1に変更されたら検知して、gameを開始する
 async function watchMatchField(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
-  const { idEnemy, idGame } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { idEnemy, idGame } = toRefs(player.value);
 
   const unsubscribe = onSnapshot(doc(playersRef, id.value), (doc) => {
     const data = doc.data();
@@ -74,8 +74,8 @@ async function watchMatchField(): Promise<void> {
 
 //マッチングを開始する
 async function startMatchmaking(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
-  const { idEnemy, idGame } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { idEnemy, idGame } = toRefs(player.value);
 
   // マッチング待機中のユーザーを検索する
   await updatePlayerField(id.value, "match", "waiting");
@@ -112,8 +112,8 @@ async function startMatchmaking(): Promise<void> {
 //gameを作成する
 async function addGame(): Promise<string> {
   const { game } = storeToRefs(gameStore);
-  const { id, data } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { idEnemy } = toRefs(player.value);
 
   try {
     const docId = (await addDoc(gamesRef, game.value)).id;

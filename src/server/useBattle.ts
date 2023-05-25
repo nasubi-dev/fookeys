@@ -20,8 +20,8 @@ async function drawCard(): Promise<Card> {
 }
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
-  const { hand } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { hand } = toRefs(player.value);
 
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
@@ -32,13 +32,12 @@ export async function setHand(): Promise<void> {
 //指定のcardを一枚引く
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
-  const { data } = storeToRefs(playerStore);
+  const { player } = storeToRefs(playerStore);
   const { game } = storeToRefs(gameStore);
-  const { idGame } = toRefs(data.value);
+  const { idGame } = toRefs(player.value);
   const { missions } = toRefs(game.value);
 
-  if (playerStore.data.sign == 0) {
-    //!onSnapshotを覚えたい
+  if (playerStore.player.sign == 0) {
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (doc) => {
       missions.value = doc.data()?.missions;
     });
@@ -58,8 +57,8 @@ export async function setMissions(): Promise<void> {
 }
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
-  const { check, idEnemy } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { check, idEnemy } = toRefs(player.value);
 
   check.value = true;
   await updateDoc(doc(playersRef, id.value), { check: check.value });
@@ -84,8 +83,8 @@ export async function watchTurnEnd(): Promise<void> {
 //Priorityの比較//!これ間違えてるわ ステータスじゃなくてカードのPriorityを比較する
 export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "comparePriorityを実行しました");
-  const { data } = storeToRefs(playerStore);
-  const { idEnemy, status } = toRefs(data.value);
+  const { player } = storeToRefs(playerStore);
+  const { idEnemy, status } = toRefs(player.value);
 
   const enemyPriority = (await getDoc(doc(playersRef, idEnemy.value))).data()?.status.priority as number;
   //priorityが大きい方が優先
@@ -100,8 +99,8 @@ export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1>
 //hungryの比較//!これ間違えてるわ ステータスじゃなくてカードのHungryを比較する
 export async function compareHungry(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "compareHungryを実行しました");
-  const { data } = storeToRefs(playerStore);
-  const { idEnemy, status, sign } = toRefs(data.value);
+  const { player } = storeToRefs(playerStore);
+  const { idEnemy, status, sign } = toRefs(player.value);
 
   const enemyHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.status.hungry as number;
   //hungryが小さい方が優先
@@ -135,8 +134,8 @@ export async function donate(): Promise<void> {
 //戦闘処理を統括する
 export async function battle(): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { id, data } = storeToRefs(playerStore);
-  const { check, field, status } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { check, field, status } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
@@ -168,8 +167,8 @@ export async function battle(): Promise<void> {
 //turnを進める
 export async function nextTurn(): Promise<void> {
   console.log(s, "nextTurnを実行しました");
-  const { id, data } = storeToRefs(playerStore);
-  const { idGame, check } = toRefs(data.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { idGame, check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
 
   game.value.turn++;
