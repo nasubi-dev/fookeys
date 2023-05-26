@@ -6,11 +6,12 @@ import { storeToRefs } from "pinia";
 import { startGame, setHand, setMissions, watchTurnEnd, nextTurn } from "@/server/useBattle";
 import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
+import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 
 const { id, player } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
-const { clickHand, clickField, deleteField } = playerStore;
+const { pushHand, popHand, deleteField } = playerStore;
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn } = toRefs(game.value);
@@ -34,6 +35,7 @@ onMounted(async () => {
 //ターンを終了時
 const turnEnd = async () => {
   console.log(i, "turnEnd");
+  //Fieldのカードをソートする
   Promise.all([
     await watchTurnEnd(),
   ]).then(() => {
@@ -65,14 +67,14 @@ const turnEnd = async () => {
         </div>
         <div>
           <h1>Field</h1>
-          <Cards :cards="field" @sendText="clickField" />
+          <Cards :cards="field" />
         </div>
         <div class="flex flex-col justify-end">
           <button @click="turnEnd">ターン終了ボタン</button>
         </div>
         <div>
           <h1>Hand</h1>
-          <Cards :cards="hand" @sendText="clickHand" />
+          <Hand :cards="hand" @pushCard="pushHand" @popCard="popHand" />
         </div>
       </div>
     </div>

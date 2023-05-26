@@ -32,7 +32,7 @@ type Mission = {
   // action?: () => void;
 };
 
-type MatchStatus = "matching" | "nothing" | "waiting"| "battle";
+type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number; priority: number };
 type PlayerData = {
@@ -49,10 +49,18 @@ type PlayerData = {
   status: Status;
 };
 
+type sumCardsField = {
+  waste: number;
+  hungry: number;
+  pow: number;
+  def: number;
+  tech: number;
+};
+
 type GameData = {
   turn: number;
   players: string[];
   missions: Mission[];
 };
 
-export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, GameData };
+export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, sumCardsField, GameData };

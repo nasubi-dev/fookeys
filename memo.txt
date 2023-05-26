@@ -1,66 +1,18 @@
-注意事項
-PiniaはServerフォルダー内で参照しない
-基本的に値の変更は増減を渡す形で
+Pinia呼び出しのとき
+storeToRefs(store) // storeの中身をrefに変換する
+toRefs(store) // storeの中身をrefに変換する
+の仕様がいまいちわかっていない
 
-終わった
-Player1側でもbattle.vueに遷移させる
-ルールが確定したら型を再構築する
-Pinia上のNameが最初何もない
-cardをセット
-missionをセット
-?初回限定の処理
-cardを選択して場に出す
-どちらが先に攻撃するのか(Priority)
+//現在
+const { player } = storeToRefs(playerStore)
+const { idGame } = toRefs(player.value)
+idGame.value // これで値を取得できるし､リアクティブになる
 
-作成順序
-battleの関数
-カード､キャラ､ミッションのデータを作成
-特殊効果作成
-エフェクト作成
-遷移アニメーション
-個人設定
+//他の書き方1
+const { player } = storeToRefs(playerStore)
+const { idGame } = player.value
+idGame // これで値を取得できるかも?
 
-追加したい
-ダメージ計算は個別に行い違いがないかチェックして、間違いがあればlogで知らせる。そのときP1の値を優先
-try/catchを活用したい
-<Suspense>を使ってみたい
-
-修正したい
-終了時の通知がうざい
-
-Battleの未実装要素
-
-giftを使用
-?shopフェーズ開始時の処理
-
-使用したgiftを公開
-?shopフェーズ終了時の処理
-
-hungryを計算/上限を超えたら行動不能
-どちらが先に攻撃するのか(Hunter)
-cardの攻撃力を計算
-cardのテクニックを計算
-cardの防御力を計算
-cardの特殊効果を実行
-damage計算の結果を出力
-
-missionを達成した時の処理
-missionを入れ替える
-async function changeMission(playerID: string, missionID: number) {
-	const gameData = await getGameData(playerID);
-	if (gameData.turn % 4 == 0) {
-		return;
-	}
-}
-
-勝敗判断･死亡判断から呼び出す
-死亡判断
-↑2回繰り返す
-
-wasteを減少
-wasteが0になった時の処理
-
-turnを進める/増減値を引数
-?battleフェーズ終了時の処理
-
-?game終了時の処理
+//他の書き方2
+const { player } = playerStore
+player.idGame // これで値を取得できるが､リアクティブではない

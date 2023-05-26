@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import { e, s, i } from "@/log";
-import type { PlayerData, GameData } from "@/types";
+import type { PlayerData, GameData, sumCardsField, Card } from "@/types";
 import { defineStore } from "pinia";
 
 const usePlayerStore = defineStore("playerData", () => {
@@ -26,52 +26,54 @@ const usePlayerStore = defineStore("playerData", () => {
   });
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
-  const sumAllField = computed<{
-    waste: number;
-    hungry: number;
-    pow: number;
-    def: number;
-    tech: number;
-  }>(() =>
+  const sumCardsField = computed<sumCardsField>(() =>
     player.value.field.reduce(
-      (acc, cur) => {
-        acc.waste += cur.waste;
-        acc.hungry += cur.hungry;
-        acc.pow += cur.pow || 0;
-        acc.def += cur.def || 0;
-        acc.tech += cur.tech || 0;
-        return acc;
+      (sum: sumCardsField, card: Card) => {
+        sum.waste += card.waste;
+        sum.hungry += card.hungry;
+        sum.pow += card.pow ?? 0;
+        sum.def += card.def ?? 0;
+        sum.tech += card.tech ?? 0;
+        return sum;
       },
       { waste: 0, hungry: 0, pow: 0, def: 0, tech: 0 }
     )
   );
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す
-  const clickHand = (index: number): void => {
+  const pushHand = (index: number): void => {
     const { field, hand } = player.value;
     field.push(hand[index]);
-    hand.splice(index, 1);
-    console.log(i, "handClick: ", index, "field: ", field);
+    console.log(i, "pushHand: ", index, "field: ", field);
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
-  const clickField = (index: number): void => {
-    const { field, hand } = player.value;
-    hand.push(field[index]);
-    field.splice(index, 1);
-    console.log(i, "fieldClick: ", index, "hand: ", hand);
+  const popHand = (index: number, card: Card): void => {
+    const { field } = player.value;
+    for (let i = field.length; i >= 0; i--) {
+      if (field[i] === card) {
+        field.splice(i, 1);
+        break;
+      }
+    }
+    console.log(i, "popHand: ", index, "field: ", field);
   };
   //ターン終了時に、Fieldのカードを捨てる
   const deleteField = (): void => {
     const { field } = player.value;
     field.splice(0, field.length);
-    console.log(i, "fieldDelete: ", "field: ", field.map((card) => card.name));
+    console.log(
+      i,
+      "fieldDelete: ",
+      "field: ",
+      field.map((card) => card.name)
+    );
   };
   return {
     id,
     player,
-    sumAllField,
-    clickHand,
-    clickField,
+    sumCardsField,
+    pushHand,
+    popHand,
     deleteField,
   };
 });
