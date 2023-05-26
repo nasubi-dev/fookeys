@@ -11,7 +11,7 @@ import Mission from "@/components/mission.vue";
 
 const { id, player } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
-const { pushHand, popHand, deleteField } = playerStore;
+const { deleteField } = playerStore;
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn } = toRefs(game.value);
@@ -74,7 +74,7 @@ const turnEnd = async () => {
         </div>
         <div>
           <h1>Hand</h1>
-          <Hand :cards="hand" @pushCard="pushHand" @popCard="popHand" />
+          <Hand />
         </div>
       </div>
     </div>

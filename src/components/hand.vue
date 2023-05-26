@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Card } from "@/types";
+import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
+
+const { player } = storeToRefs(playerStore);
+const { pushHand, popHand } = playerStore;
+const { hand } = player.value;
 
 const isSelected = ref<boolean[]>([false, false, false, false, false, false, false, false, false]);
-defineProps<{
-  cards: Card[];
-}>();
 
-const emit = defineEmits(["pushCard", "popCard"]);
-
+//HandからFieldへ
 const pushCard = (index: number) => {
   isSelected.value[index] = !isSelected.value[index]
-  emit("pushCard", index);
+  pushHand(index)
 };
-
+//FieldからHandへ
 const popCard = (index: number, card: Card) => {
   isSelected.value[index] = !isSelected.value[index]
-  emit("popCard", index, card);
+  popHand(index, card)
 };
 
 </script>
@@ -24,7 +26,7 @@ const popCard = (index: number, card: Card) => {
 <template>
   <div>
     <ul class="text-xs flex justify-start">
-      <div v-for="(card, index) in cards" :key="card.id">
+      <div v-for="(card, index) in hand" :key="card.id">
         <button @click="!isSelected[index] ? pushCard(index) : popCard(index, card)">
           <div :class="isSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
             class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">

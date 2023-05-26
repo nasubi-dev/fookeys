@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { Card } from "@/types";
+import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 
-defineProps<{
-  cards: Card[];
-}>();
+const { player,sumCardsField } = storeToRefs(playerStore);
+const { field } = player.value;
 
 </script>
 
 <template>
   <div>
     <ul class="text-xs flex justify-start">
-      <div v-for="(card) in cards" :key="card.id">
+      <div v-for="(card) in field" :key="card.id">
           <div class="w-30 h-30 bg-gray-100 rounded-lg p-4 flex flex-col justify-center items-center">
             <h5 class="text-bold">name:{{ card.name }}</h5>
             <p class="text-gray-600">ID:{{ card.id }}</p>
@@ -29,5 +29,6 @@ defineProps<{
           </div>
       </div>
     </ul>
+    {{ sumCardsField }}
   </div>
 </template>
