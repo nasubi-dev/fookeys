@@ -26,6 +26,7 @@ export async function setHand(): Promise<void> {
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
     hand.value.push(card as Card);
+    hand.value.sort((a, b) => a.id - b.id);
     updateDoc(doc(playersRef, id.value), { hand: hand.value });
   }
 }
@@ -38,6 +39,7 @@ export async function setMissions(): Promise<void> {
   const { missions } = toRefs(game.value);
 
   if (playerStore.player.sign == 0) {
+    //!みかん
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (doc) => {
       missions.value = doc.data()?.missions;
     });
@@ -64,17 +66,17 @@ export async function watchTurnEnd(): Promise<void> {
   await updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check as boolean;
-  if (enemyCheck === true) {
+  if (enemyCheck) {
     battle();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {
       const data = doc.data();
       if (!data) return;
-      if (data.check == true) {
+      if (data.check) {
         battle();
         //監視を解除する
         unsubscribe();
-        console.log(i, "監視を解除しました");
+        console.log(i, "checkの監視を解除しました");
       }
     });
   }
@@ -125,6 +127,7 @@ export async function decideFirstAtkPlayer(): Promise<0 | 1> {
 //寄付ならば先に処理を行う
 export async function donate(): Promise<void> {
   console.log(s, "donateを実行しました");
+  playerStore.player.check = true;
   //TODO: 寄付の処理を書く
 }
 //ダメージを計算する
@@ -142,13 +145,7 @@ export async function battle(): Promise<void> {
   await updateDoc(doc(playersRef, id.value), { check: check.value });
   //寄付ならば先に処理を行う
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
-  //!これじゃ敵の寄付は処理されないし､
-  if (field.value[0].name === "foodBank") {
-    await donate();
-    //寄付の処理が終わったら、checkの値をtrueにする
-    check.value = true;
-    await updateDoc(doc(playersRef, id.value), { check: check.value });
-  }
+  if (field.value[0].name === "foodBank") donate();
   //先行後攻を決める
   const firstAtkPlayerSign = await decideFirstAtkPlayer();
   //攻撃を行う

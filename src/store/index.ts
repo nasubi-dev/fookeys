@@ -44,18 +44,17 @@ const usePlayerStore = defineStore("playerData", () => {
   const pushHand = (index: number): void => {
     const { field, hand } = player.value;
     field.push(hand[index]);
-    console.log(i, "pushHand: ", index, "field: ", field);
+    console.log(i,"pushHand: ",index,"field: ",field.map((card) => card.name)
+    );
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
-  const popHand = (index: number, card: Card): void => {
+  const popHand = (index: number, id: number): void => {
     const { field } = player.value;
-    for (let i = field.length; i >= 0; i--) {
-      if (field[i] === card) {
-        field.splice(i, 1);
-        break;
-      }
-    }
-    console.log(i, "popHand: ", index, "field: ", field);
+    const cardIndex = field.findIndex((card) => card.id === id);
+    if (cardIndex === -1) throw new Error("when popHard not found");
+    field.splice(cardIndex, 1);
+    console.log(i,"popHand: ",index,"field: ",field.map((card) => card.name)
+    );
   };
   //ターン終了時に、Fieldのカードを捨てる
   const deleteField = (): void => {

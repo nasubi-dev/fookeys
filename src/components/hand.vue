@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Card } from "@/types";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
@@ -8,17 +7,19 @@ const { player } = storeToRefs(playerStore);
 const { pushHand, popHand } = playerStore;
 const { hand } = player.value;
 
-const isSelected = ref<boolean[]>([false, false, false, false, false, false, false, false, false]);
+const isSelected = ref<boolean[]>([]);
 
 //HandからFieldへ
 const pushCard = (index: number) => {
+  if(isSelected.value[index]) throw new Error("failed to pushCard");
   isSelected.value[index] = !isSelected.value[index]
   pushHand(index)
 };
 //FieldからHandへ
-const popCard = (index: number, card: Card) => {
+const popCard = (index: number, id: number) => {
+  if(!isSelected.value[index]) throw new Error("failed to popCard");
   isSelected.value[index] = !isSelected.value[index]
-  popHand(index, card)
+  popHand(index, id)
 };
 
 </script>
@@ -27,7 +28,7 @@ const popCard = (index: number, card: Card) => {
   <div>
     <ul class="text-xs flex justify-start">
       <div v-for="(card, index) in hand" :key="card.id">
-        <button @click="!isSelected[index] ? pushCard(index) : popCard(index, card)">
+        <button @click="!isSelected[index] ? pushCard(index) : popCard(index, card.id)">
           <div :class="isSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
             class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">
             <h5 class="text-bold">name:{{ card.name }}</h5>
