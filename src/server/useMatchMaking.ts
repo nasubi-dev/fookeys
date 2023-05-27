@@ -30,40 +30,28 @@ async function findWaitingPlayer(): Promise<void> {
   console.log(i, "Found player: ", idEnemy.value);
 }
 
-//playerのフィールド名を更新する
-async function updatePlayerField(
-  playerID: string,
-  field: keyof PlayerData,
-  value: string | MatchStatus | number | Character | Gift[]
-): Promise<void> {
-  try {
-    await updateDoc(doc(playersRef, playerID), { [field]: value });
-    console.log(i, field, "updated: ", value, " for player: ", playerID);
-  } catch (error) {
-    console.error(e, "Error updating match status: ", error);
-  }
-}
 //playerのフィールド名を複数更新する
-async function updatePlayerFields(
+function updatePlayerFields(
   playerID: string,
   //!ここなんとかしたい
   updates: Array<{
     field: keyof PlayerData;
     value: string | MatchStatus | Character | Gift[];
   }>
-): Promise<void> {
+) {
   updates.forEach((update) => {
-    updatePlayerField(playerID, update.field, update.value);
+    updateDoc(doc(playersRef, playerID), { [update.field]: update.value });
+    console.log(i, update.field, "updated: ", update.value, " for player: ", playerID);
   });
 }
 
 //matchの値が-1に変更されたら検知して、gameを開始する
 async function watchMatchField(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
-  const { idEnemy, idGame } = toRefs(player.value);
+  const { idEnemy, idGame, match } = toRefs(player.value);
 
-  const unsubscribe = onSnapshot(doc(playersRef, id.value), (doc) => {
-    const data = doc.data();
+  const unsubscribe = onSnapshot(doc(playersRef, id.value), (snap) => {
+    const data = snap.data();
     if (!data) return;
     // 監視対象のフィールドが指定した値になった場合に実行される処理
     if (data.match === "matching") {
@@ -75,8 +63,8 @@ async function watchMatchField(): Promise<void> {
       //両プレイヤーのIDをgameに追加する
       gameStore.game.players = [idEnemy.value, id.value];
       //プレイヤーのマッチング状況を更新する
-      player.value.match = "battle";
-      updatePlayerField(id.value, "match", "battle");
+      match.value = "battle";
+      updateDoc(doc(playersRef, id.value), { match: match.value });
       //画面遷移
       console.log(s, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
       router.push({ name: "battle", params: { idGame: idGame.value } });
@@ -95,10 +83,9 @@ async function startMatchmaking(): Promise<void> {
     { field: "match", value: match.value },
     { field: "gift", value: gift.value },
     { field: "character", value: character.value },
-  ]),
-    // マッチング待機中のユーザーを検索する
-    await findWaitingPlayer();
-
+  ]);
+  // マッチング待機中のユーザーを検索する
+  await findWaitingPlayer();
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
   if (!idEnemy.value) {
     console.log(i, "マッチング待機中...");
@@ -106,8 +93,7 @@ async function startMatchmaking(): Promise<void> {
     idGame.value = "";
   } else {
     idGame.value = await addGame();
-    //プレイヤーの情報を更新する
-    //実はここ結構気に入ってるんよね
+    //プレイヤーの情報を更新する//実はここ結構気に入ってるんよね
     await Promise.all([
       updatePlayerFields(idEnemy.value, [
         { field: "idEnemy", value: id.value },
@@ -149,4 +135,4 @@ async function addGame(): Promise<string> {
 //gameを削除する
 async function deleteGame(): Promise<void> {}
 
-export { getPlayerData, updatePlayerField, startMatchmaking };
+export { getPlayerData, startMatchmaking };

@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import { e, s, i } from "@/log";
-import type { PlayerData, GameData, sumCardsField, Card } from "@/types";
+import type { PlayerData, GameData, sumCards, Card } from "@/types";
 import { defineStore } from "pinia";
 
 const usePlayerStore = defineStore("playerData", () => {
@@ -28,7 +28,7 @@ const usePlayerStore = defineStore("playerData", () => {
       contribution: 0,
       priority: 0,
     },
-    sumCardsField: {
+    sumField: {
       waste: 0,
       hungry: 0,
       priority: 0,
@@ -39,9 +39,9 @@ const usePlayerStore = defineStore("playerData", () => {
   });
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
-  const sumCardsField = computed<sumCardsField>(() =>
+  const sumCards = computed<sumCards>(() =>
     player.value.field.reduce(
-      (sum: sumCardsField, card: Card) => {
+      (sum: sumCards, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
         sum.priority += card.priority;
@@ -94,7 +94,7 @@ const usePlayerStore = defineStore("playerData", () => {
   return {
     id,
     player,
-    sumCardsField,
+    sumCards,
     pushHand,
     popHand,
     deleteField,

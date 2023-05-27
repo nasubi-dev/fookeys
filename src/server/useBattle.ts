@@ -31,6 +31,7 @@ export async function setHand(): Promise<void> {
   }
 }
 //指定のcardを一枚引く
+//Cardを三枚提示する
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
   const { player } = storeToRefs(playerStore);
@@ -57,9 +58,10 @@ export async function setMissions(): Promise<void> {
     await updateDoc(doc(gamesRef, idGame.value), { missions: arrayUnion(selectMission) });
   }
 }
+
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
-  const { id, player,sumCardsField } = storeToRefs(playerStore);
+  const { id, player, sumCards } = storeToRefs(playerStore);
   const { check, idEnemy } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､カード選択終了
@@ -67,9 +69,10 @@ export async function watchTurnEnd(): Promise<void> {
   await updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
   //FieldのカードをFirestoreに保存する
-  await updateDoc(doc(playersRef, id.value), { field: sumCardsField.value });
+  await updateDoc(doc(playersRef, id.value), { sumField: sumCards.value });
+  console.log(i, "field: ", sumCards.value);
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check as boolean;
-  if (enemyCheck) {
+  if (enemyCheck === true) {
     battle();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {
@@ -85,47 +88,28 @@ export async function watchTurnEnd(): Promise<void> {
   }
 }
 
-//Priorityの比較//!これ間違えてるわ ステータスじゃなくてカードのPriorityを比較する
-export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
-  console.log(s, "comparePriorityを実行しました");
-  const { player,sumCardsField } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(player.value);
-
-  const enemyPriority = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumCardsField.priority as number;
-  //priorityが大きい方が優先
-  if (sumCardsField.value.priority > enemyPriority) {
-    return firstAtkPlayerSign === 0 ? 0 : 1;
-  } else if (sumCardsField.value.priority < enemyPriority) {
-    return firstAtkPlayerSign === 0 ? 1 : 0;
-  } else {
-    return firstAtkPlayerSign;
-  }
-}
-//hungryの比較//!これ間違えてるわ ステータスじゃなくてカードのHungryを比較する
-export async function compareHungry(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
-  console.log(s, "compareHungryを実行しました");
-  const { player } = storeToRefs(playerStore);
-  const { idEnemy, status, sign } = toRefs(player.value);
-
-  const enemyHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.status.hungry as number;
-  //hungryが小さい方が優先
-  if (status.value.hungry > enemyHungry) {
-    return firstAtkPlayerSign === 0 ? 1 : 0;
-  } else if (status.value.hungry < enemyHungry) {
-    return firstAtkPlayerSign === 0 ? 0 : 1;
-  } else {
-    return sign.value;
-  }
-}
 //処理の順番を決める
 export async function decideFirstAtkPlayer(): Promise<0 | 1> {
   console.log(s, "decideFirstAtkPlayerを実行しました");
-  //順番はPriorityの値を優先する
-  let firstAtkPlayerSign: 0 | 1 = 0;
-  firstAtkPlayerSign = await compareHungry(firstAtkPlayerSign);
-  firstAtkPlayerSign = await comparePriority(firstAtkPlayerSign);
-  console.log(i, "firstAtkPlayerSign: " + firstAtkPlayerSign);
-  return firstAtkPlayerSign;
+  const { player } = storeToRefs(playerStore);
+  const { idEnemy, sign, sumField } = toRefs(player.value);
+
+  //先行後攻を決める//0か1をランダムに生成
+  let firstAtkPlayer = Math.floor(Math.random() * 2);
+  const enemySumHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumField.hungry as number;
+  //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
+  console.log(i, "sumField: ", sumField.value.hungry);
+  console.log(i, "enemySumHungry: ", enemySumHungry);
+
+  if (sumField.value.hungry < enemySumHungry) {
+    firstAtkPlayer = sign.value;
+  } else if (sumField.value.hungry > enemySumHungry) {
+    firstAtkPlayer = (sign.value + 1) % 2;
+  }
+  //Priorityの値が大きい方が先行に上書き//Priorityの値が同じならばFirstAtkPlayerの値を変更しない
+
+  console.log(i, "firstAtkPlayer: ", firstAtkPlayer);
+  return 0;
 }
 //寄付ならば先に処理を行う
 export async function donate(): Promise<void> {
@@ -139,6 +123,7 @@ export async function donate(): Promise<void> {
 
 //戦闘処理を統括する
 export async function battle(): Promise<void> {
+  console.log(i, "test");
   console.log(s, "calcDamageを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { check, field, status } = toRefs(player.value);
@@ -150,20 +135,14 @@ export async function battle(): Promise<void> {
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   if (field.value[0].name === "foodBank") donate();
   //先行後攻を決める
-  const firstAtkPlayerSign = await decideFirstAtkPlayer();
+  await decideFirstAtkPlayer();
   //攻撃を行う
-  while (firstAtkPlayerSign === 0) {
-    //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
-    //ダメージを計算する
-    //missionを達成しているか確認する
-    //死亡判断を行う
-    if (status.value.hp <= 0) {
-      console.log(i, "you died");
-      // finishGame();
-      return;
-    }
-  }
+  //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
+  //ダメージを計算する
+  //missionを達成しているか確認する
+  //死亡判断を行う
 }
+
 //turnを進める
 export async function nextTurn(): Promise<void> {
   console.log(s, "nextTurnを実行しました");
