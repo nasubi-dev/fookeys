@@ -17,6 +17,5 @@ const { name, character, gift, status } = player.value;
     <span class="text-sm font-medium text-gray-900 truncate">❤:{{ status.hp }} </span>
     <span class="text-sm font-medium text-gray-900 truncate">🍖:{{ status.hungry }} </span>
     <span class="text-sm font-medium text-gray-900 truncate">🪙:{{ status.contribution }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">🦶:{{ status.priority }} </span>
   </div>
 </template>

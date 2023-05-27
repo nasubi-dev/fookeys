@@ -36,13 +36,14 @@ onMounted(async () => {
 const turnEnd = async () => {
   console.log(i, "turnEnd");
   //Fieldのカードをソートする
+  //Fieldをいじれないようにする
   Promise.all([
     await watchTurnEnd(),
   ]).then(() => {
     //処理が終了したらFieldを削除
     // deleteField();
     //handのカードのwasteの値を-1する
-    //腐っていれば腐ったカードに入れ替える
+    //腐っていれば腐ったカードに入れ替える→ソート
     //ターンを進める
     // nextTurn();
   });

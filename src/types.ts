@@ -5,6 +5,7 @@ type Card = {
   hungry: number;
   company: string;
   description: string;
+  priority: number;
   pow?: number;
   def?: number;
   tech?: number;
@@ -35,6 +36,7 @@ type Mission = {
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number; priority: number };
+type sumCardsField = { waste: number; hungry: number; priority: number; pow: number; def: number; tech: number };
 type PlayerData = {
   idEnemy: string;
   idGame: string;
@@ -42,19 +44,12 @@ type PlayerData = {
   match: MatchStatus;
   check: boolean;
   sign: PlayerSign;
-  character: Character | null;
+  character: Character;
   gift: Gift[];
   hand: Card[];
   field: Card[];
   status: Status;
-};
-
-type sumCardsField = {
-  waste: number;
-  hungry: number;
-  pow: number;
-  def: number;
-  tech: number;
+  sumCardsField: sumCardsField;
 };
 
 type GameData = {

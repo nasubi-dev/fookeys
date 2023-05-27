@@ -4,7 +4,7 @@ import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot }
 import { getPlayerData } from "./usePlayerID";
 import { e, s, i } from "@/log";
 import { router } from "@/router";
-import type { MatchStatus, PlayerData } from "@/types";
+import type { MatchStatus, PlayerData, Character, Gift } from "@/types";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 
@@ -25,13 +25,17 @@ async function findWaitingPlayer(): Promise<void> {
   // 自分を除外する
   waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
   // ランダムに選択する
-  if(waitingPlayers.length == 0) return;
+  if (waitingPlayers.length == 0) return;
   idEnemy.value = waitingPlayers[Math.floor(Math.random() * waitingPlayers.length)];
   console.log(i, "Found player: ", idEnemy.value);
 }
 
 //playerのフィールド名を更新する
-async function updatePlayerField(playerID: string, field: keyof PlayerData, value: string | MatchStatus | number): Promise<void> {
+async function updatePlayerField(
+  playerID: string,
+  field: keyof PlayerData,
+  value: string | MatchStatus | number | Character | Gift[]
+): Promise<void> {
   try {
     await updateDoc(doc(playersRef, playerID), { [field]: value });
     console.log(i, field, "updated: ", value, " for player: ", playerID);
@@ -42,7 +46,11 @@ async function updatePlayerField(playerID: string, field: keyof PlayerData, valu
 //playerのフィールド名を複数更新する
 async function updatePlayerFields(
   playerID: string,
-  updates: Array<{ field: keyof PlayerData; value: string | MatchStatus }>
+  //!ここなんとかしたい
+  updates: Array<{
+    field: keyof PlayerData;
+    value: string | MatchStatus | Character | Gift[];
+  }>
 ): Promise<void> {
   updates.forEach((update) => {
     updatePlayerField(playerID, update.field, update.value);
@@ -79,12 +87,17 @@ async function watchMatchField(): Promise<void> {
 //マッチングを開始する
 async function startMatchmaking(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
-  const { idEnemy, idGame } = toRefs(player.value);
+  const { idEnemy, idGame, match, gift, character } = toRefs(player.value);
 
-  // マッチング待機中のユーザーを検索する
-  player.value.match = "waiting";
-  await updatePlayerField(id.value, "match", "waiting");
-  await findWaitingPlayer();
+  //プレイヤーのマッチング状況を更新する
+  match.value = "waiting";
+  updatePlayerFields(id.value, [
+    { field: "match", value: match.value },
+    { field: "gift", value: gift.value },
+    { field: "character", value: character.value },
+  ]),
+    // マッチング待機中のユーザーを検索する
+    await findWaitingPlayer();
 
   // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
   if (!idEnemy.value) {

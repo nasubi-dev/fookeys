@@ -13,7 +13,12 @@ const usePlayerStore = defineStore("playerData", () => {
     match: "nothing",
     check: false,
     sign: 0,
-    character: null,
+    character: {
+      name: "",
+      description: "",
+      image: "",
+      company: "",
+    },
     gift: [],
     hand: [],
     field: [],
@@ -23,6 +28,14 @@ const usePlayerStore = defineStore("playerData", () => {
       contribution: 0,
       priority: 0,
     },
+    sumCardsField: {
+      waste: 0,
+      hungry: 0,
+      priority: 0,
+      pow: 0,
+      def: 0,
+      tech: 0,
+    },
   });
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
@@ -31,12 +44,13 @@ const usePlayerStore = defineStore("playerData", () => {
       (sum: sumCardsField, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
+        sum.priority += card.priority;
         sum.pow += card.pow ?? 0;
         sum.def += card.def ?? 0;
         sum.tech += card.tech ?? 0;
         return sum;
       },
-      { waste: 0, hungry: 0, pow: 0, def: 0, tech: 0 }
+      { waste: 0, hungry: 0, priority: 0, pow: 0, def: 0, tech: 0 }
     )
   );
   //?function/actions
@@ -44,7 +58,12 @@ const usePlayerStore = defineStore("playerData", () => {
   const pushHand = (index: number): void => {
     const { field, hand } = player.value;
     field.push(hand[index]);
-    console.log(i,"pushHand: ",index,"field: ",field.map((card) => card.name)
+    console.log(
+      i,
+      "pushHand: ",
+      index,
+      "field: ",
+      field.map((card) => card.name)
     );
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
@@ -53,7 +72,12 @@ const usePlayerStore = defineStore("playerData", () => {
     const cardIndex = field.findIndex((card) => card.id === id);
     if (cardIndex === -1) throw new Error("when popHard not found");
     field.splice(cardIndex, 1);
-    console.log(i,"popHand: ",index,"field: ",field.map((card) => card.name)
+    console.log(
+      i,
+      "popHand: ",
+      index,
+      "field: ",
+      field.map((card) => card.name)
     );
   };
   //ターン終了時に、Fieldのカードを捨てる

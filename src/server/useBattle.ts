@@ -59,12 +59,15 @@ export async function setMissions(): Promise<void> {
 }
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
-  const { id, player } = storeToRefs(playerStore);
+  const { id, player,sumCardsField } = storeToRefs(playerStore);
   const { check, idEnemy } = toRefs(player.value);
 
+  //checkの値がtrueになっていたら､カード選択終了
   check.value = true;
   await updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
+  //FieldのカードをFirestoreに保存する
+  await updateDoc(doc(playersRef, id.value), { field: sumCardsField.value });
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check as boolean;
   if (enemyCheck) {
     battle();
@@ -85,14 +88,14 @@ export async function watchTurnEnd(): Promise<void> {
 //Priorityの比較//!これ間違えてるわ ステータスじゃなくてカードのPriorityを比較する
 export async function comparePriority(firstAtkPlayerSign: 0 | 1): Promise<0 | 1> {
   console.log(s, "comparePriorityを実行しました");
-  const { player } = storeToRefs(playerStore);
-  const { idEnemy, status } = toRefs(player.value);
+  const { player,sumCardsField } = storeToRefs(playerStore);
+  const { idEnemy } = toRefs(player.value);
 
-  const enemyPriority = (await getDoc(doc(playersRef, idEnemy.value))).data()?.status.priority as number;
+  const enemyPriority = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumCardsField.priority as number;
   //priorityが大きい方が優先
-  if (status.value.priority > enemyPriority) {
+  if (sumCardsField.value.priority > enemyPriority) {
     return firstAtkPlayerSign === 0 ? 0 : 1;
-  } else if (status.value.priority < enemyPriority) {
+  } else if (sumCardsField.value.priority < enemyPriority) {
     return firstAtkPlayerSign === 0 ? 1 : 0;
   } else {
     return firstAtkPlayerSign;
