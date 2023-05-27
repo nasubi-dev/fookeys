@@ -37,6 +37,8 @@ const usePlayerStore = defineStore("playerData", () => {
       tech: 0,
     },
   });
+  //!仮置き
+  const firstAtkPlayer = ref(-1);
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
   const sumCards = computed<sumCards>(() =>
@@ -44,7 +46,7 @@ const usePlayerStore = defineStore("playerData", () => {
       (sum: sumCards, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
-        sum.priority += card.priority;
+        sum.priority += card.priority ?? 0;
         sum.pow += card.pow ?? 0;
         sum.def += card.def ?? 0;
         sum.tech += card.tech ?? 0;
@@ -94,6 +96,7 @@ const usePlayerStore = defineStore("playerData", () => {
   return {
     id,
     player,
+    firstAtkPlayer,
     sumCards,
     pushHand,
     popHand,

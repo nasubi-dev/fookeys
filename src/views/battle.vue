@@ -9,7 +9,7 @@ import Cards from "@/components/cards.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 
-const { id, player } = storeToRefs(playerStore);
+const { id, player,firstAtkPlayer } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
 const { deleteField } = playerStore;
 
@@ -77,6 +77,12 @@ const turnEnd = async () => {
           <h1>Hand</h1>
           <Hand />
         </div>
+      </div>
+      <div v-if="firstAtkPlayer === 1">
+        <p>先攻</p>
+      </div>
+      <div v-else-if="firstAtkPlayer === 0">
+        <p>後攻</p>
       </div>
     </div>
   </div>

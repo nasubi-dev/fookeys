@@ -2,7 +2,7 @@
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
-const { player, sumCardsField } = storeToRefs(playerStore);
+const { player, sumCards } = storeToRefs(playerStore);
 const { field } = player.value;
 
 </script>
@@ -28,6 +28,6 @@ const { field } = player.value;
         </div>
       </div>
     </ul>
-    {{ sumCardsField }}
+    {{ sumCards }}
   </div>
 </template>

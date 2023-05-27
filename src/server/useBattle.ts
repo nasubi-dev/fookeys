@@ -62,15 +62,15 @@ export async function setMissions(): Promise<void> {
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
   const { id, player, sumCards } = storeToRefs(playerStore);
-  const { check, idEnemy } = toRefs(player.value);
+  const { check, idEnemy, sumField } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､カード選択終了
   check.value = true;
-  await updateDoc(doc(playersRef, id.value), { check: check.value });
+  updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
   //FieldのカードをFirestoreに保存する
-  await updateDoc(doc(playersRef, id.value), { sumField: sumCards.value });
-  console.log(i, "field: ", sumCards.value);
+  sumField.value = sumCards.value;
+  updateDoc(doc(playersRef, id.value), { sumField: sumField.value });
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check as boolean;
   if (enemyCheck === true) {
     battle();
@@ -94,22 +94,23 @@ export async function decideFirstAtkPlayer(): Promise<0 | 1> {
   const { player } = storeToRefs(playerStore);
   const { idEnemy, sign, sumField } = toRefs(player.value);
 
-  //先行後攻を決める//0か1をランダムに生成
-  let firstAtkPlayer = Math.floor(Math.random() * 2);
+  //先行後攻を決める//0か1をランダムに生成//?ここの型キモすぎる
+  //!ランダムな値を両プレイヤーで共有する方法がわからん
+  let firstAtkPlayer: 0 | 1 = 0; //Math.random() * 2 ? 0 : 1;
   const enemySumHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumField.hungry as number;
   //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
-  console.log(i, "sumField: ", sumField.value.hungry);
-  console.log(i, "enemySumHungry: ", enemySumHungry);
+  console.log(i, "sumFieldHungry: ", sumField.value.hungry);
+  console.log(i, "SumEnemyHungry: ", enemySumHungry);
 
   if (sumField.value.hungry < enemySumHungry) {
     firstAtkPlayer = sign.value;
   } else if (sumField.value.hungry > enemySumHungry) {
-    firstAtkPlayer = (sign.value + 1) % 2;
+    firstAtkPlayer = (sign.value + 1) % 2 ? 0 : 1;
   }
   //Priorityの値が大きい方が先行に上書き//Priorityの値が同じならばFirstAtkPlayerの値を変更しない
 
   console.log(i, "firstAtkPlayer: ", firstAtkPlayer);
-  return 0;
+  return firstAtkPlayer;
 }
 //寄付ならば先に処理を行う
 export async function donate(): Promise<void> {
@@ -123,9 +124,8 @@ export async function donate(): Promise<void> {
 
 //戦闘処理を統括する
 export async function battle(): Promise<void> {
-  console.log(i, "test");
-  console.log(s, "calcDamageを実行しました");
-  const { id, player } = storeToRefs(playerStore);
+  console.log(s, "battleを実行しました");
+  const { id, player, firstAtkPlayer } = storeToRefs(playerStore);
   const { check, field, status } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､行動済みとする
@@ -135,7 +135,7 @@ export async function battle(): Promise<void> {
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   if (field.value[0].name === "foodBank") donate();
   //先行後攻を決める
-  await decideFirstAtkPlayer();
+  firstAtkPlayer.value = await decideFirstAtkPlayer();
   //攻撃を行う
   //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
   //ダメージを計算する
@@ -153,8 +153,8 @@ export async function nextTurn(): Promise<void> {
   game.value.turn++;
   check.value = false;
   //incrementを使うと、値を1増やすことができる
-  await updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
-  await updateDoc(doc(playersRef, id.value), { check: check.value });
+  updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
+  updateDoc(doc(playersRef, id.value), { check: check.value });
 }
 
 //!すべてのターン管理(最終的な形は未定)
