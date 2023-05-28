@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { Mission } from "@/types";
+import { toRefs } from "vue";
+import {  gameStore } from "@/main";
+import { storeToRefs } from "pinia";
 
-defineProps<{
-  missions: Mission[];
-}>();
+const { game } = storeToRefs(gameStore);
+const { missions } = toRefs(game.value);
 
 </script>
 
@@ -12,8 +13,8 @@ defineProps<{
     <ul class="text-xs">
       <div v-for="mission in missions" :key="mission.name">
         <li>
-          name:{{ mission.name }} description:{{ mission.description }}
-          <div>------</div>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ mission.name }}</span>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">description:{{ mission.description }}</span>
         </li>
       </div>
     </ul>

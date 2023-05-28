@@ -19,15 +19,12 @@ async function findWaitingPlayer(): Promise<void> {
 
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
-  if (waitingPlayers.length < 2) {
-    console.log(i, "Not enough players to start a game");
-  }
+
   // 自分を除外する
   waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
   // ランダムに選択する
-  if (waitingPlayers.length == 0) return;
   idEnemy.value = waitingPlayers[Math.floor(Math.random() * waitingPlayers.length)];
-  console.log(i, "Found player: ", idEnemy.value);
+  waitingPlayers[0] ? console.log(i, "Found player: ", idEnemy.value) : console.log(i, "Not enough players to start a game");
 }
 
 //playerのフィールド名を複数更新する
@@ -90,7 +87,6 @@ async function startMatchmaking(): Promise<void> {
   if (!idEnemy.value) {
     console.log(i, "マッチング待機中...");
     await watchMatchField();
-    idGame.value = "";
   } else {
     idGame.value = await addGame();
     //プレイヤーの情報を更新する//実はここ結構気に入ってるんよね

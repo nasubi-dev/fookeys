@@ -9,28 +9,31 @@ import Cards from "@/components/cards.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 
-const { id, player,firstAtkPlayer } = storeToRefs(playerStore);
-const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
 const { deleteField } = playerStore;
+const { id, player, firstAtkPlayer } = storeToRefs(playerStore);
+const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn } = toRefs(game.value);
+
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
-  await startGame();
-  sign.value = id.value === players.value[0] ? 0 : 1;
-  await setHand();
-  await setMissions();
-  //log
-  console.log(i, "gameId: ", idGame.value);
-  console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
-  console.log(i, "your id: ", id.value, "your sign: ", sign.value);
-  console.log(i, "character: ", character.value?.name);
-  console.log(i, "gift: ", gift.value[0]?.name, gift.value[1]?.name, gift.value[2]?.name);
-  console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution, "priority: ", status.value.priority);
-  console.log(i, "hand: ", hand.value.map((card) => card.name));
-  console.log(i, "mission: ", missions.value[0]?.name, missions.value[1]?.name, missions.value[2]?.name);
-  console.log(i, "turn: ", turn.value);
+  await Promise.all([
+    startGame(),
+    sign.value = id.value === players.value[0] ? 0 : 1,
+    setHand(),
+    setMissions(),
+  ]).then(() => {
+    console.log(i, "gameId: ", idGame.value);
+    console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
+    console.log(i, "your id: ", id.value, "your sign: ", sign.value);
+    console.log(i, "character: ", character.value?.name);
+    console.log(i, "gift: ", gift.value[0]?.name, gift.value[1]?.name, gift.value[2]?.name);
+    console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution, "priority: ", status.value.priority);
+    console.log(i, "hand: ", hand.value.map((card) => card.name));
+    console.log(i, "mission: ", missions.value.map((mission) => mission.name));
+    console.log(i, "turn: ", turn.value);
+  });
 });
 //ターンを終了時
 const turnEnd = async () => {
@@ -60,11 +63,11 @@ const turnEnd = async () => {
       <div class="max-w-7xl mx-auto">
         <div>
           <h1>Mission</h1>
-          <Mission :missions="missions" />
+          <Mission />
         </div>
         <div>
           <h1>Status</h1>
-          <Status :id="sign" />
+          <Status />
         </div>
         <div>
           <h1>Field</h1>

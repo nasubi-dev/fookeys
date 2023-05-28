@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { db } from "./firebase";
-import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, arrayUnion, increment } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, increment } from "firebase/firestore";
 import { e, s, i } from "@/log";
 import type { Card, Mission } from "@/types";
 import { playerStore, gameStore } from "@/main";
@@ -41,8 +41,12 @@ export async function setMissions(): Promise<void> {
 
   if (playerStore.player.sign == 0) {
     //!みかん
-    const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (doc) => {
-      missions.value = doc.data()?.missions;
+    const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
+      const data = snap.data();
+      if (data?.missions.length === 3) {
+        missions.value = data?.missions;
+        unsubscribe();
+      }
     });
     return;
   }
@@ -54,9 +58,8 @@ export async function setMissions(): Promise<void> {
     allMissions.splice(allMissions.indexOf(selectMission), 1);
     //Firestoreにmissionsを保存する
     //arrayUnionを使うと、配列に要素を追加できる(arrayRemoveで削除もできる)
-    //TODO: 一つづつ追加するのではなく、一度に追加するか悩み中
-    await updateDoc(doc(gamesRef, idGame.value), { missions: arrayUnion(selectMission) });
   }
+  await updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
 }
 
 //checkの値の監視
@@ -95,23 +98,29 @@ export async function decideFirstAtkPlayer(): Promise<0 | 1> {
   const { idEnemy, sign, sumField } = toRefs(player.value);
 
   //先行後攻を決める//0か1をランダムに生成//?ここの型キモすぎる
-  //!ランダムな値を両プレイヤーで共有する方法がわからん
-  let firstAtkPlayer: 0 | 1 = 0; //Math.random() * 2 ? 0 : 1;
+  let firstAtkPlayer: 0 | 1 = Math.random() * 2 ? 0 : 1;
+  if (sign.value == 1) firstAtkPlayer = (await getDoc(doc(playersRef, idEnemy.value))).data()?.firstAtkPlayer as 0 | 1;
+
   const enemySumHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumField.hungry as number;
-  //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
   console.log(i, "sumFieldHungry: ", sumField.value.hungry);
   console.log(i, "SumEnemyHungry: ", enemySumHungry);
 
+  //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
   if (sumField.value.hungry < enemySumHungry) {
     firstAtkPlayer = sign.value;
   } else if (sumField.value.hungry > enemySumHungry) {
-    firstAtkPlayer = (sign.value + 1) % 2 ? 0 : 1;
+    firstAtkPlayer = sign.value % 2 ? 1 : 0;
   }
   //Priorityの値が大きい方が先行に上書き//Priorityの値が同じならばFirstAtkPlayerの値を変更しない
-
+  if (sumField.value.priority > enemySumHungry) {
+    firstAtkPlayer = sign.value;
+  } else if (sumField.value.priority < enemySumHungry) {
+    firstAtkPlayer = sign.value % 2 ? 1 : 0;
+  }
   console.log(i, "firstAtkPlayer: ", firstAtkPlayer);
   return firstAtkPlayer;
 }
+
 //寄付ならば先に処理を行う
 export async function donate(): Promise<void> {
   console.log(s, "donateを実行しました");

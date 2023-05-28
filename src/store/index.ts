@@ -16,14 +16,13 @@ const usePlayerStore = defineStore("playerData", () => {
     character: {
       name: "",
       description: "",
-      image: "",
       company: "",
     },
     gift: [],
     hand: [],
     field: [],
     status: {
-      hp: 0,
+      hp: 1000,
       hungry: 0,
       contribution: 0,
       priority: 0,

@@ -15,7 +15,6 @@ type Card = {
 type Character = {
   name: string;
   description: string;
-  image: string;
   company: string;
   // action?: () => void;
 };
@@ -23,7 +22,6 @@ type Character = {
 type Gift = {
   name: string;
   description: string;
-  image: string;
   // action?: () => void;
 };
 
