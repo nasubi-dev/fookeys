@@ -18,9 +18,9 @@ const { players, missions, turn } = toRefs(game.value);
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
+  await startGame();
+  sign.value = id.value === players.value[0] ? 0 : 1;
   await Promise.all([
-    startGame(),
-    sign.value = id.value === players.value[0] ? 0 : 1,
     setHand(),
     setMissions(),
   ]).then(() => {
