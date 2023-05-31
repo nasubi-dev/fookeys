@@ -27,7 +27,7 @@ const usePlayerStore = defineStore("playerData", () => {
       contribution: 0,
       priority: 0,
     },
-    sumField: {
+    sumFields: {
       waste: 0,
       hungry: 0,
       priority: 0,
