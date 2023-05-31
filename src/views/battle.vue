@@ -3,18 +3,18 @@ import { onMounted, toRefs } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { startGame, setHand, setMissions, watchTurnEnd, nextTurn } from "@/server/useBattle";
+import { startGame, setHand, setMissions, watchTurnEnd,nextTurn } from "@/server/useBattle";
 import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 
 const { deleteField } = playerStore;
-const { id, player, firstAtkPlayer } = storeToRefs(playerStore);
+const { id, player } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
-const { players, missions, turn } = toRefs(game.value);
+const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -81,10 +81,10 @@ const turnEnd = async () => {
           <Hand />
         </div>
       </div>
-      <div v-if="firstAtkPlayer === 1">
+      <div v-if="firstAtkPlayer === sign">
         <p>先攻</p>
       </div>
-      <div v-else-if="firstAtkPlayer === 0">
+      <div v-else>
         <p>後攻</p>
       </div>
     </div>

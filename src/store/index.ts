@@ -1,7 +1,7 @@
-import { ref, computed } from "vue";
-import { e, s, i } from "@/log";
-import type { PlayerData, GameData, sumCards, Card } from "@/types";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
+import { i } from "@/log";
+import type { Card, GameData, PlayerData, SumCards } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -36,13 +36,11 @@ const usePlayerStore = defineStore("playerData", () => {
       tech: 0,
     },
   });
-  //!仮置き
-  const firstAtkPlayer = ref(-1);
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
-  const sumCards = computed<sumCards>(() =>
+  const sumCards = computed<SumCards>(() =>
     player.value.field.reduce(
-      (sum: sumCards, card: Card) => {
+      (sum: SumCards, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
         sum.priority += card.priority ?? 0;
@@ -95,7 +93,6 @@ const usePlayerStore = defineStore("playerData", () => {
   return {
     id,
     player,
-    firstAtkPlayer,
     sumCards,
     pushHand,
     popHand,
@@ -109,6 +106,7 @@ const useGameStore = defineStore("gameData", () => {
     turn: 1,
     players: [],
     missions: [],
+    firstAtkPlayer: 0,
   });
   //?Computed/Getter
   ///?function/actions
@@ -116,4 +114,4 @@ const useGameStore = defineStore("gameData", () => {
   return { game };
 });
 
-export { usePlayerStore, useGameStore };
+export { useGameStore, usePlayerStore };

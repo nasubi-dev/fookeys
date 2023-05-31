@@ -1,22 +1,24 @@
 import { toRefs } from "vue";
-import { db } from "./firebase";
-import { collection, doc, getDoc, updateDoc, getDocs, onSnapshot, increment } from "firebase/firestore";
-import { e, s, i } from "@/log";
-import type { Card, Mission } from "@/types";
-import { playerStore, gameStore } from "@/main";
+import { collection, deleteField, doc, getDoc, getDocs, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { storeToRefs } from "pinia";
+import { i, s } from "@/log";
+import { converter } from "@/server/converter";
+import type { Card, Mission, GameData, PlayerData } from "@/types";
+import { gameStore, playerStore } from "@/main";
+
+import { db } from "./firebase";
 
 //Collectionの参照
-const missionsRef = collection(db, "missions");
-const playersRef = collection(db, "players");
-const gamesRef = collection(db, "games");
-const deckRef = collection(db, "deck");
+const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
+const gamesRef = collection(db, "games").withConverter(converter<GameData>());
+const missionsRef = collection(db, "missions").withConverter(converter<Mission>());
+const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //cardをランダムに一枚引く
 async function drawCard(): Promise<Card> {
   const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
   const selectCard = deck[Math.floor(Math.random() * deck.length)];
-  return selectCard as Card;
+  return selectCard;
 }
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
@@ -25,7 +27,7 @@ export async function setHand(): Promise<void> {
 
   for (let i = 0; i < 6; i++) {
     const card = await drawCard();
-    hand.value.push(card as Card);
+    hand.value.push(card);
     hand.value.sort((a, b) => a.id - b.id);
     updateDoc(doc(playersRef, id.value), { hand: hand.value });
   }
@@ -52,7 +54,7 @@ export async function setMissions(): Promise<void> {
   }
   const allMissions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
   for (let i = 0; i < 3; i++) {
-    const selectMission = allMissions[Math.floor(Math.random() * allMissions.length)] as Mission;
+    const selectMission = allMissions[Math.floor(Math.random() * allMissions.length)];
     missions.value.push(selectMission);
     //選ばれたミッションはmissionsから削除する
     allMissions.splice(allMissions.indexOf(selectMission), 1);
@@ -74,7 +76,7 @@ export async function watchTurnEnd(): Promise<void> {
   //FieldのカードをFirestoreに保存する
   sumField.value = sumCards.value;
   updateDoc(doc(playersRef, id.value), { sumField: sumField.value });
-  const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check as boolean;
+  const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
   if (enemyCheck === true) {
     battle();
   } else {
@@ -92,33 +94,68 @@ export async function watchTurnEnd(): Promise<void> {
 }
 
 //処理の順番を決める
-export async function decideFirstAtkPlayer(): Promise<0 | 1> {
-  console.log(s, "decideFirstAtkPlayerを実行しました");
+export async function compareSumField(): Promise<void> {
+  console.log(s, "compareSumFieldを実行しました");
   const { player } = storeToRefs(playerStore);
-  const { idEnemy, sign, sumField } = toRefs(player.value);
+  const { idEnemy, sumField, sign } = toRefs(player.value);
+  const { game } = storeToRefs(gameStore);
+  const { firstAtkPlayer } = toRefs(game.value);
 
-  //先行後攻を決める//0か1をランダムに生成//?ここの型キモすぎる
-  let firstAtkPlayer: 0 | 1 = Math.random() * 2 ? 0 : 1;
-  if (sign.value == 1) firstAtkPlayer = (await getDoc(doc(playersRef, idEnemy.value))).data()?.firstAtkPlayer as 0 | 1;
-
-  const enemySumHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumField.hungry as number;
+  const enemySumHungry = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumField.hungry ?? 0;
   console.log(i, "sumFieldHungry: ", sumField.value.hungry);
-  console.log(i, "SumEnemyHungry: ", enemySumHungry);
-
+  console.log(i, "EnemySumHungry: ", enemySumHungry);
   //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
   if (sumField.value.hungry < enemySumHungry) {
-    firstAtkPlayer = sign.value;
+    firstAtkPlayer.value = sign.value;
+    console.log(i, "hungryの値が小さい", firstAtkPlayer.value, "が先行");
   } else if (sumField.value.hungry > enemySumHungry) {
-    firstAtkPlayer = sign.value % 2 ? 1 : 0;
+    firstAtkPlayer.value = sign.value % 2 === 0 ? 1 : 0;
+    console.log(i, "hungryの値が小さい", firstAtkPlayer.value, "が先行");
+  } else {
+    console.log(i, "hungryの値が同じなので、priorityの値を比較します");
   }
+
+  const enemySumPriority = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumField.priority ?? 0;
+  console.log(i, "sumFieldPriority: ", sumField.value.priority);
+  console.log(i, "EnemySumPriority: ", enemySumPriority);
   //Priorityの値が大きい方が先行に上書き//Priorityの値が同じならばFirstAtkPlayerの値を変更しない
-  if (sumField.value.priority > enemySumHungry) {
-    firstAtkPlayer = sign.value;
-  } else if (sumField.value.priority < enemySumHungry) {
-    firstAtkPlayer = sign.value % 2 ? 1 : 0;
+  if (sumField.value.priority > enemySumPriority) {
+    firstAtkPlayer.value = sign.value;
+    console.log(i, "priorityの値が大きい", firstAtkPlayer.value, "が先行");
+  } else if (sumField.value.priority < enemySumPriority) {
+    firstAtkPlayer.value = sign.value % 2 ? 1 : 0;
+    console.log(i, "priorityの値が大きい", firstAtkPlayer.value, "が先行");
+  } else if (sumField.value.hungry === enemySumHungry) {
+    console.log(i, "priorityの値も同じなので、ランダムで先行を決めます");
   }
-  console.log(i, "firstAtkPlayer: ", firstAtkPlayer);
-  return firstAtkPlayer;
+  console.log(i, "結果...firstAtkPlayer: ", firstAtkPlayer.value);
+}
+//firstAtkPlayerの値の監視
+export function decideFirstAtkPlayer() {
+  console.log(s, "decideFirstAtkPlayerを実行しました");
+  const { player } = storeToRefs(playerStore);
+  const { sign, idGame } = toRefs(player.value);
+  const { game } = storeToRefs(gameStore);
+  const { firstAtkPlayer } = toRefs(game.value);
+  //先行後攻を決める//0か1をランダムに生成
+  if (sign.value == 1) {
+    const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
+      const data = snap.data();
+      if (!data) return;
+      if (data.firstAtkPlayer !== undefined) {
+        firstAtkPlayer.value = data.firstAtkPlayer === 0 ? 0 : 1;
+        //監視を解除する
+        unsubscribe();
+        console.log(i, "firstAtkPlayerの監視を解除しました");
+        updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
+        compareSumField();
+      }
+    });
+  } else {
+    firstAtkPlayer.value = Math.random() < 0.5 ? 0 : 1;
+    updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: firstAtkPlayer.value });
+    compareSumField();
+  }
 }
 
 //寄付ならば先に処理を行う
@@ -134,7 +171,7 @@ export async function donate(): Promise<void> {
 //戦闘処理を統括する
 export async function battle(): Promise<void> {
   console.log(s, "battleを実行しました");
-  const { id, player, firstAtkPlayer } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { check, field, status } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､行動済みとする
@@ -144,7 +181,7 @@ export async function battle(): Promise<void> {
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   if (field.value[0].name === "foodBank") donate();
   //先行後攻を決める
-  firstAtkPlayer.value = await decideFirstAtkPlayer();
+  decideFirstAtkPlayer();
   //攻撃を行う
   //hungryの値が上限を超えていた場合､行動不能にする(ダメージ計算のときに行動不能の判定を行えばいいかも)
   //ダメージを計算する

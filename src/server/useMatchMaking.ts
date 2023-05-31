@@ -1,16 +1,16 @@
 import { toRefs } from "vue";
 import { db } from "./firebase";
 import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
-import { getPlayerData } from "./usePlayerID";
 import { e, s, i } from "@/log";
+import { converter } from "@/server/converter";
 import { router } from "@/router";
-import type { MatchStatus, PlayerData, Character, Gift } from "@/types";
+import type { MatchStatus, PlayerData, Character, Gift, GameData } from "@/types";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 //Collectionの参照
-const playersRef = collection(db, "players");
-const gamesRef = collection(db, "games");
+const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
+const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //マッチング待機中のplayerを検索する
 async function findWaitingPlayer(): Promise<void> {
@@ -131,4 +131,4 @@ async function addGame(): Promise<string> {
 //gameを削除する
 async function deleteGame(): Promise<void> {}
 
-export { getPlayerData, startMatchmaking };
+export { startMatchmaking };
