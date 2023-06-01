@@ -30,7 +30,7 @@ onMounted(async () => {
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
     console.log(i, "character: ", character.value?.name);
     console.log(i, "gift: ", gift.value[0]?.name, gift.value[1]?.name, gift.value[2]?.name);
-    console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution, "priority: ", status.value.priority);
+    console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));
     console.log(i, "mission: ", missions.value.map((mission) => mission.name));
     console.log(i, "turn: ", turn.value);

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
-const { player } = storeToRefs(playerStore);
 const { pushHand, popHand } = playerStore;
-const { hand } = player.value;
+const { player } = storeToRefs(playerStore);
+const { hand } = toRefs(player.value);
 
 const isSelected = ref<boolean[]>([]);
 

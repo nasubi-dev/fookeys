@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 const {  player } = storeToRefs(playerStore);
-const { name, character, gift, status } = player.value;
+const { name, character, gift, status } = toRefs(player.value);
 
 </script>
 

@@ -33,7 +33,7 @@ type Mission = {
 
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
-type Status = { hp: number; hungry: number; contribution: number; priority: number };
+type Status = { hp: number; hungry: number; contribution: number };
 type SumCards = { waste: number; hungry: number; priority: number; pow: number; def: number; tech: number };
 type PlayerData = {
   idEnemy: string;
@@ -54,7 +54,7 @@ type GameData = {
   turn: number;
   players: string[];
   missions: Mission[];
-  firstAtkPlayer: PlayerSign;
+  firstAtkPlayer: PlayerSign | undefined;
 };
 
 export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, SumCards, GameData };

@@ -25,7 +25,6 @@ const usePlayerStore = defineStore("playerData", () => {
       hp: 1000,
       hungry: 0,
       contribution: 0,
-      priority: 0,
     },
     sumFields: {
       waste: 0,
@@ -106,7 +105,7 @@ const useGameStore = defineStore("gameData", () => {
     turn: 1,
     players: [],
     missions: [],
-    firstAtkPlayer: 0,
+    firstAtkPlayer: undefined,
   });
   //?Computed/Getter
   ///?function/actions

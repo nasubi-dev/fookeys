@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 const { player, sumCards } = storeToRefs(playerStore);
-const { field } = player.value;
+const { field } = toRefs(player.value);
 
 </script>
 
