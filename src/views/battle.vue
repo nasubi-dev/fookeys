@@ -41,8 +41,8 @@ const turnEnd = async () => {
   console.log(i, "turnEnd");
   //Fieldのカードをソートする
   //Fieldをいじれないようにする
-  Promise.all([
-    await watchTurnEnd(),
+  await Promise.all([
+    watchTurnEnd(),
   ]).then(() => {
     //処理が終了したらFieldを削除
     // deleteField();

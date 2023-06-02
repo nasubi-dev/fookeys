@@ -15,31 +15,24 @@ const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //ダメージを反映する
 export async function reflectDamage(): Promise<void> {
-  const { id, player } = storeToRefs(playerStore);
-  const { check, sign, status, sumFields, idEnemy } = toRefs(player.value);
+  console.log(s, "reflectDamageを実行しました");
+  const { player } = storeToRefs(playerStore);
+  const { sign, status, idEnemy } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  let beforeHp = status.value.hp;
   //ダメージを反映する
-  const unsubscribe = onSnapshot(doc(playersRef, id.value), (snap) => {
-    const data = snap.data();
-    if (!data) return;
-    if (data.status.hp !== beforeHp) {
-      status.value.hp = data.status.hp;
-
-      //missionを達成しているか確認する//!未定
-      //死亡判断を行う
-      console.log(i, "自分のhp: ", status.value.hp);
-      if (status.value.hp <= 0) {
-        //TODO: 死亡処理を書く
-        console.log(i, "死亡しました");
-      }
-      //監視を解除する
-      unsubscribe();
-      beforeHp = status.value.hp;
-    }
-  });
+  if (firstAtkPlayer.value === (sign.value % 2 ? 0 : 1)) {
+    status.value.hp -= (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields.pow ?? 0;
+  }
+  //missionを達成しているか確認する//!未定
+  //死亡判断を行う
+  console.log(i, "自分のhp: ", status.value.hp);
+  if (status.value.hp <= 0) {
+    status.value.hp = 0;
+    //TODO: 死亡処理を書く
+    console.log(i, "死亡しました");
+  }
 }
 //ダメージを計算する
 export async function calcDamage(): Promise<void> {
@@ -54,6 +47,7 @@ export async function calcDamage(): Promise<void> {
     status.value.hungry += sumFields.value.hungry;
     console.log(i, "hungry: ", status.value.hungry);
     if (status.value.hungry > 100) {
+      console.log(i, "行動不能です");
       status.value.hungry = 100;
       //TODO: 行動不能の処理を書く
     }
@@ -61,17 +55,15 @@ export async function calcDamage(): Promise<void> {
     if (enemyStatus === undefined) return;
     //支援を行う//!未定
     //防御を行う//?エフェクトのみ
+    console.log(i, "def: ", sumFields.value.def);
     //マッスル攻撃を行う
     enemyStatus.hp -= sumFields.value.pow;
-    console.log(i, "enemyに", sumFields.value.pow, "のダメージ");
+    console.log(i, "マッスル攻撃でenemyに", sumFields.value.pow, "のダメージ");
     //テクニック攻撃を行う
     enemyStatus.hp -= sumFields.value.tech;
-    console.log(i, "enemyに", sumFields.value.tech, "のダメージ");
+    console.log(i, "テクニック攻撃でenemyに", sumFields.value.tech, "のダメージ");
     updateDoc(doc(playersRef, id.value), { status: status.value });
     updateDoc(doc(playersRef, idEnemy.value), { status: enemyStatus });
-  } else {
-    console.log(i, "後攻です");
-    return;
   }
 }
 //指定された､fieldの値を比較する
@@ -82,9 +74,9 @@ async function compareSumField(field: "hungry" | "priority") {
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  const enemySumField = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields[field] ?? 0;
-  // console.log(i, "sum", field, ": ", sumFields.value[field]);
-  // console.log(i, "enemySum", field, ": ", enemySumField);
+  let enemySumField = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields[field] ?? 0;
+  console.log(i, "sum", field, ": ", sumFields.value[field]);
+  console.log(i, "enemySum", field, ": ", enemySumField);
   //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
   if (sumFields.value[field] < enemySumField) {
     firstAtkPlayer.value = sign.value;
@@ -116,6 +108,7 @@ export async function watchFirstAtkPlayerField() {
         unsubscribe();
         console.log(i, "firstAtkPlayerの監視を解除しました");
         updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
+        console.log(i, firstAtkPlayer.value);
       }
     });
   } else {
@@ -138,7 +131,7 @@ export async function watchFirstAtkPlayerField() {
 export async function battle() {
   console.log(s, "battleを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { check, sign, status, sumFields, idEnemy } = toRefs(player.value);
+  const { check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -149,7 +142,7 @@ export async function battle() {
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   // if (field.value[0].name === "foodBank") donate();
   //先行後攻を決める
-  watchFirstAtkPlayerField();
+  await watchFirstAtkPlayerField();
 
   await compareSumField("hungry");
   await compareSumField("priority");
