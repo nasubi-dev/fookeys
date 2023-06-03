@@ -4,7 +4,7 @@ import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { setHand, setMissions, watchTurnEnd } from "@/server/useShop";
-import { startGame, nextTurn } from "@/server/useBattle";
+import { startGame } from "@/server/useBattle";
 import Status from "@/components/status.vue";
 import Cards from "@/components/cards.vue";
 import Hand from "@/components/hand.vue";
@@ -41,16 +41,11 @@ const turnEnd = async () => {
   console.log(i, "turnEnd");
   //Fieldのカードをソートする
   //Fieldをいじれないようにする
-  await Promise.all([
-    watchTurnEnd(),
-  ]).then(() => {
+    await watchTurnEnd();
     //処理が終了したらFieldを削除
     // deleteField();
     //handのカードのwasteの値を-1する
     //腐っていれば腐ったカードに入れ替える→ソート
-    //ターンを進める
-    // nextTurn();
-  });
 };
 
 </script>

@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { db } from "./firebase";
-import { collection, deleteField, doc, getDoc, getDocs, increment, onSnapshot, query, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { storeToRefs } from "pinia";
 import { e, i, s } from "@/log";
 import { converter } from "@/server/converter";
@@ -43,9 +43,7 @@ export async function reflectDamage(which: "primary" | "second"): Promise<void> 
 export async function calcDamage(): Promise<void> {
   console.log(s, "calcDamageを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { sumFields, idEnemy } = toRefs(player.value);
-  const { game } = storeToRefs(gameStore);
-  const { firstAtkPlayer } = toRefs(game.value);
+  const { sumFields, idEnemy, check } = toRefs(player.value);
   let myId = id.value;
   let enemyId = idEnemy.value;
 
@@ -66,7 +64,7 @@ export async function calcDamage(): Promise<void> {
     //TODO: 行動不能の処理を書く
   }
   //支援を行う//!未定
-  //防御を行う//?エフェクトのみ
+  //防御を行う//?エフェクトのみ//!現在は防御力が後攻でも有効になっている
   //マッスル攻撃を行う
   let holding = mySumFields.pow - enemySumFields.def;
   if (holding < 0) holding = 0;
@@ -76,8 +74,11 @@ export async function calcDamage(): Promise<void> {
   //テクニック攻撃を行う
   enemyStatus.hp -= mySumFields.tech;
   console.log(i, "テクニック攻撃でenemyに", mySumFields.tech, "のダメージ");
+  //行動済みにする
+  check.value = true;
   updateDoc(doc(playersRef, myId), { status: myStatus });
   updateDoc(doc(playersRef, enemyId), { status: enemyStatus });
+  updateDoc(doc(playersRef, myId), { check: check.value });
 }
 
 //指定された､fieldの値を比較する
@@ -176,20 +177,23 @@ export async function battle() {
   if (!(firstAtkPlayer.value === sign.value)) await calcDamage();
   //ダメージを反映する
   await reflectDamage("second");
+  //turnを進める
+  await nextTurn();
 }
 
 //turnを進める
 export async function nextTurn(): Promise<void> {
   console.log(s, "nextTurnを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { idGame, check } = toRefs(player.value);
+  const { idGame, sign, check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
 
+  if (!check.value) console.log(e, "行動していません");
   game.value.turn++;
-  check.value = false;
   //incrementを使うと、値を1増やすことができる
-  updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
-  updateDoc(doc(playersRef, id.value), { check: check.value });
+  if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
+  if (sign.value) console.log(i, "test: ");
+  console.log(i, "turn: ", game.value.turn);
 }
 
 //!すべてのターン管理(最終的な形は未定)
