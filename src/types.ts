@@ -30,7 +30,7 @@ type Mission = {
   description: string;
   // action?: () => void;
 };
-
+//!使われてるか調べる
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number };

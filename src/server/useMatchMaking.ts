@@ -17,13 +17,15 @@ async function findWaitingPlayer(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
 
+  console.log(i, "Finding players...");
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
 
   // 自分を除外する
-  waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
+  waitingPlayers.indexOf(id.value) ? undefined : waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
   // ランダムに選択する
   idEnemy.value = waitingPlayers[Math.floor(Math.random() * waitingPlayers.length)];
+  console.log(i, "Found players: ", waitingPlayers);
   waitingPlayers[0] ? console.log(i, "Found player: ", idEnemy.value) : console.log(i, "Not enough players to start a game");
 }
 
