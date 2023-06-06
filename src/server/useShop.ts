@@ -78,7 +78,7 @@ export async function watchTurnEnd(): Promise<void> {
   sumFields.value = sumCards.value;
   updateDoc(doc(playersRef, id.value), { sumFields: sumFields.value });
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
-  if (enemyCheck === true) {
+  if (enemyCheck) {
     battle();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {

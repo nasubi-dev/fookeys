@@ -14,23 +14,15 @@ const missionsRef = collection(db, "missions").withConverter(converter<Mission>(
 const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //ダメージを反映する
-export async function reflectDamage(which: "primary" | "second"): Promise<void> {
+export async function reflectDamage(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
-  const { player } = storeToRefs(playerStore);
-  const { sign, status, idEnemy } = toRefs(player.value);
-  const { game } = storeToRefs(gameStore);
-  const { firstAtkPlayer } = toRefs(game.value);
+  const { player, id } = storeToRefs(playerStore);
+  const { status } = toRefs(player.value);
   //ダメージを反映する
-  if (which === "primary") {
-    if (firstAtkPlayer.value === sign.value) return;
-    status.value.hp -= (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields.pow ?? 0;
-  } else {
-    if (!(firstAtkPlayer.value === sign.value)) return;
-    status.value.hp -= (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields.pow ?? 0;
-  }
+  status.value = (await getDoc(doc(playersRef, id.value))).data()?.status ?? { hp: 0, hungry: 0, contribution: 0 };
   //missionを達成しているか確認する//!未定
   //死亡判断を行う
-  console.log(i, "hp: ", status.value.hp);
+  console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
   if (status.value.hp <= 0) {
     status.value.hp = 0;
     //TODO: 死亡処理を書く
@@ -38,13 +30,12 @@ export async function reflectDamage(which: "primary" | "second"): Promise<void> 
   }
 }
 //ダメージを計算する
-export async function calcDamage(): Promise<void> {
+export async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { sumFields, idEnemy, check } = toRefs(player.value);
+  const { idEnemy, check } = toRefs(player.value);
   let myId = id.value;
   let enemyId = idEnemy.value;
-
   let myStatus = (await getDoc(doc(playersRef, myId))).data()?.status;
   let enemyStatus = (await getDoc(doc(playersRef, enemyId))).data()?.status;
   let mySumFields = (await getDoc(doc(playersRef, myId))).data()?.sumFields;
@@ -53,35 +44,43 @@ export async function calcDamage(): Promise<void> {
     console.log(e, "statusが取得できませんでした");
     return;
   }
-
   //hungryの値が上限を超えていた場合､行動不能にする
-  myStatus.hungry += sumFields.value.hungry;
+  myStatus.hungry += mySumFields.hungry;
   console.log(i, "hungry: ", myStatus.hungry);
   if (myStatus.hungry > 100) {
     console.log(i, "行動不能です");
     myStatus.hungry = 100;
     //TODO: 行動不能の処理を書く
+    console.log(i, "限界を超えたので上限の100になりました");
   }
 
   //支援を行う//!未定
   //防御を行う//?エフェクトのみ//!現在は防御力が後攻でも有効になっている
+  let defense = which === "second" ? enemySumFields.def : 0;
+  console.log(i, "defense: ", defense);
   //マッスル攻撃を行う
-  let holding = mySumFields.pow - enemySumFields.def;
+  let holding = mySumFields.pow - defense;
+  console.log(i, "holding: ", holding);
   if (holding < 0) holding = 0;
   enemyStatus.hp -= holding;
-  console.log(i, "マッスル攻撃でenemyに", mySumFields.pow, "のダメージ");
-  if (enemySumFields.def === 0) console.log(i, "相手のdefが", enemySumFields.def, "なので", holding, "のダメージ");
+  defense
+    ? console.log(i, "相手のdefが", enemySumFields.def, "なので", holding, "のダメージ")
+    : console.log(i, "マッスル攻撃でenemyに", mySumFields.pow, "のダメージ");
 
   //テクニック攻撃を行う
-  enemyStatus.hp -= mySumFields.tech;//?一応防げるギフトがある
+  enemyStatus.hp -= mySumFields.tech; //?一応防げるギフトがある
   console.log(i, "テクニック攻撃でenemyに", mySumFields.tech, "のダメージ");
 
   //行動済みにする
   check.value = true;
 
-  updateDoc(doc(playersRef, myId), { status: myStatus });
-  updateDoc(doc(playersRef, enemyId), { status: enemyStatus });
-  updateDoc(doc(playersRef, myId), { check: check.value });
+  console.log(i, "myStatus.hungry: ", myStatus.hungry);
+  console.log(i, "enemyStatus.hp: ", enemyStatus.hp);
+  await Promise.all([
+    updateDoc(doc(playersRef, myId), { "status.hungry": myStatus.hungry }),
+    updateDoc(doc(playersRef, enemyId), { "status.hp": enemyStatus.hp }),
+    updateDoc(doc(playersRef, myId), { check: check.value }),
+  ]);
 }
 
 //指定された､fieldの値を比較する
@@ -125,7 +124,7 @@ export async function watchFirstAtkPlayerField(): Promise<void> {
         unsubscribe();
         console.log(i, "firstAtkPlayerの監視を解除しました");
         updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
-        console.log(i, firstAtkPlayer.value);
+        console.log(i, "受け取ったfirstAtkPlayer: ", firstAtkPlayer.value);
       }
     });
   } else {
@@ -169,12 +168,12 @@ export async function battle() {
     return;
   }
   console.log(i, "先行の攻撃");
-  if (firstAtkPlayer.value === sign.value) await calcDamage();
-  await reflectDamage("primary");
+  if (firstAtkPlayer.value === sign.value) await calcDamage("primary");
+  await reflectDamage();
 
   console.log(i, "後攻の攻撃");
-  if (!(firstAtkPlayer.value === sign.value)) await calcDamage();
-  await reflectDamage("second");
+  if (!(firstAtkPlayer.value === sign.value)) await calcDamage("second");
+  await reflectDamage();
 
   await nextTurn(); //turnを進める
 }
@@ -190,8 +189,9 @@ export async function nextTurn(): Promise<void> {
   game.value.turn++;
   //incrementを使うと、値を1増やすことができる
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
-  if (sign.value) console.log(i, "test: ");
   console.log(i, "turn: ", game.value.turn);
+  check.value = false;
+  updateDoc(doc(playersRef, id.value), { check: check.value });
 }
 
 //!すべてのターン管理(最終的な形は未定)
