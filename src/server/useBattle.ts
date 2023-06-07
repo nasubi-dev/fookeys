@@ -14,7 +14,7 @@ const missionsRef = collection(db, "missions").withConverter(converter<Mission>(
 const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //ダメージを反映する
-export async function reflectDamage(): Promise<void> {
+async function reflectDamage(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
@@ -30,12 +30,22 @@ export async function reflectDamage(): Promise<void> {
   }
 }
 //ダメージを計算する
-export async function calcDamage(which: "primary" | "second"): Promise<void> {
+async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { idEnemy, check } = toRefs(player.value);
-  let myId = id.value;
-  let enemyId = idEnemy.value;
+  const { idEnemy, check, sign } = toRefs(player.value);
+  const { game } = storeToRefs(gameStore);
+  const { firstAtkPlayer } = toRefs(game.value);
+  //自分と相手のidを取得する
+  let myId, enemyId;
+  if (firstAtkPlayer.value === sign.value) {
+    myId = which === "primary" ? id.value : idEnemy.value;
+    enemyId = which === "primary" ? idEnemy.value : id.value;
+  } else {
+    myId = which === "primary" ? idEnemy.value : id.value;
+    enemyId = which === "primary" ? id.value : idEnemy.value;
+  }
+  //statusを取得する
   let myStatus = (await getDoc(doc(playersRef, myId))).data()?.status;
   let enemyStatus = (await getDoc(doc(playersRef, enemyId))).data()?.status;
   let mySumFields = (await getDoc(doc(playersRef, myId))).data()?.sumFields;
@@ -58,6 +68,7 @@ export async function calcDamage(which: "primary" | "second"): Promise<void> {
   //防御を行う//?エフェクトのみ//!現在は防御力が後攻でも有効になっている
   let defense = which === "second" ? enemySumFields.def : 0;
   console.log(i, "defense: ", defense);
+
   //マッスル攻撃を行う
   let holding = mySumFields.pow - defense;
   console.log(i, "holding: ", holding);
@@ -107,7 +118,7 @@ async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   }
 }
 //firstAtkPlayerの値の監視
-export async function watchFirstAtkPlayerField(): Promise<void> {
+async function watchFirstAtkPlayerField(): Promise<void> {
   console.log(s, "watchFirstAtkPlayerFieldを実行しました");
   const { player } = storeToRefs(playerStore);
   const { sign, idGame } = toRefs(player.value);
@@ -168,11 +179,13 @@ export async function battle() {
     return;
   }
   console.log(i, "先行の攻撃");
-  if (firstAtkPlayer.value === sign.value) await calcDamage("primary");
+  // if (firstAtkPlayer.value === sign.value)//!5日問題が発生するかも
+  await calcDamage("primary");
   await reflectDamage();
 
   console.log(i, "後攻の攻撃");
-  if (!(firstAtkPlayer.value === sign.value)) await calcDamage("second");
+  // if (!(firstAtkPlayer.value === sign.value))
+  await calcDamage("second");
   await reflectDamage();
 
   await nextTurn(); //turnを進める
