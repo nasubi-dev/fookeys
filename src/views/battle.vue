@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { onMounted, toRefs } from "vue";
+import { onMounted, toRefs, ref } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { setHand, setMissions, watchTurnEnd } from "@/server/useShop";
 import { startGame } from "@/server/useBattle";
 import Status from "@/components/status.vue";
-import Cards from "@/components/cards.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 
-const { deleteField } = playerStore;
-const { id, player } = storeToRefs(playerStore);
+const { deleteField,deleteHand } = playerStore;
+const { id, player,cardLock } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
@@ -37,15 +36,22 @@ onMounted(async () => {
   });
 });
 //ターンを終了時
-const turnEnd = async () => {
+const turnEnd = () => {
+  //
+  if (cardLock.value) return;
   console.log(i, "turnEnd");
-  //Fieldのカードをソートする
-  //Fieldをいじれないようにする
-    await watchTurnEnd();
-    //処理が終了したらFieldを削除
-    // deleteField();
-    //handのカードのwasteの値を-1する
-    //腐っていれば腐ったカードに入れ替える→ソート
+  //cardLockをtrueにする
+  cardLock.value = true;
+  execTurnEnd();
+};
+const execTurnEnd = async () => {
+  await watchTurnEnd();
+  //処理が終了したらFieldを削除
+  deleteField();
+  //handのカードを削除する
+  deleteHand();
+  //handのカードのwasteの値を-1する
+  //腐っていれば腐ったカードに入れ替える
 };
 
 </script>
@@ -67,10 +73,9 @@ const turnEnd = async () => {
         </div>
         <div>
           <h1>Field</h1>
-          <Cards :cards="field" />
         </div>
-        <div class="flex flex-col justify-end">
-          <button @click="turnEnd">ターン終了ボタン</button>
+        <div :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="flex flex-col justify-end">
+          <button @click="turnEnd()">ターン終了ボタン</button>
         </div>
         <div>
           <h1>Hand</h1>

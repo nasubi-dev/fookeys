@@ -194,17 +194,18 @@ export async function battle() {
 //turnを進める
 export async function nextTurn(): Promise<void> {
   console.log(s, "nextTurnを実行しました");
-  const { id, player } = storeToRefs(playerStore);
+  const { id, player,cardLock } = storeToRefs(playerStore);
   const { idGame, sign, check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
 
   if (!check.value) console.log(e, "行動していません");
   game.value.turn++;
-  //incrementを使うと、値を1増やすことができる
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
   console.log(i, "turn: ", game.value.turn);
+  //checkの値をfalseにする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+  cardLock.value = false;
 }
 
 //!すべてのターン管理(最終的な形は未定)

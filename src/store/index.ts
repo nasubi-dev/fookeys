@@ -35,6 +35,8 @@ const usePlayerStore = defineStore("playerData", () => {
       tech: 0,
     },
   });
+  const isSelected = ref<boolean[]>([false, false, false, false, false, false, false, false, false]);
+  const cardLock = ref(false);
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
   const sumCards = computed<SumCards>(() =>
@@ -89,13 +91,34 @@ const usePlayerStore = defineStore("playerData", () => {
       field.map((card) => card.name)
     );
   };
+  //ターン終了時に、isSelectedがtrueのカードを捨てる
+  const deleteHand = (): void => {
+    const { hand } = player.value;
+    const deleteIndex = isSelected.value.reduce((acc: number[], bool, index) => {
+      if (bool) acc.unshift(index);
+      return acc;
+    }, []);
+    deleteIndex.forEach((index) => {
+      hand.splice(index, 1);
+      isSelected.value[index] = false;
+    });
+    console.log(
+      i,
+      "deleteHand: ",
+      "hand: ",
+      hand.map((card) => card.name)
+    );
+  };
   return {
     id,
     player,
+    isSelected,
+    cardLock,
     sumCards,
     pushHand,
     popHand,
     deleteField,
+    deleteHand,
   };
 });
 

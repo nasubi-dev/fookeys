@@ -4,10 +4,8 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 const { pushHand, popHand } = playerStore;
-const { player } = storeToRefs(playerStore);
+const { player, isSelected } = storeToRefs(playerStore);
 const { hand } = toRefs(player.value);
-
-const isSelected = ref<boolean[]>([]);
 
 //HandからFieldへ
 const pushCard = (index: number) => {
