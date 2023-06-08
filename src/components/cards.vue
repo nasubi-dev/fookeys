@@ -15,15 +15,15 @@ const sendTest = (index: number) => {
 
 <template>
   <div>
-    <ul class="text-xs flex justify-start">
-      <div v-for="(card, index) in cards" :key="card.id">
-        <button @click="sendTest(index)">
-          <div class="w-30 h-30 bg-gray-100 rounded-lg p-4 flex flex-col justify-center items-center">
+    <div v-for="(card, index) in cards" :key="card.id">
+      <div class="box">
+        <button class=img-button @click="sendTest(index)">
+          <img src="../../src/assets/card1.png">
+          <div class="ovwelay">
             <h5 class="text-bold">name:{{ card.name }}</h5>
             <p class="text-gray-600">ID:{{ card.id }}</p>
             <p class="text-gray-600">📊🚬:{{ card.company }}</p>
             <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
-
             <div v-if="card.pow">
               <p class="text-gray-600">{{ "⚔:" + card.pow }}</p>
             </div>
@@ -34,8 +34,22 @@ const sendTest = (index: number) => {
               <p class="text-gray-600">{{ "🏹:" + card.tech }}</p>
             </div>
           </div>
-        </button>
+          </button>
+        </div>
       </div>
-    </ul>
   </div>
 </template>
+
+<style>
+.box{
+    position: relative;
+    max-width: 50%;
+    max-height: 50%;
+}
+.box p{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    }
+</style>
