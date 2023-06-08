@@ -109,6 +109,15 @@ const usePlayerStore = defineStore("playerData", () => {
       hand.map((card) => card.name)
     );
   };
+  //ターン終了時に､Handのカードの腐り値を減らす(0になったら腐りカードにする)
+  const reduceWaste = (): void => {
+    const { hand } = player.value;
+    hand.forEach((card) => {
+      card.waste -= 1;
+      if (card.waste > 0) return;
+      hand.splice(hand.indexOf(card), 1, { ...card, rotten: true });
+    });
+  };
   return {
     id,
     player,
@@ -119,6 +128,7 @@ const usePlayerStore = defineStore("playerData", () => {
     popHand,
     deleteField,
     deleteHand,
+    reduceWaste,
   };
 });
 

@@ -191,21 +191,35 @@ export async function battle() {
   await reflectDamage();
   //missionのクリア判定
 
-  //handの腐り値を減らす
-  //満腹値を減らす(腐り値が0の場合は-20)
+  //戦後処理
+  await postBattle();
+}
+
+//戦闘後の処理
+export async function postBattle(): Promise<void> {
+  console.log(s, "postBattleを実行しました");
+  const { reduceWaste } = playerStore;
+  const { id, player, cardLock } = storeToRefs(playerStore);
+  const { check, sign, idGame } = toRefs(player.value);
+  const { game } = storeToRefs(gameStore);
+  const { turn } = toRefs(game.value);
+  //handの腐り値を減らす(腐り値が0になったらhandから削除する)
+  reduceWaste();
+  updateDoc(doc(playersRef, id.value), { hand: player.value.hand });
+  //満腹値を減らす(行動不能の場合は-20)
   //turnを進める
   if (!check.value) console.log(e, "行動していません");
-  game.value.turn++;
+  turn.value++;
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
-  console.log(i, "turn: ", game.value.turn);
+  console.log(i, "turn: ", turn.value);
 
   //checkの値をfalseにする(初期値に戻す)
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+
   //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
 }
-
 //!すべてのターン管理(最終的な形は未定)
 export async function startGame(): Promise<void> {
   console.log(s, "startGameを実行しました");

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, toRefs, ref } from "vue";
+import { onMounted, toRefs } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -11,7 +11,7 @@ import Mission from "@/components/mission.vue";
 
 const { deleteField,deleteHand } = playerStore;
 const { id, player,cardLock } = storeToRefs(playerStore);
-const { idGame, character, gift, status, hand, field, sign } = toRefs(player.value);
+const { idGame, character, gift, status, hand, sign } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);

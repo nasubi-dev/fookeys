@@ -9,6 +9,7 @@ type Card = {
   pow?: number;
   def?: number;
   tech?: number;
+  rotten?: boolean;
   // special?: () => void;
 };
 
