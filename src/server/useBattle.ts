@@ -61,7 +61,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "行動不能です");
     myStatus.hungry = 100;
     //TODO: 行動不能の処理を書く
-    console.log(i, "限界を超えたので上限の100になりました");
+    console.log(i, "限界を超えたので上限の", myStatus.hungry, "になりました");
   }
 
   //支援を行う//!未定
@@ -157,8 +157,8 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 //戦闘処理を統括する
 export async function battle() {
   console.log(s, "battleを実行しました");
-  const { id, player } = storeToRefs(playerStore);
-  const { check, sign } = toRefs(player.value);
+  const { id, player, cardLock } = storeToRefs(playerStore);
+  const { check, sign, idGame } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -168,6 +168,7 @@ export async function battle() {
   //寄付ならば先に処理を行う
   //TODO: Fieldの最初のカードが寄付カードだったら、ここで寄付の処理を行う
   // if (field.value[0].name === "foodBank") donate();
+
   //先行後攻を決める
   await watchFirstAtkPlayerField();
 
@@ -182,29 +183,26 @@ export async function battle() {
   // if (firstAtkPlayer.value === sign.value)//!5日問題が発生するかも
   await calcDamage("primary");
   await reflectDamage();
+  //missionのクリア判定
 
   console.log(i, "後攻の攻撃");
   // if (!(firstAtkPlayer.value === sign.value))
   await calcDamage("second");
   await reflectDamage();
+  //missionのクリア判定
 
-  await nextTurn(); //turnを進める
-}
-
-//turnを進める
-export async function nextTurn(): Promise<void> {
-  console.log(s, "nextTurnを実行しました");
-  const { id, player,cardLock } = storeToRefs(playerStore);
-  const { idGame, sign, check } = toRefs(player.value);
-  const { game } = storeToRefs(gameStore);
-
+  //handの腐り値を減らす
+  //満腹値を減らす(腐り値が0の場合は-20)
+  //turnを進める
   if (!check.value) console.log(e, "行動していません");
   game.value.turn++;
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
   console.log(i, "turn: ", game.value.turn);
-  //checkの値をfalseにする
+
+  //checkの値をfalseにする(初期値に戻す)
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+  //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
 }
 
