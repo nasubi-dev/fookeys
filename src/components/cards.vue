@@ -16,6 +16,7 @@ const sendTest = (index: number) => {
 <template>
   <div v-for="(card, index) in cards" :key="card.id">
     <button class=img-button @click="sendTest(index)">
+      <img src="../../src/assets/card1.png">
       <h5 class="card-name">{{ card.name }}</h5>
       <p class="card-ID">{{ card.id }}</p>
       <p class="card-company">{{ card.company }}</p>
