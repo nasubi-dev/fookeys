@@ -21,7 +21,7 @@ const popCard = (index: number, id: number) => {
   isSelected.value[index] = !isSelected.value[index]
   popHand(index, id)
 };
-
+//!寄付のときFieldにカードを追加しない処理が必要
 </script>
 
 <template>

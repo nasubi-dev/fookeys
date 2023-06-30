@@ -4,15 +4,20 @@ import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc 
 import { storeToRefs } from "pinia";
 import { e, i, s } from "@/log";
 import { converter } from "@/server/converter";
-import type { Card, Mission, GameData, PlayerData, PlayerSign } from "@/types";
+import type { Mission, GameData, PlayerData, PlayerSign } from "@/types";
 import { gameStore, playerStore } from "@/main";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 const missionsRef = collection(db, "missions").withConverter(converter<Mission>());
-const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
+//寄付ならば先に処理を行う
+export async function donate(): Promise<void> {
+  console.log(s, "donateを実行しました");
+  playerStore.player.check = true;
+  //TODO: 寄付の処理を書く
+}
 //ダメージを反映する
 async function reflectDamage(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
@@ -36,6 +41,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   const { idEnemy, check, sign } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
+  //checkをfalseにする
+  check.value = false;
   //自分と相手のidを取得する
   let myId, enemyId;
   if (firstAtkPlayer.value === sign.value) {
@@ -54,39 +61,64 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(e, "statusが取得できませんでした");
     return;
   }
-  //hungryの値が上限を超えていた場合､行動不能にする
+  //自分のhungryの値が上限を超えていた場合､行動不能にする
   myStatus.hungry += mySumFields.hungry;
-  console.log(i, "hungry: ", myStatus.hungry);
+  console.log(i, "mySumHungry: ", myStatus.hungry);
   if (myStatus.hungry > 100) {
-    console.log(i, "行動不能です");
-    myStatus.hungry = 100;
-    //TODO: 行動不能の処理を書く
-    console.log(i, "限界を超えたので上限の", myStatus.hungry, "になりました");
+    //?寄付の場合と､満腹値を超えていた場合のときに戦闘できないようにする
+    check.value = true;
+    console.log(i, "自プレイヤー行動不能です");
   }
+  //相手のhungryの値が上限を超えていた場合､行動不能にする
+  let enemySumHungry = enemySumFields.hungry + enemyStatus.hungry;
+  console.log(i, "enemySumHungry: ", enemySumHungry);
+  if (enemySumHungry > 100) console.log(i, "相手プレイヤー行動不能です");
 
   //支援を行う//!未定
-  //防御を行う//?エフェクトのみ//!現在は防御力が後攻でも有効になっている
-  let defense = which === "second" ? enemySumFields.def : 0;
-  console.log(i, "defense: ", defense);
+  //防御を行う//?エフェクトのみ
+  let defense = 0;
+  if (which === "primary") console.log(i, "先行なので防御できない");
+  else {
+    if (enemySumHungry > 100) console.log(i, "敵は行動不能なので防御できない");
+    else {
+      defense = enemySumFields.def;
+      console.log(i, "enemySumFields.def: ", defense);
+    }
+  }
 
   //マッスル攻撃を行う
-  let holding = mySumFields.pow - defense;
-  console.log(i, "holding: ", holding);
-  if (holding < 0) holding = 0;
-  enemyStatus.hp -= holding;
+  console.log(i, "マッスル攻撃!!!");
+  let holdingAtk = 0;
+  console.log(i, "mySumFields.pow: ", mySumFields.pow);
+  if (check.value) console.log(i, "行動不能なので攻撃できない");
+  else {
+    holdingAtk = mySumFields.pow - defense;
+    if (holdingAtk < 0) holdingAtk = 0;
+    console.log(i, "holdingAtk: ", holdingAtk);
+  }
+  enemyStatus.hp -= holdingAtk;
   defense
-    ? console.log(i, "相手のdefが", enemySumFields.def, "なので", holding, "のダメージ")
-    : console.log(i, "マッスル攻撃でenemyに", mySumFields.pow, "のダメージ");
+    ? console.log(i, "相手のdefが", enemySumFields.def, "なので", holdingAtk, "のダメージ")
+    : console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
 
   //テクニック攻撃を行う
-  enemyStatus.hp -= mySumFields.tech; //?一応防げるギフトがある
+  console.log(i, "テクニック攻撃!!!");
+  let holdingTech = 0;
+  if (check.value) console.log(i, "行動不能なので攻撃できない");
+  else {
+    holdingTech = mySumFields.tech - 0; //?一応防げるギフトがある
+    if (holdingTech < 0) holdingTech = 0;
+    console.log(i, "holdingTech: ", holdingTech);
+  }
+  enemyStatus.hp -= mySumFields.tech;
   console.log(i, "テクニック攻撃でenemyに", mySumFields.tech, "のダメージ");
 
   //行動済みにする
   check.value = true;
+  //hungryの値が上限を超えていた場合､上限値にする
+  if (myStatus.hungry > 100) myStatus.hungry = 100;
 
-  console.log(i, "myStatus.hungry: ", myStatus.hungry);
-  console.log(i, "enemyStatus.hp: ", enemyStatus.hp);
+  //Firebaseに反映する
   await Promise.all([
     updateDoc(doc(playersRef, myId), { "status.hungry": myStatus.hungry }),
     updateDoc(doc(playersRef, enemyId), { "status.hp": enemyStatus.hp }),
@@ -131,11 +163,11 @@ async function watchFirstAtkPlayerField(): Promise<void> {
       if (!data) return;
       if (data.firstAtkPlayer !== undefined) {
         firstAtkPlayer.value = data.firstAtkPlayer === 0 ? 0 : 1;
+        updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
+        console.log(i, "受け取ったfirstAtkPlayer: ", firstAtkPlayer.value);
         //監視を解除する
         unsubscribe();
         console.log(i, "firstAtkPlayerの監視を解除しました");
-        updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
-        console.log(i, "受け取ったfirstAtkPlayer: ", firstAtkPlayer.value);
       }
     });
   } else {
@@ -145,14 +177,6 @@ async function watchFirstAtkPlayerField(): Promise<void> {
     await updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: firstAtkPlayer.value });
   }
 }
-
-//寄付ならば先に処理を行う
-// export async function donate(): Promise<void> {
-//   console.log(s, "donateを実行しました");
-//   playerStore.player.check = true;
-//   //TODO: 寄付の処理を書く
-// }
-//その値が正しいか確認する
 
 //戦闘処理を統括する
 export async function battle() {
@@ -171,7 +195,6 @@ export async function battle() {
 
   //先行後攻を決める
   await watchFirstAtkPlayerField();
-
   await compareSumField("hungry");
   await compareSumField("priority");
   console.log(i, "結果...firstAtkPlayer: ", firstAtkPlayer.value);
@@ -204,24 +227,20 @@ export async function postBattle(): Promise<void> {
   const { nextTurn } = gameStore;
 
   if (!check.value) console.log(e, "行動していません");
-
   //使ったカードを捨てる
   deleteField();
   deleteHand();
   updateDoc(doc(playersRef, id.value), { hand: player.value.hand });
-
   //handの腐り値を減らす(腐り値が0になったらhandから削除する)
   reduceWaste();
   updateDoc(doc(playersRef, id.value), { hand: player.value.hand });
-
-  //満腹値を減らす(行動不能の場合は-20)
+  //満腹値を減らす
 
   //turnを進める
   nextTurn();
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
 
   //missionを4ターンに一度変更する
-  
 
   //checkの値をfalseにする(初期値に戻す)
   check.value = false;

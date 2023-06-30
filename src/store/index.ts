@@ -84,12 +84,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const deleteField = (): void => {
     const { field } = player.value;
     field.splice(0, field.length);
-    console.log(
-      i,
-      "fieldDelete: ",
-      "field: ",
-      field.map((card) => card.name)
-    );
+    console.log(i, "fieldDelete");
   };
   //ターン終了時に、isSelectedがtrueのカードを捨てる
   const deleteHand = (): void => {
