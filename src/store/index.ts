@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { i } from "@/log";
-import type { Card, GameData, PlayerData, SumCards } from "@/types";
+import type { Card, GameData, PlayerData, SumCards, Mission } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -142,8 +142,18 @@ const useGameStore = defineStore("gameData", () => {
   });
   //?Computed/Getter
   ///?function/actions
+  //ターン終了時に、turnを1増やす
+  const nextTurn = (): void => {
+    game.value.turn += 1;
+    console.log(i, "turn: ", game.value.turn);
+  };
+  //missionを4ターンに一回更新する
+  const updateMission = (newMissions: Mission[]): void => {
+    game.value.missions = newMissions;
+    console.log(i, "mission: ", game.value.missions);
+  };
 
-  return { game };
+  return { game, nextTurn, updateMission };
 });
 
 export { useGameStore, usePlayerStore };

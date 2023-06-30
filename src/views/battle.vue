@@ -9,8 +9,7 @@ import Status from "@/components/status.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 
-const { deleteField,deleteHand } = playerStore;
-const { id, player,cardLock } = storeToRefs(playerStore);
+const { id, player, cardLock } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, sign } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
@@ -36,22 +35,13 @@ onMounted(async () => {
   });
 });
 //ターンを終了時
-const turnEnd = () => {
+const turnEnd = async () => {
   //
   if (cardLock.value) return;
   console.log(i, "turnEnd");
   //cardLockをtrueにする
   cardLock.value = true;
-  execTurnEnd();
-};
-const execTurnEnd = async () => {
   await watchTurnEnd();
-  //処理が終了したらFieldを削除
-  deleteField();
-  //handのカードを削除する
-  deleteHand();
-  //handのカードのwasteの値を-1する
-  //腐っていれば腐ったカードに入れ替える
 };
 
 </script>

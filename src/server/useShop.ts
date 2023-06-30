@@ -1,5 +1,5 @@
 import { toRefs } from "vue";
-import { collection, deleteField, doc, getDoc, getDocs, increment, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { storeToRefs } from "pinia";
 import { i, s } from "@/log";
 import { converter } from "@/server/converter";
@@ -30,16 +30,16 @@ export async function setHand(): Promise<void> {
     const card = await drawCard();
     hand.value.push(card);
     hand.value.sort((a, b) => a.id - b.id);
-    updateDoc(doc(playersRef, id.value), { hand: hand.value });
   }
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //指定のcardを一枚引く
 //Cardを三枚提示する
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
   const { player } = storeToRefs(playerStore);
-  const { game } = storeToRefs(gameStore);
   const { idGame } = toRefs(player.value);
+  const { game } = storeToRefs(gameStore);
   const { missions } = toRefs(game.value);
 
   if (playerStore.player.sign == 0) {
@@ -59,10 +59,8 @@ export async function setMissions(): Promise<void> {
     missions.value.push(selectMission);
     //選ばれたミッションはmissionsから削除する
     allMissions.splice(allMissions.indexOf(selectMission), 1);
-    //Firestoreにmissionsを保存する
-    //arrayUnionを使うと、配列に要素を追加できる(arrayRemoveで削除もできる)
   }
-  await updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
+  updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
 }
 
 //checkの値の監視
