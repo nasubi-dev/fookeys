@@ -4,6 +4,7 @@ import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc 
 import { storeToRefs } from "pinia";
 import { e, i, s } from "@/log";
 import { converter } from "@/server/converter";
+import { startShop } from "./useShop";
 import type { Mission, GameData, PlayerData, PlayerSign } from "@/types";
 import { gameStore, playerStore } from "@/main";
 
@@ -181,11 +182,13 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 //戦闘処理を統括する
 export async function battle() {
   console.log(s, "battleを実行しました");
-  const { id, player } = storeToRefs(playerStore);
+  const { id, player, phase } = storeToRefs(playerStore);
   const { check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
+  phase.value = "battle";
+  console.log(i, "phase: ", phase.value);
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
@@ -245,12 +248,10 @@ export async function postBattle(): Promise<void> {
   //checkの値をfalseにする(初期値に戻す)
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
-
   //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
-}
-//!すべてのターン管理(最終的な形は未定)
-export async function startGame(): Promise<void> {
-  console.log(s, "startGameを実行しました");
+
+  //shopを開く
+  startShop();
 }
 //!export5日まとめる

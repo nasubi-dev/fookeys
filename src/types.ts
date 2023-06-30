@@ -32,6 +32,7 @@ type Mission = {
   // action?: () => void;
 };
 //!使われてるか調べる
+type Phase = "shop" | "battle" | "result" | "none";
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number };
@@ -58,4 +59,4 @@ type GameData = {
   firstAtkPlayer: PlayerSign | undefined;
 };
 
-export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, SumCards, GameData };
+export type { Card, Character, Gift, Mission, Phase, MatchStatus, PlayerSign, Status, PlayerData, SumCards, GameData };

@@ -15,14 +15,16 @@ const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 const missionsRef = collection(db, "missions").withConverter(converter<Mission>());
 const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
-//cardをランダムに一枚引く
+//cardをランダムに1枚引く
 async function drawCard(): Promise<Card> {
+  console.log(i, "drawCardを実行しました");
   const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
   const selectCard = deck[Math.floor(Math.random() * deck.length)];
   return selectCard;
 }
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
+  console.log(i, "setHandを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
@@ -33,15 +35,26 @@ export async function setHand(): Promise<void> {
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
-//指定のcardを一枚引く
-//Cardを三枚提示する
+//Cardを3枚提示する
+export async function setOffer(): Promise<void> {
+  console.log(i, "setOfferを実行しました");
+  const { offer } = storeToRefs(playerStore);
+  for (let i = 0; i < 3; i++) {
+    const card = await drawCard();
+    offer.value.push(card);
+    offer.value.sort((a, b) => a.id - b.id);
+  }
+}
+//指定のcardを1枚引く
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
+  console.log(i, "setMissionsを実行しました");
   const { player } = storeToRefs(playerStore);
   const { idGame } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { missions } = toRefs(game.value);
 
+  if (missions.value) updateDoc(doc(gamesRef, idGame.value), { missions: [] });
   if (playerStore.player.sign == 0) {
     //!みかん
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
@@ -63,8 +76,22 @@ export async function setMissions(): Promise<void> {
   updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
 }
 
+//shopフェーズの開始
+export async function startShop(): Promise<void> {
+  console.log(i, "startShopを実行しました");
+  const { phase } = storeToRefs(playerStore);
+  const { game } = storeToRefs(gameStore);
+
+  phase.value = "shop";
+  console.log(i, "phase: ", phase.value);
+  if (!((game.value.turn % 4) - 1)) setMissions();
+  if (game.value.turn === 1) setHand();
+  else setOffer();
+}
+
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
+  console.log(i, "watchTurnEndを実行しました");
   const { id, player, sumCards } = storeToRefs(playerStore);
   const { check, idEnemy, sumFields } = toRefs(player.value);
 

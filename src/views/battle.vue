@@ -3,13 +3,13 @@ import { onMounted, toRefs } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { setHand, setMissions, watchTurnEnd } from "@/server/useShop";
-import { startGame } from "@/server/useBattle";
+import { startShop, watchTurnEnd } from "@/server/useShop";
 import Status from "@/components/status.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
 import Turn from "@/components/turn.vue";
 import Cards from "@/components/cards.vue";
+import OfferCards from "@/components/offerCards.vue";
 
 const { id, player, cardLock } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, sign } = toRefs(player.value);
@@ -19,12 +19,8 @@ const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
-  await startGame();
   sign.value = id.value === players.value[0] ? 0 : 1;
-  await Promise.all([
-    setHand(),
-    setMissions(),
-  ]).then(() => {
+  await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
@@ -67,7 +63,11 @@ const turnEnd = async () => {
         </div>
         <div>
           <h1>Field</h1>
-          <Cards />
+          <!-- <Cards /> -->
+        </div>
+        <div>
+          <h1>OfferCards</h1>
+          <OfferCards />
         </div>
         <div :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="flex flex-col justify-end">
           <button @click="turnEnd()">ターン終了ボタン</button>
