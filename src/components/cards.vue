@@ -9,26 +9,53 @@ const { field } = toRefs(player.value);
 </script>
 
 <template>
-  <div>
-    <ul class="text-xs flex justify-start">
-      <div v-for="(card) in field" :key="card.id">
-        <div class="w-30 h-30 bg-gray-100 rounded-lg p-4 flex flex-col justify-center items-center">
-          <h5 class="text-bold">name:{{ card.name }}</h5>
-          <p class="text-gray-600">ID:{{ card.id }}</p>
-          <p class="text-gray-600">📊🚬:{{ card.company }}</p>
-          <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry + "🦶: " + card.priority }}</p>
-          <div v-if="card.pow">
-            <p class="text-gray-600">{{ "⚔:" + card.pow }}</p>
-          </div>
-          <div v-if="card.def">
-            <p class="text-gray-600">{{ "🛡:" + card.def }}</p>
-          </div>
-          <div v-if="card.tech">
-            <p class="text-gray-600">{{ "🏹:" + card.tech }}</p>
-          </div>
-        </div>
+  <div v-for="(card, index) in cards" :key="card.id">
+    <button class=img-button @click="sendTest(index)">
+      <img src="../../src/assets/card1.png">
+      <h5 class="card-name">{{ card.name }}</h5>
+      <p class="card-ID">{{ card.id }}</p>
+      <p class="card-company">{{ card.company }}</p>
+      <p class="card-hungry">{{ card.waste + card.hungry }}</p>
+      <div v-if="card.pow">
+        <p class="card-attribute">{{ card.pow }}</p>
       </div>
-    </ul>
-    {{ sumCards }}
+      <div v-if="card.def">
+        <p class="card-attribute">{{ card.def }}</p>
+      </div>
+      <div v-if="card.tech">
+        <p class="card-attribute">{{ card.tech }}</p>
+      </div>
+    </button>
+
   </div>
 </template>
+
+<style>
+.card-name{
+  text-align: center;
+}
+
+.card-ID{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.card-company{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.card-hungry{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.card-attribute{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+</style>

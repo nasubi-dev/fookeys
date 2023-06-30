@@ -8,6 +8,8 @@ import { startGame } from "@/server/useBattle";
 import Status from "@/components/status.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/mission.vue";
+import Turn from "@/components/turn.vue";
+import End from "@/components/end.vue";
 
 const { id, player, cardLock } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, sign } = toRefs(player.value);
@@ -39,10 +41,19 @@ const turnEnd = async () => {
   //
   if (cardLock.value) return;
   console.log(i, "turnEnd");
-  //cardLockをtrueにする
-  cardLock.value = true;
-  await watchTurnEnd();
+
+  Promise.all([
+    await watchTurnEnd(),
+  ]).then(() => {
+    //処理が終了したらFieldを削除
+    // deleteField();
+    //handのカードのwasteの値を-1する
+    //腐っていれば腐ったカードに入れ替える
+    //ターンを進める
+    nextTurn();
+  });
 };
+
 
 </script>
 
@@ -50,6 +61,9 @@ const turnEnd = async () => {
   <div>
     <div class="flex flex-col items-center justify-center h-screen">
       <h1>Battle</h1>
+      <div>
+        <turn></turn>
+      </div>
       <p class="text-sm font-medium text-gray-900 truncate">turn:{{ turn }}</p>
       {{ "Player: " + (sign + 1) }}
       <div class="max-w-7xl mx-auto">
@@ -67,6 +81,11 @@ const turnEnd = async () => {
         <div :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="flex flex-col justify-end">
           <button @click="turnEnd()">ターン終了ボタン</button>
         </div>
+
+        <div>
+          <End></End>
+        </div>
+
         <div>
           <h1>Hand</h1>
           <Hand />
