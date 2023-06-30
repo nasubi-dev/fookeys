@@ -5,16 +5,17 @@ type Card = {
   hungry: number;
   company: string;
   description: string;
+  priority: number;
   pow?: number;
   def?: number;
   tech?: number;
+  rotten?: boolean;
   // special?: () => void;
 };
 
 type Character = {
   name: string;
   description: string;
-  image: string;
   company: string;
   // action?: () => void;
 };
@@ -22,7 +23,6 @@ type Character = {
 type Gift = {
   name: string;
   description: string;
-  image: string;
   // action?: () => void;
 };
 
@@ -31,10 +31,11 @@ type Mission = {
   description: string;
   // action?: () => void;
 };
-
-type MatchStatus = "matching" | "nothing" | "waiting";
+//!使われてるか調べる
+type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
-type Status = { hp: number; hungry: number; contribution: number; priority: number };
+type Status = { hp: number; hungry: number; contribution: number };
+type SumCards = { waste: number; hungry: number; priority: number; pow: number; def: number; tech: number };
 type PlayerData = {
   idEnemy: string;
   idGame: string;
@@ -42,17 +43,19 @@ type PlayerData = {
   match: MatchStatus;
   check: boolean;
   sign: PlayerSign;
-  character: Character | null;
+  character: Character;
   gift: Gift[];
   hand: Card[];
   field: Card[];
   status: Status;
+  sumFields: SumCards;
 };
 
 type GameData = {
   turn: number;
   players: string[];
   missions: Mission[];
+  firstAtkPlayer: PlayerSign | undefined;
 };
 
-export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, GameData };
+export type { Card, Character, Gift, Mission, MatchStatus, PlayerSign, Status, PlayerData, SumCards, GameData };

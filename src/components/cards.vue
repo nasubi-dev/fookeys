@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import type { Card } from "@/types";
+import { toRefs } from "vue";
+import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 
-defineProps<{
-  cards: Card[];
-}>();
-
-const emit = defineEmits(["sendText"]);
-
-const sendTest = (index: number) => {
-  emit("sendText", index);
-};
+const { player, sumCards } = storeToRefs(playerStore);
+const { field } = toRefs(player.value);
 
 </script>
 
@@ -31,6 +26,7 @@ const sendTest = (index: number) => {
         <p class="card-attribute">{{ card.tech }}</p>
       </div>
     </button>
+
   </div>
 </template>
 

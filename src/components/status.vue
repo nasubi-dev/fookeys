@@ -1,22 +1,22 @@
 <script setup lang="ts">
+import { toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
-const { data } = storeToRefs(playerStore);
-const { name, character, gift, status } = data.value;
+const {  player } = storeToRefs(playerStore);
+const { name, character, gift, status } = toRefs(player.value);
 
 </script>
 
 <template>
   <div class="flex justify-start">
-    <span class="text-sm font-medium text-gray-900 truncate">name:{{ name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">character:{{ character?.name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">gift1:{{ gift[0]?.name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">gift2:{{ gift[1]?.name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">gift3:{{ gift[2]?.name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">❤:{{ status.hp }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">🍖:{{ status.hungry }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">🪙:{{ status.contribution }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate">🦶:{{ status.priority }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ name }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">character:{{ character?.name }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">gift1:{{ gift[0]?.name }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">gift2:{{ gift[1]?.name }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">gift3:{{ gift[2]?.name }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">❤:{{ status.hp }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">🍖:{{ status.hungry }} </span>
+    <span class="text-sm font-medium text-gray-900 truncate mx-2">🪙:{{ status.contribution }} </span>
   </div>
 </template>

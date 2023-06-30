@@ -1,20 +1,21 @@
 import { db } from "./firebase";
 import { collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 import { e, s, i } from "@/log";
+import { converter } from "@/server/converter";
 import type { PlayerData, Character, Gift } from "@/types";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 //Collectionの参照
-const playersRef = collection(db, "players");
-const charactersRef = collection(db, "characters");
-const giftsRef = collection(db, "gifts");
+const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
+const charactersRef = collection(db, "characters").withConverter(converter<Character>());
+const giftsRef = collection(db, "gifts").withConverter(converter<Gift>());
 
 //player登録
 async function registerPlayer(): Promise<void> {
-  const { id, data } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   try {
-    id.value = (await addDoc(playersRef, data.value)).id;
+    id.value = (await addDoc(playersRef, player.value)).id;
     console.log(i, "Create Your ID: ", id.value);
   } catch (error) {
     console.error(e, "Error adding Your ID: ", error);
@@ -33,25 +34,14 @@ async function deletePlayer(): Promise<void> {
   }
 }
 
-//player情報の取得
-async function getPlayerData(playerID: string): Promise<PlayerData> {
-  const docSnap = await getDoc(doc(playersRef, playerID));
-  if (docSnap.exists()) {
-    return docSnap.data() as PlayerData;
-  } else {
-    console.log("No such PlayerDocument!");
-    return docSnap.data() as PlayerData; //!修正します5日
-  }
-}
-
 //characterの取得
 async function getCharacterData(): Promise<Character[]> {
-  return (await getDocs(charactersRef)).docs.map((doc) => doc.data()) as Character[];
+  return (await getDocs(charactersRef)).docs.map((doc) => doc.data());
 }
 
 //giftの取得
 async function getGiftData(): Promise<Gift[]> {
-  return (await getDocs(giftsRef)).docs.map((doc) => doc.data()) as Gift[];
+  return (await getDocs(giftsRef)).docs.map((doc) => doc.data());
 }
 
-export { registerPlayer, deletePlayer, getPlayerData, getCharacterData, getGiftData };
+export { registerPlayer, deletePlayer, getCharacterData, getGiftData };

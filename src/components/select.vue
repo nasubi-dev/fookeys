@@ -9,8 +9,8 @@ const props = defineProps<{
   selectType: string;
 }>();
 
-const { data } = storeToRefs(playerStore);
-const { character, gift } = toRefs(data.value);
+const { player } = storeToRefs(playerStore);
+const { character, gift } = toRefs(player.value);
 
 function selectCard(card: Character | Gift, selectType: string) {
   if (selectType == "character") {
@@ -37,7 +37,6 @@ function selectCard(card: Character | Gift, selectType: string) {
       <div v-for="card in props.cards" :key="card.name">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
           <button @click="selectCard(card, props.selectType)" class="btn-pop">
-            <img :src="card.image" class="w-full h-64 object-cover" />
             <div class="px-4 py-2">
               <h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>
               <p class="text-sm text-gray-500">{{ card.description }}</p>
