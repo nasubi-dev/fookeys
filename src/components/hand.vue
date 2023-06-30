@@ -4,17 +4,19 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 const { pushHand, popHand } = playerStore;
-const { player, isSelected } = storeToRefs(playerStore);
+const { player, isSelected,cardLock } = storeToRefs(playerStore);
 const { hand } = toRefs(player.value);
 
 //HandからFieldへ
 const pushCard = (index: number) => {
+  if(cardLock.value) return;
   if (isSelected.value[index]) throw new Error("failed to pushCard");
   isSelected.value[index] = !isSelected.value[index]
   pushHand(index)
 };
 //FieldからHandへ
 const popCard = (index: number, id: number) => {
+  if(cardLock.value) return;
   if (!isSelected.value[index]) throw new Error("failed to popCard");
   isSelected.value[index] = !isSelected.value[index]
   popHand(index, id)
