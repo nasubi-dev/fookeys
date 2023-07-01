@@ -4,12 +4,12 @@ import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { startShop, watchTurnEnd } from "@/server/useShop";
-import Status from "@/components/status.vue";
-import Hand from "@/components/hand.vue";
-import Mission from "@/components/mission.vue";
-import Turn from "@/components/turn.vue";
-import Cards from "@/components/cards.vue";
-import OfferCards from "@/components/offerCards.vue";
+import Status from "@/components/uiStatus.vue";
+import Hand from "@/components/uiHand.vue";
+import Mission from "@/components/uiMission.vue";
+import Turn from "@/components/uiTurn.vue";
+import Cards from "@/components/uiCards.vue";
+import Shop from "@/components/shop.vue";
 
 const { id, player, cardLock } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, sign } = toRefs(player.value);
@@ -65,9 +65,9 @@ const turnEnd = async () => {
           <h1>Field</h1>
           <!-- <Cards /> -->
         </div>
-        <div>
-          <h1>OfferCards</h1>
-          <OfferCards />
+        <div v-if="turn !== 1">
+          <h1>shop</h1>
+          <Shop />
         </div>
         <div :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="flex flex-col justify-end">
           <button @click="turnEnd()">ターン終了ボタン</button>

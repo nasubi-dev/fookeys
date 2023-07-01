@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { startMatchmaking } from "@/server/useMatchMaking";
-import PlayerData from "@/components/playerData.vue";
 import nasubi from "@/assets/nasubi.png";
+
 //マッチングを開始する
 //マッチングが成功したら後で押したほうがPlayer1､Player2
 async function startMatch(): Promise<void> {
@@ -17,18 +17,16 @@ async function startMatch(): Promise<void> {
       </button>
     </router-link>
 
-    <PlayerData />
-
     <div class="flex flex-1">
       <div class="w-1/2 flex items-center justify-center">
         <img :src="nasubi" class="w-1/2" />
       </div>
-      <!-- TODO キャラとギフト選択を押した場合このコンポーネントを入れ替える -->
       <div class="w-1/2 p-8 flex flex-col justify-center">
         <button class="btn-pop" @click="startMatch">
-            <img src="@/assets/matchMaking.png" class="w-1/2" />
+          <img src="@/assets/matchMaking.png" class="w-1/2" />
         </button>
-        <router-link to="/character" class="btn-pop">
+        <!-- TODO キャラとギフト選択を押した場合このコンポーネントを入れ替える -->
+        <!-- <router-link to="/character" class="btn-pop">
           <button class="text-white rounded-md">
             <img src="@/assets/characterChange.png" class="w-1/2" />
           </button>
@@ -37,7 +35,7 @@ async function startMatch(): Promise<void> {
           <button class="text-white rounded-md">
             <img src="@/assets/giftChange.png" class="w-1/2" />
           </button>
-        </router-link>
+        </router-link> -->
       </div>
     </div>
   </div>

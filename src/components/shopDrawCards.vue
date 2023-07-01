@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { playerStore, gameStore } from "@/main";
+import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 
 const { offer2Hand } = playerStore;
 const { phase, isOfferSelected, offer } = storeToRefs(playerStore);
-const { game } = storeToRefs(gameStore);
-
 </script>
 
 <template>
   <div>
     <div v-if="phase === 'shop'">
-      <div v-if="!(game.turn === 1)">
         <button @click="offer2Hand(isOfferSelected)" class="bg-white">選択確定</button>
         {{ isOfferSelected }}
-      </div>
       <ul class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">
           <button @click="isOfferSelected[index] = !isOfferSelected[index]">
