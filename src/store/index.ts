@@ -18,7 +18,11 @@ const usePlayerStore = defineStore("playerData", () => {
       description: "",
       company: "",
     },
-    gift: [],
+    gift: [
+      { name: "", description: "" },
+      { name: "", description: "" },
+      { name: "", description: "" },
+    ],
     hand: [],
     field: [],
     status: {
@@ -61,7 +65,11 @@ const usePlayerStore = defineStore("playerData", () => {
   const offer2Hand = (cards: boolean[]): void => {
     const { hand } = player.value;
     const offerHand = offer.value.filter((card, index) => cards[index]);
-    console.log(i,"offer2Hand: ",offerHand.map((card) => card.name));
+    console.log(
+      i,
+      "offer2Hand: ",
+      offerHand.map((card) => card.name)
+    );
     hand.push(...offerHand);
     hand.sort((a, b) => a.id - b.id);
     //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
@@ -74,7 +82,13 @@ const usePlayerStore = defineStore("playerData", () => {
   const pushHand = (index: number): void => {
     const { field, hand } = player.value;
     field.push(hand[index]);
-    console.log(i,"pushHand: ",index,"field: ",field.map((card) => card.name));
+    console.log(
+      i,
+      "pushHand: ",
+      index,
+      "field: ",
+      field.map((card) => card.name)
+    );
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
   const popHand = (index: number, id: number): void => {
@@ -82,7 +96,13 @@ const usePlayerStore = defineStore("playerData", () => {
     const cardIndex = field.findIndex((card) => card.id === id);
     if (cardIndex === -1) throw new Error("when popHard not found");
     field.splice(cardIndex, 1);
-    console.log(i,"popHand: ",index,"field: ",field.map((card) => card.name));
+    console.log(
+      i,
+      "popHand: ",
+      index,
+      "field: ",
+      field.map((card) => card.name)
+    );
   };
   //ターン終了時に、Fieldのカードを捨てる
   const deleteField = (): void => {
@@ -101,7 +121,12 @@ const usePlayerStore = defineStore("playerData", () => {
       hand.splice(index, 1);
       isHandSelected.value[index] = false;
     });
-    console.log(i,"deleteHand: ","hand: ",hand.map((card) => card.name));
+    console.log(
+      i,
+      "deleteHand: ",
+      "hand: ",
+      hand.map((card) => card.name)
+    );
   };
   //ターン終了時に､Handのカードの腐り値を減らす(0になったら腐りカードにする)
   const reduceWaste = (): void => {
@@ -111,7 +136,12 @@ const usePlayerStore = defineStore("playerData", () => {
       if (card.waste > 0) return;
       hand.splice(hand.indexOf(card), 1, { ...card, rotten: true });
     });
-    console.log(i,"reduceWaste: ","hand: ",hand.map((card) => card.name));
+    console.log(
+      i,
+      "reduceWaste: ",
+      "hand: ",
+      hand.map((card) => card.name)
+    );
   };
   return {
     id,

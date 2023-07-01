@@ -1,4 +1,5 @@
 import { toRefs } from "vue";
+import { db } from "./firebase";
 import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { storeToRefs } from "pinia";
 import { i, s } from "@/log";
@@ -6,8 +7,6 @@ import { converter } from "@/server/converter";
 import { battle } from "./useBattle";
 import type { Card, Mission, GameData, PlayerData } from "@/types";
 import { gameStore, playerStore } from "@/main";
-
-import { db } from "./firebase";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());

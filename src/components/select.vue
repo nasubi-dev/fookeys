@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
 import type { Character, Gift } from "@/types";
-import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { playerStore } from "@/main";
+
+const { player } = storeToRefs(playerStore);
+const { character, gift } = toRefs(player.value);
 
 const props = defineProps<{
   cards: (Character | Gift)[];
   selectType: string;
 }>();
-
-const { player } = storeToRefs(playerStore);
-const { character, gift } = toRefs(player.value);
 
 function selectCard(card: Character | Gift, selectType: string) {
   if (selectType == "character") {
@@ -20,29 +20,22 @@ function selectCard(card: Character | Gift, selectType: string) {
   if (selectType == "gift") {
     gift.value.unshift(card as Gift);
     gift.value = gift.value.slice(0, 3);
-    console.log("gift: ", gift.value);
+    console.log("gift: ", gift.value.map((g) => g.name));
   }
 }
 
 </script>
 
 <template>
-  <div>
-    <div class="flex items-center justify-between px-8 py-8 bg-white">
-      <router-link to="/menu">
-        <button class="p-4 absolute top-4 left-4 bg-blue-500 text-white rounded-md">戻る</button>
-      </router-link>
-    </div>
-    <div class="mt-8 mx-4 grid grid-cols-4 gap-2">
-      <div v-for="card in props.cards" :key="card.name">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <button @click="selectCard(card, props.selectType)" class="btn-pop">
-            <div class="px-4 py-2">
-              <h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>
-              <p class="text-sm text-gray-500">{{ card.description }}</p>
-            </div>
-          </button>
-        </div>
+  <div class="justify-center">
+    <div v-for="card in props.cards" :key="card.name">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden btn-pop px-4 py-2">
+        <button @click="selectCard(card, props.selectType)">
+          <div class="px-4 py-2">
+            <h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>
+            <p class="text-sm text-gray-500">{{ card.description }}</p>
+          </div>
+        </button>
       </div>
     </div>
   </div>

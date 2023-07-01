@@ -1,10 +1,11 @@
+import { toRefs } from "vue";
 import { db } from "./firebase";
-import { collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { collection, doc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { storeToRefs } from "pinia";
 import { e, s, i } from "@/log";
 import { converter } from "@/server/converter";
 import type { PlayerData, Character, Gift } from "@/types";
 import { playerStore } from "@/main";
-import { storeToRefs } from "pinia";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -21,7 +22,6 @@ async function registerPlayer(): Promise<void> {
     console.error(e, "Error adding Your ID: ", error);
   }
 }
-
 //player削除
 async function deletePlayer(): Promise<void> {
   const { id } = storeToRefs(playerStore);
@@ -33,12 +33,10 @@ async function deletePlayer(): Promise<void> {
     console.error(e, "Error deleting player: ", error);
   }
 }
-
 //characterの取得
 async function getCharacterData(): Promise<Character[]> {
   return (await getDocs(charactersRef)).docs.map((doc) => doc.data());
 }
-
 //giftの取得
 async function getGiftData(): Promise<Gift[]> {
   return (await getDocs(giftsRef)).docs.map((doc) => doc.data());

@@ -2,18 +2,15 @@
 import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { registerPlayer, getCharacterData, getGiftData } from "@/server/usePlayerID";
-import Storage from "@/components/storage.vue";
+import { registerPlayer } from "@/server/usePlayerID";
 
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
-const { name, character, gift } = toRefs(player.value);
+const { name } = toRefs(player.value);
 
 const newName = ref("");
 //アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name
 async function register() {
-  character.value = (await getCharacterData())[0];
-  gift.value = (await getGiftData()).slice(0, 3);
   newName.value === "" ? (name.value = "No name") : (name.value = newName.value);
   id.value == "" ? await registerPlayer() : console.log("既に登録されています");
 }

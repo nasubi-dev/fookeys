@@ -26,14 +26,7 @@ async function reflectDamage(): Promise<void> {
   const { status } = toRefs(player.value);
   //ダメージを反映する
   status.value = (await getDoc(doc(playersRef, id.value))).data()?.status ?? { hp: 0, hungry: 0, contribution: 0 };
-  //missionを達成しているか確認する//!未定
-  //死亡判断を行う
   console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
-  if (status.value.hp <= 0) {
-    status.value.hp = 0;
-    //TODO: 死亡処理を書く
-    console.log(i, "死亡しました");
-  }
 }
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
@@ -126,6 +119,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     updateDoc(doc(playersRef, myId), { check: check.value }),
   ]);
 }
+//missionが達成されているか確認する
+async function checkMission(): Promise<void> {
+  console.log(s, "checkMissionを実行しました");
+}
 
 //指定された､fieldの値を比較する
 async function compareSumField(field: "hungry" | "priority"): Promise<void> {
@@ -183,7 +180,7 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 export async function battle() {
   console.log(s, "battleを実行しました");
   const { id, player, phase } = storeToRefs(playerStore);
-  const { check } = toRefs(player.value);
+  const { check, status } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -209,13 +206,12 @@ export async function battle() {
   // if (firstAtkPlayer.value === sign.value)//!5日問題が発生するかも
   await calcDamage("primary");
   await reflectDamage();
-  //missionのクリア判定
+  await checkMission();
 
   console.log(i, "後攻の攻撃");
-  // if (!(firstAtkPlayer.value === sign.value))
   await calcDamage("second");
   await reflectDamage();
-  //missionのクリア判定
+  await checkMission();
 
   //戦後処理
   await postBattle();
