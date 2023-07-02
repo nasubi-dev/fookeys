@@ -10,8 +10,9 @@ const usePlayerStore = defineStore("playerData", () => {
     idEnemy: "",
     idGame: "",
     name: "",
-    match: "nothing",
     check: false,
+    donate: false,
+    match: "nothing",
     sign: 0,
     character: {
       name: "",
@@ -64,7 +65,7 @@ const usePlayerStore = defineStore("playerData", () => {
   //Offerの中から選択した全てのカードをHandに移動する
   const offer2Hand = (cards: boolean[]): void => {
     const { hand } = player.value;
-    const offerHand = offer.value.filter((card, index) => cards[index]);
+    const offerHand: Card[] = offer.value.filter((card, index) => cards[index]);
     console.log(
       i,
       "offer2Hand: ",

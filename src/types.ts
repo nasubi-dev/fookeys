@@ -41,8 +41,9 @@ type PlayerData = {
   idEnemy: string;
   idGame: string;
   name: string;
-  match: MatchStatus;
   check: boolean;
+  donate: boolean;
+  match: MatchStatus;
   sign: PlayerSign;
   character: Character;
   gift: Gift[];

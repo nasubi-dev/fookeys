@@ -12,7 +12,7 @@ import Cards from "@/components/uiCards.vue";
 import Shop from "@/components/shop.vue";
 
 const { id, player, cardLock } = storeToRefs(playerStore);
-const { idGame, character, gift, status, hand, sign } = toRefs(player.value);
+const { idGame, character, gift, status, hand, sign, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
@@ -74,6 +74,10 @@ const turnEnd = async () => {
         </div>
         <div>
           <h1>Hand</h1>
+          <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
+            <div v-if="donate">寄付MODE</div>
+            <div v-else>戦闘MODE</div>
+          </button>
           <Hand />
         </div>
       </div>

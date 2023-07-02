@@ -2,6 +2,7 @@
 import { toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { i } from "@/log";
 
 const { pushHand, popHand } = playerStore;
 const { player, isHandSelected, cardLock } = storeToRefs(playerStore);
