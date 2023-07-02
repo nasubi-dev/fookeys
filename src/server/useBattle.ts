@@ -50,7 +50,7 @@ async function reflectDamage(): Promise<void> {
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { idEnemy, sign } = toRefs(player.value);
+  const { idEnemy, sign,check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -134,10 +134,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //hungryの値が上限を超えていた場合､上限値にする
   if (myStatus.hungry > 100) myStatus.hungry = 100;
 
+  //行動したのでcheckをtrueにする
+  check.value = true;
+
   //Firebaseに反映する
   await Promise.all([
     updateDoc(doc(playersRef, myId), { "status.hungry": myStatus.hungry }),
     updateDoc(doc(playersRef, enemyId), { "status.hp": enemyStatus.hp }),
+    updateDoc(doc(playersRef, myId), { check: check.value }),
   ]);
 }
 //missionが達成されているか確認する
@@ -242,7 +246,7 @@ export async function postBattle(): Promise<void> {
   const { check, sign, idGame } = toRefs(player.value);
   const { nextTurn } = gameStore;
 
-  if (!check.value) console.log(e, "行動していません");
+  if (!check.value) throw new Error("checkの値がfalse､つまり行動していません");
   //使ったカードを捨てる
   deleteField();
   deleteHand();

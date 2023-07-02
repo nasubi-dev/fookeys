@@ -11,7 +11,7 @@ import Turn from "@/components/uiTurn.vue";
 import Cards from "@/components/uiCards.vue";
 import Shop from "@/components/shop.vue";
 
-const { id, player, cardLock } = storeToRefs(playerStore);
+const { id, player, cardLock, phase } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, sign, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
@@ -65,7 +65,7 @@ const turnEnd = async () => {
           <h1>Field</h1>
           <!-- <Cards /> -->
         </div>
-        <div v-if="turn !== 1">
+        <div v-if="phase === 'shop' && turn !== 1">
           <h1>shop</h1>
           <Shop />
         </div>

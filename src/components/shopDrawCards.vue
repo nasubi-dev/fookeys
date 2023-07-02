@@ -9,8 +9,8 @@ const { phase, isOfferSelected, offer } = storeToRefs(playerStore);
 <template>
   <div>
     <div v-if="phase === 'shop'">
-        <button @click="offer2Hand(isOfferSelected)" class="bg-white">選択確定</button>
-        {{ isOfferSelected }}
+      <button @click="offer2Hand(isOfferSelected), phase = 'battle'" class="bg-white">選択確定</button>
+      {{ isOfferSelected }}
       <ul class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">
           <button @click="isOfferSelected[index] = !isOfferSelected[index]">

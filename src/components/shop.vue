@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,watch } from "vue";
+import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 import ShopDrawCards from './shopDrawCards.vue';
 import ShopUseGifts from './shopUseGifts.vue';
 
+const { cardLock } = storeToRefs(playerStore);
+
 const use = ref(false);
 const draw = ref(false);
+//WatchでCardLockを監視して､trueになったらuseとdrawをfalseにする
+watch(cardLock, (newVal) => {
+  if (newVal) {
+    use.value = false;
+    draw.value = false;
+  }
+})
 //!shopフェーズを無視することができるが､将来的にポップアップになるのでOk
 </script>
 
