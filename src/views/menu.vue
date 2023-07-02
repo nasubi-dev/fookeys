@@ -50,10 +50,16 @@ const selectCharacter = ref(false);
       </div>
 
       <div v-if="selectCharacter">
-        <Select :cards="characters" selectType="character"/>
+        <Select :cards="characters" selectType="character" />
+        <button @click="selectCharacter = !selectCharacter" class="text-white rounded-md">
+          text
+        </button>
       </div>
       <div v-else-if="selectGift">
         <Select :cards="gifts" selectType="gift" />
+        <button @click="selectGift = !selectGift" class="text-white rounded-md">
+          text
+        </button>
       </div>
       <div v-else class="w-1/2 p-8 flex flex-col justify-center">
         <button @click="startMatch" class="btn-pop">

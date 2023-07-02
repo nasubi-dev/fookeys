@@ -17,8 +17,8 @@ const draw = ref(false);
       <ShopUseGifts />
     </div>
     <div v-else>
-      <button @click="draw = !draw" class="bg-white">Draw Cards</button>
-      <button @click="use = !use" class="bg-white">Use Gifts</button>
+      <button @click="draw = !draw" class="bg-white m-2">Draw Cards</button>
+      <button @click="use = !use" class="bg-white m-2">Use Gifts</button>
     </div>
   </div>
 </template>
