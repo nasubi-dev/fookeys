@@ -15,10 +15,10 @@ const offerHand = () => {
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
   hand.value.sort((a, b) => a.id - b.id);
+  console.log(i, "offer2Hand");
   //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
   offer.value.splice(0, offer.value.length);
   isOfferSelected.value = [false, false, false];
-  console.log(i, "offer2Hand");
 }
 
 </script>

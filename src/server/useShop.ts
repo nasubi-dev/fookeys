@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { db } from "./firebase";
-import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDoc, getDocs, onSnapshot, snapshotEqual, updateDoc } from "firebase/firestore";
 import { storeToRefs } from "pinia";
 import { i, s } from "@/log";
 import { converter } from "@/server/converter";
@@ -38,6 +38,7 @@ export async function setHand(): Promise<void> {
 export async function setOffer(): Promise<void> {
   console.log(i, "setOfferを実行しました");
   const { offer } = storeToRefs(playerStore);
+
   for (let i = 0; i < 3; i++) {
     const card = await drawCard();
     offer.value.push(card);
@@ -53,26 +54,33 @@ export async function setMissions(): Promise<void> {
   const { game } = storeToRefs(gameStore);
   const { missions } = toRefs(game.value);
 
-  if (missions.value) updateDoc(doc(gamesRef, idGame.value), { missions: [] });
-  if (playerStore.player.sign == 0) {
-    //!みかん
+  missions.value = [];
+  await updateDoc(doc(gamesRef, idGame.value), { missions: deleteField() });
+  console.log(i, "ミッションを削除しました");
+  if (!playerStore.player.sign) {
+    const allMissions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
+    for (let i = 0; i < 3; i++) {
+      const selectMission = allMissions[Math.floor(Math.random() * allMissions.length)];
+      missions.value.push(selectMission);
+      //選ばれたミッションはmissionsから削除する
+      allMissions.splice(allMissions.indexOf(selectMission), 1);
+    }
+    updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
+  } else {
+    console.log(i, "ミッションを監視します");
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
-      const data = snap.data();
-      if (data?.missions.length === 3) {
-        missions.value = data?.missions;
-        unsubscribe();
+      if (snap.data()?.missions !== missions.value) {
+        const mission = snap.data()?.missions;
+        if (mission !== undefined) {
+          missions.value.push(...mission);
+          console.log(i, "missionsにミッションを追加しました");
+          //監視を解除する
+          unsubscribe();
+          console.log(i, "missionsの監視を解除しました");
+        }
       }
     });
-    return;
   }
-  const allMissions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
-  for (let i = 0; i < 3; i++) {
-    const selectMission = allMissions[Math.floor(Math.random() * allMissions.length)];
-    missions.value.push(selectMission);
-    //選ばれたミッションはmissionsから削除する
-    allMissions.splice(allMissions.indexOf(selectMission), 1);
-  }
-  updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
 }
 
 //shopフェーズの開始

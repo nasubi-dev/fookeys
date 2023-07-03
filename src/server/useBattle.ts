@@ -196,7 +196,7 @@ async function watchFirstAtkPlayerField(): Promise<void> {
     //先行後攻を決める//0か1をランダムに生成
     firstAtkPlayer.value = Math.random() < 0.5 ? 0 : 1;
     console.log(i, "ランダムで決まったplayer: ", firstAtkPlayer.value);
-    await updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: firstAtkPlayer.value });
+    updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: firstAtkPlayer.value });
   }
 }
 

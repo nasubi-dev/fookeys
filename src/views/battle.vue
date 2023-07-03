@@ -11,7 +11,7 @@ import Turn from "@/components/uiTurn.vue";
 import Cards from "@/components/uiCards.vue";
 import Shop from "@/components/shop.vue";
 
-const { id, player, cardLock, phase } = storeToRefs(playerStore);
+const { id, player, cardLock, phase,offer } = storeToRefs(playerStore);
 const { idGame, character, gift, status, hand, sign, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
@@ -38,6 +38,8 @@ const turnEnd = async () => {
   console.log(i, "turnEnd");
   //cardLockをtrueにする
   cardLock.value = true;
+  //offerを空にする
+  offer.value.splice(0, offer.value.length);
   await watchTurnEnd();
 };
 
