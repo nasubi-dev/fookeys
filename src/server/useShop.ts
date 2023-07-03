@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { db } from "./firebase";
-import { collection, deleteField, doc, getDoc, getDocs, onSnapshot, snapshotEqual, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { storeToRefs } from "pinia";
 import { i, s } from "@/log";
 import { converter } from "@/server/converter";

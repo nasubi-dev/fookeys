@@ -28,7 +28,6 @@ async function findWaitingPlayer(): Promise<void> {
   console.log(i, "Found players: ", waitingPlayers);
   waitingPlayers[0] ? console.log(i, "Found player: ", idEnemy.value) : console.log(i, "Not enough players to start a game");
 }
-
 //playerのフィールド名を複数更新する
 function updatePlayerFields(
   playerID: string,
@@ -43,7 +42,6 @@ function updatePlayerFields(
     console.log(i, update.field, "updated: ", update.value, " for player: ", playerID);
   });
 }
-
 //matchの値が-1に変更されたら検知して、gameを開始する
 async function watchMatchField(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
@@ -70,7 +68,6 @@ async function watchMatchField(): Promise<void> {
     }
   });
 }
-
 //マッチングを開始する
 async function startMatchmaking(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
@@ -110,7 +107,6 @@ async function startMatchmaking(): Promise<void> {
     console.log(s, "rooting complete");
   }
 }
-
 //gameを作成する
 async function addGame(): Promise<string> {
   const { game } = storeToRefs(gameStore);
@@ -129,7 +125,6 @@ async function addGame(): Promise<string> {
   }
   return "";
 }
-
 //gameを削除する
 async function deleteGame(): Promise<void> {}
 

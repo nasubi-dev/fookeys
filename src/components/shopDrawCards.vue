@@ -37,8 +37,8 @@ const offerHand = () => {
               <p class="text-gray-600">ID:{{ card.id }}</p>
               <p class="text-gray-600">📊🚬:{{ card.company }}</p>
               <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry + "🦶: " + card.priority }}</p>
-              <div v-if="card.pow">
-                <p class="text-gray-600">{{ "⚔:" + card.pow }}</p>
+              <div v-if="card.atk">
+                <p class="text-gray-600">{{ "⚔:" + card.atk }}</p>
               </div>
               <div v-if="card.def">
                 <p class="text-gray-600">{{ "🛡:" + card.def }}</p>

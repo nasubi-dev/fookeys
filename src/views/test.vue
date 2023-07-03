@@ -2,12 +2,11 @@
 import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import Storage from "@/components/storage.vue";
-
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
 const { name } = toRefs(player.value);
 
+const img = ref("norma")
 
 </script>
 
@@ -21,10 +20,6 @@ const { name } = toRefs(player.value);
     <div>
       <span>Assets</span>
       <img src="@/assets/card1.png" alt="card1" />
-    </div>
-    <div>
-      <span>Cloud Storage</span>
-      <Storage image="norma" folder="cards" />
     </div>
   </div>
 </template>

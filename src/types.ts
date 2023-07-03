@@ -1,15 +1,16 @@
 type Card = {
-  id: number;
-  name: string;
-  waste: number;
-  hungry: number;
-  company: string;
-  description: string;
-  priority: number;
-  pow?: number;
-  def?: number;
-  tech?: number;
-  rotten?: boolean;
+  id: number;//?並び替え用?
+  name: string;//名前
+  waste: number;//消費期限
+  hungry: number;//満腹値
+  company: string;//会社名
+  description: string;//説明文
+  priority: number;//優先度
+  atk?: number;//マッスル
+  def?: number;//ディフェンス
+  tech?: number;//テクニック
+  heal?: number;//回復
+  rotten?: boolean;//腐ってるかのフラグ
   // special?: () => void;
 };
 
@@ -36,7 +37,7 @@ type Phase = "shop" | "battle" | "result" | "none";
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number };
-type SumCards = { waste: number; hungry: number; priority: number; pow: number; def: number; tech: number };
+type SumCards = { waste: number; hungry: number; priority: number; atk: number; def: number; tech: number };
 type PlayerData = {
   idEnemy: string;
   idGame: string;

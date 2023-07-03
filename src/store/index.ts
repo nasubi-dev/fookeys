@@ -35,7 +35,7 @@ const usePlayerStore = defineStore("playerData", () => {
       waste: 0,
       hungry: 0,
       priority: 0,
-      pow: 0,
+      atk: 0,
       def: 0,
       tech: 0,
     },
@@ -51,12 +51,12 @@ const usePlayerStore = defineStore("playerData", () => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
         sum.priority += card.priority;
-        sum.pow += card.pow ?? 0;
+        sum.atk += card.atk ?? 0;
         sum.def += card.def ?? 0;
         sum.tech += card.tech ?? 0;
         return sum;
       },
-      { waste: 0, hungry: 0, priority: 0, pow: 0, def: 0, tech: 0 }
+      { waste: 0, hungry: 0, priority: 0, atk: 0, def: 0, tech: 0 }
     )
   );
   //?function/actions

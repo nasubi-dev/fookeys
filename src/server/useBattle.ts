@@ -106,10 +106,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //マッスル攻撃を行う
   console.log(i, "マッスル攻撃!!!");
   let holdingAtk = 0;
-  console.log(i, "mySumFields.pow: ", mySumFields.pow);
+  console.log(i, "mySumFields.pow: ", mySumFields.atk);
   if (myCheck) console.log(i, "行動不能なので攻撃できない");
   else {
-    holdingAtk = mySumFields.pow - defense;
+    holdingAtk = mySumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
     console.log(i, "holdingAtk: ", holdingAtk);
   }
@@ -245,6 +245,7 @@ export async function postBattle(): Promise<void> {
   const { check, sign, idGame } = toRefs(player.value);
   const { nextTurn } = gameStore;
 
+  //行動していないならばエラーを返す
   if (!check.value) throw new Error("checkの値がfalse､つまり行動していません");
   //使ったカードを捨てる
   deleteField();
