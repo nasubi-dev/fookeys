@@ -11,7 +11,6 @@ import { gameStore, playerStore } from "@/main";
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
-const missionsRef = collection(db, "missions").withConverter(converter<Mission>());
 
 //寄付ならば先に処理を行う
 export async function donate(): Promise<void> {
@@ -241,7 +240,7 @@ export async function battle() {
 //戦闘後の処理
 export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
-  const { reduceWaste, deleteField, deleteHand } = playerStore;
+  const { reduceWaste, deleteField } = playerStore;
   const { id, player, cardLock } = storeToRefs(playerStore);
   const { check, sign, idGame } = toRefs(player.value);
   const { nextTurn } = gameStore;
@@ -249,7 +248,6 @@ export async function postBattle(): Promise<void> {
   if (!check.value) throw new Error("checkの値がfalse､つまり行動していません");
   //使ったカードを捨てる
   deleteField();
-  deleteHand();
   //handの腐り値を減らす(腐り値が0になったらhandから削除する)
   reduceWaste();
   updateDoc(doc(playersRef, id.value), { hand: player.value.hand });

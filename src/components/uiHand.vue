@@ -1,12 +1,28 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
+import { toRefs, ref, watch } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { i } from "@/log";
 
 const { pushHand, popHand } = playerStore;
-const { player, isHandSelected, cardLock } = storeToRefs(playerStore);
+const { player, cardLock } = storeToRefs(playerStore);
 const { hand } = toRefs(player.value);
+
+const isHandSelected = ref([false, false, false, false, false, false, false, false, false]);
+//WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
+watch(cardLock, (newVal) => {
+  if (newVal) {
+    const deleteIndex = isHandSelected.value.reduce((acc: number[], bool, index) => {
+      if (bool) acc.unshift(index);
+      return acc;
+    }, []);
+    deleteIndex.forEach((index) => {
+      hand.value.splice(index, 1);
+      isHandSelected.value[index] = false;
+    });
+    console.log(i, "deleteHand: ", "hand: ", hand.value.map((card) => card.name));
+  }
+})
 
 //HandからFieldへ
 const pushCard = (index: number) => {
@@ -22,7 +38,6 @@ const popCard = (index: number, id: number) => {
   isHandSelected.value[index] = !isHandSelected.value[index]
   popHand(index, id)
 };
-//!寄付のときFieldにカードを追加しない処理が必要
 </script>
 
 <template>

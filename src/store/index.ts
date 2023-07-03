@@ -41,8 +41,6 @@ const usePlayerStore = defineStore("playerData", () => {
     },
   });
   const phase = ref<Phase>("none");
-  const isOfferSelected = ref<boolean[]>([false, false, false]);
-  const isHandSelected = ref<boolean[]>([false, false, false, false, false, false, false, false, false]);
   const cardLock = ref(false);
   const offer = ref<Card[]>([]);
   //?Computed/Getter
@@ -52,7 +50,7 @@ const usePlayerStore = defineStore("playerData", () => {
       (sum: SumCards, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
-        sum.priority += card.priority ?? 0;
+        sum.priority += card.priority;
         sum.pow += card.pow ?? 0;
         sum.def += card.def ?? 0;
         sum.tech += card.tech ?? 0;
@@ -62,23 +60,6 @@ const usePlayerStore = defineStore("playerData", () => {
     )
   );
   //?function/actions
-  //Offerの中から選択した全てのカードをHandに移動する
-  const offer2Hand = (cards: boolean[]): void => {
-    const { hand } = player.value;
-    const offerHand: Card[] = offer.value.filter((card, index) => cards[index]);
-    console.log(
-      i,
-      "offer2Hand: ",
-      offerHand.map((card) => card.name)
-    );
-    hand.push(...offerHand);
-    hand.sort((a, b) => a.id - b.id);
-    //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
-    offer.value.splice(0, offer.value.length);
-    isOfferSelected.value = [false, false, false];
-    console.log(i, "offer2Hand");
-  };
-
   //Handのカードをクリックしたら、そのカードをFieldに出す
   const pushHand = (index: number): void => {
     const { field, hand } = player.value;
@@ -111,24 +92,6 @@ const usePlayerStore = defineStore("playerData", () => {
     field.splice(0, field.length);
     console.log(i, "fieldDelete");
   };
-  //ターン終了時に、isSelectedがtrueのカードを捨てる
-  const deleteHand = (): void => {
-    const { hand } = player.value;
-    const deleteIndex = isHandSelected.value.reduce((acc: number[], bool, index) => {
-      if (bool) acc.unshift(index);
-      return acc;
-    }, []);
-    deleteIndex.forEach((index) => {
-      hand.splice(index, 1);
-      isHandSelected.value[index] = false;
-    });
-    console.log(
-      i,
-      "deleteHand: ",
-      "hand: ",
-      hand.map((card) => card.name)
-    );
-  };
   //ターン終了時に､Handのカードの腐り値を減らす(0になったら腐りカードにする)
   const reduceWaste = (): void => {
     const { hand } = player.value;
@@ -148,16 +111,12 @@ const usePlayerStore = defineStore("playerData", () => {
     id,
     player,
     phase,
-    isOfferSelected,
-    isHandSelected,
     cardLock,
     offer,
     sumCards,
-    offer2Hand,
     pushHand,
     popHand,
     deleteField,
-    deleteHand,
     reduceWaste,
   };
 });
