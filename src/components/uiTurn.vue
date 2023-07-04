@@ -10,7 +10,7 @@ const { turn } = toRefs(game.value)
 
 <template>
     <div class="turn">
-        <img src="@/assets/Osu.png">
+        <img src="@/assets/img/Osu.png">
         <div class="turnText">
             <p>turn: {{ turn }}</p>
             <p>phase: {{ phase }}</p>

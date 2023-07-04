@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { toRefs, ref } from "vue";
+import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import type { Card } from "@/types";
-import { i } from "@/log";
 
 const { phase, offer, player } = storeToRefs(playerStore);
 const { hand } = toRefs(player.value);

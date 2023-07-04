@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { toRefs, ref, watch } from "vue";
+import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { i } from "@/log";
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);

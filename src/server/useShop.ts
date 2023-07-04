@@ -1,12 +1,12 @@
 import { toRefs } from "vue";
+import { e, s, i } from "@/log";
+import { gameStore, playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
-import { storeToRefs } from "pinia";
-import { i, s } from "@/log";
 import { converter } from "@/server/converter";
 import { battle } from "./useBattle";
 import type { Card, Mission, GameData, PlayerData } from "@/types";
-import { gameStore, playerStore } from "@/main";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -16,7 +16,7 @@ const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //cardをランダムに1枚引く
 async function drawCard(): Promise<Card> {
-  console.log(i, "drawCardを実行しました");
+  // console.log(i, "drawCardを実行しました");
   const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
   const selectCard = deck[Math.floor(Math.random() * deck.length)];
   return selectCard;
@@ -66,6 +66,7 @@ export async function setMissions(): Promise<void> {
       allMissions.splice(allMissions.indexOf(selectMission), 1);
     }
     updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
+    console.log(i, "missionsにミッションを追加しました");
   } else {
     console.log(i, "ミッションを監視します");
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
@@ -91,7 +92,7 @@ export async function startShop(): Promise<void> {
 
   phase.value = "shop";
   console.log(i, "phase: ", phase.value);
-  if (!((game.value.turn % 4) - 1)) setMissions();
+  if (game.value.turn % 4 == 1) setMissions();
   if (game.value.turn === 1) setHand();
   else setOffer();
 }

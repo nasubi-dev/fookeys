@@ -1,20 +1,21 @@
 type Card = {
-  id: number;//?並び替え用?
-  name: string;//名前
-  waste: number;//消費期限
-  hungry: number;//満腹値
-  company: string;//会社名
-  description: string;//説明文
-  priority: number;//優先度
-  atk?: number;//マッスル
-  def?: number;//ディフェンス
-  tech?: number;//テクニック
-  heal?: number;//回復
-  rotten?: boolean;//腐ってるかのフラグ
+  id: number; //?並び替え用?
+  name: string; //名前
+  waste: number; //消費期限
+  hungry: number; //満腹値
+  company: string; //会社名
+  description: string; //説明文
+  priority: number; //優先度
+  atk?: number; //マッスル
+  def?: number; //ディフェンス
+  tech?: number; //テクニック
+  heal?: number; //回復
+  rotten?: boolean; //腐ってるかのフラグ
   // special?: () => void;
 };
 
 type Character = {
+  id: number;
   name: string;
   description: string;
   company: string;
@@ -22,9 +23,11 @@ type Character = {
 };
 
 type Gift = {
+  id: number;
   name: string;
   description: string;
-  // action?: () => void;
+  requireContribution: number;
+  skill?: () => void;
 };
 
 type Mission = {
@@ -46,8 +49,8 @@ type PlayerData = {
   donate: boolean;
   match: MatchStatus;
   sign: PlayerSign;
-  character: Character;
-  gift: Gift[];
+  character: number;
+  gifts: number[];
   hand: Card[];
   field: Card[];
   status: Status;

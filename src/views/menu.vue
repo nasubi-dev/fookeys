@@ -1,30 +1,25 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { getCharacterData, getGiftData } from "@/server/usePlayerID";
+import { ref, toRefs } from "vue";
+import { e, s, i } from "@/log";
 import { startMatchmaking } from "@/server/useMatchMaking";
 import { storeToRefs } from "pinia";
 import { playerStore } from "@/main";
-import type { Character, Gift } from "@/types";
-import Select from "@/components/select.vue";
-import nasubi from "@/assets/nasubi.png";
+import SelectCharacter from "@/components/selectCharacter.vue";
+import SelectGifts from "@/components/selectGifts.vue";
+import nasubi from "@/assets/img/nasubi.png";
+import allCharacters from "@/assets/allCharacters";
+import allGifts from "@/assets/allGifts";
 
 const { player } = storeToRefs(playerStore);
+const { gifts, character } = toRefs(player.value);
+const selectGift = ref(false);
+const selectCharacter = ref(false);
 
 //マッチングを開始する
 //マッチングが成功したら後で押したほうがPlayer1､Player2
 async function startMatch(): Promise<void> {
   await startMatchmaking();
 }
-
-const characters = ref<Character[]>([]);
-const gifts = ref<Gift[]>([]);
-onMounted(async () => {
-  characters.value = await getCharacterData();
-  gifts.value = await getGiftData();
-});
-
-const selectGift = ref(false);
-const selectCharacter = ref(false);
 
 </script>
 
@@ -40,36 +35,36 @@ const selectCharacter = ref(false);
       <div class="w-1/2 p-8 flex flex-col justify-center">
         <img :src="nasubi" class="w-1/2" />
         <div>
-          {{ "character: " + player.character.name }}
+          {{ "character: " + allCharacters[character].name }}
         </div>
         <div>
-          {{ "gift1: " + player.gift[0].name }}
-          {{ "gift2: " + player.gift[1].name }}
-          {{ "gift3: " + player.gift[2].name }}
+          {{ "gift1: " + allGifts[gifts[0]].name }}
+          {{ "gift2: " + allGifts[gifts[1]].name }}
+          {{ "gift3: " + allGifts[gifts[2]].name }}
         </div>
       </div>
 
       <div v-if="selectCharacter">
-        <Select :cards="characters" selectType="character" />
+        <SelectCharacter />
         <button @click="selectCharacter = !selectCharacter" class="text-white rounded-md">
           text
         </button>
       </div>
       <div v-else-if="selectGift">
-        <Select :cards="gifts" selectType="gift" />
+        <SelectGifts />
         <button @click="selectGift = !selectGift" class="text-white rounded-md">
           text
         </button>
       </div>
       <div v-else class="w-1/2 p-8 flex flex-col justify-center">
         <button @click="startMatch" class="btn-pop">
-          <img src="@/assets/matchMaking.png" class="w-1/2" />
+          <img src="@/assets/img/matchMaking.png" class="w-1/2" />
         </button>
         <button @click="selectCharacter = !selectCharacter" class="text-white rounded-md">
-          <img src="@/assets/characterChange.png" class="w-1/2" />
+          <img src="@/assets/img/characterChange.png" class="w-1/2" />
         </button>
         <button @click="selectGift = !selectGift" class="text-white rounded-md">
-          <img src="@/assets/giftChange.png" class="w-1/2" />
+          <img src="@/assets/img/giftChange.png" class="w-1/2" />
         </button>
       </div>
     </div>

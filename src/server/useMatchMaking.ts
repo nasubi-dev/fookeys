@@ -1,12 +1,12 @@
 import { toRefs } from "vue";
+import { e, s, i } from "@/log";
+import { playerStore, gameStore } from "@/main";
+import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
-import { e, s, i } from "@/log";
 import { converter } from "@/server/converter";
 import { router } from "@/router";
 import type { MatchStatus, PlayerData, Character, Gift, GameData } from "@/types";
-import { playerStore, gameStore } from "@/main";
-import { storeToRefs } from "pinia";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -71,13 +71,13 @@ async function watchMatchField(): Promise<void> {
 //マッチングを開始する
 async function startMatchmaking(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
-  const { idEnemy, idGame, match, gift, character } = toRefs(player.value);
+  const { idEnemy, idGame, match, gifts, character } = toRefs(player.value);
 
   //プレイヤーのマッチング状況を更新する
   match.value = "waiting";
   updatePlayerFields(id.value, [
     { field: "match", value: match.value },
-    { field: "gift", value: gift.value },
+    { field: "gifts", value: gifts.value },
     { field: "character", value: character.value },
   ]);
   // マッチング待機中のユーザーを検索する

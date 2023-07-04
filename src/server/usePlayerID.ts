@@ -1,16 +1,13 @@
-import { toRefs } from "vue";
-import { db } from "./firebase";
-import { collection, doc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
-import { storeToRefs } from "pinia";
 import { e, s, i } from "@/log";
-import { converter } from "@/server/converter";
-import type { PlayerData, Character, Gift } from "@/types";
 import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
+import { db } from "./firebase";
+import { collection, doc, addDoc, deleteDoc } from "firebase/firestore";
+import { converter } from "@/server/converter";
+import type { PlayerData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
-const charactersRef = collection(db, "characters").withConverter(converter<Character>());
-const giftsRef = collection(db, "gifts").withConverter(converter<Gift>());
 
 //player登録
 async function registerPlayer(): Promise<void> {
@@ -33,13 +30,5 @@ async function deletePlayer(): Promise<void> {
     console.error(e, "Error deleting player: ", error);
   }
 }
-//characterの取得
-async function getCharacterData(): Promise<Character[]> {
-  return (await getDocs(charactersRef)).docs.map((doc) => doc.data());
-}
-//giftの取得
-async function getGiftData(): Promise<Gift[]> {
-  return (await getDocs(giftsRef)).docs.map((doc) => doc.data());
-}
 
-export { registerPlayer, deletePlayer, getCharacterData, getGiftData };
+export { registerPlayer, deletePlayer };

@@ -11,8 +11,11 @@ import Turn from "@/components/uiTurn.vue";
 import Cards from "@/components/uiCards.vue";
 import Shop from "@/components/shop.vue";
 
-const { id, player, cardLock, phase,offer } = storeToRefs(playerStore);
-const { idGame, character, gift, status, hand, sign, donate } = toRefs(player.value);
+import allGifts from "@/assets/allGifts";
+import allCharacters from "@/assets/allCharacters";
+
+const { id, player, cardLock, phase, offer } = storeToRefs(playerStore);
+const { idGame, character, gifts, status, hand, sign, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
@@ -24,8 +27,8 @@ onMounted(async () => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
-    console.log(i, "character: ", character.value?.name);
-    console.log(i, "gift: ", gift.value[0]?.name, gift.value[1]?.name, gift.value[2]?.name);
+    console.log(i, "character: ", allCharacters[character.value]);
+    console.log(i, "gift: ", allGifts[gifts.value[0]]?.name, allGifts[gifts.value[1]]?.name, allGifts[gifts.value[2]]?.name);
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));
     console.log(i, "mission: ", missions.value.map((mission) => mission.name));
@@ -49,11 +52,10 @@ const turnEnd = async () => {
   <div>
     <div class="flex flex-col items-center justify-center h-screen">
       <h1>Battle</h1>
+      {{ "Player: " + sign }}
       <div>
         <Turn />
       </div>
-      <p class="text-sm font-medium text-gray-900 truncate">turn:{{ turn }}</p>
-      {{ "Player: " + sign }}
       <div class="max-w-7xl mx-auto">
         <div>
           <h1>Mission</h1>

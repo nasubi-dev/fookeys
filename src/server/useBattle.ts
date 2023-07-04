@@ -1,12 +1,12 @@
 import { toRefs } from "vue";
+import { e, i, s } from "@/log";
+import { gameStore, playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
-import { storeToRefs } from "pinia";
-import { e, i, s } from "@/log";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
 import type { Mission, GameData, PlayerData, PlayerSign } from "@/types";
-import { gameStore, playerStore } from "@/main";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());

@@ -14,16 +14,8 @@ const usePlayerStore = defineStore("playerData", () => {
     donate: false,
     match: "nothing",
     sign: 0,
-    character: {
-      name: "",
-      description: "",
-      company: "",
-    },
-    gift: [
-      { name: "", description: "" },
-      { name: "", description: "" },
-      { name: "", description: "" },
-    ],
+    character: 0,
+    gifts: [0,0,0],
     hand: [],
     field: [],
     status: {

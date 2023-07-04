@@ -28,8 +28,7 @@ shopフェーズ
 
 未完成部分
 たまにバグるランダムな値の受け渡し←原因不明
-Card､Characters､Gifts､Missionsは.jsonファイルに書き換える?
-ギフト使用コンポーネント作成
+Card､Characters､Gifts､Missionsなどの静的情報はassetsに保存
 ショップフェーズも相手を待つ←そのためにはポップアップ表示が先
 見た目を整える(多分まだある)
   logを画面

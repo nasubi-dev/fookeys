@@ -19,7 +19,7 @@ const img = ref("norma")
     </div>
     <div>
       <span>Assets</span>
-      <img src="@/assets/card1.png" alt="card1" />
+      <img src="@/assets/img/card1.png" alt="card1" />
     </div>
   </div>
 </template>
