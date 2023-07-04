@@ -36,7 +36,10 @@ const offerHand = () => {
               <h5 class="text-bold">{{ card.name }}</h5>
               <p class="text-gray-600">ID:{{ card.id }}</p>
               <p class="text-gray-600">📊🚬:{{ card.company }}</p>
-              <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry + "🦶: " + card.priority }}</p>
+              <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
+              <div v-if="card.priority">
+                <p class="text-gray-600">{{ "🦶: " + card.priority }}</p>
+              </div>
               <div v-if="card.atk">
                 <p class="text-gray-600">{{ "⚔:" + card.atk }}</p>
               </div>
