@@ -13,6 +13,7 @@ import Shop from "@/components/shop.vue";
 
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
+import allMissions from "@/assets/allMissions";
 
 const { id, player, cardLock, phase, offer } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, sign, donate } = toRefs(player.value);
@@ -27,11 +28,11 @@ onMounted(async () => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
-    console.log(i, "character: ", allCharacters[character.value]);
+    console.log(i, "character: ", allCharacters[character.value].name);
     console.log(i, "gift: ", allGifts[gifts.value[0]]?.name, allGifts[gifts.value[1]]?.name, allGifts[gifts.value[2]]?.name);
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));
-    console.log(i, "mission: ", missions.value.map((mission) => mission.name));
+    console.log(i, "mission: ", allMissions[missions.value[0]]?.name, allMissions[missions.value[1]]?.name, allMissions[missions.value[2]]?.name);
     console.log(i, "turn: ", turn.value);
   });
 });
@@ -91,6 +92,7 @@ const turnEnd = async () => {
       <div v-else>
         <p>後攻</p>
       </div>
+      <button @click="console.log(missions)">testtttttt</button>
     </div>
   </div>
 </template>

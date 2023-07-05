@@ -244,6 +244,8 @@ export async function postBattle(): Promise<void> {
   const { id, player, cardLock } = storeToRefs(playerStore);
   const { check, sign, idGame } = toRefs(player.value);
   const { nextTurn } = gameStore;
+  const { game } = storeToRefs(gameStore);
+  const { firstAtkPlayer } = toRefs(game.value);
 
   //行動していないならばエラーを返す
   if (!check.value) throw new Error("checkの値がfalse､つまり行動していません");
@@ -263,6 +265,8 @@ export async function postBattle(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { check: check.value });
   //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
+  //firstAtkPlayerの値をundefinedにする
+  firstAtkPlayer.value = undefined;
 
   //shopを開く
   startShop();

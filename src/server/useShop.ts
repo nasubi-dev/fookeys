@@ -6,12 +6,12 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { battle } from "./useBattle";
-import type { Card, Mission, GameData, PlayerData } from "@/types";
+import type { Card, GameData, PlayerData } from "@/types";
+import allMissions from "@/assets/allMissions";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
-const missionsRef = collection(db, "missions").withConverter(converter<Mission>());
 const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //cardをランダムに1枚引く
@@ -50,35 +50,38 @@ export async function setOffer(): Promise<void> {
 export async function setMissions(): Promise<void> {
   console.log(i, "setMissionsを実行しました");
   const { player } = storeToRefs(playerStore);
-  const { idGame } = toRefs(player.value);
+  const { idGame, sign } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { missions } = toRefs(game.value);
 
-  missions.value = [];
-  await updateDoc(doc(gamesRef, idGame.value), { missions: deleteField() });
-  console.log(i, "ミッションを削除しました");
-  if (!playerStore.player.sign) {
-    const allMissions = (await getDocs(missionsRef)).docs.map((doc) => doc.data());
+  if (!sign.value) {
     for (let i = 0; i < 3; i++) {
-      const selectMission = allMissions[Math.floor(Math.random() * allMissions.length)];
-      missions.value.push(selectMission);
-      //選ばれたミッションはmissionsから削除する
-      allMissions.splice(allMissions.indexOf(selectMission), 1);
+      const selectMissions = allMissions[Math.floor(Math.random() * allMissions.length)];
+      missions.value[i] = selectMissions.id;
+      //同じmissionがセットされないようにする
+      for (let j = 0; j < i; j++) {
+        if (missions.value[i] === missions.value[j]) {
+          i--;
+          missions.value.pop();
+          break;
+        }
+      }
     }
     updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
-    console.log(i, "missionsにミッションを追加しました");
+    console.log(i, "missionにミッションを追加しました");
+    console.log(i, "missions: ", missions.value);
+    updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
   } else {
     console.log(i, "ミッションを監視します");
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
-      if (snap.data()?.missions !== missions.value) {
-        const mission = snap.data()?.missions;
-        if (mission !== undefined) {
-          missions.value.push(...mission);
-          console.log(i, "missionsにミッションを追加しました");
-          //監視を解除する
-          unsubscribe();
-          console.log(i, "missionsの監視を解除しました");
-        }
+      const updateMissions = snap.data()?.missions;
+      if (updateMissions?.length === 3) {
+        missions.value = updateMissions;
+        console.log(i, "missionsにミッションを追加しました");
+        console.log(i, "missions: ", missions.value);
+        //監視を解除する
+        unsubscribe();
+        console.log(i, "missionsの監視を解除しました");
       }
     });
   }

@@ -15,7 +15,7 @@ const usePlayerStore = defineStore("playerData", () => {
     match: "nothing",
     sign: 0,
     character: 0,
-    gifts: [0,0,0],
+    gifts: [0,1,2],
     hand: [],
     field: [],
     status: {
@@ -118,8 +118,8 @@ const useGameStore = defineStore("gameData", () => {
   const game = ref<GameData>({
     turn: 1,
     players: [],
-    missions: [],
     firstAtkPlayer: undefined,
+    missions: [],
   });
   //?Computed/Getter
   ///?function/actions
@@ -128,13 +128,8 @@ const useGameStore = defineStore("gameData", () => {
     game.value.turn += 1;
     console.log(i, "turn: ", game.value.turn);
   };
-  //missionを4ターンに一回更新する
-  const updateMission = (newMissions: Mission[]): void => {
-    game.value.missions = newMissions;
-    console.log(i, "mission: ", game.value.missions);
-  };
 
-  return { game, nextTurn, updateMission };
+  return { game, nextTurn };
 });
 
 export { useGameStore, usePlayerStore };

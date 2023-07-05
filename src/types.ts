@@ -31,8 +31,10 @@ type Gift = {
 };
 
 type Mission = {
+  id: number;
   name: string;
   description: string;
+  reward: number;
   // action?: () => void;
 };
 //!使われてるか調べる
@@ -60,7 +62,7 @@ type PlayerData = {
 type GameData = {
   turn: number;
   players: string[];
-  missions: Mission[];
+  missions: number[];
   firstAtkPlayer: PlayerSign | undefined;
 };
 
