@@ -3,22 +3,21 @@ import { e, s, i } from "@/log";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, deleteField, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { battle } from "./useBattle";
 import type { Card, GameData, PlayerData } from "@/types";
 import allMissions from "@/assets/allMissions";
+import allCards from "@/assets/allCard";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
-const deckRef = collection(db, "deck").withConverter(converter<Card>());
 
 //cardをランダムに1枚引く
-async function drawCard(): Promise<Card> {
+function drawCard(): Card {
   // console.log(i, "drawCardを実行しました");
-  const deck = (await getDocs(deckRef)).docs.map((doc) => doc.data());
-  const selectCard = deck[Math.floor(Math.random() * deck.length)];
+  const selectCard = allCards[Math.floor(Math.random() * allCards.length)];
   return selectCard;
 }
 //cardをHandに6枚セットする
@@ -28,7 +27,7 @@ export async function setHand(): Promise<void> {
   const { hand } = toRefs(player.value);
 
   for (let i = 0; i < 6; i++) {
-    const card = await drawCard();
+    const card = drawCard();
     hand.value.push(card);
     hand.value.sort((a, b) => a.id - b.id);
   }
@@ -40,7 +39,7 @@ export async function setOffer(): Promise<void> {
   const { offer } = storeToRefs(playerStore);
 
   for (let i = 0; i < 3; i++) {
-    const card = await drawCard();
+    const card = drawCard();
     offer.value.push(card);
     offer.value.sort((a, b) => a.id - b.id);
   }

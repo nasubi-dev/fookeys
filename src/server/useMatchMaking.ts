@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { router } from "@/router";
-import type { MatchStatus, PlayerData, Character, Gift, GameData } from "@/types";
+import type { MatchStatus, PlayerData, GameData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());

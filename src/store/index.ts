@@ -30,6 +30,7 @@ const usePlayerStore = defineStore("playerData", () => {
       atk: 0,
       def: 0,
       tech: 0,
+      heal: 0,
     },
   });
   const phase = ref<Phase>("none");
@@ -42,13 +43,14 @@ const usePlayerStore = defineStore("playerData", () => {
       (sum: SumCards, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
-        sum.priority += card.priority;
+        sum.priority += card.priority?? 0;
         sum.atk += card.atk ?? 0;
         sum.def += card.def ?? 0;
         sum.tech += card.tech ?? 0;
+        sum.heal += card.heal ?? 0;
         return sum;
       },
-      { waste: 0, hungry: 0, priority: 0, atk: 0, def: 0, tech: 0 }
+      { waste: 0, hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
     )
   );
   //?function/actions
