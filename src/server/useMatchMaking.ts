@@ -34,7 +34,7 @@ function updatePlayerFields(
   //!ここなんとかしたい
   updates: Array<{
     field: keyof PlayerData;
-    value: string | MatchStatus | Character | Gift[];
+    value: string | MatchStatus | number | number[];
   }>
 ) {
   updates.forEach((update) => {
