@@ -92,7 +92,6 @@ const turnEnd = async () => {
       <div v-else>
         <p>後攻</p>
       </div>
-      <button @click="console.log(missions)">testtttttt</button>
     </div>
   </div>
 </template>
