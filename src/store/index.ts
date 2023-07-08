@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { i } from "@/log";
-import type { Card, GameData, PlayerData, SumCards, Mission, Phase } from "@/types";
+import type { Card, GameData, PlayerData, SumCards, Phase } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State

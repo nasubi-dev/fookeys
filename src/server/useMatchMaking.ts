@@ -20,7 +20,6 @@ async function findWaitingPlayer(): Promise<void> {
   console.log(i, "Finding players...");
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
-
   // 自分を除外する
   waitingPlayers.indexOf(id.value) ? undefined : waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
   // ランダムに選択する
@@ -68,6 +67,24 @@ async function watchMatchField(): Promise<void> {
     }
   });
 }
+//gameを作成する
+async function addGame(): Promise<string> {
+  const { game } = storeToRefs(gameStore);
+  const { id, player } = storeToRefs(playerStore);
+  const { idEnemy } = toRefs(player.value);
+
+  try {
+    const docId = (await addDoc(gamesRef, game.value)).id;
+    console.log(s, "games Document ID: ", docId);
+    //両プレイヤーのIDをgameに追加する
+    game.value.players = [id.value, idEnemy.value];
+    await updateDoc(doc(gamesRef, docId), { players: [id.value, idEnemy.value] });
+    return docId;
+  } catch (error) {
+    console.error(e, "Error adding games document: ", error);
+  }
+  return "";
+}
 //マッチングを開始する
 async function startMatchmaking(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
@@ -106,24 +123,6 @@ async function startMatchmaking(): Promise<void> {
     router.push({ name: "battle", params: { idGame: idGame.value } });
     console.log(s, "rooting complete");
   }
-}
-//gameを作成する
-async function addGame(): Promise<string> {
-  const { game } = storeToRefs(gameStore);
-  const { id, player } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(player.value);
-
-  try {
-    const docId = (await addDoc(gamesRef, game.value)).id;
-    console.log(s, "games Document ID: ", docId);
-    //両プレイヤーのIDをgameに追加する
-    game.value.players = [id.value, idEnemy.value];
-    await updateDoc(doc(gamesRef, docId), { players: [id.value, idEnemy.value] });
-    return docId;
-  } catch (error) {
-    console.error(e, "Error adding games document: ", error);
-  }
-  return "";
 }
 //gameを削除する
 async function deleteGame(): Promise<void> {}

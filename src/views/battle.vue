@@ -70,7 +70,7 @@ const turnEnd = async () => {
           <h1>Field</h1>
           <!-- <Cards /> -->
         </div>
-        <div v-if="phase === 'shop' && turn !== 1">
+        <div v-if="phase === 'shop' && turn !== 1" class="overlay">
           <h1>shop</h1>
           <Shop />
         </div>
