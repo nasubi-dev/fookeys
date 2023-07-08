@@ -15,8 +15,8 @@ import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
 
-const { id, player, cardLock, phase, offer } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, sign, donate } = toRefs(player.value);
+const { id, player, cardLock, phase, offer,sign } = storeToRefs(playerStore);
+const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);

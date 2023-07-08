@@ -1,11 +1,12 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { i } from "@/log";
-import type { Card, GameData, PlayerData, SumCards, Phase } from "@/types";
+import type { Card, GameData, PlayerData, SumCards, Phase,PlayerSign } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
   const id = ref("");
+  const sign = ref<PlayerSign>(0);
   const player = ref<PlayerData>({
     idEnemy: "",
     idGame: "",
@@ -13,9 +14,8 @@ const usePlayerStore = defineStore("playerData", () => {
     check: false,
     donate: false,
     match: "nothing",
-    sign: 0,
     character: 0,
-    gifts: [0,1,2],
+    gifts: [0, 1, 2],
     hand: [],
     field: [],
     status: {
@@ -43,7 +43,7 @@ const usePlayerStore = defineStore("playerData", () => {
       (sum: SumCards, card: Card) => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
-        sum.priority += card.priority?? 0;
+        sum.priority += card.priority ?? 0;
         sum.atk += card.atk ?? 0;
         sum.def += card.def ?? 0;
         sum.tech += card.tech ?? 0;
@@ -101,8 +101,14 @@ const usePlayerStore = defineStore("playerData", () => {
       hand.map((card) => card.name)
     );
   };
+  //PhaseをShopからBattleに変更する
+  const shiftBattle = (): void => {
+    phase.value = "battle";
+    console.log(i, "changePhase: ", phase.value);
+  };
   return {
     id,
+    sign,
     player,
     phase,
     cardLock,
@@ -112,6 +118,7 @@ const usePlayerStore = defineStore("playerData", () => {
     popHand,
     deleteField,
     reduceWaste,
+    shiftBattle,
   };
 });
 

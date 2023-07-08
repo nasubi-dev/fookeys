@@ -14,7 +14,6 @@ const useGift = (index: boolean[]) => {
   const selectedGifts = gifts.value.filter((gift, index) => isGiftSelected.value[index]);
   console.log(i, "selectedGifts: ", selectedGifts.map((gift) => allGifts[gift].name));
   //giftで使った分の貢献度を減らす
-  
 }
 </script>
 

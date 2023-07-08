@@ -48,8 +48,8 @@ async function reflectDamage(): Promise<void> {
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { id, player } = storeToRefs(playerStore);
-  const { idEnemy, sign,check } = toRefs(player.value);
+  const { id, player, sign } = storeToRefs(playerStore);
+  const { idEnemy, check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -151,8 +151,8 @@ async function checkMission(): Promise<void> {
 //指定された､fieldの値を比較する
 async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   console.log(s, "compareSum", field, "を実行しました");
-  const { player } = storeToRefs(playerStore);
-  const { idEnemy, sumFields, sign } = toRefs(player.value);
+  const { player, sign } = storeToRefs(playerStore);
+  const { idEnemy, sumFields } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -174,8 +174,8 @@ async function compareSumField(field: "hungry" | "priority"): Promise<void> {
 //firstAtkPlayerの値の監視
 async function watchFirstAtkPlayerField(): Promise<void> {
   console.log(s, "watchFirstAtkPlayerFieldを実行しました");
-  const { player } = storeToRefs(playerStore);
-  const { sign, idGame } = toRefs(player.value);
+  const { player, sign } = storeToRefs(playerStore);
+  const { idGame } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -241,8 +241,8 @@ export async function battle() {
 export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { reduceWaste, deleteField } = playerStore;
-  const { id, player, cardLock } = storeToRefs(playerStore);
-  const { check, sign, idGame } = toRefs(player.value);
+  const { id, player, cardLock, sign } = storeToRefs(playerStore);
+  const { check, idGame } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);

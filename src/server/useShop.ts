@@ -48,8 +48,8 @@ export async function setOffer(): Promise<void> {
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
   console.log(i, "setMissionsを実行しました");
-  const { player } = storeToRefs(playerStore);
-  const { idGame, sign } = toRefs(player.value);
+  const { player,sign } = storeToRefs(playerStore);
+  const { idGame } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { missions } = toRefs(game.value);
 

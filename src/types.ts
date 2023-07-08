@@ -50,7 +50,6 @@ type PlayerData = {
   check: boolean;
   donate: boolean;
   match: MatchStatus;
-  sign: PlayerSign;
   character: number;
   gifts: number[];
   hand: Card[];
