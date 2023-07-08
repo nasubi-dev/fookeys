@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { i } from "@/log";
-import type { Card, GameData, PlayerData, SumCards, Phase,PlayerSign } from "@/types";
+import type { Card, GameData, PlayerData, SumCards, Phase, PlayerSign } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -19,7 +19,7 @@ const usePlayerStore = defineStore("playerData", () => {
     hand: [],
     field: [],
     status: {
-      hp: 1000,
+      hp: 600,
       hungry: 0,
       contribution: 0,
     },

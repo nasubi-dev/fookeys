@@ -15,7 +15,7 @@ import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
 
-const { id, player, cardLock, phase, offer,sign } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
@@ -24,6 +24,7 @@ const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
+  status.value.contribution += allCharacters[character.value].initialContribution ?? 0;
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);

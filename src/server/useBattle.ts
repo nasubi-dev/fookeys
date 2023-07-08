@@ -7,6 +7,7 @@ import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc 
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
 import type { Mission, GameData, PlayerData, PlayerSign } from "@/types";
+import allCharacters from "@/assets/allCharacters";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -63,32 +64,31 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     enemyId = which === "primary" ? id.value : idEnemy.value;
   }
   //statusを取得する
-  let myStatus = (await getDoc(doc(playersRef, myId))).data()?.status;
-  let enemyStatus = (await getDoc(doc(playersRef, enemyId))).data()?.status;
-  let mySumFields = (await getDoc(doc(playersRef, myId))).data()?.sumFields;
-  let enemySumFields = (await getDoc(doc(playersRef, enemyId))).data()?.sumFields;
-  let myCheck = (await getDoc(doc(playersRef, myId))).data()?.check;
-  let enemyCheck = (await getDoc(doc(playersRef, enemyId))).data()?.check;
-  if (!myStatus || !enemyStatus || !mySumFields || !enemySumFields || myCheck === undefined || enemyCheck === undefined) {
-    console.log(e, "情報が取得できませんでした");
+  let my = (await getDoc(doc(playersRef, myId))).data();
+  let enemy = (await getDoc(doc(playersRef, enemyId))).data();
+  if (!my || !my.status || !my.sumFields || !my.check || !my.field || !my.character) {
+    console.log(e, "自分の情報が取得できませんでした");
     return;
   }
-
-  //寄付をしていた場合､満腹値を増やさない
-  if (!myCheck) {
+  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.check || !enemy.field || !enemy.character) {
+    console.log(e, "敵の情報が取得できませんでした");
+    return;
+  }
+  if (!my.check) {
+    //寄付をしていた場合､満腹値を増やさない
     //自分のhungryの値が上限を超えていた場合､行動不能にする
-    myStatus.hungry += mySumFields.hungry;
-    console.log(i, "mySumHungry: ", myStatus.hungry);
-    if (myStatus.hungry > 100) {
-      myCheck = true;
+    my.status.hungry += my.sumFields.hungry;
+    console.log(i, "mySumHungry: ", my.status.hungry);
+    if (my.status.hungry > 200 + (allCharacters[my.character].maxHungry ?? 0)) {
+      my.check = true;
       console.log(i, "自プレイヤー行動不能です");
     }
   }
   //相手のhungryの値が上限を超えていた場合､行動不能にする
-  let enemySumHungry = enemySumFields.hungry + enemyStatus.hungry;
+  let enemySumHungry = enemy.sumFields.hungry + enemy.status.hungry;
   console.log(i, "enemySumHungry: ", enemySumHungry);
-  if (enemySumHungry > 100) {
-    enemyCheck = true;
+  if (enemySumHungry > 200 + (allCharacters[enemy.character].maxHungry ?? 0)) {
+    enemy.check = true;
     console.log(i, "相手プレイヤー行動不能です");
   }
   //支援を行う//!未定
@@ -96,9 +96,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   let defense = 0;
   if (which === "primary") console.log(i, "先行なので防御できない");
   else {
-    if (enemyCheck) console.log(i, "敵は行動不能なので防御できない");
+    if (enemy.check) console.log(i, "敵は行動不能なので防御できない");
     else {
-      defense = enemySumFields.def;
+      defense = enemy.sumFields.def;
       console.log(i, "enemySumFields.def: ", defense);
     }
   }
@@ -106,40 +106,40 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //マッスル攻撃を行う
   console.log(i, "マッスル攻撃!!!");
   let holdingAtk = 0;
-  console.log(i, "mySumFields.pow: ", mySumFields.atk);
-  if (myCheck) console.log(i, "行動不能なので攻撃できない");
+  console.log(i, "mySumFields.pow: ", my.sumFields.atk);
+  if (my.check) console.log(i, "行動不能なので攻撃できない");
   else {
-    holdingAtk = mySumFields.atk - defense;
+    holdingAtk = my.sumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
     console.log(i, "holdingAtk: ", holdingAtk);
   }
-  enemyStatus.hp -= holdingAtk;
+  enemy.status.hp -= holdingAtk;
   defense
-    ? console.log(i, "相手のdefが", enemySumFields.def, "なので", holdingAtk, "のダメージ")
+    ? console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ")
     : console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
 
   //テクニック攻撃を行う
   console.log(i, "テクニック攻撃!!!");
   let holdingTech = 0;
-  if (myCheck) console.log(i, "行動不能なので攻撃できない");
+  if (my.check) console.log(i, "行動不能なので攻撃できない");
   else {
-    holdingTech = mySumFields.tech - 0; //?一応防げるギフトがある
+    holdingTech = my.sumFields.tech - 0; //?一応防げるギフトがある
     if (holdingTech < 0) holdingTech = 0;
     console.log(i, "holdingTech: ", holdingTech);
   }
-  enemyStatus.hp -= mySumFields.tech;
-  console.log(i, "テクニック攻撃でenemyに", mySumFields.tech, "のダメージ");
+  enemy.status.hp -= my.sumFields.tech;
+  console.log(i, "テクニック攻撃でenemyに", my.sumFields.tech, "のダメージ");
 
   //hungryの値が上限を超えていた場合､上限値にする
-  if (myStatus.hungry > 100) myStatus.hungry = 100;
+  if (my.status.hungry > 100) my.status.hungry = 100;
 
   //行動したのでcheckをtrueにする
   check.value = true;
 
   //Firebaseに反映する
   await Promise.all([
-    updateDoc(doc(playersRef, myId), { "status.hungry": myStatus.hungry }),
-    updateDoc(doc(playersRef, enemyId), { "status.hp": enemyStatus.hp }),
+    updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry }),
+    updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp }),
     updateDoc(doc(playersRef, myId), { check: check.value }),
   ]);
 }

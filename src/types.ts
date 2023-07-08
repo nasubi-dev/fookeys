@@ -19,7 +19,10 @@ type Character = {
   name: string;
   description: string;
   company: string;
-  // action?: () => void;
+  maxHungry?: number;
+  maxHp?: number;
+  initialContribution?: number;
+  passive?: () => void;
 };
 
 type Gift = {
@@ -35,6 +38,7 @@ type Mission = {
   name: string;
   description: string;
   reward: number;
+  rank?: number;
   // action?: () => void;
 };
 //!使われてるか調べる
