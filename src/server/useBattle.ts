@@ -31,7 +31,7 @@ export async function donate(): Promise<void> {
     console.log(i, "contribution: ", status.value.contribution);
   }
   if (enemyDonate) {
-    updateDoc(doc(playersRef, idEnemy.value), { check: false });
+    updateDoc(doc(playersRef, idEnemy.value), { check: true });
     console.log(i, "敵の寄付処理");
     //?現状だと相手のStatusを表示していないので､今は書かない
     //?書くのはアニメーションだけでいい
@@ -67,8 +67,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   let my = (await getDoc(doc(playersRef, myId))).data();
   let enemy = (await getDoc(doc(playersRef, enemyId))).data();
   if (!my || !my.status || !my.sumFields || !my.field || my.character === undefined) throw Error("自分の情報が取得できませんでした");
-  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.field || enemy.character === undefined)
-    throw Error("相手の情報が取得できませんでした");
+  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.field || enemy.character === undefined) throw Error("相手の情報が取得できませんでした");
   //寄付をしていた場合､満腹値を増やさない
   //自分のhungryの値が上限を超えていた場合､行動不能にする
   if (!my.check) {
@@ -86,6 +85,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     enemy.check = true;
     console.log(i, "相手プレイヤー行動不能です");
   }
+
   //支援を行う//!未定
   //防御を行う//?エフェクトのみ
   let defense = 0;
@@ -127,10 +127,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //hungryの値が上限を超えていた場合､上限値にする
   if (my.status.hungry > 100) my.status.hungry = 100;
-
   //行動したのでcheckをtrueにする
   check.value = true;
-
   //Firebaseに反映する
   await Promise.all([
     updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry }),

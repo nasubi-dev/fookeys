@@ -12,7 +12,6 @@ const { hand, check } = toRefs(player.value);
 const isOfferSelected = ref([false, false, false]);
 //選択を確定させたらHandにtrueのカードを追加して､offerを空にする
 const offerHand = async () => {
-  await watchShopEnd();
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
@@ -21,6 +20,7 @@ const offerHand = async () => {
   //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
   offer.value.splice(0, offer.value.length);
   isOfferSelected.value = [false, false, false];
+  await watchShopEnd();
 }
 
 </script>
@@ -28,7 +28,7 @@ const offerHand = async () => {
 <template>
   <div>
     <div v-if="phase === 'shop'">
-      <button @click="offerHand()" class="bg-white">選択確定</button>
+      <button @click="offerHand()" :class="check ? 'bg-red-500' : 'bg-blue-500'">選択確定</button>
       {{ isOfferSelected }}
       <ul class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">

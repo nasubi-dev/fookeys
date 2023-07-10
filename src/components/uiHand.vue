@@ -78,6 +78,9 @@ const popCard = (index: number, id: number) => {
               <div v-if="card.tech">
                 <p>{{ "🏹:" + card.tech }}</p>
               </div>
+              <div v-if="card.heal">
+                <p>{{ "💖:" + card.heal }}</p>
+                </div>
             </div>
           </button>
         </div>

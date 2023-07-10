@@ -57,7 +57,7 @@ const turnEnd = async () => {
       <h1>Battle</h1>
       {{ "Player: " + sign }}
       <div>
-        <Turn />
+        <!-- <Turn /> -->
       </div>
       <div class="max-w-7xl mx-auto">
         <div>

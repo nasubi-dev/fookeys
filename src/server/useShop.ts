@@ -9,6 +9,7 @@ import { battle } from "./useBattle";
 import type { Card, GameData, PlayerData } from "@/types";
 import allMissions from "@/assets/allMissions";
 import allCards from "@/assets/allCards";
+import allGifts from "@/assets/allGifts";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -85,7 +86,6 @@ export async function setMissions(): Promise<void> {
     });
   }
 }
-
 //shopフェーズの開始
 export async function startShop(): Promise<void> {
   console.log(i, "startShopを実行しました");
@@ -98,8 +98,34 @@ export async function startShop(): Promise<void> {
   if (game.value.turn === 1) setHand();
   else setOffer();
 }
+//shopフェーズの終了
+export async function endShop(): Promise<void> {
+  console.log(i, "useGiftsを実行しました");
+  const { id, player, phase } = storeToRefs(playerStore);
+  const { isSelectedGift } = toRefs(player.value);
+
+  //自分のisSelectedGiftを実行する
+  const myGift = isSelectedGift.value;
+  console.log(i, "myGift: ", myGift);
+  if (myGift !== undefined) {
+    console.log(i, "自分のGiftを実行します");
+    allGifts[myGift].skill(id.value);
+  }
+  //敵のisSelectedGiftを実行する
+  const enemyGift = (await getDoc(doc(playersRef, id.value))).data()?.isSelectedGift;
+  console.log(i, "enemyGift: ", enemyGift);
+  if (enemyGift !== undefined) {
+    console.log(i, "相手のGiftを実行します");
+    allGifts[enemyGift].skill(id.value);
+  }
+
+  //終了時処理
+  phase.value = "battle";
+  isSelectedGift.value = undefined;
+  resetCheck();
+}
 //checkのReset
-export async function resetCheck(): Promise<void> {
+export function resetCheck() {
   console.log(i, "resetCheckを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { check } = toRefs(player.value);
@@ -111,24 +137,24 @@ export async function resetCheck(): Promise<void> {
 //checkの値の監視
 export async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
-  const { id, player, phase } = storeToRefs(playerStore);
-  const { check, idEnemy } = toRefs(player.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { check, idEnemy, isSelectedGift } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､shopフェーズを終了する
   check.value = true;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
+  updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
+  console.log(i, "isSelectedGift: " + isSelectedGift.value);
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
   if (enemyCheck) {
-    phase.value = "battle";
-    resetCheck();
+    endShop();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {
       const data = doc.data();
       if (!data) return;
       if (data.check) {
-        phase.value = "battle";
-        resetCheck();
+        endShop();
         //監視を解除する
         unsubscribe();
         console.log(i, "checkの監視を解除しました");
@@ -140,11 +166,12 @@ export async function watchShopEnd(): Promise<void> {
 export async function watchTurnEnd(): Promise<void> {
   console.log(i, "watchTurnEndを実行しました");
   const { id, player, sumCards } = storeToRefs(playerStore);
-  const { check, idEnemy, sumFields } = toRefs(player.value);
+  const { check, idEnemy, sumFields, donate } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､カード選択終了
   check.value = true;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+  updateDoc(doc(playersRef, id.value), { donate: donate.value });
   console.log(i, "check: " + check.value);
   //FieldのカードをFirestoreに保存する
   sumFields.value = sumCards.value;

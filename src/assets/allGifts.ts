@@ -7,7 +7,9 @@ const allGifts: Gift[] = [
     name: "マジック",
     description: "手札を全て入れ替える",
     requireContribution: 15,
-    skill: () => console.log(i, "ギフト1"),
+    skill: (id: string) => {
+      console.log(i, id + "の使用したギフト1");
+    },
   },
   {
     id: 1,
@@ -64,7 +66,6 @@ const allGifts: Gift[] = [
     description: "このラウンド中相手から受けるダメージを無効化する",
     requireContribution: 55,
     skill: () => console.log(i, "ギフト9"),
-
   },
   {
     id: 9,

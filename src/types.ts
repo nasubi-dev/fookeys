@@ -30,7 +30,7 @@ type Gift = {
   name: string;
   description: string;
   requireContribution: number;
-  skill?: () => void;
+  skill: (id: string) => void;
 };
 
 type Mission = {
@@ -56,6 +56,7 @@ type PlayerData = {
   match: MatchStatus;
   character: number;
   gifts: number[];
+  isSelectedGift: number | undefined;
   hand: Card[];
   field: Card[];
   status: Status;

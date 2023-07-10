@@ -16,6 +16,7 @@ const usePlayerStore = defineStore("playerData", () => {
     match: "nothing",
     character: 0,
     gifts: [0, 1, 2],
+    isSelectedGift: undefined,
     hand: [],
     field: [],
     status: {
