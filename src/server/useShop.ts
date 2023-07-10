@@ -98,7 +98,44 @@ export async function startShop(): Promise<void> {
   if (game.value.turn === 1) setHand();
   else setOffer();
 }
+//checkのReset
+export async function resetCheck(): Promise<void> {
+  console.log(i, "resetCheckを実行しました");
+  const { id, player } = storeToRefs(playerStore);
+  const { check } = toRefs(player.value);
 
+  check.value = false;
+  updateDoc(doc(playersRef, id.value), { check: check.value });
+  console.log(i, "check: " + check.value);
+}
+//checkの値の監視
+export async function watchShopEnd(): Promise<void> {
+  console.log(i, "watchShopEndを実行しました");
+  const { id, player, phase } = storeToRefs(playerStore);
+  const { check, idEnemy } = toRefs(player.value);
+
+  //checkの値がtrueになっていたら､shopフェーズを終了する
+  check.value = true;
+  updateDoc(doc(playersRef, id.value), { check: check.value });
+  console.log(i, "check: " + check.value);
+  const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
+  if (enemyCheck) {
+    phase.value = "battle";
+    resetCheck();
+  } else {
+    const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {
+      const data = doc.data();
+      if (!data) return;
+      if (data.check) {
+        phase.value = "battle";
+        resetCheck();
+        //監視を解除する
+        unsubscribe();
+        console.log(i, "checkの監視を解除しました");
+      }
+    });
+  }
+}
 //checkの値の監視
 export async function watchTurnEnd(): Promise<void> {
   console.log(i, "watchTurnEndを実行しました");

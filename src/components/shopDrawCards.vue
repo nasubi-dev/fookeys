@@ -3,14 +3,16 @@ import { toRefs, ref } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { watchShopEnd } from "@/server/useShop";
 import type { Card } from "@/types";
 
-const { phase, offer, player } = storeToRefs(playerStore);
-const { hand } = toRefs(player.value);
+const { offer, player, phase } = storeToRefs(playerStore);
+const { hand, check } = toRefs(player.value);
 
 const isOfferSelected = ref([false, false, false]);
 //選択を確定させたらHandにtrueのカードを追加して､offerを空にする
-const offerHand = () => {
+const offerHand = async () => {
+  await watchShopEnd();
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
@@ -26,7 +28,7 @@ const offerHand = () => {
 <template>
   <div>
     <div v-if="phase === 'shop'">
-      <button @click="offerHand(), phase = 'battle'" class="bg-white">選択確定</button>
+      <button @click="offerHand()" class="bg-white">選択確定</button>
       {{ isOfferSelected }}
       <ul class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, initializeFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -13,3 +14,4 @@ initializeFirestore(app, {
   ignoreUndefinedProperties: true,
 });
 export const db = getFirestore(app);
+export const analytics = getAnalytics(app);

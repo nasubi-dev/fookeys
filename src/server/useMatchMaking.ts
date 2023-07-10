@@ -41,7 +41,7 @@ function updatePlayerFields(
     console.log(i, update.field, "updated: ", update.value, " for player: ", playerID);
   });
 }
-//matchの値が-1に変更されたら検知して、gameを開始する
+//matchの値がmatchingに変更されたら検知して、gameを開始する
 async function watchMatchField(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
   const { idEnemy, idGame, match } = toRefs(player.value);

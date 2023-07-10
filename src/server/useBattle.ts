@@ -66,17 +66,12 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //statusを取得する
   let my = (await getDoc(doc(playersRef, myId))).data();
   let enemy = (await getDoc(doc(playersRef, enemyId))).data();
-  if (!my || !my.status || !my.sumFields || !my.check || !my.field || !my.character) {
-    console.log(e, "自分の情報が取得できませんでした");
-    return;
-  }
-  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.check || !enemy.field || !enemy.character) {
-    console.log(e, "敵の情報が取得できませんでした");
-    return;
-  }
+  if (!my || !my.status || !my.sumFields || !my.field || my.character === undefined) throw Error("自分の情報が取得できませんでした");
+  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.field || enemy.character === undefined)
+    throw Error("相手の情報が取得できませんでした");
+  //寄付をしていた場合､満腹値を増やさない
+  //自分のhungryの値が上限を超えていた場合､行動不能にする
   if (!my.check) {
-    //寄付をしていた場合､満腹値を増やさない
-    //自分のhungryの値が上限を超えていた場合､行動不能にする
     my.status.hungry += my.sumFields.hungry;
     console.log(i, "mySumHungry: ", my.status.hungry);
     if (my.status.hungry > 200 + (allCharacters[my.character].maxHungry ?? 0)) {
@@ -203,14 +198,11 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 //戦闘処理を統括する
 export async function battle() {
   console.log(s, "battleを実行しました");
-  const { id, player, phase } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { check } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  //phaseをbattleにする
-  phase.value = "battle";
-  console.log(i, "phase: ", phase.value);
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
