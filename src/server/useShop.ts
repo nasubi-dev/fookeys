@@ -8,7 +8,7 @@ import { converter } from "@/server/converter";
 import { battle } from "./useBattle";
 import type { Card, GameData, PlayerData } from "@/types";
 import allMissions from "@/assets/allMissions";
-import allCards from "@/assets/allCard";
+import allCards from "@/assets/allCards";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());

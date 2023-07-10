@@ -3,6 +3,13 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import bianca from "@/assets/img/companys/bianca.png";
+import bulbull from "@/assets/img/companys/bulbull.png";
+import galdaybee from "@/assets/img/companys/galdaybee.png";
+import hanamie from "@/assets/img/companys/hanamie.png";
+import norma from "@/assets/img/companys/norma.png";
+import rapidpot from "@/assets/img/companys/rapidpot.png";
+import unlimit from "@/assets/img/companys/unlimit.png";
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
@@ -45,24 +52,31 @@ const popCard = (index: number, id: number) => {
     <ul class="text-xs flex justify-start">
       <div v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
-          <button @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id)">
-            <div :class="isHandSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
-              class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">
-              <h5 class="text-bold">{{ card.name }}</h5>
-              <p class="text-gray-600">ID:{{ card.id }}</p>
-              <p class="text-gray-600">📊🚬:{{ card.company }}</p>
-              <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
+          <button @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id)"
+            :class="isHandSelected[index] ? 'transform -translate-y-2' : null" class="overCard">
+            <img v-if="card.company === 'bianca'" :src="bianca" /><!--! ばかみたいな解決法 -->
+            <img v-if="card.company === 'bulbull'" :src="bulbull" />
+            <img v-if="card.company === 'galdaybee'" :src="galdaybee" />
+            <img v-if="card.company === 'hanamie'" :src="hanamie" />
+            <img v-if="card.company === 'norma'" :src="norma" />
+            <img v-if="card.company === 'rapidpot'" :src="rapidpot" />
+            <img v-if="card.company === 'unlimit'" :src="unlimit" />
+            <div class="overText">
+              <h5>{{ card.name }}</h5>
+              <p>ID:{{ card.id }}</p>
+              <p>📊🚬:{{ card.company }}</p>
+              <p>{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
               <div v-if="card.priority">
-                <p class="text-gray-600">{{ "🦶: " + card.priority }}</p>
+                <p>{{ "🦶: " + card.priority }}</p>
               </div>
               <div v-if="card.atk">
-                <p class="text-gray-600">{{ "⚔:" + card.atk }}</p>
+                <p>{{ "⚔:" + card.atk }}</p>
               </div>
               <div v-if="card.def">
-                <p class="text-gray-600">{{ "🛡:" + card.def }}</p>
+                <p>{{ "🛡:" + card.def }}</p>
               </div>
               <div v-if="card.tech">
-                <p class="text-gray-600">{{ "🏹:" + card.tech }}</p>
+                <p>{{ "🏹:" + card.tech }}</p>
               </div>
             </div>
           </button>

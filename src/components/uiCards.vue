@@ -14,7 +14,7 @@ const { field } = toRefs(player.value);
     <ul class="text-xs flex justify-start">
       <div v-for="(card) in field" :key="card.id">
         <div class="card">
-          <img :src=card1 class="cardImg w-30 h-30" />
+          <img :src=card1 class="w-30 h-30" />
           <div class="cardText w-30 h-30 p-4 flex flex-col justify-center items-center">
             <h5 class="text-bold">name:{{ card.name }}</h5>
             <p class="text-gray-600">ID:{{ card.id }}</p>

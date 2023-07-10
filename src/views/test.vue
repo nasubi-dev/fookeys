@@ -2,11 +2,18 @@
 import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import bianca from "@/assets/img/companys/bianca.png";
+import bulbull from "@/assets/img/companys/bulbull.png";
+import galdaybee from "@/assets/img/companys/galdaybee.png";
+import hanamie from "@/assets/img/companys/hanamie.png";
+import norma from "@/assets/img/companys/norma.png";
+import rapidpot from "@/assets/img/companys/rapidpot.png";
+import unlimit from "@/assets/img/companys/unlimit.png";
+
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
-const { name } = toRefs(player.value);
+const { name, hand } = toRefs(player.value);
 
-const img = ref("norma")
 
 </script>
 
@@ -17,9 +24,8 @@ const img = ref("norma")
       <p class="text-sm font-medium text-gray-900 truncate">id:{{ id }}</p>
       <p class="text-sm font-medium text-gray-900 truncate">name:{{ name }}</p>
     </div>
-    <div>
-      <span>Assets</span>
-      <img src="@/assets/img/card1.png" alt="card1" />
+    <div v-for="card in hand" :key="card.id" class="max-w-3xl">
+      <p>{{ card.id }}</p>
     </div>
   </div>
 </template>

@@ -23,16 +23,21 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.card {
+.overCard {
   position: relative;
-  max-width: 50%;
-  max-height: 50%;
+  width: -30px;
+  height: -30px;
 }
-.cardText {
+.overText {
   position: absolute;
   top: 50%;
   left: 50%;
+  padding: -4px;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .overlay{
   z-index:1;

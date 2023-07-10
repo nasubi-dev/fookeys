@@ -10,6 +10,7 @@ import Mission from "@/components/uiMission.vue";
 import Turn from "@/components/uiTurn.vue";
 import Cards from "@/components/uiCards.vue";
 import Shop from "@/components/shop.vue";
+import Test from "@/views/test.vue";
 
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
@@ -93,6 +94,7 @@ const turnEnd = async () => {
       <div v-else>
         <p>後攻</p>
       </div>
+      <!-- <Test/> -->
     </div>
   </div>
 </template>
