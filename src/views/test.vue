@@ -2,13 +2,6 @@
 import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import bianca from "@/assets/img/companys/bianca.png";
-import bulbull from "@/assets/img/companys/bulbull.png";
-import galdaybee from "@/assets/img/companys/galdaybee.png";
-import hanamie from "@/assets/img/companys/hanamie.png";
-import norma from "@/assets/img/companys/norma.png";
-import rapidpot from "@/assets/img/companys/rapidpot.png";
-import unlimit from "@/assets/img/companys/unlimit.png";
 
 //storeの参照
 const { id, player } = storeToRefs(playerStore);

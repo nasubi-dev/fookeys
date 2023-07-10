@@ -3,14 +3,6 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import bianca from "@/assets/img/companys/bianca.png";
-import bulbull from "@/assets/img/companys/bulbull.png";
-import galdaybee from "@/assets/img/companys/galdaybee.png";
-import hanamie from "@/assets/img/companys/hanamie.png";
-import norma from "@/assets/img/companys/norma.png";
-import rapidpot from "@/assets/img/companys/rapidpot.png";
-import unlimit from "@/assets/img/companys/unlimit.png";
-
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
 const { hand } = toRefs(player.value);
@@ -54,13 +46,7 @@ const popCard = (index: number, id: number) => {
         <div v-if="!card.rotten">
           <button @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id)"
             :class="isHandSelected[index] ? 'transform -translate-y-2' : null" class="overCard">
-            <img v-if="card.company === 'bianca'" :src="bianca" /><!--! ばかみたいな解決法 -->
-            <img v-if="card.company === 'bulbull'" :src="bulbull" />
-            <img v-if="card.company === 'galdaybee'" :src="galdaybee" />
-            <img v-if="card.company === 'hanamie'" :src="hanamie" />
-            <img v-if="card.company === 'norma'" :src="norma" />
-            <img v-if="card.company === 'rapidpot'" :src="rapidpot" />
-            <img v-if="card.company === 'unlimit'" :src="unlimit" />
+            <img :src="`/img/companys/${card.company}.png`" height="100" />
             <div class="overText">
               <h5>{{ card.name }}</h5>
               <p>ID:{{ card.id }}</p>
@@ -80,7 +66,7 @@ const popCard = (index: number, id: number) => {
               </div>
               <div v-if="card.heal">
                 <p>{{ "💖:" + card.heal }}</p>
-                </div>
+              </div>
             </div>
           </button>
         </div>
