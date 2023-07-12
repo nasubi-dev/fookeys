@@ -7,7 +7,15 @@ import { storeToRefs } from "pinia";
 const { id, player } = storeToRefs(playerStore);
 const { name, hand } = toRefs(player.value);
 
-
+//LeftClickとRightClickの判定
+const clickLeft = (e: MouseEvent) => {
+  e.preventDefault();
+  console.log("LeftClick");
+};
+const clickRight = (e: MouseEvent) => {
+  e.preventDefault();
+  console.log("RightClick");
+};
 
 </script>
 
@@ -19,6 +27,6 @@ const { name, hand } = toRefs(player.value);
       <p class="text-sm font-medium text-gray-900 truncate">name:{{ name }}</p>
     </div>
 
-    <button @click.left.prevent="console.log('left')" @click.right.prevent="console.log('right')">Click Me!!!</button>
+    <button @click.left.prevent="clickLeft" @click.right.prevent="clickRight">Click Me!!!</button>
   </div>
 </template>
