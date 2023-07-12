@@ -7,16 +7,16 @@ import { storeToRefs } from "pinia";
 const { id, player } = storeToRefs(playerStore);
 const { name, hand } = toRefs(player.value);
 
-const msg=ref("Hello World");
+const msg = ref("Hello World");
 //LeftClickとRightClickの判定
 const clickLeft = (e: MouseEvent) => {
   e.preventDefault();
-  msg.value="LeftClick";
+  msg.value = "LeftClick";
   console.log("LeftClick");
 };
 const clickRight = (e: MouseEvent) => {
   e.preventDefault();
-  msg.value="RightClick";
+  msg.value = "RightClick";
   console.log("RightClick");
 };
 

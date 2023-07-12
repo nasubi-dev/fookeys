@@ -25,11 +25,10 @@ document.addEventListener('touchstart', touchHandler, {
   passive: false
 });
 
-//RightClickMenu禁止
-addEventListener('contextmenu', e => {
-  e.preventDefault();
-});
-
+//テキスト選択禁止
+document.onselectstart = function() {
+  return false;
+}
 </script>
 
 <template>
