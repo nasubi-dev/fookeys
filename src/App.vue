@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { deletePlayer } from "@/server/usePlayerID";
-import {  tryOnBeforeUnmount } from "@vueuse/core";
+import { tryOnBeforeUnmount } from "@vueuse/core";
 
 
 onMounted(async () => {
@@ -25,14 +25,15 @@ document.addEventListener('touchstart', touchHandler, {
   passive: false
 });
 
-//ドラッグ禁止
-document.onselectstart = function() {
-  return false;
-}
+//RightClickMenu禁止
+addEventListener('contextmenu', e => {
+  e.preventDefault();
+});
+
 </script>
 
 <template>
-  <div class="bg-gray-600 h-screen">
+  <div id="noContextMenu" class="bg-gray-600 h-screen">
     <RouterView />
   </div>
 </template>
