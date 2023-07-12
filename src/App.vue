@@ -14,10 +14,20 @@ tryOnBeforeUnmount(async () => {
   await deletePlayer();
   console.log("アンマウントされました");
 });
+
+//ピンチアウト禁止
+const touchHandler = (event: any) => {
+  if (event.touches.length > 1) {
+    event.preventDefault();
+  }
+};
+document.addEventListener('touchstart', touchHandler, {
+  passive: false
+});
 </script>
 
 <template>
-  <div class="bg-gray-600 h-screen">
+  <div class="bg-gray-600 h-screen" style="user-select: none;">
     <RouterView />
   </div>
 </template>
