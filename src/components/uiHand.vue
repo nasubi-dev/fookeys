@@ -3,15 +3,12 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { OnLongPress } from '@vueuse/components'
-import { vOnClickOutside } from '@vueuse/components'
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
 const { hand } = toRefs(player.value);
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
-const longPressed = ref([false, false, false, false, false, false, false, false, false])
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
 watch(cardLock, (newVal) => {
   if (newVal) {
@@ -26,14 +23,6 @@ watch(cardLock, (newVal) => {
     console.log(i, "deleteHand: ", "hand: ", hand.value.map((card) => card.name));
   }
 })
-//長押しでカードの詳細を表示する
-const onLongPressCallback = (index: number) => {
-  longPressed.value[index] = true
-  console.log("longPressedComponent: ", longPressed.value[index]);
-}
-const resetComponent = (index: number) => {
-  longPressed.value[index] = false
-}
 //HandからFieldへ
 const pushCard = (index: number) => {
   if (cardLock.value) return;
@@ -55,13 +44,7 @@ const popCard = (index: number, id: number) => {
     <ul class="text-xs flex justify-start">
       <div v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
-          {{ "longPressed: " + longPressed[index] }}
-          <!-- <div v-if="longPressed[index]" v-on-click-outside="longPressed[index] = false">
-            Hello World
-          </div> -->
-          <vOnClickOutside v-if="false" />
-          <OnLongPress @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
-            @trigger="onLongPressCallback(index)"
+          <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
             :class="handSelected[index] ? 'transform -translate-y-2' : null" class="overCard">
             <img :src="`/img/companys/${card.company}.png`" height="100" />
             <div class="overText">
@@ -85,8 +68,7 @@ const popCard = (index: number, id: number) => {
                 <p>{{ "💖:" + card.heal }}</p>
               </div>
             </div>
-          </OnLongPress>
-          <button @click="resetComponent(index)">reset</button>
+          </button>
         </div>
         <div v-else>
           <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"

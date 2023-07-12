@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, onUnmounted } from "vue";
+import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { deletePlayer } from "@/server/usePlayerID";
-import { tryOnMounted, tryOnUnmounted, tryOnBeforeUnmount } from "@vueuse/core";
+import {  tryOnBeforeUnmount } from "@vueuse/core";
 
 
 onMounted(async () => {
