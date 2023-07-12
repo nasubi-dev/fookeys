@@ -24,10 +24,15 @@ const touchHandler = (event: any) => {
 document.addEventListener('touchstart', touchHandler, {
   passive: false
 });
+
+//ドラッグ禁止
+document.onselectstart = function() {
+  return false;
+}
 </script>
 
 <template>
-  <div class="bg-gray-600 h-screen" style="user-select: none;">
+  <div class="bg-gray-600 h-screen">
     <RouterView />
   </div>
 </template>
