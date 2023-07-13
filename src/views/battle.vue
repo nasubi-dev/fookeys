@@ -5,7 +5,7 @@ import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { startShop, watchTurnEnd } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
-import Hand from "@/components/uiHand.vue";
+import Hand from "@/components/hand.vue";
 import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
 import Test from "@/views/test.vue";

@@ -3,6 +3,7 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import HandCard from "@/components/handCard.vue";
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
@@ -46,28 +47,7 @@ const popCard = (index: number, id: number) => {
         <div v-if="!card.rotten">
           <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
             :class="handSelected[index] ? 'transform -translate-y-2' : null" class="overCard">
-            <img :src="`/img/companys/${card.company}.png`" height="100" />
-            <div class="overText">
-              <h5>{{ card.name }}</h5>
-              <p>ID:{{ card.id }}</p>
-              <p>📊🚬:{{ card.company }}</p>
-              <p>{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
-              <div v-if="card.priority">
-                <p>{{ "🦶: " + card.priority }}</p>
-              </div>
-              <div v-if="card.atk">
-                <p>{{ "⚔:" + card.atk }}</p>
-              </div>
-              <div v-if="card.def">
-                <p>{{ "🛡:" + card.def }}</p>
-              </div>
-              <div v-if="card.tech">
-                <p>{{ "🏹:" + card.tech }}</p>
-              </div>
-              <div v-if="card.heal">
-                <p>{{ "💖:" + card.heal }}</p>
-              </div>
-            </div>
+            <HandCard :card="card" />
           </button>
         </div>
         <div v-else>

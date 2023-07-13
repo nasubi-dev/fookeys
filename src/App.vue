@@ -9,7 +9,7 @@ onMounted(async () => {
   console.log("マウントされました");
 });
 
-//アプリが閉じられたらユーザーIDを削除する
+//アプリが閉じられたらユーザーIDを削除する//!反応しない
 tryOnBeforeUnmount(async () => {
   await deletePlayer();
   console.log("アンマウントされました");
@@ -24,7 +24,6 @@ const touchHandler = (event: any) => {
 document.addEventListener('touchstart', touchHandler, {
   passive: false
 });
-
 //テキスト選択禁止
 document.onselectstart = function() {
   return false;
