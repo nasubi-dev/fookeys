@@ -31,7 +31,8 @@ onClickOutside(el, () => {
       <p>{{ "description: " + card.description }}</p>
     </div>
     <div ref="htmlRefHook">
-      <img :src="`/img/companys/${card.company}.png`" height="100" />
+      <img :src="`/img/companys/${card.company}.png`" height="100" onselectstart="return false;"
+        onmousedown="return false;" />
       <div class="overText">
         <h5>{{ card.name }}</h5>
         <p>ID:{{ card.id }}</p>
