@@ -7,8 +7,6 @@ import { startShop, watchTurnEnd } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
 import Hand from "@/components/uiHand.vue";
 import Mission from "@/components/uiMission.vue";
-import Turn from "@/components/uiTurn.vue";
-import Cards from "@/components/uiCards.vue";
 import Shop from "@/components/shop.vue";
 import Test from "@/views/test.vue";
 
@@ -56,9 +54,7 @@ const turnEnd = async () => {
     <div class="flex flex-col items-center justify-center h-screen">
       <h1>Battle</h1>
       {{ "Player: " + sign }}
-      <div>
-        <!-- <Turn /> -->
-      </div>
+      {{ "Phase: " + phase }}
       <div class="max-w-7xl mx-auto">
         <div>
           <h1>Mission</h1>
@@ -67,10 +63,6 @@ const turnEnd = async () => {
         <div>
           <h1>Status</h1>
           <Status />
-        </div>
-        <div>
-          <h1>Field</h1>
-          <!-- <Cards /> -->
         </div>
         <div v-if="phase === 'shop' && turn !== 1" class="overlay">
           <h1>shop</h1>

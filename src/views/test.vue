@@ -2,24 +2,22 @@
 import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { onClickOutside } from '@vueuse/core'
 
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
 const { name, hand } = toRefs(player.value);
 
-const msg = ref("Hello World");
-//LeftClickとRightClickの判定
-const clickLeft = (e: MouseEvent) => {
-  e.preventDefault();
-  msg.value = "LeftClick";
-  console.log("LeftClick");
-};
-const clickRight = (e: MouseEvent) => {
-  e.preventDefault();
-  msg.value = "RightClick";
-  console.log("RightClick");
-};
+const el = ref()
 
+const msg = ref("Hello World");
+const dropDown = ref(false);
+
+const close = () => {
+  dropDown.value = false
+}
+
+onClickOutside(el, close)
 </script>
 
 <template>
@@ -30,6 +28,9 @@ const clickRight = (e: MouseEvent) => {
       <p class="text-sm font-medium text-gray-900 truncate">name:{{ name }}</p>
     </div>
     {{ msg }}
-    <button @click.left.prevent="clickLeft" @click.right.prevent="clickRight">Click Me!!!</button>
+    <div ref="el" v-if="dropDown">
+      <p>dropDown</p>
+    </div>
+    <button @click.left.prevent="dropDown = true">Click Me!!!</button>
   </div>
 </template>
