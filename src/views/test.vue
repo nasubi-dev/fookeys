@@ -21,11 +21,6 @@ const clickRight = () => {
   console.log("RightClick");
 };
 
-document.addEventListener('long-press', function (e) {
-  console.log(e.target);
-  clickRight();
-});
-
 </script>
 
 <template>
@@ -36,6 +31,6 @@ document.addEventListener('long-press', function (e) {
       <p class="text-sm font-medium text-gray-900 truncate">name:{{ name }}</p>
     </div>
     {{ msg }}
-    <button data-long-press-event-delay="500">Click Me!!!</button>
+    <button>Click Me!!!</button>
   </div>
 </template>

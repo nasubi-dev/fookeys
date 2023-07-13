@@ -4,7 +4,6 @@ import { RouterView } from "vue-router";
 import { deletePlayer } from "@/server/usePlayerID";
 import { tryOnBeforeUnmount } from "@vueuse/core";
 
-
 onMounted(async () => {
   console.log("マウントされました");
 });
@@ -32,7 +31,7 @@ document.onselectstart = function() {
 </script>
 
 <template>
-  <div class="bg-gray-600 h-screen" style="user-select: none;">
+  <div class="bg-gray-600 h-screen" style="user-select: none;-webkit-touch-callout: none;">
     <RouterView />
   </div>
 </template>
