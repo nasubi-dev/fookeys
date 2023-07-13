@@ -3,21 +3,30 @@ import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { onClickOutside } from '@vueuse/core'
+import { onLongPress } from '@vueuse/core'
 
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
 const { name, hand } = toRefs(player.value);
 
-const el = ref()
-
 const msg = ref("Hello World");
+const el = ref()
 const dropDown = ref(false);
 
-const close = () => {
-  dropDown.value = false
+const htmlRefHook = ref<HTMLElement | null>(null)
+const onLongPressCallbackHook = (e: PointerEvent) => {
+  dropDown.value = true
 }
+onLongPress(
+  htmlRefHook,
+  onLongPressCallbackHook,
+  { modifiers: { prevent: true } }
+)
 
-onClickOutside(el, close)
+onClickOutside(el, () => {
+  dropDown.value = false
+})
+
 </script>
 
 <template>
@@ -32,5 +41,8 @@ onClickOutside(el, close)
       <p>dropDown</p>
     </div>
     <button @click.left.prevent="dropDown = true">Click Me!!!</button>
+    <button ref="htmlRefHook" class="ml-2 button small">
+      Press long
+    </button>
   </div>
 </template>
