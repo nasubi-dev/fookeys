@@ -2162,6 +2162,11 @@ lodash@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
+long-press-event@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/long-press-event/-/long-press-event-2.4.6.tgz#bbd81cf931aa62928f43c00ce1b4b396bbd5219f"
+  integrity sha512-59zL3M+uD7Q2DTuxJ2UkbVV3+0D9PrcI7zgem1AXRinH6g8mb7iN9vOKCqiVriW15S4L9OmKOr/d8q9qAaeCGQ==
+
 long@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"

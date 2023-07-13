@@ -32,7 +32,7 @@ document.onselectstart = function() {
 </script>
 
 <template>
-  <div id="noContextMenu" class="bg-gray-600 h-screen" style="user-select: none;">
+  <div class="bg-gray-600 h-screen" style="user-select: none;">
     <RouterView />
   </div>
 </template>

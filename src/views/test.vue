@@ -1,24 +1,30 @@
 <script setup lang="ts">
-import { ref, toRefs } from "vue";
+import { ref, toRefs, watch } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { onLongPress } from '@vueuse/core'
+import { e } from "@/log";
 
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
 const { name, hand } = toRefs(player.value);
 
+
 const msg = ref("Hello World");
 //LeftClickとRightClickの判定
-const clickLeft = (e: MouseEvent) => {
-  e.preventDefault();
+const clickLeft = () => {
   msg.value = "LeftClick";
   console.log("LeftClick");
 };
-const clickRight = (e: MouseEvent) => {
-  e.preventDefault();
+const clickRight = () => {
   msg.value = "RightClick";
   console.log("RightClick");
 };
+
+document.addEventListener('long-press', function (e) {
+  console.log(e.target);
+  clickRight();
+});
 
 </script>
 
@@ -30,6 +36,6 @@ const clickRight = (e: MouseEvent) => {
       <p class="text-sm font-medium text-gray-900 truncate">name:{{ name }}</p>
     </div>
     {{ msg }}
-    <button @click.left.prevent="clickLeft" @click.right.prevent="clickRight">Click Me!!!</button>
+    <button data-long-press-event-delay="500">Click Me!!!</button>
   </div>
 </template>
