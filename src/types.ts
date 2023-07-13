@@ -25,12 +25,13 @@ type Character = {
   passive?: () => void;
 };
 
+type Timing = "before" | "after";
 type Gift = {
   id: number;
   name: string;
   description: string;
   requireContribution: number;
-  skill: (id: string) => void;
+  skill: (timing:Timing,id: string) => void;
 };
 
 type Mission = {

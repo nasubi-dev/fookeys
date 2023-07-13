@@ -1,5 +1,7 @@
+import { ref, toRefs } from "vue";
 import { e, s, i } from "@/log";
 import type { Gift } from "@/types";
+import { changeAllHand, changeHandValue, changeStatusValue, setHand } from "@/server/useShopUtils";
 
 const allGifts: Gift[] = [
   {
@@ -7,8 +9,9 @@ const allGifts: Gift[] = [
     name: "マジック",
     description: "手札を全て入れ替える",
     requireContribution: 15,
-    skill: (id: string) => {
-      console.log(i, id + "の使用したギフト1");
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      changeAllHand();
     },
   },
   {
@@ -16,14 +19,20 @@ const allGifts: Gift[] = [
     name: "つまみ食い",
     description: "手札のカードの満腹度を🍖-10する",
     requireContribution: 20,
-    skill: () => console.log(i, "ギフト2"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      changeHandValue("hungry", -10);
+    },
   },
   {
     id: 2,
     name: "塩漬け",
-    description: "手札のカードの満腹度を🍖-10する",
+    description: "手札の消費期限を🦠+2する",
     requireContribution: 25,
-    skill: () => console.log(i, "ギフト3"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      changeHandValue("waste", 2);
+    },
   },
   {
     id: 3,
@@ -37,7 +46,10 @@ const allGifts: Gift[] = [
     name: "お昼寝",
     description: "HPを❤️+200する",
     requireContribution: 35,
-    skill: () => console.log(i, "ギフト5"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      changeStatusValue("hp", 200);
+    },
   },
   {
     id: 5,
@@ -51,12 +63,15 @@ const allGifts: Gift[] = [
     name: "お散歩",
     description: "自身の満腹度を🍖-100する",
     requireContribution: 45,
-    skill: () => console.log(i, "ギフト7"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      changeStatusValue("hungry", -100);
+    },
   },
   {
     id: 7,
     name: "サプリメント",
-    description: "このラウンド中相手から受けるダメージを無効化する",
+    description: "このラウンド中与えるマッスルダメージを2倍にする。",
     requireContribution: 50,
     skill: () => console.log(i, "ギフト8"),
   },
@@ -72,7 +87,10 @@ const allGifts: Gift[] = [
     name: "福袋",
     description: "カードを6枚ドローする",
     requireContribution: 60,
-    skill: () => console.log(i, "ギフト10"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      setHand();
+    },
   },
   {
     id: 10,
