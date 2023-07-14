@@ -15,7 +15,7 @@ const usePlayerStore = defineStore("playerData", () => {
     donate: false,
     match: "nothing",
     character: 0,
-    gifts: [0, 3, 9],
+    gifts: [5, 3, 9],
     isSelectedGift: undefined,
     hand: [],
     field: [],
@@ -102,6 +102,22 @@ const usePlayerStore = defineStore("playerData", () => {
       hand.map((card) => card.name)
     );
   };
+  //腐っている全てのカードを削除する
+  const deleteAllWaste0 = (): void => {
+    const { hand } = player.value;
+    //forEachの中でspliceを使うとindexがずれるので、whileを使う
+    let i = 0;
+    while (i < hand.length) {
+      if (hand[i].waste === 0) hand.splice(i, 1);
+      else i++;
+    }
+    console.log(
+      i,
+      "deleteAllWaste0: ",
+      "hand: ",
+      hand.map((card) => card.name)
+    );
+  };
   //PhaseをShopからBattleに変更する
   const shiftBattle = (): void => {
     phase.value = "battle";
@@ -119,6 +135,7 @@ const usePlayerStore = defineStore("playerData", () => {
     popHand,
     deleteField,
     reduceWaste,
+    deleteAllWaste0,
     shiftBattle,
   };
 });

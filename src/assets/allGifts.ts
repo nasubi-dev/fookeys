@@ -1,6 +1,6 @@
 import { e, s, i } from "@/log";
 import type { Gift } from "@/types";
-import { changeAllHand, changeHandValue, changeStatusValue, setHand } from "@/server/useShopUtils";
+import { changeAllHand, changeHandValue, changeStatusValue, setHand, deleteAllWaste0 } from "@/server/useShopUtils";
 
 const allGifts: Gift[] = [
   {
@@ -9,6 +9,7 @@ const allGifts: Gift[] = [
     description: "手札を全て入れ替える",
     requireContribution: 15,
     skill: (timing: string) => {
+      //?この行でログコンポーネントを呼び出す
       if (timing !== "before") return;
       changeAllHand();
     },
@@ -58,7 +59,10 @@ const allGifts: Gift[] = [
     name: "リサイクル",
     description: "腐ったカードを手札から全部消す",
     requireContribution: 40,
-    skill: () => console.log(i, "ギフト6"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      deleteAllWaste0();
+    },
   },
   {
     id: 6,

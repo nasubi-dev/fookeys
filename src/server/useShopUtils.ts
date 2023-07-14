@@ -5,11 +5,9 @@ import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import { battle } from "./useBattle";
 import type { Card, GameData, PlayerData } from "@/types";
 import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
-import allGifts from "@/assets/allGifts";
 import allCards from "@/assets/allCards";
 
 //Collectionの参照
@@ -102,7 +100,7 @@ export async function setMissions(): Promise<void> {
   }
 }
 //Handの値を変更する
-export async function changeHandValue(key: "hungry" | "waste", value: number): Promise<void> {
+export function changeHandValue(key: "hungry" | "waste", value: number): void {
   console.log(i, "changeHandValueを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
@@ -119,8 +117,18 @@ export async function changeHandValue(key: "hungry" | "waste", value: number): P
     hand.value.map((card) => card[key])
   );
 }
+//Handの腐ったカードを削除する
+export function deleteAllWaste0(): void {
+  console.log(i, "reduceWaste0を実行しました");
+  const { deleteAllWaste0 } = playerStore;
+  const { id, player } = storeToRefs(playerStore);
+  const { hand } = toRefs(player.value);
+
+  deleteAllWaste0();
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
+}
 //Statusの値を変更する
-export async function changeStatusValue(key: "contribution" | "hp" | "hungry", value: number): Promise<void> {
+export function changeStatusValue(key: "contribution" | "hp" | "hungry", value: number): void {
   console.log(i, "changeStatusValueを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { status, character } = toRefs(player.value);
