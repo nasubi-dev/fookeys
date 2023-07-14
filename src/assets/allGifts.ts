@@ -1,4 +1,3 @@
-import { ref, toRefs } from "vue";
 import { e, s, i } from "@/log";
 import type { Gift } from "@/types";
 import { changeAllHand, changeHandValue, changeStatusValue, setHand } from "@/server/useShopUtils";
@@ -37,9 +36,12 @@ const allGifts: Gift[] = [
   {
     id: 3,
     name: "食事制限",
-    description: "30	このラウンド中相手は3枚までしかカードを使用できない",
+    description: "このラウンド中相手は3枚までしかカードを使用できない",
     requireContribution: 30,
-    skill: () => console.log(i, "ギフト4"),
+    skill: (timing: string) => {
+      if (timing !== "before") return;
+      console.log(i, "食事制限を実行しました");
+    },
   },
   {
     id: 4,

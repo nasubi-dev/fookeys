@@ -3,11 +3,12 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { getEnemyGift } from "@/server/useShop";
 import HandCard from "@/components/handCard.vue";
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
-const { hand } = toRefs(player.value);
+const { hand, field } = toRefs(player.value);
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
@@ -25,8 +26,14 @@ watch(cardLock, (newVal) => {
   }
 })
 //HandからFieldへ
-const pushCard = (index: number) => {
+const pushCard = async (index: number) => {
   if (cardLock.value) return;
+  const enemyGift = await getEnemyGift();
+  console.log(i, "isSelectedGift: ", enemyGift, "fieldLength: ", field.value.length);
+  if (enemyGift === 3 && field.value.length >= 3) {
+    console.log(i, "field is full");
+    return;
+  }
   if (handSelected.value[index]) throw new Error("failed to pushCard");
   handSelected.value[index] = !handSelected.value[index]
   pushHand(index)

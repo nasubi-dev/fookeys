@@ -30,7 +30,7 @@ export async function setHand(): Promise<void> {
 
   for (let i = 0; i < 6; i++) {
     hand.value.push(drawCard());
-    if(hand.value.length > 9) hand.value.shift();
+    if (hand.value.length > 9) hand.value.shift();
     hand.value.sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
@@ -126,7 +126,7 @@ export async function changeStatusValue(key: "contribution" | "hp" | "hungry", v
   const { status, character } = toRefs(player.value);
 
   status.value[key] += value;
-  const maxHp = 600 + allCharacters[character.value].maxHp;
+  const maxHp = 600 + (allCharacters[character.value].maxHp ?? 0);
   if (key === "hp" && status.value.hp > maxHp) status.value.hp = maxHp;
   if (key === "hungry" && status.value.hungry < 0) status.value.hungry = 0;
   updateDoc(doc(playersRef, id.value), { status: status.value });

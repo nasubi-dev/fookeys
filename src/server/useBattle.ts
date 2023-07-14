@@ -232,7 +232,7 @@ export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { reduceWaste, deleteField } = playerStore;
   const { id, player, cardLock, sign } = storeToRefs(playerStore);
-  const { check, idGame } = toRefs(player.value);
+  const { check, idGame,isSelectedGift } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -255,6 +255,8 @@ export async function postBattle(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { check: check.value });
   //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
+  //isSelectedGiftの値をundefinedにする
+  isSelectedGift.value = undefined;
   //firstAtkPlayerの値をundefinedにする
   firstAtkPlayer.value = undefined;
 
