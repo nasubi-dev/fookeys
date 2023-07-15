@@ -17,7 +17,7 @@ const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 //cardをランダムに1枚引く
 export function drawCard(): Card {
   // console.log(i, "drawCardを実行しました");
-  const selectCard = allCards[Math.floor(Math.random() * allCards.length)];
+  const selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
   return selectCard;
 }
 //cardをHandに6枚セットする

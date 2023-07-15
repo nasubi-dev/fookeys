@@ -17,13 +17,13 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //相手のisSelectedGiftを取得する
-export async function getEnemyGift(): Promise<number|undefined> {
+export async function getEnemyGift(): Promise<number | undefined> {
   console.log(i, "getEnemyGiftを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
 
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift;
-  return enemyGift ;
+  return enemyGift;
 }
 
 //shopフェーズの開始
@@ -42,7 +42,7 @@ export async function startShop(): Promise<void> {
 export async function endShop(): Promise<void> {
   console.log(i, "useGiftsを実行しました");
   const { id, player, phase } = storeToRefs(playerStore);
-  const { isSelectedGift, idEnemy,status } = toRefs(player.value);
+  const { isSelectedGift, idEnemy, status } = toRefs(player.value);
 
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
