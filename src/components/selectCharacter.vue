@@ -22,7 +22,9 @@ function selectCharacter(card: Character) {
                 <div class="px-4 py-2">
                     <h2 class="text-lg font-medium text-gray-800">{{ card.name }}</h2>
                     <p class="text-sm text-gray-500">{{ card.company }}</p>
-                    <p class="text-sm text-gray-500">{{ card.description }}</p>
+                    <p class="text-sm text-gray-500">{{ card.description1 }}</p>
+                    <p class="text-sm text-gray-500">{{ card.description2 }}</p>
+                    <p class="text-sm text-gray-500">{{ card.description3 }}</p>
                 </div>
             </button>
         </div>

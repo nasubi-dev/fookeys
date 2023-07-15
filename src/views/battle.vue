@@ -24,6 +24,9 @@ const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   status.value.contribution += allCharacters[character.value].initialContribution ?? 0;
+  if (allCharacters[character.value].maxHp !== undefined) {
+    status.value.hp += allCharacters[character.value].maxHp ?? 600;
+  }
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);

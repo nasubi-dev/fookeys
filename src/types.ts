@@ -17,7 +17,9 @@ type Card = {
 type Character = {
   id: number;
   name: string;
-  description: string;
+  description1?: string;
+  description2?: string;
+  description3?: string;
   company: string;
   maxHungry?: number;
   maxHp?: number;
