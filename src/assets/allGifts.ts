@@ -8,7 +8,7 @@ const allGifts: Gift[] = [
     name: "マジック",
     description: "手札を全て入れ替える",
     requireContribution: 15,
-    skill: (timing: string) => {
+    skill: (timing) => {
       //?この行でログコンポーネントを呼び出す
       if (timing !== "before") return;
       changeAllHand();
@@ -19,7 +19,7 @@ const allGifts: Gift[] = [
     name: "つまみ食い",
     description: "手札のカードの満腹度を🍖-10する",
     requireContribution: 20,
-    skill: (timing: string) => {
+    skill: (timing) => {
       if (timing !== "before") return;
       changeHandValue("hungry", -10);
     },
@@ -29,7 +29,7 @@ const allGifts: Gift[] = [
     name: "塩漬け",
     description: "手札の消費期限を🦠+2する",
     requireContribution: 25,
-    skill: (timing: string) => {
+    skill: (timing) => {
       if (timing !== "before") return;
       changeHandValue("waste", 2);
     },
@@ -39,7 +39,7 @@ const allGifts: Gift[] = [
     name: "食事制限",
     description: "このラウンド中相手は3枚までしかカードを使用できない",
     requireContribution: 30,
-    skill: (timing: string) => {
+    skill: (timing) => {
       if (timing !== "before") return;
       console.log(i, "食事制限を実行しました");
     },
@@ -49,7 +49,7 @@ const allGifts: Gift[] = [
     name: "お昼寝",
     description: "HPを❤️+200する",
     requireContribution: 35,
-    skill: (timing: string) => {
+    skill: (timing) => {
       if (timing !== "before") return;
       changeStatusValue("hp", 200);
     },
@@ -59,7 +59,7 @@ const allGifts: Gift[] = [
     name: "リサイクル",
     description: "腐ったカードを手札から全部消す",
     requireContribution: 40,
-    skill: (timing: string) => {
+    skill: (timing) => {
       if (timing !== "before") return;
       deleteAllWaste0();
     },
@@ -69,7 +69,7 @@ const allGifts: Gift[] = [
     name: "お散歩",
     description: "自身の満腹度を🍖-100する",
     requireContribution: 45,
-    skill: (timing: string) => {
+    skill: (timing) => {
       if (timing !== "before") return;
       changeStatusValue("hungry", -100);
     },
