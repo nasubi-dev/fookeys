@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, toRefs } from "vue";
+import { onMounted, toRefs, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -10,15 +10,22 @@ import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
 import Test from "@/views/test.vue";
 
+import { usePush } from 'notivue'
+const push = usePush()
+
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
 
-const { id, player, cardLock, phase, offer, sign } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign,log } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
 const { game } = storeToRefs(gameStore);
 const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
+
+watch(log, (newVal) => {
+  if (newVal) push.info(newVal)
+})
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {

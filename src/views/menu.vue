@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { ref, toRefs } from "vue";
+import { ref, toRefs, watch } from "vue";
 import { e, s, i } from "@/log";
-import { startMatchmaking } from "@/server/useMatchMaking";
 import { storeToRefs } from "pinia";
 import { playerStore } from "@/main";
+import { startMatchmaking } from "@/server/useMatchMaking";
 import SelectCharacter from "@/components/selectCharacter.vue";
 import SelectGifts from "@/components/selectGifts.vue";
 import nasubi from "@/assets/img/nasubi.png";
 import allCharacters from "@/assets/allCharacters";
 import allGifts from "@/assets/allGifts";
 
-const { player } = storeToRefs(playerStore);
+import { usePush } from 'notivue'
+const push = usePush()
+
+const { player, log } = storeToRefs(playerStore);
 const { gifts, character } = toRefs(player.value);
 const selectGift = ref(false);
 const selectCharacter = ref(false);
@@ -21,6 +24,9 @@ async function startMatch(): Promise<void> {
   await startMatchmaking();
 }
 
+watch(log, (newVal) => {
+  if (newVal) push.info(newVal)
+})
 </script>
 
 <template>
@@ -42,6 +48,8 @@ async function startMatch(): Promise<void> {
           {{ "gift2: " + allGifts[gifts[1]].name }}
           {{ "gift3: " + allGifts[gifts[2]].name }}
         </div>
+
+        <button @click="push.success('text')">Push</button>
       </div>
 
       <div v-if="selectCharacter">

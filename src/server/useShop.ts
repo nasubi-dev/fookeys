@@ -40,8 +40,8 @@ export async function startShop(): Promise<void> {
 }
 //shopフェーズの終了
 export async function endShop(): Promise<void> {
-  console.log(i, "useGiftsを実行しました");
-  const { id, player, phase } = storeToRefs(playerStore);
+  console.log(i, "endShopを実行しました");
+  const { id, player, phase, log } = storeToRefs(playerStore);
   const { isSelectedGift, idEnemy, status } = toRefs(player.value);
 
   //自分のisSelectedGiftを実行する
@@ -49,16 +49,20 @@ export async function endShop(): Promise<void> {
   console.log(i, "myGift: ", myGift);
   if (myGift !== undefined) {
     console.log(i, "【戦闘前】自分のGiftを実行します");
+    log.value = "【戦闘前】自分のGiftを実行します";
     console.log(i, "myGift: ", allGifts[myGift].name);
     allGifts[myGift].skill("before", id.value);
     status.value.contribution -= allGifts[myGift].requireContribution;
+    log.value = allGifts[myGift].name + "を使用しました";
   }
   //敵のisSelectedGiftを実行する
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift;
   console.log(i, "enemyGift: ", enemyGift);
   if (enemyGift !== undefined) {
     console.log(i, "【戦闘前】相手のGiftを実行します");
+    log.value = "【戦闘前】相手のGiftを実行します";
     console.log(i, "enemyGift: ", allGifts[enemyGift].name);
+    log.value = allGifts[enemyGift].name + "を使用しました";
     //Logだけ
   }
 
@@ -79,12 +83,13 @@ export function resetCheck() {
 //checkの値の監視
 export async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
-  const { id, player } = storeToRefs(playerStore);
+  const { id, player,log } = storeToRefs(playerStore);
   const { check, idEnemy, isSelectedGift } = toRefs(player.value);
 
   //選択したGiftをFirestoreに保存する
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
   console.log(i, "isSelectedGift: " + isSelectedGift.value);
+  log.value = "isSelectedGift: " + isSelectedGift.value;
   //checkの値がtrueになっていたら､shopフェーズを終了する
   check.value = true;
   updateDoc(doc(playersRef, id.value), { check: check.value });

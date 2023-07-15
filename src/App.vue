@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { deletePlayer } from "@/server/usePlayerID";
 import { tryOnBeforeUnmount } from "@vueuse/core";
-
+import { Notivue, Notifications } from 'notivue'
 
 onMounted(async () => {
   console.log("マウントされました");
@@ -25,13 +25,16 @@ document.addEventListener('touchstart', touchHandler, {
   passive: false
 });
 //テキスト選択禁止
-document.onselectstart = function() {
+document.onselectstart = function () {
   return false;
 }
 </script>
 
 <template>
   <div id="noContextMenu" class="bg-gray-600 h-screen" style="user-select: none;">
+    <Notivue v-slot="item">
+      <Notifications :item="item" />
+    </Notivue>
     <RouterView />
   </div>
 </template>
