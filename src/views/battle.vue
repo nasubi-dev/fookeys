@@ -9,13 +9,13 @@ import Hand from "@/components/hand.vue";
 import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
 import Test from "@/views/test.vue";
+import allGifts from "@/assets/allGifts";
+import allCharacters from "@/assets/allCharacters";
+import allMissions from "@/assets/allMissions";
 
 import { usePush } from 'notivue'
 const push = usePush()
 
-import allGifts from "@/assets/allGifts";
-import allCharacters from "@/assets/allCharacters";
-import allMissions from "@/assets/allMissions";
 
 const { id, player, cardLock, phase, offer, sign,log } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
