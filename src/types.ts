@@ -33,7 +33,7 @@ type Gift = {
   name: string;
   description: string;
   requireContribution: number;
-  skill: (timing:Timing,id: string) => void;
+  skill: (timing: Timing, id: string) => number;
 };
 
 type Mission = {
@@ -41,15 +41,16 @@ type Mission = {
   name: string;
   description: string;
   reward: number;
-  rank?: number;
-  // action?: () => void;
+  goalAchievement: number;
+  nowAchievement: number;
+  checker?: (sumFields?: SumCards, field?: Card[]) => void;
 };
 //!使われてるか調べる
 type Phase = "shop" | "battle" | "result" | "none";
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number };
-type SumCards = { waste: number; hungry: number; priority: number; atk: number; def: number; tech: number; heal: number };
+type SumCards = { num: number; waste: number; hungry: number; priority: number; atk: number; def: number; tech: number; heal: number };
 type PlayerData = {
   idEnemy: string;
   idGame: string;
@@ -69,7 +70,7 @@ type PlayerData = {
 type GameData = {
   turn: number;
   players: string[];
-  missions: number[];
+  missionsNum: number[];
   firstAtkPlayer: PlayerSign | undefined;
 };
 

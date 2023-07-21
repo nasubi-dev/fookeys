@@ -23,7 +23,7 @@ export function drawCard(): Card {
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
   console.log(i, "setHandを実行しました");
-  const { id, player, log } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
   for (let i = 0; i < 6; i++) {
@@ -37,12 +37,11 @@ export async function setHand(): Promise<void> {
     "setHand: ",
     hand.value.map((card) => card.name)
   );
-  log.value = "setHand: " + hand.value.map((card) => card.name);
 }
 //Cardを3枚提示する
 export async function setOffer(): Promise<void> {
   console.log(i, "setOfferを実行しました");
-  const { offer, log } = storeToRefs(playerStore);
+  const { offer } = storeToRefs(playerStore);
 
   for (let i = 0; i < 3; i++) {
     offer.value.push(drawCard());
@@ -74,46 +73,49 @@ export async function setMissions(): Promise<void> {
   console.log(i, "setMissionsを実行しました");
   const { player, sign, log } = storeToRefs(playerStore);
   const { idGame } = toRefs(player.value);
-  const { game } = storeToRefs(gameStore);
-  const { missions } = toRefs(game.value);
+  const { game, missions } = storeToRefs(gameStore);
+  const { missionsNum } = toRefs(game.value);
 
   if (!sign.value) {
     for (let i = 0; i < 3; i++) {
-      const selectMissions = allMissions[Math.floor(Math.random() * allMissions.length)];
-      missions.value[i] = selectMissions.id;
+      const selectMission = Math.floor(Math.random() * allMissions.length);
+      missionsNum.value[i] = selectMission;
       //同じmissionがセットされないようにする
       for (let j = 0; j < i; j++) {
-        if (missions.value[i] === missions.value[j]) {
+        if (allMissions[missionsNum.value[i]].id === allMissions[missionsNum.value[j]].id) {
           i--;
           missions.value.pop();
           break;
         }
       }
     }
-    updateDoc(doc(gamesRef, idGame.value), { missions: missions.value });
+    updateDoc(doc(gamesRef, idGame.value), { missionsNum: missionsNum.value });
+    missions.value = missionsNum.value.map((num) => allMissions[num]);
     console.log(i, "missionにミッションを追加しました");
     log.value = "missionにミッションを追加しました";
     console.log(
       i,
       "missions: ",
-      missions.value.map((mission) => allMissions[mission].name)
+      allMissions[missionsNum.value[0]].name,
+      allMissions[missionsNum.value[1]].name,
+      allMissions[missionsNum.value[2]].name
     );
-    log.value = "missions: " + missions.value.map((mission) => allMissions[mission].name);
     updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
   } else {
     console.log(i, "ミッションを監視します");
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
-      const updateMissions = snap.data()?.missions;
+      const updateMissions = snap.data()?.missionsNum;
       if (updateMissions?.length === 3) {
-        missions.value = updateMissions;
+        missionsNum.value = updateMissions;
+        missions.value = missionsNum.value.map((num) => allMissions[num]);
         console.log(i, "missionsにミッションを追加しました");
-        log.value = "missionsにミッションを追加しました";
         console.log(
           i,
           "missions: ",
-          missions.value.map((mission) => allMissions[mission].name)
+          allMissions[missionsNum.value[0]].name,
+          allMissions[missionsNum.value[1]].name,
+          allMissions[missionsNum.value[2]].name
         );
-        log.value = "missions: " + missions.value.map((mission) => allMissions[mission].name);
         //監視を解除する
         unsubscribe();
         console.log(i, "missionsの監視を解除しました");

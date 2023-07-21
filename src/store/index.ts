@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { i } from "@/log";
-import type { Card, GameData, PlayerData, SumCards, Phase, PlayerSign } from "@/types";
+import type { Card, GameData, PlayerData, SumCards, Phase, PlayerSign, Mission } from "@/types";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -25,6 +25,7 @@ const usePlayerStore = defineStore("playerData", () => {
       contribution: 0,
     },
     sumFields: {
+      num: 0,
       waste: 0,
       hungry: 0,
       priority: 0,
@@ -43,6 +44,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const sumCards = computed<SumCards>(() =>
     player.value.field.reduce(
       (sum: SumCards, card: Card) => {
+        sum.num += 1;
         sum.waste += card.waste;
         sum.hungry += card.hungry;
         sum.priority += card.priority ?? 0;
@@ -52,7 +54,7 @@ const usePlayerStore = defineStore("playerData", () => {
         sum.heal += card.heal ?? 0;
         return sum;
       },
-      { waste: 0, hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
+      { num: 0, waste: 0, hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
     )
   );
   //?function/actions
@@ -148,8 +150,9 @@ const useGameStore = defineStore("gameData", () => {
     turn: 1,
     players: [],
     firstAtkPlayer: undefined,
-    missions: [],
+    missionsNum: [],
   });
+  const missions = ref<Mission[]>([]);
   //?Computed/Getter
   ///?function/actions
   //ターン終了時に、turnを1増やす
@@ -158,7 +161,7 @@ const useGameStore = defineStore("gameData", () => {
     console.log(i, "turn: ", game.value.turn);
   };
 
-  return { game, nextTurn };
+  return { game, missions, nextTurn };
 });
 
 export { useGameStore, usePlayerStore };

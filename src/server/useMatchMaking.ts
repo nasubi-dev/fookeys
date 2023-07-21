@@ -18,7 +18,6 @@ async function findWaitingPlayer(): Promise<void> {
   const { idEnemy } = toRefs(player.value);
 
   console.log(i, "Finding players...");
-  log.value = "Finding players...";
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
   // 自分を除外する
@@ -126,7 +125,6 @@ async function startMatchmaking(): Promise<void> {
     ]);
     //画面遷移
     console.log(i, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
-    log.value = "マッチ成功!相手ID:" + idEnemy.value + "ゲームID:" + idGame.value;
     router.push({ name: "battle", params: { idGame: idGame.value } });
     console.log(s, "rooting complete");
     log.value = "rooting complete";

@@ -17,11 +17,11 @@ import { usePush } from 'notivue'
 const push = usePush()
 
 
-const { id, player, cardLock, phase, offer, sign,log } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign, log } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
-const { game } = storeToRefs(gameStore);
-const { players, missions, turn, firstAtkPlayer } = toRefs(game.value);
+const { game, missions } = storeToRefs(gameStore);
+const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
 watch(log, (newVal) => {
   if (newVal) push.info(newVal)
@@ -42,7 +42,7 @@ onMounted(async () => {
     console.log(i, "gift: ", allGifts[gifts.value[0]]?.name, allGifts[gifts.value[1]]?.name, allGifts[gifts.value[2]]?.name);
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));
-    console.log(i, "mission: ", allMissions[missions.value[0]]?.name, allMissions[missions.value[1]]?.name, allMissions[missions.value[2]]?.name);
+    console.log(i, "mission: ", missions.value[0]?.name, missions.value[1]?.name, missions.value[2]?.name);
     console.log(i, "turn: ", turn.value);
   });
 });
@@ -69,6 +69,7 @@ const turnEnd = async () => {
         <div>
           <h1>Mission</h1>
           <Mission />
+          <button @click="missions[0].nowAchievement += 10">check</button>
         </div>
         <div>
           <h1>Status</h1>
@@ -90,7 +91,10 @@ const turnEnd = async () => {
           <Hand />
         </div>
       </div>
-      <div v-if="firstAtkPlayer === sign">
+      <div v-if="firstAtkPlayer === undefined">
+        <p>準備中</p>
+      </div>
+      <div v-else-if="firstAtkPlayer === sign">
         <p>先攻</p>
       </div>
       <div v-else>

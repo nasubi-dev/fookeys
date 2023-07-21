@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
 import { gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import allMissions from "@/assets/allMissions";
 
-const { game } = storeToRefs(gameStore);
-const { missions } = toRefs(game.value);
+const { missions } = storeToRefs(gameStore);
 
 </script>
 
 <template>
   <div>
     <ul class="text-xs">
-      <div v-for="mission in missions" :key="mission">
+      <div v-for="mission in missions" :key="mission.id">
         <li>
-          mission:{{ mission }}
-          <span class="text-sm font-medium text-gray-900 truncate mx-2">id:{{ allMissions[mission]?.id }}</span>
-          <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ allMissions[mission]?.name }}</span>
-          <span class="text-sm font-medium text-gray-900 truncate mx-2">reward:{{ allMissions[mission]?.reward }}</span>
-          <span class="text-sm font-medium text-gray-900 truncate mx-2">description:{{ allMissions[mission]?.description }}</span>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">id:{{ mission.id }}</span>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ mission.name }}</span>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">reward:{{ mission.reward }}</span>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">description:{{ mission.description }}</span>
+          <span class="text-sm font-medium text-gray-900 truncate mx-2">achievement:{{
+            mission.nowAchievement + "/" + mission.goalAchievement }}</span>
         </li>
       </div>
     </ul>

@@ -43,7 +43,7 @@ const allCards: Card[] = [
     company: "norma",
     waste: 5,
     hungry: 5,
-    priority: 5,
+    priority: -5,
   },
   {
     id: 5,
@@ -88,7 +88,7 @@ const allCards: Card[] = [
     company: "bianca",
     waste: 10,
     hungry: 10,
-    priority: 10,
+    priority: -10,
   },
 ]; //!100枚くらいあるから重くなったら分割する
 export default allCards;
