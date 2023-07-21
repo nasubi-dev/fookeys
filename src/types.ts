@@ -33,7 +33,7 @@ type Gift = {
   name: string;
   description: string;
   requireContribution: number;
-  skill: (timing: Timing, id: string) => number;
+  skill: (timing: Timing, id: string) => void;
 };
 
 type Mission = {
@@ -43,7 +43,7 @@ type Mission = {
   reward: number;
   goalAchievement: number;
   nowAchievement: number;
-  checker?: (sumFields?: SumCards, field?: Card[]) => void;
+  checker?: (sumFields?: SumCards, field?: Card[]) => number | undefined;
 };
 //!使われてるか調べる
 type Phase = "shop" | "battle" | "result" | "none";

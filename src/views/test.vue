@@ -22,7 +22,7 @@ const judgeAchieved = () => {
   status.value.contribution += testMission.value.reward;
 }
 
-const testMission: Ref<Mission> = ref({
+const testMission = ref({
   id: 0,
   name: "test",
   description: "test",
