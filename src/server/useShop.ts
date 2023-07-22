@@ -83,7 +83,7 @@ export function resetCheck() {
 //checkの値の監視
 export async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
-  const { id, player,log } = storeToRefs(playerStore);
+  const { id, player, log } = storeToRefs(playerStore);
   const { check, idEnemy, isSelectedGift } = toRefs(player.value);
 
   //選択したGiftをFirestoreに保存する
@@ -114,15 +114,15 @@ export async function watchShopEnd(): Promise<void> {
 export async function watchTurnEnd(): Promise<void> {
   console.log(i, "watchTurnEndを実行しました");
   const { id, player, sumCards } = storeToRefs(playerStore);
-  const { check, idEnemy, sumFields, donate } = toRefs(player.value);
+  const { check, idEnemy, sumFields, donate, field } = toRefs(player.value);
 
   //checkの値がtrueになっていたら､カード選択終了
   check.value = true;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   updateDoc(doc(playersRef, id.value), { donate: donate.value });
   console.log(i, "check: " + check.value);
-  //FieldのカードをFirestoreに保存する
   sumFields.value = sumCards.value;
+  updateDoc(doc(playersRef, id.value), { field: field.value });
   updateDoc(doc(playersRef, id.value), { sumFields: sumFields.value });
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
   if (enemyCheck) {

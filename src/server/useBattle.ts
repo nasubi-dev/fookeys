@@ -72,18 +72,20 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     throw Error("相手の情報が取得できませんでした");
   //寄付をしていた場合､満腹値を増やさない
   //自分のhungryの値が上限を超えていた場合､行動不能にする
+  const maxHungry = 200 + (allCharacters[my.character].maxHungry ?? 0);
   if (!my.check) {
     my.status.hungry += my.sumFields.hungry;
     console.log(i, "mySumHungry: ", my.status.hungry);
-    if (my.status.hungry > 200 + (allCharacters[my.character].maxHungry ?? 0)) {
+    if (my.status.hungry > maxHungry) {
       my.check = true;
       console.log(i, "自プレイヤー行動不能です");
     }
   }
   //相手のhungryの値が上限を超えていた場合､行動不能にする
   let enemySumHungry = enemy.status.hungry + (which === "primary" ? enemy.sumFields.hungry : 0);
+  const enemyMaxHungry = 200 + (allCharacters[enemy.character].maxHungry ?? 0);
   console.log(i, "enemySumHungry: ", enemySumHungry);
-  if (enemySumHungry > 200 + (allCharacters[enemy.character].maxHungry ?? 0)) {
+  if (enemySumHungry > enemyMaxHungry) {
     enemy.check = true;
     console.log(i, "相手プレイヤー行動不能です");
   }
@@ -139,7 +141,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   log.value = "テクニック攻撃でenemyに" + my.sumFields.tech + "のダメージ";
 
   //hungryの値が上限を超えていた場合､上限値にする
-  if (my.status.hungry > 100) my.status.hungry = 100;
+  if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
   //Firebaseに反映する
   await Promise.all([
     updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry }),
@@ -171,29 +173,18 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.field || enemy.character === undefined)
     throw Error("相手の情報が取得できませんでした");
 
-  let ie: number = 0;
-  for (let i = 0; i < 3; i++) {
-    if (which === "primary") {
-      //!ここひどい
-      if (firstAtkPlayer.value === sign.value) {
-        ie = missions.value[i].checker?.(my.sumFields, my.field) ?? 0;
-        missions.value[i].nowAchievement += ie;
-      } else {
-        ie = missions.value[i].checker?.(enemy.sumFields, enemy.field) ?? 0;
-        missions.value[i].nowAchievement += ie;
-      }
-    } else {
-      if (firstAtkPlayer.value === sign.value) {
-        ie = missions.value[i].checker?.(my.sumFields, my.field) ?? 0;
-        missions.value[i].nowAchievement += ie;
-      } else {
-        ie = missions.value[i].checker?.(enemy.sumFields, enemy.field) ?? 0;
-        missions.value[i].nowAchievement += ie;
-      }
-    }
-    if (missions.value[i].nowAchievement >= missions.value[i].goalAchievement) {
-      status.value.contribution += missions.value[i].reward;
-      console.log(i, "reward: ", missions.value[i].reward);
+  //missionを進捗させる
+  const equalPlayerSign = sign.value === firstAtkPlayer.value;
+  for (let mission of missions.value) {
+    mission.nowAchievement +=
+      mission.checker?.(equalPlayerSign ? my.sumFields : enemy.sumFields, equalPlayerSign ? my.field : enemy.field) ?? 0;
+    //Missionを達成したら報酬を受け取る
+    if (mission.nowAchievement >= mission.goalAchievement) {
+      mission.nowAchievement = mission.goalAchievement;
+      equalPlayerSign ? (my.status.contribution += mission.reward) : (enemy.status.contribution += mission.reward);
+      updateDoc(doc(playersRef, equalPlayerSign ? myId : enemyId), { status: equalPlayerSign ? my.status : enemy.status });
+      status.value.contribution += equalPlayerSign ? mission.reward : 0;
+      console.log(i, "reward: ", mission.reward);
     }
   }
 }

@@ -34,7 +34,10 @@ const allMissions: Mission[] = [
     nowAchievement: 0,
     checker: (sumFields, field) => {
       if (field === undefined) return;
-      return field.map((card) => card.company).filter((company) => company === "hanamie").length;
+      const hanamieCards = field.filter((card) => card.company === "hanamie").length;
+      console.log("tttt",field.length);
+      console.log("tttt",hanamieCards);
+      return hanamieCards
     },
   },
   {

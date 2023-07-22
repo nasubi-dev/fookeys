@@ -38,9 +38,6 @@ onClickOutside(el, () => {
         <p>ID:{{ card.id }}</p>
         <p>📊🚬:{{ card.company }}</p>
         <p>{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
-        <div v-if="card.priority">
-          <p>{{ "🦶: " + card.priority }}</p>
-        </div>
         <div v-if="card.atk">
           <p>{{ "⚔:" + card.atk }}</p>
         </div>
@@ -49,6 +46,9 @@ onClickOutside(el, () => {
         </div>
         <div v-if="card.tech">
           <p>{{ "🏹:" + card.tech }}</p>
+        </div>
+        <div v-if="card.priority">
+          <p>{{ "🦶: " + card.priority }}</p>
         </div>
         <div v-if="card.heal">
           <p>{{ "💖:" + card.heal }}</p>
