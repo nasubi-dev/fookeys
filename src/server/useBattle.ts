@@ -157,7 +157,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  //自分と相手のidを取得する
+  //自分と相手のidを取得する というかmy,enemyは意味があってない
   let myId, enemyId;
   if (firstAtkPlayer.value === sign.value) {
     myId = which === "primary" ? id.value : idEnemy.value;
@@ -181,6 +181,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
     mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand) ?? 0;
     //Missionを達成したら報酬を受け取る
     if (mission.nowAchievement >= mission.goalAchievement) {
+      mission.achieved = true;
       mission.nowAchievement = mission.goalAchievement;
       if (equalPlayerSign && which === "primary") {
         status.value.contribution += mission.reward;

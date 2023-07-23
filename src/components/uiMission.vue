@@ -11,6 +11,7 @@ const { missions } = storeToRefs(gameStore);
     <ul class="text-xs">
       <div v-for="mission in missions" :key="mission.id">
         <li>
+          <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">id:{{ mission.id }}</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ mission.name }}</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">reward:{{ mission.reward }}</span>

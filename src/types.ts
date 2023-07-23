@@ -39,6 +39,7 @@ type Gift = {
 type Mission = {
   id: number;
   name: string;
+  achieved: boolean;
   description: string;
   reward: number;
   goalAchievement: number;
