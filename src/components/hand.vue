@@ -3,7 +3,7 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { getEnemyGift } from "@/server/useShop";
+import { getEnemyGift, watchTurnEnd } from "@/server/useShop";
 import HandCard from "@/components/handCard.vue";
 
 const { pushHand, popHand } = playerStore;
@@ -12,7 +12,7 @@ const { hand, field } = toRefs(player.value);
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
-watch(cardLock, (newVal) => {
+watch(cardLock, async(newVal) => {
   if (newVal) {
     const deleteIndex = handSelected.value.reduce((acc: number[], bool, index) => {
       if (bool) acc.unshift(index);
@@ -23,6 +23,7 @@ watch(cardLock, (newVal) => {
       handSelected.value[index] = false;
     });
     console.log(i, "deleteHand: ", "hand: ", hand.value.map((card) => card.name));
+    await watchTurnEnd();
   }
 })
 //HandからFieldへ

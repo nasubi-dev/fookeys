@@ -169,22 +169,27 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   //statusを取得する
   let my = (await getDoc(doc(playersRef, myId))).data();
   let enemy = (await getDoc(doc(playersRef, enemyId))).data();
-  if (!my || !my.status || !my.sumFields || !my.field || my.character === undefined) throw Error("自分の情報が取得できませんでした");
-  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.field || enemy.character === undefined)
+  if (!my || !my.status || !my.sumFields || !my.field || !my.hand || my.character === undefined)
+    throw Error("自分の情報が取得できませんでした");
+  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.hand || enemy.character === undefined)
     throw Error("相手の情報が取得できませんでした");
 
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value) {
-    mission.nowAchievement +=
-      mission.checker?.(equalPlayerSign ? my.sumFields : enemy.sumFields, equalPlayerSign ? my.field : enemy.field) ?? 0;
+    //Missionを進捗させる
+    mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand) ?? 0;
     //Missionを達成したら報酬を受け取る
     if (mission.nowAchievement >= mission.goalAchievement) {
       mission.nowAchievement = mission.goalAchievement;
-      equalPlayerSign ? (my.status.contribution += mission.reward) : (enemy.status.contribution += mission.reward);
-      updateDoc(doc(playersRef, equalPlayerSign ? myId : enemyId), { status: equalPlayerSign ? my.status : enemy.status });
-      status.value.contribution += equalPlayerSign ? mission.reward : 0;
-      console.log(i, "reward: ", mission.reward);
+      if (equalPlayerSign && which === "primary") {
+        status.value.contribution += mission.reward;
+        console.log(i, "mission: " + mission.name + "を達成したので", mission.reward, "の貢献度を受け取りました");
+      } else if (!equalPlayerSign && which === "second") {
+        status.value.contribution += mission.reward;
+        console.log(i, "mission: " + mission.name + "を達成したので", mission.reward, "の貢献度を受け取りました");
+      }
+      updateDoc(doc(playersRef, id.value), { status: status.value });
     }
   }
 }
@@ -290,7 +295,7 @@ export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { reduceWaste, deleteField } = playerStore;
   const { id, player, cardLock, sign, log } = storeToRefs(playerStore);
-  const { check, idGame, isSelectedGift } = toRefs(player.value);
+  const { check, idGame, isSelectedGift, hand } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -301,7 +306,7 @@ export async function postBattle(): Promise<void> {
   deleteField();
   //handの腐り値を減らす(腐り値が0になったらhandから削除する)
   reduceWaste();
-  updateDoc(doc(playersRef, id.value), { hand: player.value.hand });
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
   //満腹値を減らす
 
   //turnを進める

@@ -3,7 +3,7 @@ import { onMounted, toRefs, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { startShop, watchTurnEnd } from "@/server/useShop";
+import { startShop } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
 import Hand from "@/components/hand.vue";
 import Mission from "@/components/uiMission.vue";
@@ -54,7 +54,7 @@ const turnEnd = async () => {
   cardLock.value = true;
   //offerを空にする
   offer.value.splice(0, offer.value.length);
-  await watchTurnEnd();
+  //!手札がFirestoreに保存するためにhand.vueから移動する
 };
 
 </script>

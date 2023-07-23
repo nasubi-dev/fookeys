@@ -63,32 +63,5 @@ const allCards: Card[] = [
     hungry: 7,
     def: 7,
   },
-  {
-    id: 7,
-    name: "カード8",
-    description: "カード8の説明",
-    company: "bianca",
-    waste: 8,
-    hungry: 8,
-    tech: 8,
-  },
-  {
-    id: 8,
-    name: "カード9",
-    description: "カード9の説明",
-    company: "bianca",
-    waste: 9,
-    hungry: 9,
-    heal: 9,
-  },
-  {
-    id: 9,
-    name: "カード10",
-    description: "カード10の説明",
-    company: "bianca",
-    waste: 10,
-    hungry: 10,
-    priority: -10,
-  },
 ]; //!100枚くらいあるから重くなったら分割する
 export default allCards;
