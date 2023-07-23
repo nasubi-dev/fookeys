@@ -3,7 +3,7 @@ import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { getEnemyGift, watchTurnEnd } from "@/server/useShop";
+import { watchTurnEnd } from "@/server/useShop";
 import HandCard from "@/components/handCard.vue";
 
 const { pushHand, popHand } = playerStore;

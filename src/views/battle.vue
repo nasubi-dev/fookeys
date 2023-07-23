@@ -6,13 +6,11 @@ import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
-import Hand from "@/components/hand.vue";
+import enemyCards from "@/components/enemyCards.vue";
 import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
-import Test from "@/views/test.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
-import allMissions from "@/assets/allMissions";
 
 import { usePush } from 'notivue'
 const push = usePush()
@@ -22,7 +20,7 @@ const { id, player, cardLock, phase, offer, sign, log } = storeToRefs(playerStor
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { name: enemyName, character: enemyCharacter, gifts: enemyGifts, status: enemyStatus, hand: enemyHand } = toRefs(enemyPlayer.value);
+const { name: enemyName, hand: enemyHand } = toRefs(enemyPlayer.value);
 
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -74,7 +72,10 @@ const turnEnd = async () => {
         <div>
           {{ enemyName }}
           <Status :player="enemyPlayer" />
-
+        </div>
+        <div>
+          <h1>enemyHand</h1>
+          <enemyCards :cards="enemyHand" />
         </div>
         <div>
           <h1>Mission</h1>
@@ -110,7 +111,6 @@ const turnEnd = async () => {
       <div v-else>
         <p>後攻</p>
       </div>
-      <!-- <Test/> -->
     </div>
   </div>
 </template>
