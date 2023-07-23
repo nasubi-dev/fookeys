@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore, gameStore } from "@/main";
+import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
 import Hand from "@/components/hand.vue";
@@ -20,6 +21,9 @@ const push = usePush()
 const { id, player, cardLock, phase, offer, sign, log } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
+const { enemyPlayer } = storeToRefs(enemyPlayerStore);
+const { name: enemyName, character: enemyCharacter, gifts: enemyGifts, status: enemyStatus, hand: enemyHand } = toRefs(enemyPlayer.value);
+
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
@@ -34,6 +38,7 @@ onMounted(async () => {
   if (allCharacters[character.value].maxHp !== undefined) {
     status.value.hp += allCharacters[character.value].maxHp ?? 600;
   }
+  getEnemyPlayer();
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
@@ -67,13 +72,18 @@ const turnEnd = async () => {
       {{ "Phase: " + phase }}
       <div class="max-w-7xl mx-auto">
         <div>
+          {{ enemyName }}
+          <Status :player="enemyPlayer" />
+
+        </div>
+        <div>
           <h1>Mission</h1>
           <Mission />
           <button @click="missions[0].nowAchievement += 10">check</button>
         </div>
         <div>
           <h1>Status</h1>
-          <Status />
+          <Status :player="player" />
         </div>
         <div v-if="phase === 'shop' && turn !== 1" class="overlay">
           <h1>shop</h1>

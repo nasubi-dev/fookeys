@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
-import { deletePlayer } from "@/server/usePlayerID";
+import { deletePlayer } from "@/server/usePlayerData";
 import { tryOnBeforeUnmount } from "@vueuse/core";
 import { Notivue, Notifications } from 'notivue'
 

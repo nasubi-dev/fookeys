@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore } from "@/main";
+import { playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { getEnemyGift, watchTurnEnd } from "@/server/useShop";
 import HandCard from "@/components/handCard.vue";
@@ -10,9 +10,13 @@ const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
 const { hand, field } = toRefs(player.value);
 
+const { enemyPlayer } = storeToRefs(enemyPlayerStore);
+const { isSelectedGift:enemyIsSelectedGift } = toRefs(enemyPlayer.value);
+
+
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
-watch(cardLock, async(newVal) => {
+watch(cardLock, async (newVal) => {
   if (newVal) {
     const deleteIndex = handSelected.value.reduce((acc: number[], bool, index) => {
       if (bool) acc.unshift(index);
@@ -29,9 +33,8 @@ watch(cardLock, async(newVal) => {
 //HandからFieldへ
 const pushCard = async (index: number) => {
   if (cardLock.value) return;
-  const enemyGift = await getEnemyGift();
-  console.log(i, "isSelectedGift: ", enemyGift, "fieldLength: ", field.value.length);
-  if (enemyGift === 3 && field.value.length >= 3) {
+  console.log(i, "isSelectedGift: ", enemyIsSelectedGift.value, "fieldLength: ", field.value.length);
+  if (enemyIsSelectedGift.value === 3 && field.value.length >= 3) {
     console.log(i, "field is full");
     return;
   }

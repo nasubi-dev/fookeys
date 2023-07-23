@@ -144,6 +144,39 @@ const usePlayerStore = defineStore("playerData", () => {
   };
 });
 
+const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
+  //?Const/State
+  const enemyPlayer = ref<PlayerData>({
+    idEnemy: "",
+    idGame: "",
+    name: "",
+    check: false,
+    donate: false,
+    match: "nothing",
+    character: 0,
+    gifts: [5, 3, 9],
+    isSelectedGift: undefined,
+    hand: [],
+    field: [],
+    status: {
+      hp: 600,
+      hungry: 0,
+      contribution: 0,
+    },
+    sumFields: {
+      num: 0,
+      waste: 0,
+      hungry: 0,
+      priority: 0,
+      atk: 0,
+      def: 0,
+      tech: 0,
+      heal: 0,
+    },
+  });
+  return { enemyPlayer };
+});
+
 const useGameStore = defineStore("gameData", () => {
   //?Const/State
   const game = ref<GameData>({
@@ -164,4 +197,4 @@ const useGameStore = defineStore("gameData", () => {
   return { game, missions, nextTurn };
 });
 
-export { useGameStore, usePlayerStore };
+export { useGameStore, useEnemyPlayerStore, usePlayerStore };

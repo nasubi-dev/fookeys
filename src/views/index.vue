@@ -2,7 +2,7 @@
 import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { registerPlayer } from "@/server/usePlayerID";
+import { registerPlayer } from "@/server/usePlayerData";
 
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
