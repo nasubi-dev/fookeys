@@ -53,7 +53,8 @@ const popCard = (index: number, id: number) => {
 
 <template>
   <div>
-    <ul class="text-xs flex justify-start">
+    {{ handSelected }}
+    <ul class="text-xs flex justify-start ">
       <div v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
           <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
@@ -69,6 +70,5 @@ const popCard = (index: number, id: number) => {
         </div>
       </div>
     </ul>
-    {{ handSelected }}
   </div>
 </template>

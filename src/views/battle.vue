@@ -100,7 +100,7 @@ const turnEnd = async () => {
           <UiHand />
         </div>
       </div>
-      <div v-if="firstAtkPlayer === undefined">
+      <!-- <div v-if="firstAtkPlayer === undefined">
         <p>準備中</p>
       </div>
       <div v-else-if="firstAtkPlayer === sign">
@@ -108,7 +108,7 @@ const turnEnd = async () => {
       </div>
       <div v-else>
         <p>後攻</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
