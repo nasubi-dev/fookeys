@@ -21,9 +21,7 @@ const touchHandler = (event: any) => {
     event.preventDefault();
   }
 };
-document.addEventListener('touchstart', touchHandler, {
-  passive: false
-});
+document.addEventListener('touchstart', touchHandler, { passive: false });
 //テキスト選択禁止
 document.onselectstart = function () {
   return false;

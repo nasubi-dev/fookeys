@@ -55,8 +55,6 @@ const turnEnd = async () => {
   console.log(i, "turnEnd");
   //cardLockをtrueにする
   cardLock.value = true;
-  //offerを空にする
-  offer.value.splice(0, offer.value.length);
   //!手札がFirestoreに保存するためにhand.vueから移動する
 };
 

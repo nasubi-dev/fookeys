@@ -15,7 +15,9 @@ const offerHand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  hand.value.sort((a, b) => a.id - b.id);
+  hand.value.sort((a, b) => {
+    return a.id > b.id ? 1 : -1
+  });
   console.log(i, "offer2Hand");
   //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
   offer.value.splice(0, offer.value.length);

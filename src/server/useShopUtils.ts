@@ -29,7 +29,9 @@ export async function setHand(): Promise<void> {
   for (let i = 0; i < 6; i++) {
     hand.value.push(drawCard());
     if (hand.value.length > 9) hand.value.shift();
-    hand.value.sort((a, b) => a.id - b.id);
+    hand.value.sort((a, b) => {
+      return a.id > b.id ? 1 : -1
+    });
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   console.log(
@@ -45,7 +47,9 @@ export async function setOffer(): Promise<void> {
 
   for (let i = 0; i < 3; i++) {
     offer.value.push(drawCard());
-    offer.value.sort((a, b) => a.id - b.id);
+    offer.value.sort((a, b) => {
+      return a.id > b.id ? 1 : -1;
+    });
   }
 }
 //Handをすべて入れ替える
