@@ -18,7 +18,7 @@ async function register() {
 
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
-    <img src="@/assets/img/fookeys.png" class="w-60" />
+    <img src="@/assets/img/ui/fookeys.png" class="w-60" />
     <form class="flex flex-col items-center">
       <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name" v-model="newName" />
       <router-link to="/menu" @click="register" type="button"

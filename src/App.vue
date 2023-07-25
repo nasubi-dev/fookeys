@@ -31,7 +31,7 @@ document.onselectstart = function () {
 </script>
 
 <template>
-  <div id="noContextMenu" class="bg-gray-600 h-screen" style="user-select: none;">
+  <div id="noContextMenu" class="background" style="user-select: none;">
     <Notivue v-slot="item">
       <Notifications :item="item" />
     </Notivue>

@@ -56,6 +56,12 @@
   display: inline-block;
   z-index: 1;
 }
+.background{
+  background-image: url(../src/assets/img/ui/background.png);
+  background-position: 50%, 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 img {
   -webkit-touch-callout:none;
   -webkit-user-select:none;

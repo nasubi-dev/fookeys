@@ -66,13 +66,13 @@ watch(log, (newVal) => {
       </div>
       <div v-else class="w-1/2 p-8 flex flex-col justify-center">
         <button @click="startMatch" class="btn-pop">
-          <img src="@/assets/img/matchMaking.png" class="w-1/2" />
+          <img src="@/assets/img/ui/entry.png" class="w-1/2" />
         </button>
         <button @click="selectCharacter = !selectCharacter" class="text-white rounded-md">
-          <img src="@/assets/img/characterChange.png" class="w-1/2" />
+          <img src="@/assets/img/ui/changeCharacter.png" class="w-1/2" />
         </button>
         <button @click="selectGift = !selectGift" class="text-white rounded-md">
-          <img src="@/assets/img/giftChange.png" class="w-1/2" />
+          <img src="@/assets/img/ui/changeGift.png" class="w-1/2" />
         </button>
       </div>
     </div>

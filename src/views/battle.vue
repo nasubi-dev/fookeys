@@ -98,7 +98,6 @@ const turnEnd = async () => {
             <div v-else>戦闘MODE</div>
           </button>
           <UiHand />
-          <UiEnemyHand :cards="hand" />
         </div>
       </div>
       <div v-if="firstAtkPlayer === undefined">
