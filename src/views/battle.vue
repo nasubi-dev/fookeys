@@ -6,7 +6,8 @@ import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
-import enemyCards from "@/components/enemyCards.vue";
+import UiHand from "@/components/uiHand.vue";
+import UiEnemyHand from "@/components/uiEnemyHand.vue";
 import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
@@ -20,7 +21,6 @@ const { id, player, cardLock, phase, offer, sign, log } = storeToRefs(playerStor
 const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { name: enemyName, hand: enemyHand } = toRefs(enemyPlayer.value);
 
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -70,17 +70,15 @@ const turnEnd = async () => {
       {{ "Phase: " + phase }}
       <div class="max-w-7xl mx-auto">
         <div>
-          {{ enemyName }}
-          <Status :player="enemyPlayer" />
+          <h1>enemyHand</h1>
+          <UiEnemyHand :cards="enemyPlayer.hand" />
         </div>
         <div>
-          <h1>enemyHand</h1>
-          <enemyCards :cards="enemyHand" />
+          <Status :player="enemyPlayer" />
         </div>
         <div>
           <h1>Mission</h1>
           <Mission />
-          <button @click="missions[0].nowAchievement += 10">check</button>
         </div>
         <div>
           <h1>Status</h1>
@@ -99,7 +97,8 @@ const turnEnd = async () => {
             <div v-if="donate">寄付MODE</div>
             <div v-else>戦闘MODE</div>
           </button>
-          <Hand />
+          <UiHand />
+          <UiEnemyHand :cards="hand" />
         </div>
       </div>
       <div v-if="firstAtkPlayer === undefined">

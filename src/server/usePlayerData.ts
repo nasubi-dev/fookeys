@@ -46,6 +46,7 @@ function getEnemyPlayer(): void {
     if (doc.exists()) {
       console.log(i, "Current enemyPlayer data: ", doc.data());
       enemyPlayer.value = doc.data();
+      //対戦終了後はunsubscribeする
       if (doc.data().match === "nothing") unsubscribe();
     }
   });

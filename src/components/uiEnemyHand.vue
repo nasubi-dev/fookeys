@@ -9,10 +9,7 @@ defineProps<{ cards: Card[] }>();
   <div>
     <ul class="text-xs flex justify-start">
       <div v-for="(card) in cards" :key="card.id">
-        <div>
-          {{ card }}
-          <img :src="`/img/companysBack/${card.company}.png`" class=" w-14 h-14" />
-        </div>
+        <img :src="`/img/companysBack/${card.company}.png`" class=" w-14 h-14" />
       </div>
     </ul>
   </div>
