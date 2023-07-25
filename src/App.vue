@@ -28,6 +28,12 @@ document.addEventListener('touchstart', touchHandler, {
 document.onselectstart = function () {
   return false;
 }
+//スクロール禁止
+function disableScroll(event: any) {
+  event.preventDefault();
+}
+// イベントと関数を紐付け
+document.addEventListener('touchmove', disableScroll, { passive: false });
 </script>
 
 <template>
