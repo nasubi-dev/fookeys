@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import type { PlayerData } from "@/types";
+import { toRefs } from "vue";
+import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 import allCharacters from "@/assets/allCharacters";
-import allGifts from "@/assets/allGifts";
+import statusImg from "@/assets/img/ui/status.png";
 
-defineProps<{ player: PlayerData }>();
+const { player } = storeToRefs(playerStore);
+const { name, character, status } = toRefs(player.value);
 
 </script>
 
 <template>
-  <div class="flex justify-start">
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ player.name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">character:{{ allCharacters[player.character].name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">gift1:{{ allGifts[player.gifts[0]].name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">gift2:{{ allGifts[player.gifts[1]].name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">gift3:{{ allGifts[player.gifts[2]].name }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">❤:{{ player.status.hp + "/" + (600 + (allCharacters[player.character].maxHp ?? 0)) }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">🍖:{{ player.status.hungry +"/"+(200 + (allCharacters[player.character].maxHungry ?? 0)) }} </span>
-    <span class="text-sm font-medium text-gray-900 truncate mx-2">🪙:{{ player.status.contribution }} </span>
+  <div class="overCard w-1/2 h-auto">
+    <img :src="statusImg" class="" />
+    <div class="overText transform translate-y-3">
+      <span class="text-sm font-medium text-gray-900 truncate mx-2">
+        name:{{ name }}
+        {{ allCharacters[player.character].name }}
+        ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
+        🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
+        🪙:{{ status.contribution }}
+      </span>
+    </div>
   </div>
 </template>

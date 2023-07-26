@@ -12,17 +12,6 @@
   transform: scale(0.95);
   opacity: 0.8;
 }
-.turn {
-  position: relative;
-  max-width: 50%;
-  max-height: 50%;
-}
-.turnText {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 .overCard {
   position: relative;
   width: -30px;

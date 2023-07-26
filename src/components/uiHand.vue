@@ -58,7 +58,7 @@ const popCard = (index: number, id: number) => {
       <div v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
           <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
-            :class="handSelected[index] ? 'transform -translate-y-2' : null" class="overCard">
+            :class="handSelected[index] ? 'transform -translate-y-2' : null" >
             <UiHandCard :card="card" />
           </button>
         </div>

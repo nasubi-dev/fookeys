@@ -30,7 +30,7 @@ onClickOutside(el, () => {
       {{ dropDown }}
       <p>{{ "description: " + card.description }}</p>
     </div>
-    <div ref="htmlRefHook">
+    <div ref="htmlRefHook" class="overCard">
       <img :src="`/img/companys/${card.company}.png`"  onselectstart="return false;"
         onmousedown="return false;" class=" w-28 h-28"/>
       <div class="overText">

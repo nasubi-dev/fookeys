@@ -7,7 +7,7 @@ import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import Status from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
-import UiEnemyHand from "@/components/uiEnemyHand.vue";
+import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
@@ -36,7 +36,9 @@ onMounted(async () => {
   if (allCharacters[character.value].maxHp !== undefined) {
     status.value.hp += allCharacters[character.value].maxHp ?? 600;
   }
-  getEnemyPlayer();
+  setTimeout(() => {
+    getEnemyPlayer();//!あとでもっといい方法を考える
+  }, 1000);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
@@ -62,41 +64,29 @@ const turnEnd = async () => {
 
 <template>
   <div>
-    <div class="flex flex-col items-center justify-center h-screen">
+    <div class="flex flex-col h-screen w-screen px-5">
       <h1>Battle</h1>
       {{ "Player: " + sign }}
       {{ "Phase: " + phase }}
-      <div class="max-w-7xl mx-auto">
-        <div>
-          <h1>enemyHand</h1>
-          <UiEnemyHand :cards="enemyPlayer.hand" />
-        </div>
-        <div>
-          <Status :player="enemyPlayer" />
-        </div>
-        <div>
-          <h1>Mission</h1>
-          <Mission />
-        </div>
-        <div>
-          <h1>Status</h1>
-          <Status :player="player" />
-        </div>
-        <div v-if="phase === 'shop' && turn !== 1" class="overlay">
-          <h1>shop</h1>
-          <Shop />
-        </div>
-        <div :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="flex flex-col justify-end">
-          <button @click="turnEnd()">ターン終了ボタン</button>
-        </div>
-        <div>
-          <h1>Hand</h1>
-          <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
-            <div v-if="donate">寄付MODE</div>
-            <div v-else>戦闘MODE</div>
-          </button>
-          <UiHand />
-        </div>
+      <div>
+        <UiEnemyInfo />
+      </div>
+      <div>
+        <Mission />
+      </div>
+      <div class="flex flex-none">
+        <Status :player="player" />
+        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full px-5 py-5">Turn End</button>
+      </div>
+      <div v-if="phase === 'shop' && turn !== 1" class="overlay">
+        <Shop />
+      </div>
+      <div>
+        <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
+          <div v-if="donate">寄付MODE</div>
+          <div v-else>戦闘MODE</div>
+        </button>
+        <UiHand />
       </div>
       <!-- <div v-if="firstAtkPlayer === undefined">
         <p>準備中</p>

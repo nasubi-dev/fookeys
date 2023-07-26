@@ -8,6 +8,7 @@ import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
 import type { Mission, GameData, PlayerData, PlayerSign } from "@/types";
 import allCharacters from "@/assets/allCharacters";
+import { getEnemyPlayer } from "./usePlayerData";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -262,6 +263,7 @@ export async function battle() {
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
+  getEnemyPlayer();//!
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
@@ -282,11 +284,15 @@ export async function battle() {
   await reflectDamage();
   await checkMission("primary");
 
+  getEnemyPlayer();//!
+
   console.log(i, "後攻の攻撃");
   log.value = "後攻の攻撃";
   await calcDamage("second");
   await reflectDamage();
   await checkMission("second");
+
+  getEnemyPlayer();//!
 
   //戦後処理
   await postBattle();
@@ -324,6 +330,7 @@ export async function postBattle(): Promise<void> {
   //firstAtkPlayerの値をundefinedにする
   firstAtkPlayer.value = undefined;
 
+  getEnemyPlayer();//!
   //shopを開く
   startShop();
 }

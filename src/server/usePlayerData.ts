@@ -3,7 +3,7 @@ import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, doc, addDoc, deleteDoc, onSnapshot } from "firebase/firestore";
+import { collection, doc, addDoc, deleteDoc, onSnapshot, getDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import type { PlayerData } from "@/types";
 
@@ -33,23 +33,17 @@ async function deletePlayer(): Promise<void> {
     console.error(e, "Error deleting player: ", error);
   }
 }
-//enemyPlayer情報常時取得
-function getEnemyPlayer(): void {
+//enemyPlayer情報取得
+async function getEnemyPlayer(): Promise<void> {
   console.log(i, "getEnemyPlayerを実行しました");
   const { player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 
   if (!idEnemy.value) return;
-  const enemyPlayerRef = doc(playersRef, idEnemy.value);
-  const unsubscribe = onSnapshot(enemyPlayerRef, (doc) => {
-    if (doc.exists()) {
-      console.log(i, "Current enemyPlayer data: ", doc.data());
-      enemyPlayer.value = doc.data();
-      //対戦終了後はunsubscribeする
-      if (doc.data().match === "nothing") unsubscribe();
-    }
-  });
+  const enemyPlayerData = (await getDoc(doc(playersRef, idEnemy.value))).data();
+  if (!enemyPlayerData) return;
+  enemyPlayer.value = enemyPlayerData;
 }
 
 export { registerPlayer, deletePlayer, getEnemyPlayer };

@@ -35,7 +35,7 @@ document.addEventListener('touchmove', disableScroll, { passive: false });
 </script>
 
 <template>
-  <div id="noContextMenu" class="background" style="user-select: none;">
+  <div id="noContextMenu" class="background">
     <Notivue v-slot="item">
       <Notifications :item="item" />
     </Notivue>
