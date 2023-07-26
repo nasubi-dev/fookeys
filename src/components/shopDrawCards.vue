@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { watchShopEnd } from "@/server/useShop";
 import type { Card } from "@/types";
 
-const { offer, player, phase } = storeToRefs(playerStore);
+const { offer, player, phase, log } = storeToRefs(playerStore);
 const { hand, check } = toRefs(player.value);
 
 const isOfferSelected = ref([false, false, false]);
@@ -15,9 +15,12 @@ const offerHand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  hand.value.sort((a, b) => {
-    return a.id > b.id ? 1 : -1
-  });
+  if (hand.value.length > 9) {
+    console.log(i, "hand is full");
+    log.value = "手札がいっぱいです"
+    hand.value.splice(9, hand.value.length - 9);
+  }
+  hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   console.log(i, "offer2Hand");
   //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
   offer.value.splice(0, offer.value.length);
