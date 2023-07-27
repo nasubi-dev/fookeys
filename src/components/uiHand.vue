@@ -11,7 +11,7 @@ const { player, cardLock } = storeToRefs(playerStore);
 const { hand, field } = toRefs(player.value);
 
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { isSelectedGift:enemyIsSelectedGift } = toRefs(enemyPlayer.value);
+const { isSelectedGift: enemyIsSelectedGift } = toRefs(enemyPlayer.value);
 
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
@@ -54,18 +54,20 @@ const popCard = (index: number, id: number) => {
 <template>
   <div>
     {{ handSelected }}
-    <ul class="text-xs flex justify-start ">
+    <ul class="text-xs flex flex-row w-auto h-auto">
       <div v-for="(card, index) in hand" :key="card.id">
-        <div v-if="!card.rotten">
-          <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
-            :class="handSelected[index] ? 'transform -translate-y-2' : null" >
-            <UiHandCard :card="card" />
-          </button>
-        </div>
-        <div v-else>
-          <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
-            class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">
-            <h5 class="text-bold">腐ってます!!!!!</h5>
+        <div class="">
+          <div v-if="!card.rotten">
+            <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
+              :class="handSelected[index] ? 'transform -translate-y-2' : null">
+              <UiHandCard :card="card" />
+            </button>
+          </div>
+          <div v-else>
+            <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
+              class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">
+              <h5 class="text-bold">腐ってます!!!!!</h5>
+            </div>
           </div>
         </div>
       </div>

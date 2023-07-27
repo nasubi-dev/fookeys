@@ -26,7 +26,7 @@ export async function setHand(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 9; i++) {//!一時的に9枚にしている
     hand.value.push(drawCard());
     if (hand.value.length > 9) hand.value.shift();
     hand.value = [...hand.value].sort((a, b) => a.id - b.id);
