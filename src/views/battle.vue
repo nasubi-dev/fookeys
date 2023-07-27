@@ -64,24 +64,24 @@ const turnEnd = async () => {
 
 <template>
   <div>
-    <div class="flex flex-col h-screen w-screen px-5">
-      <h1>Battle</h1>
-      {{ "Player: " + sign }}
-      {{ "Phase: " + phase }}
-      <div>
+    <div class="flex flex-col h-screen w-screen p-5 relative">
+      <div class="flex flex-row-reverse">
         <UiEnemyInfo />
+        {{ "Player: " + sign }}
+        {{ "Phase: " + phase }}
       </div>
       <div>
         <Mission />
       </div>
-      <div class="flex flex-none">
-        <Status :player="player" />
-        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full px-5 py-5">Turn End</button>
-      </div>
-      <div v-if="phase === 'shop' && turn !== 1" class="overlay">
-        <Shop />
-      </div>
-      <div>
+      <div class="bottom-0 absolute mb-3">
+        <div class="flex content-end">
+          <Status :player="player" />
+          <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'"
+            class="p-5 mt-auto rounded-full">turn End</button>
+        </div>
+        <div v-if="phase === 'shop' && turn !== 1" class="overlay">
+          <Shop />
+        </div>
         <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
           <div v-if="donate">寄付MODE</div>
           <div v-else>戦闘MODE</div>
