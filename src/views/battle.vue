@@ -7,7 +7,7 @@ import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
-import Mission from "@/components/uiMission.vue";
+import Mission from "@/components/uiMissions.vue";
 import Status from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import Shop from "@/components/shop.vue";
@@ -18,12 +18,9 @@ import sumFieldImg from "@/assets/img/ui/info.png";
 import { usePush } from 'notivue'
 const push = usePush()
 
-
-const { id, player, cardLock, phase, offer, sign, log } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate, sumFields } = toRefs(player.value);
-
+const { id, player, cardLock, phase, offer, sign, log, sumCards } = storeToRefs(playerStore);
+const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
@@ -38,8 +35,8 @@ onMounted(async () => {
   if (allCharacters[character.value].maxHp !== undefined) {
     status.value.hp += allCharacters[character.value].maxHp ?? 600;
   }
-  setTimeout(() => {
-    getEnemyPlayer();//!あとでもっといい方法を考える
+  setTimeout(async () => {
+    await getEnemyPlayer();//!あとでもっといい方法を考える
   }, 1000);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
@@ -54,7 +51,7 @@ onMounted(async () => {
   });
 });
 //ターンを終了時
-const turnEnd = async () => {
+const turnEnd = () => {
   if (cardLock.value) return;
   console.log(i, "turnEnd");
   //cardLockをtrueにする
@@ -67,7 +64,7 @@ const turnEnd = async () => {
 <template>
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <UiEnemyInfo />
+      <UiEnemyInfo class="flex flex-row-reverse" />
       <UiGifts :gifts="gifts" player="enemyPlayer" />
 
       <div class="flex justify-start">
@@ -76,7 +73,7 @@ const turnEnd = async () => {
         <div class="overCard">
           <img :src="sumFieldImg" />
           <div class="overText">
-            {{ sumFields }}
+            {{ sumCards }}
           </div>
         </div>
       </div>
