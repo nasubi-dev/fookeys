@@ -57,6 +57,10 @@
   background-repeat: no-repeat;
   background-size: contain;
 }
+.cardSize{
+  width: 11.1vw;
+  height: auto;
+}
 img {
   -webkit-touch-callout:none;
   -webkit-user-select:none;

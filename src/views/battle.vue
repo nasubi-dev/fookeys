@@ -5,20 +5,22 @@ import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
+import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
+import UiGifts from "@/components/uiGifts.vue";
+import Mission from "@/components/uiMission.vue";
 import Status from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
-import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
-import Mission from "@/components/uiMission.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
+import sumFieldImg from "@/assets/img/ui/info.png";
 
 import { usePush } from 'notivue'
 const push = usePush()
 
 
 const { id, player, cardLock, phase, offer, sign, log } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
+const { idGame, character, gifts, status, hand, donate, sumFields } = toRefs(player.value);
 
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 
@@ -65,19 +67,25 @@ const turnEnd = async () => {
 <template>
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <div class="flex flex-row-reverse">
-        <UiEnemyInfo />
-        {{ "Player: " + sign }}
-        {{ "Phase: " + phase }}
+      <UiEnemyInfo />
+      <UiGifts :gifts="gifts" player="enemyPlayer" />
+
+      <div class="flex justify-start">
+        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="p-5 rounded-full">turn
+          End</button>
+        <div class="overCard">
+          <img :src="sumFieldImg" />
+          <div class="overText">
+            {{ sumFields }}
+          </div>
+        </div>
       </div>
-      <div>
-        <Mission />
-      </div>
+
       <div class="bottom-0 absolute mb-3">
         <div class="flex content-end">
           <Status :player="player" />
-          <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'"
-            class="p-5 mt-auto rounded-full">turn End</button>
+          <UiGifts :gifts="gifts" player="player" />
+          <Mission />
         </div>
         <div v-if="phase === 'shop' && turn !== 1" class="overlay">
           <Shop />
@@ -88,15 +96,6 @@ const turnEnd = async () => {
         </button>
         <UiHand />
       </div>
-      <!-- <div v-if="firstAtkPlayer === undefined">
-        <p>準備中</p>
-      </div>
-      <div v-else-if="firstAtkPlayer === sign">
-        <p>先攻</p>
-      </div>
-      <div v-else>
-        <p>後攻</p>
-      </div> -->
     </div>
   </div>
 </template>

@@ -35,9 +35,7 @@ onClickOutside(el, () => {
         onmousedown="return false;"/>
       <div class="overText">
         <h5>{{ card.name }}</h5>
-        <p>ID:{{ card.id }}</p>
-        <p>📊🚬:{{ card.company }}</p>
-        <p>{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
+        <p>{{ card.waste }}</p>
         <div v-if="card.atk">
           <p>{{ "⚔:" + card.atk }}</p>
         </div>

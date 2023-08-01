@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { gameStore } from "@/main";
 import { storeToRefs } from "pinia";
+import infoImg from "@/assets/img/ui/info.png";
 
 const { missions } = storeToRefs(gameStore);
 
@@ -8,18 +9,18 @@ const { missions } = storeToRefs(gameStore);
 
 <template>
   <div>
-    <ul class="text-xs">
-      <div v-for="mission in missions" :key="mission.id">
-        <li>
+    <div v-for="mission in missions" :key="mission.id">
+      <div class="overCard">
+        <img :src="infoImg" />
+        <div class="overText">
           <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
-          <span class="text-sm font-medium text-gray-900 truncate mx-2">id:{{ mission.id }}</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">name:{{ mission.name }}</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">reward:{{ mission.reward }}</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">description:{{ mission.description }}</span>
           <span class="text-sm font-medium text-gray-900 truncate mx-2">achievement:{{
             mission.nowAchievement + "/" + mission.goalAchievement }}</span>
-        </li>
+        </div>
       </div>
-    </ul>
+    </div>
   </div>
 </template>

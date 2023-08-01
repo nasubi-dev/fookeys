@@ -53,13 +53,12 @@ const popCard = (index: number, id: number) => {
 
 <template>
   <div>
-    {{ handSelected }}
     <ul class="text-xs flex flex-row w-auto h-auto">
       <div v-for="(card, index) in hand" :key="card.id">
         <div class="">
           <div v-if="!card.rotten">
             <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
-              :class="handSelected[index] ? 'transform -translate-y-2' : null">
+              :class="handSelected[index] ? 'transform -translate-y-2' : null" class="cardSize">
               <UiHandCard :card="card" />
             </button>
           </div>
