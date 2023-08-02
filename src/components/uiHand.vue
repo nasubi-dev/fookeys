@@ -52,7 +52,7 @@ const popCard = (index: number, id: number) => {
 </script>
 
 <template>
-  <div>
+  <div class="">
     <ul class="text-xs flex flex-row w-auto h-auto">
       <div v-for="(card, index) in hand" :key="card.id">
         <div class="">

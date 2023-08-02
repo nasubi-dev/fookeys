@@ -7,13 +7,13 @@ import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
-import Mission from "@/components/uiMissions.vue";
-import Status from "@/components/uiStatus.vue";
+import UiMission from "@/components/uiMissions.vue";
+import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
+import UiSumField from "@/components/uiSumField.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
-import sumFieldImg from "@/assets/img/ui/info.png";
 
 import { usePush } from 'notivue'
 const push = usePush()
@@ -65,32 +65,26 @@ const turnEnd = () => {
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <UiEnemyInfo class="flex flex-row-reverse" />
-      <UiGifts :gifts="gifts" player="enemyPlayer" />
 
-      <div class="flex justify-start">
-        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="p-5 rounded-full">turn
+      <div class="flex justify-center">
+        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">turn
           End</button>
-        <div class="overCard">
-          <img :src="sumFieldImg" />
-          <div class="overText">
-            {{ sumCards }}
-          </div>
-        </div>
-      </div>
-
-      <div class="bottom-0 absolute mb-3">
-        <div class="flex content-end">
-          <Status :player="player" />
-          <UiGifts :gifts="gifts" player="player" />
-          <Mission />
-        </div>
-        <div v-if="phase === 'shop' && turn !== 1" class="overlay">
-          <Shop />
-        </div>
+        <UiSumField />
         <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
           <div v-if="donate">寄付MODE</div>
           <div v-else>戦闘MODE</div>
         </button>
+      </div>
+
+      <div class="bottom-0 absolute mb-3">
+        <div class="flex content-end">
+          <UiStatus :player="player" />
+          <UiGifts :gifts="gifts" player="player" />
+          <UiMission />
+        </div>
+        <div v-if="phase === 'shop' && turn !== 1" class="overlay">
+          <Shop />
+        </div>
         <UiHand />
       </div>
     </div>

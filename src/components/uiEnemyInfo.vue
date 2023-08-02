@@ -2,11 +2,12 @@
 import { toRefs } from "vue";
 import { enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import UiGifts from "@/components/uiGifts.vue";
 import allCharacters from "@/assets/allCharacters";
 import enemyStatusImg from "@/assets/img/ui/enemyStatus.png";
 
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { hand, name, character, status } = toRefs(enemyPlayer.value);
+const { hand, name, character, status,gifts } = toRefs(enemyPlayer.value);
 
 </script>
 
@@ -19,14 +20,17 @@ const { hand, name, character, status } = toRefs(enemyPlayer.value);
     </ul>
     <div class="overCard w-1/3 h-auto">
       <img :src="enemyStatusImg" class="" />
-      <div class="overText transform translate-y-3">
-        <span class="text-sm font-medium text-gray-900 truncate mx-2">
+      <div class="overText">
+        <span class="text-sm font-medium text-gray-900 truncate mx-2 transform -translate-y-3">
           name:{{ name }}
           {{ allCharacters[character].name }}
           ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
           🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
           🪙:{{ status.contribution }}
         </span>
+      </div>
+      <div class="overText mt-auto ">
+        <UiGifts :gifts="gifts" player="enemyPlayer" class="transform -translate-x-3 translate-y-8"/>
       </div>
     </div>
 

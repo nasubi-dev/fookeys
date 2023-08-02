@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div>
+  <div class="overText">
     <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
     <span class="text-sm font-medium text-gray-900 truncate mx-2">{{ mission.name }}</span>
     <span class="text-sm font-medium text-gray-900 truncate mx-2">reward:{{ mission.reward }}</span>
