@@ -263,7 +263,6 @@ export async function battle() {
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  getEnemyPlayer();//!
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
@@ -284,7 +283,6 @@ export async function battle() {
   await reflectDamage();
   await checkMission("primary");
 
-  getEnemyPlayer();//!
 
   console.log(i, "後攻の攻撃");
   log.value = "後攻の攻撃";
@@ -292,7 +290,6 @@ export async function battle() {
   await reflectDamage();
   await checkMission("second");
 
-  getEnemyPlayer();//!
 
   //戦後処理
   await postBattle();

@@ -25,6 +25,12 @@
   justify-content: center;
   align-items: center;
 }
+.overText .waste{
+  transform: translate(-500%, -50%);
+}
+.overText .info{
+  transform: translate(0%,200%);
+}
 .overlay{
   z-index:1;
   position:fixed;

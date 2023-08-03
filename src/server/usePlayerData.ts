@@ -33,17 +33,23 @@ async function deletePlayer(): Promise<void> {
     console.error(e, "Error deleting player: ", error);
   }
 }
-//enemyPlayer情報取得
-async function getEnemyPlayer(): Promise<void> {
+//enemyPlayer情報常時取得
+function getEnemyPlayer(): void {
   console.log(i, "getEnemyPlayerを実行しました");
   const { player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 
   if (!idEnemy.value) return;
-  const enemyPlayerData = (await getDoc(doc(playersRef, idEnemy.value))).data();
-  if (!enemyPlayerData) return;
-  enemyPlayer.value = enemyPlayerData;
+  const enemyPlayerRef = doc(playersRef, idEnemy.value);
+  const unsubscribe = onSnapshot(enemyPlayerRef, (doc) => {
+    if (doc.exists()) {
+      console.log(i, "Current enemyPlayer data: ", doc.data());
+      enemyPlayer.value = doc.data();
+      //対戦終了後はunsubscribeする
+      if (doc.data().match === "nothing") unsubscribe();
+    }
+  });
 }
 
 export { registerPlayer, deletePlayer, getEnemyPlayer };

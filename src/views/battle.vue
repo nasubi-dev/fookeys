@@ -35,9 +35,8 @@ onMounted(async () => {
   if (allCharacters[character.value].maxHp !== undefined) {
     status.value.hp += allCharacters[character.value].maxHp ?? 600;
   }
-  setTimeout(async () => {
-    await getEnemyPlayer();//!あとでもっといい方法を考える
-  }, 1000);
+  getEnemyPlayer();//!あとでもっといい方法を考える
+
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
@@ -64,7 +63,8 @@ const turnEnd = () => {
 <template>
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <UiEnemyInfo class="flex flex-row-reverse" />
+
+      <UiEnemyInfo :enemyPlayer="enemyPlayer" class="flex flex-row-reverse" />
 
       <div class="flex justify-center">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">turn
@@ -76,17 +76,18 @@ const turnEnd = () => {
         </button>
       </div>
 
-      <div class="bottom-0 absolute mb-3">
-        <div class="flex content-end">
+      <div class="bottom-0 absolute mb-3 mr-3 max-w-full">
+        <div class="flex max-w-full">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" player="player" />
-          <UiMission />
+          <UiMission class="ml-auto" />
         </div>
         <div v-if="phase === 'shop' && turn !== 1" class="overlay">
           <Shop />
         </div>
         <UiHand />
       </div>
+
     </div>
   </div>
 </template>

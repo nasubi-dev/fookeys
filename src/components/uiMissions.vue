@@ -12,7 +12,7 @@ const { missions } = storeToRefs(gameStore);
 <template>
   <div>
     <div v-for="mission in missions" :key="mission.id">
-      <div class="overCard">
+      <div class="overCard" style="width:25dvw;">
         <img :src="infoImg" class="" />
         <UiMission :mission="mission" />
       </div>

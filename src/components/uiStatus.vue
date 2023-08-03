@@ -11,7 +11,7 @@ const { name, character, status } = toRefs(player.value);
 </script>
 
 <template>
-  <div class="overCard w-1/2 h-auto mt-auto">
+  <div class="overCard  mt-auto" style="width:50dvw;">
     <img :src="statusImg" class="" />
     <div class="overText transform translate-y-3">
       <span class="text-sm font-medium text-gray-900 truncate mx-2">

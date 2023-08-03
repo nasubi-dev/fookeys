@@ -28,28 +28,30 @@ onClickOutside(el, () => {
   <div>
     <div v-if="dropDown" ref="el" class="bg-white rounded">
       {{ dropDown }}
-      <p>{{ "description: " + card.description }}</p>
+      <h5>{{ card.name }}</h5>
+      <p>{{ card.description }}</p>
     </div>
     <div ref="htmlRefHook" class="overCard">
-      <img :src="`/img/companys/${card.company}.png`"  onselectstart="return false;"
-        onmousedown="return false;"/>
+      <img :src="`/img/companys/${card.company}.png`" onselectstart="return false;" onmousedown="return false;" />
       <div class="overText">
-        <h5>{{ card.name }}</h5>
-        <p>{{ card.waste }}</p>
-        <div v-if="card.atk">
-          <p>{{ "⚔:" + card.atk }}</p>
-        </div>
-        <div v-if="card.def">
-          <p>{{ "🛡:" + card.def }}</p>
-        </div>
-        <div v-if="card.tech">
-          <p>{{ "🏹:" + card.tech }}</p>
-        </div>
-        <div v-if="card.priority">
-          <p>{{ "🦶: " + card.priority }}</p>
-        </div>
-        <div v-if="card.heal">
-          <p>{{ "💖:" + card.heal }}</p>
+        <p class="waste">{{ card.waste }}</p>
+        <div class="info flex justify-start">
+          <p>{{ "🍖" + card.hungry }}</p>
+          <div v-if="card.atk">
+            <p>{{ "⚔:" + card.atk }}</p>
+          </div>
+          <div v-if="card.def">
+            <p>{{ "🛡:" + card.def }}</p>
+          </div>
+          <div v-if="card.tech">
+            <p>{{ "🏹:" + card.tech }}</p>
+          </div>
+          <div v-if="card.priority">
+            <p>{{ "🦶: " + card.priority }}</p>
+          </div>
+          <div v-if="card.heal">
+            <p>{{ "💖:" + card.heal }}</p>
+          </div>
         </div>
       </div>
     </div>
