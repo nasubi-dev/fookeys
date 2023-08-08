@@ -36,7 +36,7 @@ onClickOutside(el, () => {
       <div class="overText">
         <p class="waste">{{ card.waste }}</p>
         <div class="info flex justify-start">
-          <p>{{ "🍖" + card.hungry }}</p>
+          <p>{{ "🍖" + card.hungry }} </p>
           <div v-if="card.atk">
             <p>{{ "⚔:" + card.atk }}</p>
           </div>

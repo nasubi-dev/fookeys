@@ -9,7 +9,7 @@ const { sumCards } = storeToRefs(playerStore);
 
 <template>
   <div>
-    <div class="overCard w-96">
+    <div class="overCard">
       <img :src="sumFieldImg" />
       <div class="overText">
         {{ sumCards }}

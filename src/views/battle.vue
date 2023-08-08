@@ -35,7 +35,9 @@ onMounted(async () => {
   if (allCharacters[character.value].maxHp !== undefined) {
     status.value.hp += allCharacters[character.value].maxHp ?? 600;
   }
-  getEnemyPlayer();//!あとでもっといい方法を考える
+  setTimeout(async() => {
+    await getEnemyPlayer();//!あとでもっといい方法を考える
+  }, 1000);
 
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
@@ -64,9 +66,9 @@ const turnEnd = () => {
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
 
-      <UiEnemyInfo :enemyPlayer="enemyPlayer" class="flex flex-row-reverse" />
+      <UiEnemyInfo :e="enemyPlayer" class="flex flex-row-reverse" />
 
-      <div class="flex justify-center">
+      <div v-if="!cardLock" class="flex justify-center">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">turn
           End</button>
         <UiSumField />
@@ -74,6 +76,11 @@ const turnEnd = () => {
           <div v-if="donate">寄付MODE</div>
           <div v-else>戦闘MODE</div>
         </button>
+      </div>
+      <div v-else class="flex flex-col">
+        "自分の使用したカード"
+        "相手の使用したカード"
+        "優先度高い順にカードを処理"
       </div>
 
       <div class="bottom-0 absolute mb-3 mr-3 max-w-full">

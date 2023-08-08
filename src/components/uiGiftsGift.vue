@@ -35,7 +35,7 @@ onClickOutside(el, () => {
       <p>{{ "description: " + allGifts[gift]?.description }}</p>
     </div>
     <div ref="htmlRefHook" class="mt-auto">
-      <button class="p-5 mx-1 rounded-full bg-white" onselectstart="return false;" onmousedown="return false;">
+      <button class="mx-1 rounded-full bg-white" style="padding:2vw;" onselectstart="return false;" onmousedown="return false;">
       </button>
     </div>
   </div>
