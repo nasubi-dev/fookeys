@@ -11,10 +11,10 @@ import { battle } from "@/server/useBattle";
 import allMissions from "@/assets/allMissions";
 import allCards from "@/assets/allCards";
 import allGifts from "@/assets/allGifts";
+import { getEnemyPlayer } from "./usePlayerData";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
-const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //相手のisSelectedGiftを取得する
 export async function getEnemyGift(): Promise<number | undefined> {
@@ -126,12 +126,14 @@ export async function watchTurnEnd(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
   if (enemyCheck) {
+    // await getEnemyPlayer();
     battle();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {
       const data = doc.data();
       if (!data) return;
       if (data.check) {
+        // getEnemyPlayer();
         battle();
         //監視を解除する
         unsubscribe();

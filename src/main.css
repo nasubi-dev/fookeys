@@ -24,12 +24,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  white-space: nowrap;
 }
 .overText .waste{
   transform: translate(-500%, -50%);
 }
 .overText .info{
-  transform: translate(0%,200%);
+  transform: translate(0%,170%);
 }
 .overlay{
   z-index:1;
@@ -61,7 +62,7 @@
   background-size: 100% 100%;
 }
 .cardSize{
-  width: 11.1vw;
+  width: 11.11111vw;
   height: auto;
 }
 img {

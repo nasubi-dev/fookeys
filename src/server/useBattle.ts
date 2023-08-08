@@ -266,7 +266,9 @@ export async function battle() {
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+  getEnemyPlayer(); //!
 
+  
   //寄付ならば先に処理を行う
   await donate();
   //先行後攻を決める
@@ -277,22 +279,27 @@ export async function battle() {
   else console.log(i, "結果...firstAtkPlayer: ", firstAtkPlayer.value);
   log.value = "結果...firstAtkPlayer: " + firstAtkPlayer.value;
 
-  console.log(i, "先行の攻撃");
-  log.value = "先行の攻撃";
-  await calcDamage("primary");
-  await reflectDamage();
-  await checkMission("primary");
+  setTimeout(async () => {
+    console.log(i, "先行の攻撃");
+    log.value = "先行の攻撃";
+    await calcDamage("primary");
+    await reflectDamage();
+    await checkMission("primary");
 
+    getEnemyPlayer(); //!
 
-  console.log(i, "後攻の攻撃");
-  log.value = "後攻の攻撃";
-  await calcDamage("second");
-  await reflectDamage();
-  await checkMission("second");
+    setTimeout(async () => {
+      console.log(i, "後攻の攻撃");
+      log.value = "後攻の攻撃";
+      await calcDamage("second");
+      await reflectDamage();
+      await checkMission("second");
 
-
-  //戦後処理
-  await postBattle();
+      getEnemyPlayer(); //!
+      //戦後処理
+      await postBattle();
+    }, 1000);
+  }, 1000);
 }
 //戦闘後の処理
 export async function postBattle(): Promise<void> {
@@ -327,7 +334,7 @@ export async function postBattle(): Promise<void> {
   //firstAtkPlayerの値をundefinedにする
   firstAtkPlayer.value = undefined;
 
-  getEnemyPlayer();//!
+  getEnemyPlayer(); //!
   //shopを開く
   startShop();
 }
