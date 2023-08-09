@@ -11,15 +11,18 @@ import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import UiSumField from "@/components/uiSumField.vue";
+import UiEnemyUseCard from "@/components/uiEnemyUseCard.vue";
+import UiUseCard from "@/components/uiUseCard.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
+import infoImg from "@/assets/img/ui/info.png";
 
 import { usePush } from 'notivue'
 const push = usePush()
 
-const { id, player, cardLock, phase, offer, sign, log, sumCards } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate } = toRefs(player.value);
+const { id, player, cardLock, phase, offer, sign, log, sumCards, components } = storeToRefs(playerStore);
+const { idGame, character, gifts, status, hand, donate, field, sumFields } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -35,7 +38,7 @@ onMounted(async () => {
   if (allCharacters[character.value].maxHp !== undefined) {
     status.value.hp += allCharacters[character.value].maxHp ?? 600;
   }
-  setTimeout(async() => {
+  setTimeout(async () => {
     await getEnemyPlayer();//!あとでもっといい方法を考える
   }, 1000);
 
@@ -68,7 +71,7 @@ const turnEnd = () => {
 
       <UiEnemyInfo :e="enemyPlayer" class="flex flex-row-reverse" />
 
-      <div v-if="!cardLock" class="flex justify-center">
+      <div v-if="components === 'afterBattle'" class="flex justify-center">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">turn
           End</button>
         <UiSumField />
@@ -78,9 +81,27 @@ const turnEnd = () => {
         </button>
       </div>
       <div v-else class="flex flex-col">
-        "自分の使用したカード"
-        "相手の使用したカード"
+        "先行の使用したカード"
+        "後攻の使用したカード"
         "優先度高い順にカードを処理"
+        <div v-if="components === 'afterDecideFirstAtkPlayer' || 'afterPrimaryAtk' || 'afterSecondAtk'">
+          {{ components }}
+
+          <div v-if="sign === firstAtkPlayer" style="width: 35vw;">
+            <div v-if="components !== 'afterSecondAtk'">
+              <UiUseCard />
+            </div>
+            <UiEnemyUseCard />
+          </div>
+
+          <div v-if="sign !== firstAtkPlayer" style="width: 35vw;">
+            <div v-if="components !== 'afterSecondAtk'">
+              <UiUseCard />
+            </div>
+            <UiEnemyUseCard />
+
+          </div>
+        </div>
       </div>
 
       <div class="bottom-0 absolute mb-3 mr-3 max-w-full">
@@ -89,7 +110,7 @@ const turnEnd = () => {
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />
         </div>
-        <div v-if="phase === 'shop' && turn !== 1" class="overlay">
+        <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
           <Shop />
         </div>
         <UiHand />

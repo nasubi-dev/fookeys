@@ -39,6 +39,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const cardLock = ref(false);
   const offer = ref<Card[]>([]);
   const log = ref<string>();
+  const components = ref<string>("afterBattle");
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
   const sumCards = computed<SumCards>(() =>
@@ -134,6 +135,7 @@ const usePlayerStore = defineStore("playerData", () => {
     cardLock,
     offer,
     log,
+    components,
     sumCards,
     pushHand,
     popHand,

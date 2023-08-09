@@ -11,7 +11,6 @@ import { battle } from "@/server/useBattle";
 import allMissions from "@/assets/allMissions";
 import allCards from "@/assets/allCards";
 import allGifts from "@/assets/allGifts";
-import { getEnemyPlayer } from "./usePlayerData";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -83,13 +82,12 @@ export function resetCheck() {
 //checkの値の監視
 export async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
-  const { id, player, log } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { check, idEnemy, isSelectedGift } = toRefs(player.value);
 
   //選択したGiftをFirestoreに保存する
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
   console.log(i, "isSelectedGift: " + isSelectedGift.value);
-  log.value = "isSelectedGift: " + isSelectedGift.value;
   //checkの値がtrueになっていたら､shopフェーズを終了する
   check.value = true;
   updateDoc(doc(playersRef, id.value), { check: check.value });
@@ -119,21 +117,19 @@ export async function watchTurnEnd(): Promise<void> {
   //checkの値がtrueになっていたら､カード選択終了
   check.value = true;
   sumFields.value = sumCards.value;
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
+  updateDoc(doc(playersRef, id.value), { field: field.value });
   updateDoc(doc(playersRef, id.value), { check: check.value });
   updateDoc(doc(playersRef, id.value), { donate: donate.value });
-  updateDoc(doc(playersRef, id.value), { field: field.value });
   updateDoc(doc(playersRef, id.value), { sumFields: sumFields.value });
-  updateDoc(doc(playersRef, id.value), { hand: hand.value });
   const enemyCheck = (await getDoc(doc(playersRef, idEnemy.value))).data()?.check;
   if (enemyCheck) {
-    // await getEnemyPlayer();
     battle();
   } else {
     const unsubscribe = onSnapshot(doc(playersRef, idEnemy.value), (doc) => {
       const data = doc.data();
       if (!data) return;
       if (data.check) {
-        // getEnemyPlayer();
         battle();
         //監視を解除する
         unsubscribe();
