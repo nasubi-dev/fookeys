@@ -17,6 +17,7 @@ import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 import infoImg from "@/assets/img/ui/info.png";
+import decide from "@/assets/img/ui/decide.png";
 
 import { usePush } from 'notivue'
 const push = usePush()
@@ -72,35 +73,35 @@ const turnEnd = () => {
       <UiEnemyInfo :e="enemyPlayer" class="flex flex-row-reverse" />
 
       <div v-if="components === 'afterBattle'" class="flex justify-center">
-        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">turn
-          End</button>
+        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
+          <img :src="decide" style="width: 20vw;" />
+        </button>
         <UiSumField />
         <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
           <div v-if="donate">寄付MODE</div>
           <div v-else>戦闘MODE</div>
         </button>
       </div>
-      <div v-else class="flex flex-col">
+
+      <div v-else>
         "先行の使用したカード"
         "後攻の使用したカード"
         "優先度高い順にカードを処理"
-        <div v-if="components === 'afterDecideFirstAtkPlayer' || 'afterPrimaryAtk' || 'afterSecondAtk'">
-          {{ components }}
-
-          <div v-if="sign === firstAtkPlayer" style="width: 35vw;">
-            <div v-if="components !== 'afterSecondAtk'">
-              <UiUseCard />
-            </div>
+        {{ components }}
+        <div v-if="sign === firstAtkPlayer" style="width: 35vw;">
+          <div v-if="components !== 'afterSecondAtk'">
+            <UiUseCard />
+          </div>
+          <UiEnemyUseCard />
+        </div>
+        <div v-else style="width: 35vw;">
+          <div v-if="components !== 'afterSecondAtk'">
             <UiEnemyUseCard />
           </div>
-
-          <div v-if="sign !== firstAtkPlayer" style="width: 35vw;">
-            <div v-if="components !== 'afterSecondAtk'">
-              <UiUseCard />
-            </div>
-            <UiEnemyUseCard />
-
-          </div>
+          <UiUseCard />
+        </div>
+        <div class="overlay">
+          test
         </div>
       </div>
 

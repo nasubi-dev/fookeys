@@ -1,14 +1,4 @@
-import type { Card } from "@/types";
-const allCards: Card[] =[
-  {
-    "id": 0,
-    "name": "腐ったカード",
-    "waste": 0,
-    "hungry": 0,
-    "company": "none",
-    "description": "このカードは腐っている。",
-    "rotten": true
-  },
+[
   {
     "id": 1,
     "name": "フライドポテト",
@@ -508,7 +498,8 @@ const allCards: Card[] =[
     "hungry": 40,
     "company": "unlimit",
     "description": "2ラウンドの間、スピード🦶+100で行動する。",
-    "def": 145
+    "def": 145,
+    "tech": ""
   },
   {
     "id": 60,
@@ -816,5 +807,3 @@ const allCards: Card[] =[
     "description": "このラウンド中、与えるマッスルダメージを2倍にする。"
   }
 ]
-
-export default allCards;

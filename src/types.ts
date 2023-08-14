@@ -1,15 +1,15 @@
 type Card = {
-  id: number; //?並び替え用?
-  name: string; //名前
-  waste: number; //消費期限
-  hungry: number; //満腹値
-  company: string; //会社名
-  description: string; //説明文
-  priority?: number; //優先度
-  atk?: number; //マッスル
-  def?: number; //ディフェンス
-  tech?: number; //テクニック
-  heal?: number; //回復
+  id: number;
+  name: string;
+  waste: number;
+  hungry: number;
+  company: string;
+  description?: string;
+  priority?: number;
+  atk?: number;
+  def?: number;
+  tech?: number;
+  heal?: number;
   rotten?: boolean; //腐ってるかのフラグ
   // special?: () => void;
 };
@@ -44,7 +44,7 @@ type Mission = {
   reward: number;
   goalAchievement: number;
   nowAchievement: number;
-  checker?: (sumFields?: SumCards, field?: Card[],hand?:Card[]) => number | undefined;
+  checker?: (sumFields?: SumCards, field?: Card[], hand?: Card[]) => number | undefined;
 };
 //!使われてるか調べる
 type Phase = "shop" | "battle" | "result" | "none";

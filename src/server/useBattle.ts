@@ -255,6 +255,7 @@ export async function battle() {
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+  await wait(5000);
   getEnemyPlayer(); //!
 
   //寄付ならば先に処理を行う
@@ -269,6 +270,7 @@ export async function battle() {
 
   components.value = "afterDecideFirstAtkPlayer";
   await wait(5000);
+  getEnemyPlayer(); //!
 
   console.log(i, "先行の攻撃");
   log.value = "先行の攻撃";
@@ -304,8 +306,6 @@ export async function postBattle(): Promise<void> {
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  //行動していないならばエラーを返す
-  // if (!check.value) throw new Error("checkの値がfalse､つまり行動していません");
   //使ったカードを捨てる
   deleteField();
   //handの腐り値を減らす(腐り値が0になったらhandから削除する)
