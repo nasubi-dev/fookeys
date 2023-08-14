@@ -53,7 +53,7 @@ async function reflectDamage(): Promise<void> {
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { id, player, sign } = storeToRefs(playerStore);
+  const { id, player, sign, components } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -94,6 +94,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
 
   //支援を行う//!未定
+
+  components.value = "afterSupport";
+  await wait(1000);
+
   //防御を行う//?エフェクトのみ
   let defense = 0;
   if (which === "primary") {
@@ -106,6 +110,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       console.log(i, "enemySumFields.def: ", defense);
     }
   }
+
+  components.value = "afterDefense";
+  await wait(1000);
 
   //マッスル攻撃を行う
   console.log(i, "マッスル攻撃!!!");
@@ -125,6 +132,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
   }
 
+  components.value = "afterMuscle";
+  await wait(1000);
+
   //テクニック攻撃を行う
   console.log(i, "テクニック攻撃!!!");
   let holdingTech = 0;
@@ -137,6 +147,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
   enemy.status.hp -= my.sumFields.tech;
   console.log(i, "テクニック攻撃でenemyに", my.sumFields.tech, "のダメージ");
+
+  components.value = "afterTechnique";
+  await wait(1000);
 
   //hungryの値が上限を超えていた場合､上限値にする
   if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
@@ -255,7 +268,7 @@ export async function battle() {
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
-  await wait(5000);
+  await wait(3000);
   getEnemyPlayer(); //!
 
   //寄付ならば先に処理を行う

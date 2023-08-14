@@ -2,7 +2,6 @@
 import { toRefs } from "vue";
 import { gameStore } from "@/main";
 import { storeToRefs } from "pinia";
-import infoImg from "@/assets/img/ui/info.png";
 import UiMission from "@/components/uiMissionsMission.vue";
 
 const { missions } = storeToRefs(gameStore);
@@ -12,10 +11,7 @@ const { missions } = storeToRefs(gameStore);
 <template>
   <div>
     <div v-for="mission in missions" :key="mission.id">
-      <div class="overCard" style="width:25dvw;">
-        <img :src="infoImg" class="" />
-        <UiMission :mission="mission" />
-      </div>
+      <UiMission :mission="mission" />
     </div>
   </div>
 </template>

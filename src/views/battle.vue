@@ -101,22 +101,46 @@ const turnEnd = () => {
           <UiUseCard />
         </div>
         <div class="overlay">
-          test
+          test:
+          <div v-if="components === 'afterMuscle'">
+            afterMuscle
+            {{ field.map((card) => {
+              if (card.id <= 22 && card.id > 0) { return card.name }
+            }) }}
+          </div>
+          <div v-if="components === 'afterTechnique'">
+            afterTechnique
+            {{ field.map((card) => {
+              if (card.id <= 44 && card.id > 22) { return card.name }
+            }) }}
+          </div>
+          <div v-if="components === 'afterDefense'">
+            afterDefense
+            {{ field.map((card) => {
+              if (card.id <= 65 && card.id > 44) { return card.name }
+            }) }}
+          </div>
+          <div v-if="components === 'afterSupport'">
+            afterSupport
+            {{ field.map((card) => {
+              if (card.id <= 96 && card.id > 65) { return card.name }
+            }) }}
+          </div>
         </div>
       </div>
 
+      <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
+        <Shop />
+      </div>
+
       <div class="bottom-0 absolute mb-3 mr-3 max-w-full">
-        <div class="flex max-w-full">
+        <div class="flex max-w-full mb-1">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />
         </div>
-        <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
-          <Shop />
-        </div>
         <UiHand />
       </div>
-
     </div>
   </div>
 </template>
