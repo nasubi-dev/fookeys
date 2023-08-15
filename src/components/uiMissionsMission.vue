@@ -34,7 +34,7 @@ onClickOutside(el, () => {
     <div v-if="dropDown" ref="el" class="bg-white rounded">
       {{ mission.description }}
     </div>
-    <div ref="htmlRefHook" class="overCard animate-slide-in-top">
+    <div ref="htmlRefHook" class="overCard">
       <img :src="infoImg" onselectstart="return false;" onmousedown="return false;" style="width: 25vw;" />
       <div class="overText">
         <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>

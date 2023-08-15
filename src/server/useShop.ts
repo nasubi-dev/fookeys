@@ -34,8 +34,10 @@ export async function startShop(): Promise<void> {
   phase.value = "shop";
   console.log(i, "phase: ", phase.value);
   if (game.value.turn % 4 == 1) setMissions();
-  if (game.value.turn === 1) setHand();
-  else setOffer();
+  if (game.value.turn === 1) {
+    setHand();
+    phase.value = "battle";
+  } else setOffer();
 }
 //shopフェーズの終了
 export async function endShop(): Promise<void> {

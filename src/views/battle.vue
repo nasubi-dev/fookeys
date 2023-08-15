@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, toRefs, watch } from "vue";
+import { onMounted, toRefs, watch, ref } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -16,7 +16,6 @@ import UiUseCard from "@/components/uiUseCard.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
-import infoImg from "@/assets/img/ui/info.png";
 import decide from "@/assets/img/ui/decide.png";
 
 import { usePush } from 'notivue'
@@ -63,6 +62,16 @@ const turnEnd = () => {
   cardLock.value = true;
   //!手札がFirestoreに保存するためにhand.vueから移動する
 };
+
+const battleAnimation = ref(true);
+watch(phase, (newVal) => {
+  if (newVal === 'battle') {
+    battleAnimation.value = true;
+    setTimeout(() => {
+      battleAnimation.value = false;
+    }, 1000);
+  }
+})
 
 </script>
 
@@ -129,8 +138,15 @@ const turnEnd = () => {
         </div>
       </div>
 
+      {{ phase }}
+
       <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
         <Shop />
+      </div>
+      <div v-else>
+        <div v-if="battleAnimation" class="animate-slide-to-top overlay">
+          Battle Phase // ここにアニメーションを入れる
+        </div>
       </div>
 
       <div class="bottom-0 absolute mb-3 mr-3 max-w-full">

@@ -154,10 +154,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //hungryの値が上限を超えていた場合､上限値にする
   if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
   //Firebaseに反映する
-  await Promise.all([
-    updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry }),
-    updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp }),
-  ]);
+    await Promise.all([
+      updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry }),
+      updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp }),
+    ]);
 }
 
 //missionの統括
@@ -268,7 +268,7 @@ export async function battle() {
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
-  await wait(3000);
+  await wait(1000);
   getEnemyPlayer(); //!
 
   //寄付ならば先に処理を行う
@@ -282,7 +282,7 @@ export async function battle() {
   log.value = "結果...firstAtkPlayer: " + firstAtkPlayer.value;
 
   components.value = "afterDecideFirstAtkPlayer";
-  await wait(5000);
+  await wait(1000);
   getEnemyPlayer(); //!
 
   console.log(i, "先行の攻撃");
@@ -292,7 +292,7 @@ export async function battle() {
   await checkMission("primary");
 
   components.value = "afterPrimaryAtk";
-  await wait(5000);
+  await wait(1000);
   getEnemyPlayer(); //!
 
   console.log(i, "後攻の攻撃");
@@ -302,7 +302,7 @@ export async function battle() {
   await checkMission("second");
 
   components.value = "afterSecondAtk";
-  await wait(5000);
+  await wait(1000);
   getEnemyPlayer(); //!
 
   //戦後処理

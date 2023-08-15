@@ -27,8 +27,8 @@ onClickOutside(el, () => {
 <template>
   <div>
     <div v-if="dropDown" ref="el" class="bg-white rounded">
-      {{ dropDown }}
       <h5>{{ card.name }}</h5>
+      <p>{{ card.company }}</p>
       <p>{{ card.description }}</p>
     </div>
     <div ref="htmlRefHook" class="overCard animate-slide-in-top">
