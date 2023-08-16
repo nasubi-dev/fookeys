@@ -11,7 +11,6 @@ import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import UiSumField from "@/components/uiSumField.vue";
-import UiEnemyUseCard from "@/components/uiEnemyUseCard.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
@@ -79,7 +78,7 @@ watch(phase, (newVal) => {
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
 
-      <UiEnemyInfo :e="enemyPlayer" class="flex flex-row-reverse" />
+      <UiEnemyInfo :p="enemyPlayer" class="flex flex-row-reverse" />
 
       <div v-if="components === 'afterBattle'" class="flex justify-center">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
@@ -99,16 +98,18 @@ watch(phase, (newVal) => {
         {{ components }}
         <div v-if="sign === firstAtkPlayer" style="width: 35vw;">
           <div v-if="components !== 'afterSecondAtk'">
-            <UiUseCard />
+            <UiUseCard :p="player" />
           </div>
-          <UiEnemyUseCard />
+          <UiUseCard :p="enemyPlayer" />
         </div>
+
         <div v-else style="width: 35vw;">
           <div v-if="components !== 'afterSecondAtk'">
-            <UiEnemyUseCard />
+            <UiUseCard :p="enemyPlayer" />
           </div>
-          <UiUseCard />
+          <UiUseCard :p="player" />
         </div>
+
         <div class="overlay">
           test:
           <div v-if="components === 'afterMuscle'">
@@ -149,8 +150,8 @@ watch(phase, (newVal) => {
         </div>
       </div>
 
-      <div class="bottom-0 absolute mb-3 mr-3 max-w-full">
-        <div class="flex max-w-full mb-1">
+      <div class="bottom-0 absolute m-3">
+        <div class="flex justify-start mb-1" style="width: 95vw;">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />

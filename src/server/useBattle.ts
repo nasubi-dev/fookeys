@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
-import type { Mission, GameData, PlayerData, PlayerSign } from "@/types";
+import type { GameData, PlayerData, PlayerSign } from "@/types";
 import allCharacters from "@/assets/allCharacters";
 import { getEnemyPlayer } from "./usePlayerData";
 

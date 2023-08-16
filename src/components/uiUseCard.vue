@@ -1,33 +1,29 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore } from "@/main";
-import { storeToRefs } from "pinia";
+import type { PlayerData } from "@/types";
+import uiCardBehind from "./uiCardBehind.vue";
 import allCharacters from "@/assets/allCharacters";
 import infoImg from "@/assets/img/ui/info.png";
 
-const { player } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate, field, sumFields } = toRefs(player.value);
+defineProps<{
+  p: PlayerData;
+}>();
+
 </script>
 <template>
-  <div>
+  <div style="width: 20vw;">
     <div class="overCard">
       <img :src="infoImg" />
-      <div class="overText flex justify-start">
-        <p>{{ allCharacters[character].name }}</p>
-        <p>{{ field.map((card) => card.name) }}</p>
+      <div class="overText">
         <div class="flex justify-start">
-          <p>{{ "0️⃣" + sumFields.num }}</p>
-          <p>{{ "🍃" + sumFields.waste }}</p>
-          <p>{{ "🍖" + sumFields.hungry }} </p>
-          <p>{{ "⚔:" + sumFields.atk }}</p>
-          <p>{{ "🛡:" + sumFields.def }}</p>
-          <p>{{ "🏹:" + sumFields.tech }}</p>
-          <p>{{ "🦶: " + sumFields.priority }}</p>
-          <p>{{ "💖:" + sumFields.heal }}</p>
+          <p>{{ allCharacters[p.character].name }}</p>
+          <p>{{ "🍃" + p.sumFields.waste }}</p>
+          <p>{{ "🍖" + p.sumFields.hungry }} </p>
         </div>
       </div>
     </div>
-    
+
+    <uiCardBehind :cards="p.field" />
+
   </div>
 </template>
