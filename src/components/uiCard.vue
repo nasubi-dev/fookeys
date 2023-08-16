@@ -31,7 +31,7 @@ onClickOutside(el, () => {
       <p>{{ card.company }}</p>
       <p>{{ card.description }}</p>
     </div>
-    <div ref="htmlRefHook" class="overCard animate-slide-in-top">
+    <div ref="htmlRefHook" class="overCard">
       <img :src="`/img/companys/${card.company}.png`" onselectstart="return false;" onmousedown="return false;" />
       <div class="overText">
         <p class="waste">{{ card.waste }}</p>

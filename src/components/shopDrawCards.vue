@@ -5,6 +5,8 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { watchShopEnd } from "@/server/useShop";
 import type { Card } from "@/types";
+import uiHandCard from "./uiCard.vue";
+import decide from "@/assets/img/ui/decide.png";
 
 const { offer, player, phase, log } = storeToRefs(playerStore);
 const { hand, check } = toRefs(player.value);
@@ -32,34 +34,18 @@ const offerHand = async () => {
 
 <template>
   <div>
-    <div v-if="phase === 'shop'">
-      <button @click="offerHand()" :class="check ? 'bg-red-500' : 'bg-blue-500'">選択確定</button>
-      {{ isOfferSelected }}
-      <ul class="text-xs flex justify-start">
+    <div v-if="phase === 'shop'" class="flex justify-start">
+      <button @click="offerHand()" :class="check ? 'bg-red-500' : 'bg-blue-500'">
+        <img :src="decide" style="width: 20vw;" />
+      </button>
+      <div class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">
           <button @click="isOfferSelected[index] = !isOfferSelected[index]">
-            <div :class="isOfferSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
-              class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">
-              <h5 class="text-bold">{{ card.name }}</h5>
-              <p class="text-gray-600">ID:{{ card.id }}</p>
-              <p class="text-gray-600">📊🚬:{{ card.company }}</p>
-              <p class="text-gray-600">{{ "🍃:" + card.waste + "🍖: " + card.hungry }}</p>
-              <div v-if="card.priority">
-                <p class="text-gray-600">{{ "🦶: " + card.priority }}</p>
-              </div>
-              <div v-if="card.atk">
-                <p class="text-gray-600">{{ "⚔:" + card.atk }}</p>
-              </div>
-              <div v-if="card.def">
-                <p class="text-gray-600">{{ "🛡:" + card.def }}</p>
-              </div>
-              <div v-if="card.tech">
-                <p class="text-gray-600">{{ "🏹:" + card.tech }}</p>
-              </div>
-            </div>
+            <uiHandCard :card="card"
+              :class="isOfferSelected[index] ? 'bg-red-100 transform -translate-y-2' : 'bg-blue-100'" class="cardSize" />
           </button>
         </div>
-      </ul>
+      </div>
     </div>
   </div>
 </template>

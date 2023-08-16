@@ -4,7 +4,7 @@ import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { watchTurnEnd } from "@/server/useShop";
-import UiHandCard from "@/components/uiHandCard.vue";
+import UiHandCard from "@/components/uiCard.vue";
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
@@ -59,12 +59,12 @@ const popCard = (index: number, id: number) => {
           <div v-if="!card.rotten">
             <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
               :class="handSelected[index] ? 'transform -translate-y-2' : null" class="cardSize">
-              <UiHandCard :card="card" />
+              <UiHandCard :card="card" class="animate-slide-in-top" />
             </button>
           </div>
           <div v-else>
             <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
-              class="w-30 h-30 rounded-lg p-4 flex flex-col justify-center items-center">
+              class="rounded-lg p-4 flex flex-col justify-center items-center">
               <h5 class="text-bold">腐ってます!!!!!</h5>
             </div>
           </div>
