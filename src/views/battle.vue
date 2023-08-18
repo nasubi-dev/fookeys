@@ -12,6 +12,7 @@ import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import UiSumField from "@/components/uiSumField.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
+import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
@@ -20,7 +21,7 @@ import decide from "@/assets/img/ui/decide.png";
 import { usePush } from 'notivue'
 const push = usePush()
 
-const { id, player, cardLock, phase, offer, sign, log, sumCards, components } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign, log, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
@@ -77,7 +78,6 @@ watch(phase, (newVal) => {
 <template>
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-
       <UiEnemyInfo :p="enemyPlayer" class="flex flex-row-reverse" />
 
       <div v-if="components === 'afterBattle'" class="flex justify-center">
@@ -92,9 +92,6 @@ watch(phase, (newVal) => {
       </div>
 
       <div v-else>
-        "先行の使用したカード"
-        "後攻の使用したカード"
-        "優先度高い順にカードを処理"
         {{ components }}
         <div v-if="sign === firstAtkPlayer" style="width: 35vw;">
           <div v-if="components !== 'afterSecondAtk'">
@@ -102,7 +99,6 @@ watch(phase, (newVal) => {
           </div>
           <UiUseCard :p="enemyPlayer" />
         </div>
-
         <div v-else style="width: 35vw;">
           <div v-if="components !== 'afterSecondAtk'">
             <UiUseCard :p="enemyPlayer" />
@@ -111,34 +107,13 @@ watch(phase, (newVal) => {
         </div>
 
         <div class="overlay">
-          test:
-          <div v-if="components === 'afterMuscle'">
-            afterMuscle
-            {{ field.map((card) => {
-              if (card.id <= 22 && card.id > 0) { return card.name }
-            }) }}
-          </div>
-          <div v-if="components === 'afterTechnique'">
-            afterTechnique
-            {{ field.map((card) => {
-              if (card.id <= 44 && card.id > 22) { return card.name }
-            }) }}
-          </div>
-          <div v-if="components === 'afterDefense'">
-            afterDefense
-            {{ field.map((card) => {
-              if (card.id <= 65 && card.id > 44) { return card.name }
-            }) }}
-          </div>
-          <div v-if="components === 'afterSupport'">
-            afterSupport
-            {{ field.map((card) => {
-              if (card.id <= 96 && card.id > 65) { return card.name }
-            }) }}
-          </div>
+          {{ components + battleResult }}
+          <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+            :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
+          <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+            :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
         </div>
       </div>
-
       {{ phase }}
 
       <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">

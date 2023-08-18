@@ -53,7 +53,7 @@ async function reflectDamage(): Promise<void> {
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { id, player, sign, components } = storeToRefs(playerStore);
+  const { id, player, sign, battleResult } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -84,6 +84,13 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       console.log(i, "自プレイヤー行動不能です");
     }
   }
+  //hungryの値が上限を超えていた場合､上限値にする
+  if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
+  updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
+
+  battleResult.value = ["hungry", my.check ? 1 : 0]; //?1は行動不能
+  await wait(1000);
+
   //相手のhungryの値が上限を超えていた場合､行動不能にする
   let enemySumHungry = enemy.status.hungry + (which === "primary" ? enemy.sumFields.hungry : 0);
   const enemyMaxHungry = 200 + (allCharacters[enemy.character].maxHungry ?? 0);
@@ -95,7 +102,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //支援を行う//!未定
 
-  components.value = "afterSupport";
+  battleResult.value = ["sup", 0]; //!未定
   await wait(1000);
 
   //防御を行う//?エフェクトのみ
@@ -111,53 +118,49 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     }
   }
 
-  components.value = "afterDefense";
+  battleResult.value = ["def", my.sumFields.def];
   await wait(1000);
 
   //マッスル攻撃を行う
   console.log(i, "マッスル攻撃!!!");
   let holdingAtk = 0;
-  console.log(i, "mySumFields.pow: ", my.sumFields.atk);
-  if (my.check) {
-    console.log(i, "行動不能なので攻撃できない");
-  } else {
+  console.log(i, "mySumFields.atk: ", my.sumFields.atk);
+  if (my.check) console.log(i, "行動不能なので攻撃できない");
+  else {
     holdingAtk = my.sumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
     console.log(i, "holdingAtk: ", holdingAtk);
   }
   enemy.status.hp -= holdingAtk;
-  if (defense) {
+  if (defense !== 0) {
     console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
   } else {
     console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
   }
 
-  components.value = "afterMuscle";
+  battleResult.value = ["atk", holdingAtk];
   await wait(1000);
 
   //テクニック攻撃を行う
   console.log(i, "テクニック攻撃!!!");
+  let techDefense = 0;
   let holdingTech = 0;
   if (my.check) {
     console.log(i, "行動不能なので攻撃できない");
   } else {
-    holdingTech = my.sumFields.tech - 0; //?一応防げるギフトがある
+    holdingTech = my.sumFields.tech - techDefense; //?一応防げるギフトがある
     if (holdingTech < 0) holdingTech = 0;
     console.log(i, "holdingTech: ", holdingTech);
   }
   enemy.status.hp -= my.sumFields.tech;
-  console.log(i, "テクニック攻撃でenemyに", my.sumFields.tech, "のダメージ");
+  if (techDefense !== 0) {
+    console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
+  } else {
+    console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
+  }
 
-  components.value = "afterTechnique";
+  battleResult.value = ["tech", holdingTech];
   await wait(1000);
-
-  //hungryの値が上限を超えていた場合､上限値にする
-  if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
-  //Firebaseに反映する
-    await Promise.all([
-      updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry }),
-      updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp }),
-    ]);
 }
 
 //missionの統括
@@ -268,7 +271,7 @@ export async function battle() {
   //checkの値がtrueになっていたら､行動済みとする
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
-  await wait(1000);
+  await wait(1500);
   getEnemyPlayer(); //!
 
   //寄付ならば先に処理を行う
@@ -284,6 +287,7 @@ export async function battle() {
   components.value = "afterDecideFirstAtkPlayer";
   await wait(1000);
   getEnemyPlayer(); //!
+  components.value = "primaryAtk";
 
   console.log(i, "先行の攻撃");
   log.value = "先行の攻撃";
@@ -291,9 +295,9 @@ export async function battle() {
   await reflectDamage();
   await checkMission("primary");
 
-  components.value = "afterPrimaryAtk";
   await wait(1000);
   getEnemyPlayer(); //!
+  components.value = "secondAtk";
 
   console.log(i, "後攻の攻撃");
   log.value = "後攻の攻撃";
@@ -301,7 +305,6 @@ export async function battle() {
   await reflectDamage();
   await checkMission("second");
 
-  components.value = "afterSecondAtk";
   await wait(1000);
   getEnemyPlayer(); //!
 
