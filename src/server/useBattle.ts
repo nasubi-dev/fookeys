@@ -154,9 +154,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
   enemy.status.hp -= my.sumFields.tech;
   if (techDefense !== 0) {
-    console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
+    console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingTech, "のダメージ");
   } else {
-    console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
+    console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
   }
 
   battleResult.value = ["tech", holdingTech];

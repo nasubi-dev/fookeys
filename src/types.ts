@@ -4,7 +4,7 @@ type Card = {
   waste: number;
   hungry: number;
   company: string;
-  attribute: string;
+  attribute?: string;
   description?: string;
   priority?: number;
   atk?: number;
