@@ -80,7 +80,7 @@ watch(phase, (newVal) => {
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <UiEnemyInfo :p="enemyPlayer" class="flex flex-row-reverse" />
 
-      <div v-if="components === 'afterBattle'" class="overlay flex justify-center">
+      <div v-if="components === 'afterBattle'" class="flex justify-center">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
           <img :src="decide" style="width: 20vw;" />
         </button>
