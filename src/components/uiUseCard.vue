@@ -17,8 +17,8 @@ defineProps<{
       <div class="overText">
         <div class="flex justify-start">
           <p>{{ allCharacters[p.character].name }}</p>
-          <p>{{ "🍃" + p.sumFields.waste }}</p>
           <p>{{ "🍖" + p.sumFields.hungry }} </p>
+          <p v-if="p.sumFields.priority">{{ "🦶: " + p.sumFields.priority }}</p>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted, toRefs, watch, ref } from "vue";
 import { e, s, i } from "@/log";
 import type { Card } from "@/types";
 
@@ -7,42 +8,44 @@ defineProps<{
   value: number | string;
   after: number | string;
 }>();
+const view = ref(false);
 
 </script>
 <template>
-  <div class="flex justify-start">
-    <div class="overCard">
-      <div class="flex justify-start">
-        <div v-for="card in (cards.map((card) => { if (card.attribute === after) { return card } }))" :key="card?.id">
-          <div v-if="card" style="width: 15vw;">
-            <img :src="`/img/companys/${card.company}.png`" />
-            <div class="overText">
-              <p class="waste">{{ card.waste }}</p>
-              <div class="info flex justify-start">
-                <p>{{ "🍖" + card.hungry }} </p>
-                <div v-if="card.atk">
-                  <p>{{ "⚔:" + card.atk }}</p>
-                </div>
-                <div v-if="card.def">
-                  <p>{{ "🛡:" + card.def }}</p>
-                </div>
-                <div v-if="card.tech">
-                  <p>{{ "🏹:" + card.tech }}</p>
-                </div>
-                <div v-if="card.priority">
-                  <p>{{ "🦶: " + card.priority }}</p>
-                </div>
-                <div v-if="card.heal">
-                  <p>{{ "💖:" + card.heal }}</p>
-                </div>
+  <div>
+    <div class="overCard flex justify-start">
+      <div v-for="card in (cards.map((card) => { if (card.attribute === after) { return card } }))" :key="card?.id">
+        <div v-if="card" class="overCard" style="width: 15vw;">
+          <img :src="`/img/companys/${card.company}.png`" />
+          <div class="overText">
+            <p class="waste">{{ card.waste }}</p>
+            <div class="info flex justify-start">
+              <p>{{ "🍖" + card.hungry }} </p>
+              <div v-if="card.atk">
+                <p>{{ "⚔:" + card.atk }}</p>
+              </div>
+              <div v-if="card.def">
+                <p>{{ "🛡:" + card.def }}</p>
+              </div>
+              <div v-if="card.tech">
+                <p>{{ "🏹:" + card.tech }}</p>
+              </div>
+              <div v-if="card.priority">
+                <p>{{ "🦶: " + card.priority }}</p>
+              </div>
+              <div v-if="card.heal">
+                <p>{{ "💖:" + card.heal }}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="overText">
-        <div v-if="after !== 'hungry'" class=" text-lg text-fuchsia-600">{{ value }}</div>
-        <div v-else class=" text-lg">{{ value ? "行動不能" : "行動可能" }}</div>
+      <div v-if="after === 'hungry'" class=" text-lg">{{ value ? "行動不能✖" : "行動可能✔" }}</div>
+      <div v-if="view" class="overText">
+        <div v-if="after === 'def'" class=" text-lg font-bold text-fuchsia-600">{{ "🛡:" + value }}</div>
+        <div v-if="after === 'atk'" class=" text-lg font-bold text-fuchsia-600">{{ "⚔:" + value }}</div>
+        <div v-if="after === 'tech'" class=" text-lg font-bold text-fuchsia-600">{{ "🏹:" + value }}</div>
+        <!-- <div v-if="after === 'hungry' || 'sup'" class=" text-lg font-bold text-fuchsia-600">????????????????????</div> -->
       </div>
     </div>
   </div>

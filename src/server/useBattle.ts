@@ -42,7 +42,7 @@ export async function donate(): Promise<void> {
   }
 }
 //ダメージを反映する
-async function reflectDamage(): Promise<void> {
+async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
@@ -60,7 +60,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //自分と相手のidを取得する
   let myId, enemyId;
-  if (firstAtkPlayer.value === sign.value) {
+  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
+  if (a) {
     myId = which === "primary" ? id.value : idEnemy.value;
     enemyId = which === "primary" ? idEnemy.value : id.value;
   } else {
@@ -86,10 +87,13 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
   //hungryの値が上限を超えていた場合､上限値にする
   if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
-  updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
 
-  battleResult.value = ["hungry", my.check ? 1 : 0]; //?1は行動不能
+  if (a) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
   await wait(1000);
+  await reflectStatus();
+  await getEnemyPlayer(); //!
+  battleResult.value = ["hungry", my.check ? 1 : 0]; //?1は行動不能
+  await wait(2000);
 
   //相手のhungryの値が上限を超えていた場合､行動不能にする
   let enemySumHungry = enemy.status.hungry + (which === "primary" ? enemy.sumFields.hungry : 0);
@@ -102,8 +106,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //支援を行う//!未定
 
-  battleResult.value = ["sup", 0]; //!未定
   await wait(1000);
+  await reflectStatus();
+  await getEnemyPlayer(); //!
+  battleResult.value = ["sup", 0]; //!未定
+  await wait(2000);
 
   //防御を行う//?エフェクトのみ
   let defense = 0;
@@ -118,8 +125,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     }
   }
 
-  battleResult.value = ["def", my.sumFields.def];
   await wait(1000);
+  await reflectStatus();
+  await getEnemyPlayer(); //!
+  battleResult.value = ["def", my.sumFields.def];
+  await wait(2000);
 
   //マッスル攻撃を行う
   console.log(i, "マッスル攻撃!!!");
@@ -138,8 +148,12 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
   }
 
-  battleResult.value = ["atk", holdingAtk];
+  if(a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
   await wait(1000);
+  await reflectStatus();
+  await getEnemyPlayer(); //!
+  battleResult.value = ["atk", holdingAtk];
+  await wait(2000);
 
   //テクニック攻撃を行う
   console.log(i, "テクニック攻撃!!!");
@@ -159,8 +173,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
   }
 
-  battleResult.value = ["tech", holdingTech];
+  if(a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
   await wait(1000);
+  await reflectStatus();
+  await getEnemyPlayer(); //!
+  battleResult.value = ["tech", holdingTech];
+  await wait(2000);
+
+  battleResult.value = ["none", 0];
 }
 
 //missionの統括
@@ -292,7 +312,7 @@ export async function battle() {
   console.log(i, "先行の攻撃");
   log.value = "先行の攻撃";
   await calcDamage("primary");
-  await reflectDamage();
+  await reflectStatus();
   await checkMission("primary");
 
   await wait(1000);
@@ -302,7 +322,7 @@ export async function battle() {
   console.log(i, "後攻の攻撃");
   log.value = "後攻の攻撃";
   await calcDamage("second");
-  await reflectDamage();
+  await reflectStatus();
   await checkMission("second");
 
   await wait(1000);
