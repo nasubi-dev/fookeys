@@ -1,26 +1,42 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
-import { playerStore } from "@/main";
+import { ref, toRefs, watch } from "vue";
+import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import allCharacters from "@/assets/allCharacters";
 import statusImg from "@/assets/img/ui/status.png";
 
-const { player } = storeToRefs(playerStore);
+const { player, components, battleResult, sign } = storeToRefs(playerStore);
 const { name, character, status } = toRefs(player.value);
+const { game } = toRefs(gameStore);
+const { firstAtkPlayer } = toRefs(game.value);
 
+const retainedDef = ref<number | undefined>(0);
+watch(battleResult, (newVal) => {
+  if (newVal[0] === 'def' && typeof newVal[1] === 'number') {
+    if (firstAtkPlayer.value === sign.value) {
+      if (components.value === 'primaryAtk') retainedDef.value = newVal[1];
+    } else {
+      if (components.value === 'secondAtk') retainedDef.value = newVal[1];
+    }
+  }//!あとでもっといい方法考える
+  if (newVal[0] === 'tech' && components.value === 'secondAtk') {//!変更タイミング帰るかも
+    retainedDef.value = undefined;
+  }
+})
 </script>
 
 <template>
   <div class="overCard  mt-auto" style="width:50dvw;">
     <img :src="statusImg" class="" />
-    <div class="overText transform translate-y-3">
-      <span class="text-sm font-medium text-gray-900 truncate mx-2">
-        name:{{ name }}
-        {{ allCharacters[player.character].name }}
+    <div class="overText text-sm font-medium text-gray-900" style="width:50dvw;">
+      <div class="status font-bold text-3xl">
+        <!-- name:{{ name }}
+        {{ allCharacters[player.character].name }} -->
         ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
         🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
         🪙:{{ status.contribution }}
-      </span>
+      </div>
+      <div class="def font-bold text-5xl">{{ retainedDef }}</div>
     </div>
   </div>
 </template>

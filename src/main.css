@@ -33,6 +33,12 @@
 .overText .info{
   transform: translate(0%,170%);
 }
+.overText .status{
+  transform: translate(10%,150%);
+}
+.overText .def{
+  transform: translate(-750%,0%);
+}
 .overlay{
   z-index:1;
   position:fixed;
