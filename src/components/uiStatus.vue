@@ -10,13 +10,13 @@ const { name, character, status } = toRefs(player.value);
 const { game } = toRefs(gameStore);
 const { firstAtkPlayer } = toRefs(game.value);
 
-const retainedDef = ref<number | undefined>(0);
+const retainedDef = ref<number | undefined>();
 watch(battleResult, (newVal) => {
   if (newVal[0] === 'def' && typeof newVal[1] === 'number') {
     if (firstAtkPlayer.value === sign.value) {
-      if (components.value === 'primaryAtk') retainedDef.value = newVal[1];
+      if (components.value === 'primaryAtk' && newVal[1]) retainedDef.value = newVal[1];
     } else {
-      if (components.value === 'secondAtk') retainedDef.value = newVal[1];
+      if (components.value === 'secondAtk' && newVal[1]) retainedDef.value = newVal[1];
     }
   }//!あとでもっといい方法考える
   if (newVal[0] === 'tech' && components.value === 'secondAtk') {//!変更タイミング帰るかも
@@ -26,17 +26,19 @@ watch(battleResult, (newVal) => {
 </script>
 
 <template>
-  <div class="overCard  mt-auto" style="width:50dvw;">
-    <img :src="statusImg" class="" />
+  <div class="overCard" style="width:50dvw;">
+    <img :src="statusImg" class="block" />
     <div class="overText text-sm font-medium text-gray-900" style="width:50dvw;">
-      <div class="status font-bold text-3xl">
+      <div class="status font-bold text-3xl mt-auto">
         <!-- name:{{ name }}
         {{ allCharacters[player.character].name }} -->
         ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
         🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
         🪙:{{ status.contribution }}
       </div>
-      <div class="def font-bold text-5xl">{{ retainedDef }}</div>
+    </div>
+    <div class="overText">
+      <div class="font-bold text-5xl mr-auto ml-5 transform -translate-x-48 translate-y-6">{{ retainedDef }}</div>
     </div>
   </div>
 </template>
