@@ -107,7 +107,7 @@ watch(phase, (newVal) => {
         </div>
 
         <div class="overlay flex flex-col">
-          {{ battleResult + " " }}
+          {{ battleResult }}
           <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
             :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
           <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"

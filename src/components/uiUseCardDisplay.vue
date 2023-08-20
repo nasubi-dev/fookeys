@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { onMounted, toRefs, watch, ref } from "vue";
 import { e, s, i } from "@/log";
+import { playerStore } from "@/main";
+import { storeToRefs } from "pinia";
 import type { Card } from "@/types";
+
+const { cardLock } = storeToRefs(playerStore);
 
 defineProps<{
   cards: Card[];
   value: number | string;
   after: number | string;
 }>();
-const view = ref(false);
 
 </script>
 <template>
@@ -40,11 +42,11 @@ const view = ref(false);
           </div>
         </div>
       </div>
-      <div v-if="after === 'hungry'" class=" text-lg">{{ value ? "行動不能✖" : "行動可能✔" }}</div>
-      <div v-if="view" class="overText">
-        <div v-if="after === 'def'" class=" text-lg font-bold text-fuchsia-600">{{ "🛡:" + value }}</div>
-        <div v-if="after === 'atk'" class=" text-lg font-bold text-fuchsia-600">{{ "⚔:" + value }}</div>
-        <div v-if="after === 'tech'" class=" text-lg font-bold text-fuchsia-600">{{ "🏹:" + value }}</div>
+      <div v-if="cardLock" class="overText">
+        <div v-if="after === 'hungry'" class=" text-lg">{{ value ? "行動不能✖" : "行動可能✔" }}</div>
+        <div v-if="after === 'def' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "🛡:" + value }}</div>
+        <div v-if="after === 'atk' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "⚔:" + value }}</div>
+        <div v-if="after === 'tech' && value" class="text-5xl font-bold text-fuchsia-600">{{ "🏹:" + value }}</div>
         <!-- <div v-if="after === 'hungry' || 'sup'" class=" text-lg font-bold text-fuchsia-600">????????????????????</div> -->
       </div>
     </div>
