@@ -77,16 +77,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //寄付をしていた場合､満腹値を増やさない
   //自分のhungryの値が上限を超えていた場合､行動不能にする
   const maxHungry = 200 + (allCharacters[my.character].maxHungry ?? 0);
-  if (!my.check) {
-    my.status.hungry += my.sumFields.hungry;
-    console.log(i, "mySumHungry: ", my.status.hungry);
-    if (my.status.hungry > maxHungry) {
-      my.check = true;
-      console.log(i, "自プレイヤー行動不能です");
-    }
+  my.status.hungry += my.sumFields.hungry;
+  console.log(i, "mySumHungry: ", my.status.hungry);
+  if (my.status.hungry > maxHungry) {
+    my.check = true;
+    console.log(i, "自プレイヤー行動不能です");
+    //hungryの値が上限を超えていた場合､上限値にする
+    if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
   }
-  //hungryの値が上限を超えていた場合､上限値にする
-  if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
 
   if (a) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
   await wait(1000);
@@ -94,6 +92,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   await getEnemyPlayer(); //!
   battleResult.value = ["hungry", my.check ? 1 : 0]; //?1は行動不能
   await wait(2000);
+
+  if (my.check) return;
 
   //相手のhungryの値が上限を超えていた場合､行動不能にする
   let enemySumHungry = enemy.status.hungry + (which === "primary" ? enemy.sumFields.hungry : 0);
@@ -105,80 +105,86 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
 
   //支援を行う//!未定
-
-  await wait(1000);
-  await reflectStatus();
-  await getEnemyPlayer(); //!
-  battleResult.value = ["sup", 0]; //!未定
-  await wait(2000);
+  if (my.field.map((card) => card.attribute).includes("sup")) {
+    await wait(1000);
+    await reflectStatus();
+    await getEnemyPlayer(); //!
+    battleResult.value = ["sup", 0]; //!未定
+    await wait(2000);
+  }
 
   //防御を行う//?エフェクトのみ
   let defense = 0;
-  if (which === "primary") {
-    console.log(i, "先行なので防御できない");
-  } else {
-    if (enemy.check) {
-      console.log(i, "敵は行動不能なので防御できない");
+  if (my.field.map((card) => card.attribute).includes("def")) {
+    if (which === "primary") {
+      console.log(i, "先行なので防御できない");
     } else {
-      defense = enemy.sumFields.def;
-      console.log(i, "enemySumFields.def: ", defense);
+      if (enemy.check) {
+        console.log(i, "敵は行動不能なので防御できない");
+      } else {
+        defense = enemy.sumFields.def;
+        console.log(i, "enemySumFields.def: ", defense);
+      }
     }
-  }
 
-  await wait(1000);
-  await reflectStatus();
-  await getEnemyPlayer(); //!
-  battleResult.value = ["def", my.sumFields.def];
-  await wait(2000);
+    await wait(1000);
+    await reflectStatus();
+    await getEnemyPlayer(); //!
+    battleResult.value = ["def", my.sumFields.def];
+    await wait(2000);
+  }
 
   //マッスル攻撃を行う
-  console.log(i, "マッスル攻撃!!!");
-  let holdingAtk = 0;
-  console.log(i, "mySumFields.atk: ", my.sumFields.atk);
-  if (my.check) console.log(i, "行動不能なので攻撃できない");
-  else {
-    holdingAtk = my.sumFields.atk - defense;
-    if (holdingAtk < 0) holdingAtk = 0;
-    console.log(i, "holdingAtk: ", holdingAtk);
-  }
-  enemy.status.hp -= holdingAtk;
-  if (defense !== 0) {
-    console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
-  } else {
-    console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
-  }
+  if (my.field.map((card) => card.attribute).includes("atk")) {
+    let holdingAtk = 0;
+    console.log(i, "mySumFields.atk: ", my.sumFields.atk);
+    if (my.check) console.log(i, "行動不能なので攻撃できない");
+    else {
+      holdingAtk = my.sumFields.atk - defense;
+      if (holdingAtk < 0) holdingAtk = 0;
+      console.log(i, "holdingAtk: ", holdingAtk);
+    }
+    enemy.status.hp -= holdingAtk;
+    if (defense !== 0) {
+      console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
+    } else {
+      console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
+    }
 
-  if(a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
-  await wait(1000);
-  await reflectStatus();
-  await getEnemyPlayer(); //!
-  battleResult.value = ["atk", holdingAtk];
-  await wait(2000);
+    if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
+    await wait(1000);
+    await reflectStatus();
+    await getEnemyPlayer(); //!
+    battleResult.value = ["atk", holdingAtk];
+    await wait(2000);
+  }
 
   //テクニック攻撃を行う
-  console.log(i, "テクニック攻撃!!!");
-  let techDefense = 0;
-  let holdingTech = 0;
-  if (my.check) {
-    console.log(i, "行動不能なので攻撃できない");
-  } else {
-    holdingTech = my.sumFields.tech - techDefense; //?一応防げるギフトがある
-    if (holdingTech < 0) holdingTech = 0;
-    console.log(i, "holdingTech: ", holdingTech);
-  }
-  enemy.status.hp -= my.sumFields.tech;
-  if (techDefense !== 0) {
-    console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingTech, "のダメージ");
-  } else {
-    console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
-  }
+  if (my.field.map((card) => card.attribute).includes("tech")) {
+    console.log(i, "テクニック攻撃!!!");
+    let techDefense = 0;
+    let holdingTech = 0;
+    if (my.check) {
+      console.log(i, "行動不能なので攻撃できない");
+    } else {
+      holdingTech = my.sumFields.tech - techDefense; //?一応防げるギフトがある
+      if (holdingTech < 0) holdingTech = 0;
+      console.log(i, "holdingTech: ", holdingTech);
+    }
+    enemy.status.hp -= my.sumFields.tech;
+    if (techDefense !== 0) {
+      console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingTech, "のダメージ");
+    } else {
+      console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
+    }
 
-  if(a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
-  await wait(1000);
-  await reflectStatus();
-  await getEnemyPlayer(); //!
-  battleResult.value = ["tech", holdingTech];
-  await wait(2000);
+    if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
+    await wait(1000);
+    await reflectStatus();
+    await getEnemyPlayer(); //!
+    battleResult.value = ["tech", holdingTech];
+    await wait(2000);
+  }
 
   battleResult.value = ["none", 0];
 }
