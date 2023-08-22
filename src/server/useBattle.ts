@@ -206,7 +206,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value) {
     //Missionを進捗させる
-    mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand,my.donate) ?? 0;
+    mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand, my.donate) ?? 0;
     //Missionを達成したら報酬を受け取る
     if (mission.nowAchievement >= mission.goalAchievement) {
       mission.achieved = true;
@@ -232,24 +232,25 @@ async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
-  let enemySumFieldsValue = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields[field] ?? 0;
+  let enemySumFields = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields;
   console.log(i, "sum", field, ": ", sumFields.value[field]);
-  console.log(i, "enemySum", field, ": ", enemySumFieldsValue);
+  console.log(i, "enemySum", field, ": ", enemySumFields?.[field]);
   //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
-  if (sumFields.value[field] < enemySumFieldsValue) {
-    firstAtkPlayer.value = sign.value;
-    console.log(i, field, "の値が小さい", firstAtkPlayer.value, "が先行");
-  } else if (sumFields.value[field] > enemySumFieldsValue) {
-    //!ここなんとかしたい
-    firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
-    console.log(i, field, "の値が小さい", firstAtkPlayer.value, "が先行");
+  if (sumFields.value[field] < (enemySumFields?.[field] ?? 0)) {
+    if (field === "hungry") firstAtkPlayer.value = sign.value;
+    else if (field === "priority") firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
+    console.log(i, field, "の値が小さいので", firstAtkPlayer.value, "が先行");
+  } else if (sumFields.value[field] > (enemySumFields?.[field] ?? 0)) {
+    if (field === "hungry") firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
+    else if (field === "priority") firstAtkPlayer.value = sign.value;
+    console.log(i, field, "の値が大きいので", firstAtkPlayer.value, "が先行");
   } else {
     console.log(i, field, "の値が同じなので");
   }
-
-  //寄付ならば先に処理を行う
-  if (donate.value) firstAtkPlayer.value = sign.value;
-  if (enemyDonate.value) firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
+  if (sign.value) {
+    if (donate.value) firstAtkPlayer.value = sign.value;
+    if (enemyDonate.value) firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
+  }
 }
 //firstAtkPlayerの値の監視
 async function watchFirstAtkPlayerField(): Promise<void> {
