@@ -199,16 +199,14 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   //statusを取得する
   let my = (await getDoc(doc(playersRef, myId))).data();
   let enemy = (await getDoc(doc(playersRef, enemyId))).data();
-  if (!my || !my.status || !my.sumFields || !my.field || !my.hand || my.character === undefined)
-    throw Error("自分の情報が取得できませんでした");
-  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.hand || enemy.character === undefined)
-    throw Error("相手の情報が取得できませんでした");
+  if (!my) throw Error("自分の情報が取得できませんでした");
+  if (!enemy) throw Error("相手の情報が取得できませんでした");
 
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value) {
     //Missionを進捗させる
-    mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand) ?? 0;
+    mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand,my.donate) ?? 0;
     //Missionを達成したら報酬を受け取る
     if (mission.nowAchievement >= mission.goalAchievement) {
       mission.achieved = true;

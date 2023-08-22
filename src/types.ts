@@ -45,7 +45,7 @@ type Mission = {
   reward: number;
   goalAchievement: number;
   nowAchievement: number;
-  checker?: (sumFields?: SumCards, field?: Card[], hand?: Card[]) => number | undefined;
+  checker?: (sumFields?: SumCards, field?: Card[], hand?: Card[], donate?: boolean) => number | undefined;
 };
 //!使われてるか調べる
 type Phase = "shop" | "battle" | "result" | "none";
