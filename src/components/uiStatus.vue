@@ -19,7 +19,7 @@ watch(battleResult, (newVal) => {
       if (components.value === 'secondAtk' && newVal[1]) retainedDef.value = newVal[1];
     }
   }//!あとでもっといい方法考える
-  if (newVal[0] === 'tech' && components.value === 'secondAtk') {//!変更タイミング帰るかも
+  if ((newVal[0] === 'atk' && components.value === 'secondAtk') || (newVal[0] === 'none' && components.value === 'secondAtk')) {//!変更タイミング帰るかも
     retainedDef.value = undefined;
   }
 })

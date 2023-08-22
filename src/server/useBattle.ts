@@ -115,18 +115,18 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //防御を行う//?エフェクトのみ
   let defense = 0;
-  if (my.field.map((card) => card.attribute).includes("def")) {
-    if (which === "primary") {
-      console.log(i, "先行なので防御できない");
+  if (which === "primary") {
+    console.log(i, "先行なので防御できない");
+  } else {
+    if (enemy.check) {
+      console.log(i, "敵は行動不能なので防御できない");
     } else {
-      if (enemy.check) {
-        console.log(i, "敵は行動不能なので防御できない");
-      } else {
-        defense = enemy.sumFields.def;
-        console.log(i, "enemySumFields.def: ", defense);
-      }
+      defense = enemy.sumFields.def;
+      console.log(i, "enemySumFields.def: ", defense);
     }
+  }
 
+  if (my.field.map((card) => card.attribute).includes("def")) {
     await wait(1000);
     await reflectStatus();
     await getEnemyPlayer(); //!
@@ -304,6 +304,7 @@ export async function battle() {
   await donate();
   //先行後攻を決める
   await watchFirstAtkPlayerField();
+  await wait(1000);
   await compareSumField("hungry");
   await compareSumField("priority");
   if (firstAtkPlayer.value === undefined) throw new Error("firstAtkPlayerの値がundefinedです");
