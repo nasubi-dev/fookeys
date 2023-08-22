@@ -16,7 +16,9 @@ defineProps<{
 <template>
   <div>
     <div class="overCard flex justify-start">
-      <div v-for="card in (cards.map((card) => { if (card.attribute === after) { return card } }))" :key="card?.id">
+      <div
+        v-for="card in (after === 'donate' ? cards : (cards.map((card) => { if (card.attribute === after) { return card } })))"
+        :key="card?.id">
         <div v-if="card" class="overCard" style="width: 15vw;">
           <img :src="`/img/companys/${card.company}.png`" />
           <div class="overText">
@@ -44,6 +46,7 @@ defineProps<{
       </div>
       <div v-if="cardLock" class="overText">
         <div v-if="after === 'hungry'" class=" text-lg">{{ value ? "行動不能✖" : "行動可能✔" }}</div>
+        <div v-if="after === 'donate' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "🪙" + value }}</div>
         <div v-if="after === 'def' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "🛡:" + value }}</div>
         <div v-if="after === 'atk' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "⚔:" + value }}</div>
         <div v-if="after === 'tech' && value" class="text-5xl font-bold text-fuchsia-600">{{ "🏹:" + value }}</div>

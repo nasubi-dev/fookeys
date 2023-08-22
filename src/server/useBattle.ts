@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { e, i, s } from "@/log";
-import { gameStore, playerStore } from "@/main";
+import { gameStore, playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
@@ -18,29 +18,6 @@ const wait = async (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 };
 
-//寄付ならば先に処理を行う
-export async function donate(): Promise<void> {
-  console.log(s, "donateを実行しました");
-  const { player, id } = storeToRefs(playerStore);
-  const { check, donate, idEnemy, field, status } = toRefs(player.value);
-
-  let enemyDonate = (await getDoc(doc(playersRef, idEnemy.value))).data()?.donate ?? false;
-  let enemySumFields = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields ?? 0;
-  //donateがtrueならば寄付を行う
-  if (donate.value) {
-    check.value = true;
-    updateDoc(doc(playersRef, id.value), { check: true });
-    console.log(i, "自分の寄付処理");
-    status.value.contribution += field.value.length * 50;
-    updateDoc(doc(playersRef, id.value), { status: status.value });
-  }
-  if (enemyDonate) {
-    updateDoc(doc(playersRef, idEnemy.value), { check: true });
-    console.log(i, "敵の寄付処理");
-    //?現状だと相手のStatusを表示していないので､今は書かない
-    //?書くのはアニメーションだけでいい
-  }
-}
 //ダメージを反映する
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
@@ -71,10 +48,23 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //statusを取得する
   let my = (await getDoc(doc(playersRef, myId))).data();
   let enemy = (await getDoc(doc(playersRef, enemyId))).data();
-  if (!my || !my.status || !my.sumFields || !my.field || my.character === undefined) throw Error("自分の情報が取得できませんでした");
-  if (!enemy || !enemy.status || !enemy.sumFields || !enemy.field || !enemy.field || enemy.character === undefined)
-    throw Error("相手の情報が取得できませんでした");
-  //寄付をしていた場合､満腹値を増やさない
+  if (!my) throw Error("自分の情報が取得できませんでした");
+  if (!enemy) throw Error("相手の情報が取得できませんでした");
+
+  //寄付をしていた場合､ダメージ計算を行わない
+  if (my.donate) {
+    console.log(i, "寄付をしていたのでダメージ計算を行いません");
+    my.status.contribution += my.field.length * 50;
+    if (a) updateDoc(doc(playersRef, myId), { status: my.status });
+    await wait(1000);
+    await reflectStatus();
+    await getEnemyPlayer(); //!ここでenemyPlayerの値を更新する
+    battleResult.value = ["donate", my.field.length * 50];
+    await wait(2000);
+    battleResult.value = ["none", 0];
+    return;
+  }
+
   //自分のhungryの値が上限を超えていた場合､行動不能にする
   const maxHungry = 200 + (allCharacters[my.character].maxHungry ?? 0);
   my.status.hungry += my.sumFields.hungry;
@@ -238,7 +228,9 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
 async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   console.log(s, "compareSum", field, "を実行しました");
   const { player, sign } = storeToRefs(playerStore);
-  const { idEnemy, sumFields } = toRefs(player.value);
+  const { idEnemy, sumFields, donate } = toRefs(player.value);
+  const { enemyPlayer } = storeToRefs(enemyPlayerStore);
+  const { donate: enemyDonate } = toRefs(enemyPlayer.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -256,6 +248,10 @@ async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   } else {
     console.log(i, field, "の値が同じなので");
   }
+
+  //寄付ならば先に処理を行う
+  if (donate.value) firstAtkPlayer.value = sign.value;
+  if (enemyDonate.value) firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
 }
 //firstAtkPlayerの値の監視
 async function watchFirstAtkPlayerField(): Promise<void> {
@@ -300,8 +296,6 @@ export async function battle() {
   await wait(1500);
   getEnemyPlayer(); //!
 
-  //寄付ならば先に処理を行う
-  await donate();
   //先行後攻を決める
   await watchFirstAtkPlayerField();
   await wait(1000);
