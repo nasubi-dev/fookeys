@@ -1,7 +1,8 @@
 import { computed, ref } from "vue";
-import { defineStore } from "pinia";
 import { i } from "@/log";
+import { defineStore } from "pinia";
 import type { Card, GameData, PlayerData, SumCards, Phase, PlayerSign, Mission } from "@/types";
+import allCards from "@/assets/allCards";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -98,8 +99,9 @@ const usePlayerStore = defineStore("playerData", () => {
     hand.forEach((card) => {
       card.waste -= 1;
       if (card.waste > 0) return;
-      hand.splice(hand.indexOf(card), 1, { ...card, rotten: true });
+      hand.splice(hand.indexOf(card), 1, allCards[0]);
     });
+    hand.sort((a, b) => a.id - b.id);
     console.log(
       i,
       "reduceWaste: ",
@@ -123,11 +125,6 @@ const usePlayerStore = defineStore("playerData", () => {
       hand.map((card) => card.name)
     );
   };
-  //PhaseをShopからBattleに変更する
-  const shiftBattle = (): void => {
-    phase.value = "battle";
-    console.log(i, "changePhase: ", phase.value);
-  };
   return {
     id,
     sign,
@@ -144,7 +141,6 @@ const usePlayerStore = defineStore("playerData", () => {
     deleteField,
     reduceWaste,
     deleteAllWaste0,
-    shiftBattle,
   };
 });
 

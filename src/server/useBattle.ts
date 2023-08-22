@@ -19,23 +19,12 @@ const wait = async (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 };
 //Playerを同期する
-export async function syncPlayer(): Promise<void> {}
-
-//ダメージを反映する
-async function reflectStatus(): Promise<void> {
-  console.log(s, "reflectDamageを実行しました");
-  const { player, id } = storeToRefs(playerStore);
-  const { status } = toRefs(player.value);
-  //ダメージを反映する
-  status.value = (await getDoc(doc(playersRef, id.value))).data()?.status ?? { hp: 0, hungry: 0, contribution: 0 };
-  console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
-}
-//ダメージを計算する
-async function calcDamage(which: "primary" | "second"): Promise<void> {
-  console.log(s, "calcDamageを実行しました");
-  const { id, player, sign, battleResult } = storeToRefs(playerStore);
+export async function syncPlayer(
+  which: "primary" | "second"
+): Promise<{ myId: string; enemyId: string; my: PlayerData; enemy: PlayerData }> {
+  const { id, player, sign } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
-  const { game } = toRefs(gameStore);
+  const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
   //自分と相手のidを取得する
@@ -53,6 +42,26 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   let enemy = (await getDoc(doc(playersRef, enemyId))).data();
   if (!my) throw Error("自分の情報が取得できませんでした");
   if (!enemy) throw Error("相手の情報が取得できませんでした");
+  return { myId, enemyId, my, enemy };
+}
+
+//ダメージを反映する
+async function reflectStatus(): Promise<void> {
+  console.log(s, "reflectDamageを実行しました");
+  const { player, id } = storeToRefs(playerStore);
+  const { status } = toRefs(player.value);
+  //ダメージを反映する
+  status.value = (await getDoc(doc(playersRef, id.value))).data()?.status ?? { hp: 0, hungry: 0, contribution: 0 };
+  console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
+}
+//ダメージを計算する
+async function calcDamage(which: "primary" | "second"): Promise<void> {
+  console.log(s, "calcDamageを実行しました");
+  const { sign, battleResult } = storeToRefs(playerStore);
+  const { game } = toRefs(gameStore);
+  const { firstAtkPlayer } = toRefs(game.value);
+  const { myId, enemyId, my, enemy } = await syncPlayer(which);
+  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
 
   //寄付をしていた場合､ダメージ計算を行わない
   if (my.donate) {
@@ -186,24 +195,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 async function checkMission(which: "primary" | "second"): Promise<void> {
   console.log(s, "checkMissionを実行しました");
   const { id, player, sign } = storeToRefs(playerStore);
-  const { idEnemy, status } = toRefs(player.value);
+  const { status } = toRefs(player.value);
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-
-  //自分と相手のidを取得する というかmy,enemyは意味があってない
-  let myId, enemyId;
-  if (firstAtkPlayer.value === sign.value) {
-    myId = which === "primary" ? id.value : idEnemy.value;
-    enemyId = which === "primary" ? idEnemy.value : id.value;
-  } else {
-    myId = which === "primary" ? idEnemy.value : id.value;
-    enemyId = which === "primary" ? id.value : idEnemy.value;
-  }
-  //statusを取得する
-  let my = (await getDoc(doc(playersRef, myId))).data();
-  let enemy = (await getDoc(doc(playersRef, enemyId))).data();
-  if (!my) throw Error("自分の情報が取得できませんでした");
-  if (!enemy) throw Error("相手の情報が取得できませんでした");
+  const { myId, enemyId, my, enemy } = await syncPlayer(which);
 
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
@@ -229,25 +224,10 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
 async function judgeDonate(which: "primary" | "second"): Promise<void> {
   console.log(s, "comparePriorityを実行しました");
   const { id, player, sign } = storeToRefs(playerStore);
-  const { idEnemy, donate } = toRefs(player.value);
+  const { idEnemy } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-
-  //自分と相手のidを取得する
-  let myId, enemyId;
-  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
-  if (a) {
-    myId = which === "primary" ? id.value : idEnemy.value;
-    enemyId = which === "primary" ? idEnemy.value : id.value;
-  } else {
-    myId = which === "primary" ? idEnemy.value : id.value;
-    enemyId = which === "primary" ? id.value : idEnemy.value;
-  }
-  //statusを取得する
-  let my = (await getDoc(doc(playersRef, myId))).data();
-  let enemy = (await getDoc(doc(playersRef, enemyId))).data();
-  if (!my) throw Error("自分の情報が取得できませんでした");
-  if (!enemy) throw Error("相手の情報が取得できませんでした");
+  const { myId, enemyId, my, enemy } = await syncPlayer(which);
 
   //donateの値がtrueの場合､優先度は最上位になる
   const enemyDonate = (await getDoc(doc(playersRef, idEnemy.value))).data()?.donate;
