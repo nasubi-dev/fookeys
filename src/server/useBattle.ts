@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { e, i, s } from "@/log";
-import { gameStore, playerStore, enemyPlayerStore } from "@/main";
+import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
@@ -63,6 +63,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   const { myId, enemyId, my, enemy } = await syncPlayer(which);
   const a = firstAtkPlayer.value === sign.value ? 1 : 0;
 
+  //fieldが空の場合､ダメージ計算を行わない
+  if (my.field.length === 0) return;
   //寄付をしていた場合､ダメージ計算を行わない
   if (my.donate) {
     console.log(i, "寄付をしていたのでダメージ計算を行いません");
@@ -221,30 +223,26 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   }
 }
 //donateの場合､優先度は最上位になる
-async function judgeDonate(which: "primary" | "second"): Promise<void> {
+async function judgeDonate(): Promise<void> {
   console.log(s, "comparePriorityを実行しました");
   const { id, player, sign } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(player.value);
+  const { idEnemy, donate } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-  const { myId, enemyId, my, enemy } = await syncPlayer(which);
 
   //donateの値がtrueの場合､優先度は最上位になる
-  const enemyDonate = (await getDoc(doc(playersRef, idEnemy.value))).data()?.donate;
-  if (sign.value) {
-    if (which === "primary") {
-      firstAtkPlayer.value = my.donate ? sign.value : enemyDonate ? (((sign.value + 1) % 2) as PlayerSign) : firstAtkPlayer.value;
-    } else if (which === "second") {
-      firstAtkPlayer.value = my.donate ? (((sign.value + 1) % 2) as PlayerSign) : enemyDonate ? sign.value : firstAtkPlayer.value;
-    }
-  } else {
-    if (which === "primary") {
-      firstAtkPlayer.value = my.donate ? (((sign.value + 1) % 2) as PlayerSign) : enemyDonate ? sign.value : firstAtkPlayer.value;
-    } else if (which === "second") {
-      firstAtkPlayer.value = my.donate ? sign.value : enemyDonate ? (((sign.value + 1) % 2) as PlayerSign) : firstAtkPlayer.value;
-    }
-  }
+  const getSwitchedPlayerSign = (playerSign: PlayerSign): PlayerSign => (playerSign === 0 ? 1 : 0);
+  const isEnemyDonate = (await getDoc(doc(playersRef, idEnemy.value))).data()?.donate;
+  let newFirstAtkPlayer: PlayerSign | undefined = firstAtkPlayer.value;
 
+  if (firstAtkPlayer.value === sign.value) {
+    if (donate.value) newFirstAtkPlayer = sign.value;
+    if (isEnemyDonate) newFirstAtkPlayer = getSwitchedPlayerSign(sign.value);
+  } else {
+    if (isEnemyDonate) newFirstAtkPlayer = getSwitchedPlayerSign(sign.value);
+    if (donate.value) newFirstAtkPlayer = sign.value;
+  }
+  if (newFirstAtkPlayer !== undefined) firstAtkPlayer.value = newFirstAtkPlayer;
   console.log(i, "donateの値がtrueの場合､優先度は最上位になる");
 }
 //指定された､fieldの値を比較する
@@ -319,8 +317,7 @@ export async function battle() {
   await wait(1000);
   await compareSumField("hungry");
   await compareSumField("priority");
-  await judgeDonate("primary");
-  await judgeDonate("second");
+  await judgeDonate();
   if (firstAtkPlayer.value === undefined) throw new Error("firstAtkPlayerの値がundefinedです");
   else console.log(i, "結果...firstAtkPlayer: ", firstAtkPlayer.value);
   log.value = "結果...firstAtkPlayer: " + firstAtkPlayer.value;
