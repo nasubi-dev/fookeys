@@ -95,13 +95,13 @@ const usePlayerStore = defineStore("playerData", () => {
   };
   //ターン終了時に､Handのカードの腐り値を減らす(0になったら腐りカードにする)
   const reduceWaste = (): void => {
-    const { hand } = player.value;
+    let { hand } = player.value;
     hand.forEach((card) => {
       card.waste -= 1;
       if (card.waste > 0) return;
       hand.splice(hand.indexOf(card), 1, allCards[0]);
+      hand = hand.sort((a, b) => a.id - b.id);
     });
-    hand.sort((a, b) => a.id - b.id);
     console.log(
       i,
       "reduceWaste: ",

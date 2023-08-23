@@ -205,6 +205,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value) {
+    if (mission.achieved) continue;
     //Missionを進捗させる
     mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand, my.donate) ?? 0;
     //Missionを達成したら報酬を受け取る

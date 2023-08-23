@@ -1,29 +1,18 @@
 import { toRefs } from "vue";
 import { e, s, i } from "@/log";
-import type { Card, GameData, PlayerData } from "@/types";
-import { gameStore, playerStore } from "@/main";
+import type { PlayerData } from "@/types";
+import { gameStore, playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { setMissions, setHand, setOffer } from "@/server/useShopUtils";
+import { getEnemyPlayer } from "@/server/usePlayerData";
 import { battle } from "@/server/useBattle";
-import allMissions from "@/assets/allMissions";
-import allCards from "@/assets/allCards";
 import allGifts from "@/assets/allGifts";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
-
-//相手のisSelectedGiftを取得する
-export async function getEnemyGift(): Promise<number | undefined> {
-  console.log(i, "getEnemyGiftを実行しました");
-  const { id, player } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(player.value);
-
-  const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift;
-  return enemyGift;
-}
 
 //shopフェーズの開始
 export async function startShop(): Promise<void> {
@@ -43,40 +32,29 @@ export async function startShop(): Promise<void> {
 export async function endShop(): Promise<void> {
   console.log(i, "endShopを実行しました");
   const { id, player, phase, log } = storeToRefs(playerStore);
-  const { isSelectedGift, idEnemy, status } = toRefs(player.value);
+  const { isSelectedGift, status, check, idEnemy } = toRefs(player.value);
 
+  await getEnemyPlayer(); //!
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
   console.log(i, "myGift: ", myGift);
   if (myGift !== undefined) {
-    console.log(i, "【戦闘前】自分のGiftを実行します");
-    log.value = "【戦闘前】自分のGiftを実行します";
     console.log(i, "myGift: ", allGifts[myGift].name);
     allGifts[myGift].skill("before", id.value);
     status.value.contribution -= allGifts[myGift].requireContribution;
     log.value = allGifts[myGift].name + "を使用しました";
   }
-  //敵のisSelectedGiftを実行する
-  const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift;
+  //相手のisSelectedGiftを実行する
+  const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift;//?何故かgetEnemyPlayer()ではErrorになる
   console.log(i, "enemyGift: ", enemyGift);
   if (enemyGift !== undefined) {
-    console.log(i, "【戦闘前】相手のGiftを実行します");
-    log.value = "【戦闘前】相手のGiftを実行します";
     console.log(i, "enemyGift: ", allGifts[enemyGift].name);
     log.value = allGifts[enemyGift].name + "を使用しました";
     //Logだけ
   }
-
+  //?メモ:battleで相手手札が正しく表示されていないので修正する
   //終了時処理
   phase.value = "battle";
-  resetCheck();
-}
-//checkのReset
-export function resetCheck() {
-  console.log(i, "resetCheckを実行しました");
-  const { id, player } = storeToRefs(playerStore);
-  const { check } = toRefs(player.value);
-
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
