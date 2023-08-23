@@ -8,7 +8,7 @@ import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firesto
 import { converter } from "@/server/converter";
 import { setMissions, setHand, setOffer } from "@/server/useShopUtils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { battle } from "@/server/useBattle";
+import { battle,wait } from "@/server/useBattle";
 import allGifts from "@/assets/allGifts";
 
 //Collectionの参照
@@ -58,16 +58,18 @@ export async function endShop(): Promise<void> {
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
+  getEnemyPlayer();//!
 }
 //checkの値の監視
 export async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { check, idEnemy, isSelectedGift } = toRefs(player.value);
+  const { check, idEnemy, isSelectedGift,hand } = toRefs(player.value);
 
-  //選択したGiftをFirestoreに保存する
+  //Firestoreに保存する
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
-  console.log(i, "isSelectedGift: " + isSelectedGift.value);
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
+
   //checkの値がtrueになっていたら､shopフェーズを終了する
   check.value = true;
   updateDoc(doc(playersRef, id.value), { check: check.value });

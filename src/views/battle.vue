@@ -67,7 +67,7 @@ const battleAnimation = ref(true);
 watch(phase, (newVal) => {
   if (newVal === 'battle') {
     battleAnimation.value = true;
-    setTimeout(() => {
+    setTimeout(async() => {
       battleAnimation.value = false;
     }, 1000);
   }

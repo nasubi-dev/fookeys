@@ -15,7 +15,7 @@ defineProps<{
   <div class="flex flex-col ml-auto">
     <uiCardBehind :cards="p.hand" />
 
-    <div class="overCard h-auto" style="width:35dvw;">
+    <div class="overCard h-auto ml-auto" style="width:35dvw;">
       <img :src="enemyStatusImg" />
       <div class="overText">
         <span class="text-sm font-medium text-gray-900 truncate mx-2 transform -translate-y-3">

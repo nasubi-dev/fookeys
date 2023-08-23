@@ -15,7 +15,7 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //指定されたmsだけ待機する
-const wait = async (ms: number): Promise<void> => {
+export const wait = async (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 };
 //Playerを同期する
@@ -124,6 +124,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   } else {
     if (enemy.check) {
       console.log(i, "敵は行動不能なので防御できない");
+    } else if (enemy.donate) {
+      console.log(i, "敵は寄付をしていたので防御できない");
     } else {
       defense = enemy.sumFields.def;
       console.log(i, "enemySumFields.def: ", defense);
