@@ -41,7 +41,7 @@ async function getEnemyPlayer(): Promise<void> {
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 
   if (!idEnemy.value) return;
-  const data = (await getDoc(doc(playersRef, idEnemy.value))).data();
+  const data = (await getDoc(doc(playersRef, idEnemy.value))).data() as PlayerData;
   if (!data) return;
   enemyPlayer.value = data;
   console.log(i, "getEnemyPlayerが完了しました");

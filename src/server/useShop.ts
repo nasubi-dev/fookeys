@@ -45,14 +45,13 @@ export async function endShop(): Promise<void> {
     log.value = allGifts[myGift].name + "を使用しました";
   }
   //相手のisSelectedGiftを実行する
-  const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift;//?何故かgetEnemyPlayer()ではErrorになる
+  const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
   console.log(i, "enemyGift: ", enemyGift);
   if (enemyGift !== undefined) {
     console.log(i, "enemyGift: ", allGifts[enemyGift].name);
     log.value = allGifts[enemyGift].name + "を使用しました";
     //Logだけ
   }
-  //?メモ:battleで相手手札が正しく表示されていないので修正する
   //終了時処理
   phase.value = "battle";
   check.value = false;

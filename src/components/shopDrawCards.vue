@@ -17,7 +17,7 @@ const offerHand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  if (hand.value.length > 9) {
+  if (hand.value.length >= 9) {
     console.log(i, "hand is full");
     log.value = "手札がいっぱいです"
     hand.value.splice(9, hand.value.length - 9);

@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
-import type { GameData, PlayerData, PlayerSign } from "@/types";
+import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
 import allCharacters from "@/assets/allCharacters";
 import { getEnemyPlayer } from "./usePlayerData";
 
@@ -38,8 +38,8 @@ export async function syncPlayer(
     enemyId = which === "primary" ? id.value : idEnemy.value;
   }
   //statusを取得する
-  let my = (await getDoc(doc(playersRef, myId))).data();
-  let enemy = (await getDoc(doc(playersRef, enemyId))).data();
+  let my = (await getDoc(doc(playersRef, myId))).data() as PlayerData;
+  let enemy = (await getDoc(doc(playersRef, enemyId))).data() as PlayerData;
   if (!my) throw Error("自分の情報が取得できませんでした");
   if (!enemy) throw Error("相手の情報が取得できませんでした");
   return { myId, enemyId, my, enemy };
@@ -51,7 +51,9 @@ async function reflectStatus(): Promise<void> {
   const { player, id } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
   //ダメージを反映する
-  status.value = (await getDoc(doc(playersRef, id.value))).data()?.status ?? { hp: 0, hungry: 0, contribution: 0 };
+  let myStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  if(!myStatus) throw Error("myStatusが取得できませんでした");
+  status.value = myStatus;
   console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
 }
 //ダメージを計算する
@@ -255,8 +257,8 @@ async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   const { idEnemy, sumFields } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-
-  let enemySumFields = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields;
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  let enemySumFields = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields as SumCards;
   console.log(i, "sum", field, ": ", sumFields.value[field]);
   console.log(i, "enemySum", field, ": ", enemySumFields?.[field]);
   //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない

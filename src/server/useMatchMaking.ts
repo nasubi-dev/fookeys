@@ -48,7 +48,7 @@ async function watchMatchField(): Promise<void> {
   const { idEnemy, idGame, match } = toRefs(player.value);
 
   const unsubscribe = onSnapshot(doc(playersRef, id.value), (snap) => {
-    const data = snap.data();
+    const data = snap.data() as PlayerData | undefined;
     if (!data) return;
     // 監視対象のフィールドが指定した値になった場合に実行される処理
     if (data.match === "matching") {

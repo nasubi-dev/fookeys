@@ -27,7 +27,6 @@ export async function setHand(): Promise<void> {
   const { hand } = toRefs(player.value);
 
   for (let i = 0; i < 6; i++) {
-    //!一時的に9枚にしている
     if (hand.value.length >= 9) {
       console.log(i, "hand is full");
       return;
@@ -110,7 +109,7 @@ export async function setMissions(): Promise<void> {
   } else {
     console.log(i, "ミッションを監視します");
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
-      const updateMissions = snap.data()?.missionsNum;
+      const updateMissions = snap.data()?.missionsNum as number[] | undefined;
       if (updateMissions?.length === 3) {
         missionsNum.value = updateMissions;
         missions.value = missionsNum.value.map((num) => allMissions[num]);

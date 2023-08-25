@@ -49,7 +49,10 @@ watch(log, (newVal) => {
           {{ "gift3: " + allGifts[gifts[2]].name }}
         </div>
 
-        <button @click="push.success('text')">Push</button>
+        <button @click="push.success('text')">success</button>
+        <button
+          @click="push.info('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')">long</button>
+        <button @click="push.error({ title: 'error', message: 'error rrrrrrrrrrrrrrrr \n rrrrrrrr', })">error</button>
       </div>
 
       <div v-if="selectCharacter">
