@@ -35,30 +35,33 @@ watch(battleResult, (newVal) => {
 });
 </script>
 <template>
-  <div style="width: 20vw;">
-    <div class="flex justify-start">
-
-      <div class="overCard">
-        <img :src="infoImg" />
-        <div class="overText">
-          <div class="flex justify-start">
-            <p>{{ allCharacters[p.player.character].name }}</p>
-            <p>{{ "🍖" + p.player.sumFields.hungry }} </p>
-            <p v-if="p.player.sumFields.priority">{{ "🦶: " + p.player.sumFields.priority }}</p>
+  <transition enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-x-[-150%] opacity-0"
+    leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+    <div style="width: 20vw;" class=" animate-slide-in-top">
+      <div class="flex justify-start">
+        <div class="overCard">
+          <img :src="infoImg" />
+          <div class="overText">
+            <div class="flex justify-start">
+              <p>{{ allCharacters[p.player.character].name }}</p>
+              <p>{{ "🍖" + p.player.sumFields.hungry }} </p>
+              <p v-if="p.player.sumFields.priority">{{ "🦶: " + p.player.sumFields.priority }}</p>
+            </div>
           </div>
         </div>
+
+        <div>
+          <div v-if="p.player.donate">donate</div>
+          <div v-else>battle</div>
+        </div>
       </div>
-      <div>
-        <div v-if="p.player.donate">donate</div>
-        <div v-else>battle</div>
-      </div>
-    </div>
-    <div class="flex justify-start">
+
+      <div class="flex justify-start">
         <uiCardBehind v-show="isShowSup" :cards="p.player.field" :attribute="'sup'" />
         <uiCardBehind v-show="isShowDef" :cards="p.player.field" :attribute="'def'" />
         <uiCardBehind v-show="isShowAtk" :cards="p.player.field" :attribute="'atk'" />
         <uiCardBehind v-show="isShowTech" :cards="p.player.field" :attribute="'tech'" />
+      </div>
     </div>
-
-  </div>
+  </transition>
 </template>

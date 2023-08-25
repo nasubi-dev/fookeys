@@ -97,11 +97,11 @@ watch(phase, (newVal) => {
       <div v-else>
         {{ components }}
         <div v-if="sign === firstAtkPlayer" style="width: 40vw;">
-          <UiUseCard :player="player" :which="'primary'" v-if="components !== 'secondAtk'" />
+          <UiUseCard :player="player" :which="'primary'" v-show="components !== 'secondAtk'" />
           <UiUseCard :player="enemyPlayer" :which="'second'" />
         </div>
         <div v-else style="width: 40vw;">
-          <UiUseCard :player="enemyPlayer" :which="'primary'" v-if="components !== 'secondAtk'" />
+          <UiUseCard :player="enemyPlayer" :which="'primary'" v-show="components !== 'secondAtk'" />
           <UiUseCard :player="player" :which="'second'" />
         </div>
 
