@@ -257,17 +257,18 @@ async function compareSumField(field: "hungry" | "priority"): Promise<void> {
   const { idEnemy, sumFields } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  const getSwitchedPlayerSign = (playerSign: PlayerSign): PlayerSign => (playerSign === 0 ? 1 : 0);
   let enemySumFields = (await getDoc(doc(playersRef, idEnemy.value))).data()?.sumFields as SumCards;
   console.log(i, "sum", field, ": ", sumFields.value[field]);
   console.log(i, "enemySum", field, ": ", enemySumFields?.[field]);
   //hungryの値が小さい方が先行//hungryの値が同じならばFirstAtkPlayerの値を変更しない
   if (sumFields.value[field] < (enemySumFields?.[field] ?? 0)) {
     if (field === "hungry") firstAtkPlayer.value = sign.value;
-    else if (field === "priority") firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
+    else if (field === "priority") firstAtkPlayer.value = getSwitchedPlayerSign(sign.value);
     console.log(i, field, "の値が小さいので", firstAtkPlayer.value, "が先行");
   } else if (sumFields.value[field] > (enemySumFields?.[field] ?? 0)) {
-    if (field === "hungry") firstAtkPlayer.value = ((sign.value + 1) % 2) as PlayerSign;
+    if (field === "hungry") firstAtkPlayer.value = getSwitchedPlayerSign(sign.value);
     else if (field === "priority") firstAtkPlayer.value = sign.value;
     console.log(i, field, "の値が大きいので", firstAtkPlayer.value, "が先行");
   } else {

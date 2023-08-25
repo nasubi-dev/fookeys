@@ -22,7 +22,7 @@ import { usePush } from 'notivue'
 const push = usePush()
 
 const { id, player, cardLock, phase, offer, sign, log, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate, field, sumFields } = toRefs(player.value);
+const { idGame, character, gifts, status, hand, donate, field, sumFields, name } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -67,7 +67,7 @@ const battleAnimation = ref(true);
 watch(phase, (newVal) => {
   if (newVal === 'battle') {
     battleAnimation.value = true;
-    setTimeout(async() => {
+    setTimeout(async () => {
       battleAnimation.value = false;
     }, 1000);
   }
@@ -78,9 +78,12 @@ watch(phase, (newVal) => {
 <template>
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <UiEnemyInfo :p="enemyPlayer" class="flex flex-row-reverse" />
+      <div class="flex flex-row-reverse">
+        <UiEnemyInfo :p="enemyPlayer" />
+        {{ id + ": " + name + " " + sign }}
+      </div>
 
-      <div v-if="components === 'afterBattle'" class="flex justify-center">
+      <div v-if="components === 'afterBattle'" class="flex justify-center mt-5">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
           <img :src="decide" style="width: 20vw;" />
         </button>
@@ -93,17 +96,13 @@ watch(phase, (newVal) => {
 
       <div v-else>
         {{ components }}
-        <div v-if="sign === firstAtkPlayer" style="width: 35vw;">
-          <div v-if="components !== 'secondAtk'">
-            <UiUseCard :p="player" />
-          </div>
-          <UiUseCard :p="enemyPlayer" />
+        <div v-if="sign === firstAtkPlayer" style="width: 40vw;">
+          <UiUseCard :player="player" :which="'primary'" v-if="components !== 'secondAtk'" />
+          <UiUseCard :player="enemyPlayer" :which="'second'" />
         </div>
-        <div v-else style="width: 35vw;">
-          <div v-if="components !== 'secondAtk'">
-            <UiUseCard :p="enemyPlayer" />
-          </div>
-          <UiUseCard :p="player" />
+        <div v-else style="width: 40vw;">
+          <UiUseCard :player="enemyPlayer" :which="'primary'" v-if="components !== 'secondAtk'" />
+          <UiUseCard :player="player" :which="'second'" />
         </div>
 
         <div class="overlay flex flex-col">
@@ -120,7 +119,7 @@ watch(phase, (newVal) => {
         <Shop />
       </div>
       <div v-else>
-        <div v-if="battleAnimation" class="animate-slide-to-top overlay">
+        <div v-if="battleAnimation" class="overlay">
           Battle Phase // ここにアニメーションを入れる
         </div>
       </div>

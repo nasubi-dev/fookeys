@@ -34,7 +34,6 @@ export async function endShop(): Promise<void> {
   const { id, player, phase, log } = storeToRefs(playerStore);
   const { isSelectedGift, status, check, idEnemy } = toRefs(player.value);
 
-  await getEnemyPlayer(); //!
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
   console.log(i, "myGift: ", myGift);

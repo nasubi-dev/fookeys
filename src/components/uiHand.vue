@@ -59,7 +59,7 @@ const popCard = (index: number, id: number) => {
           <div v-if="!card.rotten">
             <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
               :class="handSelected[index] ? 'transform -translate-y-2' : null" class="cardSize">
-              <UiHandCard :card="card" class="animate-slide-in-top" />
+              <UiHandCard :card="card" />
             </button>
           </div>
           <div v-else>
