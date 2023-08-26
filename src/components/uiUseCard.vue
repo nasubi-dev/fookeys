@@ -34,10 +34,11 @@ watch(battleResult, (newVal) => {
   }
 });
 </script>
+
 <template>
-  <transition enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-x-[-150%] opacity-0"
+  <Transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-x-[-150%] opacity-0"
     leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-    <div style="width: 20vw;" class=" animate-slide-in-top">
+    <div style="width: 20vw;">
       <div class="flex justify-start">
         <div class="overCard">
           <img :src="infoImg" />
@@ -63,5 +64,5 @@ watch(battleResult, (newVal) => {
         <uiCardBehind v-show="isShowTech" :cards="p.player.field" :attribute="'tech'" />
       </div>
     </div>
-  </transition>
+  </Transition>
 </template>

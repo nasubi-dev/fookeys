@@ -13,13 +13,13 @@ defineProps<{
 
 <template>
   <div class="flex flex-col ml-auto">
-    <uiCardBehind :cards="p.hand" />
+        <uiCardBehind :cards="p.hand" />
 
     <div class="overCard h-auto ml-auto" style="width:35dvw;">
       <img :src="enemyStatusImg" />
       <div class="overText">
         <span class="text-sm font-medium text-gray-900 truncate mx-2 transform -translate-y-3">
-          name:{{ p.name }}
+          {{ p.name }}
           {{ allCharacters[p.character].name }}
           ❤:{{ p.status.hp + "/" + (600 + (allCharacters[p.character].maxHp ?? 0)) }}
           🍖:{{ p.status.hungry + "/" + (200 + (allCharacters[p.character].maxHungry ?? 0)) }}

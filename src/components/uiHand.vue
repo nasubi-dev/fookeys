@@ -52,24 +52,23 @@ const popCard = (index: number, id: number) => {
 </script>
 
 <template>
-  <div>
-    <ul class="text-xs flex flex-row w-auto h-auto">
+  <div class="text-xs flex justify-start overflow-clip">
+    <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div v-for="(card, index) in hand" :key="card.id">
-        <div class="">
-          <div v-if="!card.rotten">
-            <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
-              :class="handSelected[index] ? 'transform -translate-y-2' : null" class="cardSize">
-              <UiHandCard :card="card" />
-            </button>
-          </div>
-          <div v-else>
-            <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
-              class="rounded-lg p-4 flex flex-col justify-center items-center">
-              <h5 class="text-bold">腐ってます!!!!!</h5>
-            </div>
+        <div v-if="!card.rotten">
+          <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
+            :class="handSelected[index] ? 'transform -translate-y-2' : null" class="cardSize">
+            <UiHandCard :card="card" />
+          </button>
+        </div>
+        <div v-else>
+          <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
+            class="rounded-lg p-4 flex flex-col items-center">
+            <h5 class="text-bold">腐ってます!!!!!</h5>
           </div>
         </div>
       </div>
-    </ul>
+    </transition-group>
   </div>
 </template>

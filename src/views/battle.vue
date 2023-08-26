@@ -83,7 +83,7 @@ watch(phase, (newVal) => {
         {{ id + ": " + name + " " + sign }}
       </div>
 
-      <div v-if="components === 'afterBattle'" class="flex justify-center mt-5">
+      <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
         <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
           <img :src="decide" style="width: 20vw;" />
         </button>
@@ -94,7 +94,7 @@ watch(phase, (newVal) => {
         </button>
       </div>
 
-      <div v-else>
+      <div v-if="components !== 'afterBattle'">
         {{ components }}
         <div v-if="sign === firstAtkPlayer" style="width: 40vw;">
           <UiUseCard :player="player" :which="'primary'" v-show="components !== 'secondAtk'" />
@@ -130,7 +130,7 @@ watch(phase, (newVal) => {
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />
         </div>
-        <UiHand />
+        <UiHand class=" pt-3" />
       </div>
     </div>
   </div>

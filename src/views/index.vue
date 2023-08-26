@@ -3,7 +3,7 @@ import { ref, toRefs } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { registerPlayer } from "@/server/usePlayerData";
-
+import test from "./test.vue";
 //storeの参照
 const { id, player } = storeToRefs(playerStore);
 const { name } = toRefs(player.value);
@@ -14,17 +14,11 @@ async function register() {
   newName.value === "" ? (name.value = "No name") : (name.value = newName.value);
   id.value == "" ? await registerPlayer() : console.log("既に登録されています");
 }
-const aaaa = ref(false)
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
     <img src="@/assets/img/ui/fookeys.png" class="w-60" />
-    <button @click="aaaa = !aaaa">click!!</button>
-    <transition enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-      <div v-if="aaaa">test text</div>
-    </transition>
     <form class="flex flex-col items-center">
       <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name" v-model="newName" />
       <router-link to="/menu" @click="register" type="button"
