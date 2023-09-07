@@ -26,11 +26,10 @@ onClickOutside(el, () => {
   dropDown.value = false
 })
 
-
 </script>
 
 <template>
-  <div>
+  <div class="m-3">
     <div v-if="dropDown" ref="el" class="bg-white rounded">
       {{ mission.description }}
     </div>
@@ -41,8 +40,11 @@ onClickOutside(el, () => {
         <span class="text-sm font-medium text-gray-900 truncate mx-2">{{ mission.name }}reward:
           {{ mission.reward }}
         </span>
-        <span class="text-sm font-medium text-gray-900 truncate mx-2">achievement:{{
-          mission.nowAchievement + "/" + mission.goalAchievement }}</span>
+        <div class="gauge">
+          <span class=" text-white text-sm font-medium truncate mx-2 fixed">{{mission.nowAchievement + "/" + mission.goalAchievement }}</span>
+          <div class="bar" :style="{ width: (100 - ((mission.nowAchievement / mission.goalAchievement) * 100)) + '%' }">
+          </div>
+        </div>
       </div>
     </div>
   </div>

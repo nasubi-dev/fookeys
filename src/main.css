@@ -70,6 +70,21 @@
   width: 10vw;
   height: auto;
 }
+.gauge{
+  border: 3px solid #393332;
+  border-radius: 5px;
+  width: 200px;
+  margin: 10px 0;
+  background: #e4b714;
+  display: flex;
+  justify-content: flex-end;
+}
+.gauge .bar {
+  width: 0;
+  height: 20px;
+  background: #393332;
+  transition: 1s ease;
+}
 img {
   -webkit-touch-callout:none;
   -webkit-user-select:none;
