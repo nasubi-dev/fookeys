@@ -29,7 +29,7 @@ onClickOutside(el, () => {
 
 <template>
   <div class="flex flex-row w-auto h-auto">
-    <div v-if="dropDown" ref="el" class="bg-white rounded">
+    <div v-if="dropDown" ref="el" class="bg-white rounded fixed z-10">
       {{ dropDown }}
       <p>{{ "name: " +allGifts[gift]?.name }}</p>
       <p>{{ "description: " + allGifts[gift]?.description }}</p>

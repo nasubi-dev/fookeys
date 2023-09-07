@@ -25,8 +25,8 @@ onClickOutside(el, () => {
 
 </script>
 <template>
-  <div>
-    <div v-if="dropDown" ref="el" class="bg-white rounded">
+  <div class="btn-pop block">
+    <div v-if="dropDown" ref="el" class="bg-white rounded fixed z-10">
       <h5>{{ card.name }}</h5>
       <p>{{ card.company }}</p>
       <p>{{ card.description }}</p>

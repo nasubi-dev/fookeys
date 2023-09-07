@@ -30,7 +30,7 @@ onClickOutside(el, () => {
 
 <template>
   <div class="m-3">
-    <div v-if="dropDown" ref="el" class="bg-white rounded">
+    <div v-if="dropDown" ref="el" class="bg-white rounded fixed z-10">
       {{ mission.description }}
     </div>
     <div ref="htmlRefHook" class="overCard">
