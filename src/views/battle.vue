@@ -69,7 +69,7 @@ watch(phase, (newVal) => {
     battleAnimation.value = true;
     setTimeout(async () => {
       battleAnimation.value = false;
-    }, 1000);
+    }, 1500);
   }
 })
 
@@ -120,8 +120,7 @@ watch(phase, (newVal) => {
       </div>
       <div v-else>
         <div v-if="battleAnimation" class="overlay">
-          Battle Phase // ここにアニメーションを入れる
-          <img :src="`/gifs/shopping.gif`" />
+          <img :src="`/gifs/eating.gif`" />
         </div>
       </div>
 

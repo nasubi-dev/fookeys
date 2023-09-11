@@ -81,7 +81,7 @@
 }
 .gauge .bar {
   width: 0;
-  height: 20px;
+  height: 15px;
   background: #393332;
   transition: 1s ease;
 }

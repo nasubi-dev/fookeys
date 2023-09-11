@@ -26,6 +26,9 @@ onMounted(() => {
 watch(phase, (newVal) => {
   if (newVal === 'shop') {
     shopAnimation.value = true;
+    setTimeout(async () => {
+      shopAnimation.value = false;
+    }, 2000);
   }
 })
 </script>
@@ -35,7 +38,7 @@ watch(phase, (newVal) => {
     <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
       <div v-if="shopAnimation">
-        Shop Phase // ここにアニメーションを入れる
+        <img :src="`/gifs/shopping.gif`" />
       </div>
       <div v-else>
         <div v-if="draw">

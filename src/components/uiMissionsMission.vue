@@ -3,7 +3,7 @@ import { ref } from "vue";
 import type { Mission } from "@/types";
 import { onClickOutside } from '@vueuse/core'
 import { onLongPress } from '@vueuse/core'
-import infoImg from '@/assets/img/ui/info.png'
+import missionImg from '@/assets/img/ui/mission.png'
 
 defineProps<{
   mission: Mission;
@@ -29,22 +29,22 @@ onClickOutside(el, () => {
 </script>
 
 <template>
-  <div class="m-3">
+  <div>
     <div v-if="dropDown" ref="el" class="bg-white rounded fixed z-10">
       {{ mission.description }}
     </div>
-    <div ref="htmlRefHook" class="overCard">
-      <img :src="infoImg" onselectstart="return false;" onmousedown="return false;" style="width: 25vw;" />
+    <div ref="htmlRefHook" class="overCard w-full">
+      <img :src="missionImg" onselectstart="return false;" onmousedown="return false;" style="width: 25vw;" />
       <div class="overText">
-        <span class="text-sm font-medium text-gray-900 truncate mx-2">{{ mission.name }}reward:
+        <span class="text-sm font-medium text-gray-900 truncate mx-2 mt-5">{{ mission.name }}reward:
           {{ mission.reward }}
         </span>
-        <div class="gauge">
-          <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
-          <span v-else class=" text-white text-sm font-medium truncate mx-2 fixed">{{ mission.nowAchievement + "/" +
-            mission.goalAchievement }}</span>
-          <div class="bar" :style="{ width: (100 - ((mission.nowAchievement / mission.goalAchievement) * 100)) + '%' }">
-          </div>
+          <div class="gauge">
+            <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
+            <span v-else class=" text-white text-sm font-medium truncate mx-2 fixed">{{ mission.nowAchievement + "/" +
+              mission.goalAchievement }}</span>
+            <div class="bar" :style="{ width: (100 - ((mission.nowAchievement / mission.goalAchievement) * 100)) + '%' }">
+            </div>
         </div>
       </div>
     </div>
