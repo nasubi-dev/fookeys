@@ -4,8 +4,6 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import ShopDrawCards from './shopDrawCards.vue';
 import ShopUseGifts from './shopUseGifts.vue';
-import drawCard from "@/assets/img/ui/drawCard.png";
-import useGift from "@/assets/img/ui/useGift.png";
 
 const { cardLock, phase } = storeToRefs(playerStore);
 
@@ -34,28 +32,31 @@ watch(phase, (newVal) => {
 
 <template>
   <div>
-    <div v-if="shopAnimation" class="animate-slide-to-top">
-      Shop Phase // ここにアニメーションを入れる
-    </div>
-    <div v-else>
-      <div v-if="draw">
-        <ShopDrawCards />
+    <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
+      <div v-if="shopAnimation">
+        Shop Phase // ここにアニメーションを入れる
       </div>
-      <div v-else-if="use">
-        <ShopUseGifts />
-      </div>
-      <div v-else class="flex justify-start">
-        <div class="overCard" style="width: 20vw;">
-          <button @click="draw = !draw">
-            <img :src="drawCard" />
-          </button>
+      <div v-else>
+        <div v-if="draw">
+          <ShopDrawCards />
         </div>
-        <div class="overCard">
-          <button @click="use = !use" style="width: 20vw;">
-            <img :src="useGift" />
-          </button>
+        <div v-else-if="use">
+          <ShopUseGifts />
+        </div>
+        <div v-else class="flex justify-start">
+          <div class="overCard" style="width: 20vw;">
+            <button @click="draw = !draw">
+              <img :src="`img/ui/drawCard.png`" />
+            </button>
+          </div>
+          <div class="overCard">
+            <button @click="use = !use" style="width: 20vw;">
+              <img :src="`img/ui/useGift.png`" />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>

@@ -36,12 +36,13 @@ onClickOutside(el, () => {
     <div ref="htmlRefHook" class="overCard">
       <img :src="infoImg" onselectstart="return false;" onmousedown="return false;" style="width: 25vw;" />
       <div class="overText">
-        <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
         <span class="text-sm font-medium text-gray-900 truncate mx-2">{{ mission.name }}reward:
           {{ mission.reward }}
         </span>
         <div class="gauge">
-          <span class=" text-white text-sm font-medium truncate mx-2 fixed">{{mission.nowAchievement + "/" + mission.goalAchievement }}</span>
+          <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mx-2">✔</span>
+          <span v-else class=" text-white text-sm font-medium truncate mx-2 fixed">{{ mission.nowAchievement + "/" +
+            mission.goalAchievement }}</span>
           <div class="bar" :style="{ width: (100 - ((mission.nowAchievement / mission.goalAchievement) * 100)) + '%' }">
           </div>
         </div>

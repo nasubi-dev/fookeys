@@ -26,10 +26,10 @@ watch(battleResult, (newVal) => {
 </script>
 
 <template>
-  <div class="overCard" style="width:50dvw;">
-    <img :src="statusImg" class="block" />
+  <div class="overCard mt-auto" style="width:50dvw;">
+    <img :src="statusImg"  />
     <div class="overText text-sm font-medium text-gray-900" style="width:50dvw;">
-      <div class="status font-bold text-3xl mt-auto">
+      <div class="status font-bold text-3xl">
         <!-- name:{{ name }}
         {{ allCharacters[player.character].name }} -->
         ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}

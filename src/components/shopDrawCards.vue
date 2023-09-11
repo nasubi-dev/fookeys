@@ -5,7 +5,7 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { watchShopEnd } from "@/server/useShop";
 import type { Card } from "@/types";
-import uiHandCard from "./uiCard.vue";
+import UiCard from "./uiCard.vue";
 import decide from "@/assets/img/ui/decide.png";
 
 const { offer, player, phase, log } = storeToRefs(playerStore);
@@ -35,14 +35,14 @@ const offerHand = async () => {
 <template>
   <div>
     <div v-if="phase === 'shop'" class="flex justify-start">
-      <button @click="offerHand()" :class="check ? 'bg-red-500' : 'bg-blue-500'">
+      <button @click="offerHand()">
         <img :src="decide" style="width: 20vw;" />
       </button>
       <div class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">
-          <button @click="isOfferSelected[index] = !isOfferSelected[index]">
-            <uiHandCard :card="card"
-              :class="isOfferSelected[index] ? 'bg-red-100 transform -translate-y-2' : 'bg-blue-100'" class="cardSize" />
+          <button @click="isOfferSelected[index] = !isOfferSelected[index]" class="cardSize"
+            :class="isOfferSelected[index] ? 'transform -translate-y-2' : null">
+            <UiCard :card="card" />
           </button>
         </div>
       </div>

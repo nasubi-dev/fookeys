@@ -4,7 +4,7 @@ import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { watchTurnEnd } from "@/server/useShop";
-import UiHandCard from "@/components/uiCard.vue";
+import UiCard from "@/components/uiCard.vue";
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock } = storeToRefs(playerStore);
@@ -59,7 +59,7 @@ const popCard = (index: number, id: number) => {
         <div v-if="!card.rotten">
           <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
             :class="handSelected[index] ? 'transform -translate-y-2' : null" class="cardSize">
-            <UiHandCard :card="card" />
+            <UiCard :card="card" />
           </button>
         </div>
         <div v-else>

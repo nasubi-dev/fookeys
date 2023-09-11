@@ -121,6 +121,7 @@ watch(phase, (newVal) => {
       <div v-else>
         <div v-if="battleAnimation" class="overlay">
           Battle Phase // ここにアニメーションを入れる
+          <img :src="`/gifs/shopping.gif`" />
         </div>
       </div>
 
