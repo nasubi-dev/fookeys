@@ -89,7 +89,7 @@ export async function setMissions(): Promise<void> {
       for (let j = 0; j < i; j++) {
         if (allMissions[missionsNum.value[i]].id === allMissions[missionsNum.value[j]].id) {
           i--;
-          missions.value.pop();
+          missions.value?.pop();
           break;
         }
       }

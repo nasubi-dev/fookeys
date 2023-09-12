@@ -9,9 +9,12 @@ const { missions } = storeToRefs(gameStore);
 </script>
 
 <template>
-  <div>
+  <div class="overflow-clip">
+    <transition-group enter-from-class="translate-x-[150%] opacity-0" leave-to-class="translate-x-[-150%] opacity-0"
+        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
     <div v-for="mission in missions" :key="mission.id">
       <UiMission :mission="mission" />
     </div>
+    </transition-group>
   </div>
 </template>

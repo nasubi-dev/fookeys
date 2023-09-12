@@ -18,11 +18,14 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 export async function startShop(): Promise<void> {
   console.log(i, "startShopを実行しました");
   const { phase } = storeToRefs(playerStore);
-  const { game } = storeToRefs(gameStore);
+  const { game,missions } = storeToRefs(gameStore);
 
   phase.value = "shop";
   console.log(i, "phase: ", phase.value);
-  if (game.value.turn % 4 == 1) setMissions();
+  if (game.value.turn % 4 == 1){
+    missions.value = undefined;
+    setMissions();
+  }
   if (game.value.turn === 1) {
     setHand();
     phase.value = "battle";

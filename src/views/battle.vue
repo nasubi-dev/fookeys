@@ -50,7 +50,7 @@ onMounted(async () => {
     console.log(i, "gift: ", allGifts[gifts.value[0]]?.name, allGifts[gifts.value[1]]?.name, allGifts[gifts.value[2]]?.name);
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));
-    console.log(i, "mission: ", missions.value[0]?.name, missions.value[1]?.name, missions.value[2]?.name);
+    console.log(i, "mission: ", missions.value?.map((mission) => mission.name));
     console.log(i, "turn: ", turn.value);
   });
 });

@@ -185,7 +185,7 @@ const useGameStore = defineStore("gameData", () => {
     firstAtkPlayer: undefined,
     missionsNum: [],
   });
-  const missions = ref<Mission[]>([]);
+  const missions = ref<Mission[] | undefined>([]);
   //?Computed/Getter
   ///?function/actions
   //ターン終了時に、turnを1増やす

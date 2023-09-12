@@ -65,7 +65,7 @@ const popCard = (index: number, id: number) => {
         <div v-else>
           <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
             class="rounded-lg p-4 flex flex-col items-center">
-            <h5 class="text-bold">腐ってます!!!!!</h5>
+            <h5 class="text-bold">腐ってます!</h5>
           </div>
         </div>
       </div>
