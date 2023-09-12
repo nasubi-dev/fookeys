@@ -12,6 +12,7 @@ const { offer, player, phase, log } = storeToRefs(playerStore);
 const { hand, check } = toRefs(player.value);
 
 const isOfferSelected = ref([false, false, false]);
+const pushed = ref(false);
 //選択を確定させたらHandにtrueのカードを追加して､offerを空にする
 const offerHand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
@@ -27,6 +28,7 @@ const offerHand = async () => {
   //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
   offer.value.splice(0, offer.value.length);
   isOfferSelected.value = [false, false, false];
+  pushed.value = false;
   await watchShopEnd();
 }
 
@@ -34,18 +36,22 @@ const offerHand = async () => {
 
 <template>
   <div>
-    <div v-if="phase === 'shop'" class="flex justify-start">
-      <button @click="offerHand()">
+    <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+
+    <div v-if="phase === 'shop' && !pushed" class="flex justify-start">
+      <button @click="offerHand(), pushed = !pushed">
         <img :src="decide" style="width: 20vw;" />
       </button>
       <div class="text-xs flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">
-          <button @click="isOfferSelected[index] = !isOfferSelected[index]" class="cardSize"
+          <button @click="isOfferSelected[index] = !isOfferSelected[index]" class="cardSize card-pop"
             :class="isOfferSelected[index] ? 'transform -translate-y-2' : null">
             <UiCard :card="card" />
           </button>
         </div>
       </div>
     </div>
+    </transition-group>
   </div>
 </template>

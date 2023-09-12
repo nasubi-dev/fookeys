@@ -83,16 +83,20 @@ watch(phase, (newVal) => {
         {{ id + ": " + name + " " + sign }}
       </div>
 
-      <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
-        <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
-          <img :src="decide" style="width: 20vw;" />
-        </button>
-        <UiSumField />
-        <button @click="cardLock ? null : donate = !donate" :class="donate ? 'bg-red-100' : 'bg-blue-100'">
-          <div v-if="donate">寄付MODE</div>
-          <div v-else>戦闘MODE</div>
-        </button>
-      </div>
+      <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+        <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
+          <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
+            <img :src="decide" style="width: 20vw;" />
+          </button>
+          <UiSumField />
+          <button @click="cardLock ? null : donate = !donate" class="card-pop"
+            :class="donate ? 'bg-red-100' : 'bg-blue-100'">
+            <div v-if="donate">寄付MODE</div>
+            <div v-else>戦闘MODE</div>
+          </button>
+        </div>
+      </transition-group>
 
       <div v-if="components !== 'afterBattle'">
         {{ components }}

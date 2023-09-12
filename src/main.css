@@ -6,12 +6,11 @@
 .btn-pop {
   transition: all 0.3s ease;
 }
-.btn-pop:hover {
-  transform: translateY(-2px);
-}
 .btn-pop:active {
-  transform: scale(0.95);
-  opacity: 0.8;
+	-webkit-transform: translate(0,2px);
+	-moz-transform: translate(0,2px);
+	transform: translate(0,2px);
+	border-bottom:none;
 }
 .overCard {
   position: relative;

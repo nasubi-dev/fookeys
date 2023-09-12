@@ -41,13 +41,13 @@ watch(phase, (newVal) => {
         <img :src="`/gifs/shopping.gif`" />
       </div>
       <div v-else>
-        <div v-if="draw">
+        <div v-show="draw">
           <ShopDrawCards />
         </div>
-        <div v-else-if="use">
+        <div v-show="use">
           <ShopUseGifts />
         </div>
-        <div v-else class="flex justify-start">
+        <div v-if="!draw && !use" class="flex justify-start">
           <div class="overCard" style="width: 20vw;">
             <button @click="draw = !draw">
               <img :src="`img/ui/drawCard.png`" />

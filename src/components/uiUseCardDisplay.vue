@@ -3,6 +3,7 @@ import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import type { Card } from "@/types";
+import UiCard from "./uiCard.vue";
 
 const { cardLock } = storeToRefs(playerStore);
 
@@ -20,29 +21,8 @@ defineProps<{
       <div
         v-for="card in (after === 'donate' ? cards : (cards.map((card) => { if (card.attribute === after) { return card } })))"
         :key="card?.id">
-        <div v-if="card" class="overCard" style="width: 15vw;">
-          <img :src="`/img/companys/${card.company}.png`" />
-          <div class="overText">
-            <p class="waste">{{ card.waste }}</p>
-            <div class="info flex justify-start">
-              <p>{{ "🍖" + card.hungry }} </p>
-              <div v-if="card.atk">
-                <p>{{ "⚔:" + card.atk }}</p>
-              </div>
-              <div v-if="card.def">
-                <p>{{ "🛡:" + card.def }}</p>
-              </div>
-              <div v-if="card.tech">
-                <p>{{ "🏹:" + card.tech }}</p>
-              </div>
-              <div v-if="card.priority">
-                <p>{{ "🦶: " + card.priority }}</p>
-              </div>
-              <div v-if="card.heal">
-                <p>{{ "💖:" + card.heal }}</p>
-              </div>
-            </div>
-          </div>
+        <div v-if="card" class="cardSize" style="width: 15vw;">
+          <UiCard :card="card" />
         </div>
       </div>
 
