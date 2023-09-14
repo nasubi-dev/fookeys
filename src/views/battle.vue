@@ -80,13 +80,18 @@ watch(phase, (newVal) => {
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <div class="flex flex-row-reverse">
         <UiEnemyInfo :p="enemyPlayer" />
-        {{ id + ": " + name + " " + sign }}
+        <div class="flex flex-col">
+          <p> {{ "id: " + id }}</p>
+          <p> {{ "sign: " + sign }}</p>
+          <p> {{ "phase: " + phase }}</p>
+          <p> {{ "turn: " + turn }}</p>
+        </div>
       </div>
 
       <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
         <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
-          <button @click="turnEnd()" :class="cardLock ? 'bg-red-100' : 'bg-blue-100'" class="rounded-full">
+          <button @click="turnEnd()">
             <img :src="decide" style="width: 20vw;" />
           </button>
           <UiSumField />
@@ -110,14 +115,12 @@ watch(phase, (newVal) => {
         </div>
 
         <div class="overlay flex flex-col">
-          {{ battleResult }}
           <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
             :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
           <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
             :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
         </div>
       </div>
-      {{ phase }}
 
       <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
         <Shop />
@@ -134,7 +137,7 @@ watch(phase, (newVal) => {
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />
         </div>
-        <UiHand class=" pt-3" />
+        <UiHand class=" pt-5" />
       </div>
     </div>
   </div>
