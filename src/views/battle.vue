@@ -17,6 +17,8 @@ import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 import decide from "@/assets/img/ui/decide.png";
+import battleImg from "@/assets/img/ui/battle.png"
+import donateImg from "@/assets/img/ui/donate.png"
 
 import { usePush } from 'notivue'
 const push = usePush()
@@ -92,8 +94,8 @@ watch(phase, (newVal) => {
           <UiSumField />
           <button @click="cardLock ? null : donate = !donate" class="card-pop"
             :class="donate ? 'bg-red-100' : 'bg-blue-100'">
-            <div v-if="donate">寄付MODE</div>
-            <div v-else>戦闘MODE</div>
+            <img v-if="donate" :src="donateImg" class="w-24" />
+            <img v-else :src="battleImg" class="w-24" />
           </button>
         </div>
       </transition-group>

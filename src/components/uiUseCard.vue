@@ -7,6 +7,8 @@ import type { PlayerData } from "@/types";
 import uiCardBehind from "./uiCardBehind.vue";
 import allCharacters from "@/assets/allCharacters";
 import infoImg from "@/assets/img/ui/info.png";
+import battleImg from "@/assets/img/ui/battle.png"
+import donateImg from "@/assets/img/ui/donate.png"
 
 const { components, battleResult } = storeToRefs(playerStore);
 
@@ -52,8 +54,8 @@ watch(battleResult, (newVal) => {
         </div>
 
         <div>
-          <div v-if="p.player.donate">donate</div>
-          <div v-else>battle</div>
+          <img v-if="p.player.donate" :src="donateImg" class="w-24" />
+          <img v-else :src="battleImg" class="w-24" />
         </div>
       </div>
 
