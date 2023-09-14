@@ -349,7 +349,7 @@ export async function battle() {
   await reflectStatus();
   await checkMission("second");
 
-  await wait(1000);
+  await wait(3000);
   getEnemyPlayer(); //!
 
   //戦後処理
