@@ -339,7 +339,7 @@ export async function battle() {
   await reflectStatus();
   await checkMission("primary");
 
-  await wait(1000);
+  await wait(3000);
   getEnemyPlayer(); //!
   components.value = "secondAtk";
 

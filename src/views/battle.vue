@@ -75,6 +75,37 @@ watch(phase, (newVal) => {
   }
 })
 
+const myTurnAnimation = ref(true);
+const enemyTurnAnimation = ref(true);
+watch(components, (newVal) => {
+  if (newVal === "primaryAtk") {
+    if (sign.value === firstAtkPlayer.value) {
+      myTurnAnimation.value = true;
+      setTimeout(async () => {
+        myTurnAnimation.value = false;
+      }, 2000);
+    } else {
+      enemyTurnAnimation.value = true;
+      setTimeout(async () => {
+        enemyTurnAnimation.value = false;
+      }, 2000);
+    }
+  }
+  if (newVal === "secondAtk") {
+    if (sign.value !== firstAtkPlayer.value) {
+      myTurnAnimation.value = true;
+      setTimeout(async () => {
+        myTurnAnimation.value = false;
+      }, 2000);
+    } else {
+      enemyTurnAnimation.value = true;
+      setTimeout(async () => {
+        enemyTurnAnimation.value = false;
+      }, 2000);
+    }
+  }
+})
+
 </script>
 
 <template>
@@ -97,10 +128,9 @@ watch(phase, (newVal) => {
             <img :src="decide" style="width: 20vw;" />
           </button>
           <UiSumField />
-          <button @click="cardLock ? null : donate = !donate" class="card-pop"
-            :class="donate ? 'bg-red-100' : 'bg-blue-100'">
-            <img v-if="donate" :src="donateImg" class="w-24" />
-            <img v-else :src="battleImg" class="w-24" />
+          <button @click="cardLock ? null : donate = !donate" class="card-pop">
+            <img v-if="donate" :src="donateImg" class="w-12" />
+            <img v-else :src="battleImg" class="w-12" />
           </button>
         </div>
       </transition-group>
@@ -116,12 +146,21 @@ watch(phase, (newVal) => {
           <UiUseCard :player="player" :which="'second'" />
         </div>
 
-        <div class="overlay flex flex-col">
-          <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-            :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
-          <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-            :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
-        </div>
+        <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+          leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
+          <div v-if="myTurnAnimation" class="overlay">
+            <img :src="`/gifs/myTurn.png`" style="width: 40vw;" />
+          </div>
+          <div v-else-if="enemyTurnAnimation" class="overlay">
+            <img :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
+          </div>
+          <div v-else class="overlay flex flex-col">
+            <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+              :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
+            <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+              :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+          </div>
+        </transition>
       </div>
 
       <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
