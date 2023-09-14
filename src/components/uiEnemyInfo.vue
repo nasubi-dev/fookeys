@@ -26,7 +26,7 @@ defineProps<{
           🪙:{{ p.status.contribution }}
         </span>
 
-        <div class="">
+        <div>
           <UiGifts :gifts="p.gifts" player="enemyPlayer" class="transform -translate-x-3 translate-y-8" />
         </div>
       </div>
