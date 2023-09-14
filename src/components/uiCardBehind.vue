@@ -14,7 +14,7 @@ defineProps<{
         <div class="overCard">
           <img v-if="card" :src="`/img/companysBack/${card.company}.png`" class=" w-14 h-14" />
           <div class="overText">
-            {{ card?.attribute }}
+            <!-- {{ card?.attribute }} -->
           </div>
         </div>
       </div>

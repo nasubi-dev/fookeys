@@ -4,6 +4,7 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import ShopDrawCards from './shopDrawCards.vue';
 import ShopUseGifts from './shopUseGifts.vue';
+import notYet from "@/assets/img/notYet.png";
 
 const { cardLock, phase } = storeToRefs(playerStore);
 
@@ -54,8 +55,11 @@ watch(phase, (newVal) => {
             </button>
           </div>
           <div class="overCard">
-            <button @click="use = !use" style="width: 20vw;">
+            <button style="width: 20vw;">
               <img :src="`img/ui/useGift.png`" />
+              <div class="overText">
+                <img :src="notYet" class="h-auto " />
+              </div>
             </button>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { startMatchmaking } from "@/server/useMatchMaking";
 import SelectCharacter from "@/components/selectCharacter.vue";
 import SelectGifts from "@/components/selectGifts.vue";
 import nasubi from "@/assets/img/nasubi.png";
+import notYet from "@/assets/img/notYet.png";
 import allCharacters from "@/assets/allCharacters";
 import allGifts from "@/assets/allGifts";
 
@@ -69,13 +70,20 @@ watch(log, (newVal) => {
       </div>
       <div v-else class="w-1/2 p-8 flex flex-col justify-center">
         <button @click="startMatch" class="btn-pop">
-          <img src="@/assets/img/ui/entry.png" class="w-1/2" />
+          <img src="@/assets/img/ui/entry.png" class=" w-1/2" />
         </button>
-        <button @click="selectCharacter = !selectCharacter" class="text-white rounded-md">
-          <img src="@/assets/img/ui/changeCharacter.png" class="w-1/2" />
+        <button  class="text-white rounded-md overCard">
+          <img src="@/assets/img/ui/changeCharacter.png" class=" w-1/2" />
+          <div class="overText">
+            <img :src="notYet" class="h-auto w-1/4" />
+          </div>
         </button>
-        <button @click="selectGift = !selectGift" class="text-white rounded-md">
-          <img src="@/assets/img/ui/changeGift.png" class="w-1/2" />
+        <button class="text-white rounded-md overCard">
+          <img src="@/assets/img/ui/changeGift.png" class=" w-1/2" />
+          <div class="overText">
+
+            <img :src="notYet" class="h-auto w-1/4" />
+          </div>
         </button>
       </div>
     </div>

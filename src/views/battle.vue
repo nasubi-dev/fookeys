@@ -75,8 +75,8 @@ watch(phase, (newVal) => {
   }
 })
 
-const myTurnAnimation = ref(true);
-const enemyTurnAnimation = ref(true);
+const myTurnAnimation = ref(false);
+const enemyTurnAnimation = ref(false);
 watch(components, (newVal) => {
   if (newVal === "primaryAtk") {
     if (sign.value === firstAtkPlayer.value) {
