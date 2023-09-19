@@ -51,8 +51,8 @@ async function reflectStatus(): Promise<void> {
   const { player, id } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
   //ダメージを反映する
-  let myStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  if(!myStatus) throw Error("myStatusが取得できませんでした");
+  let myStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  if (!myStatus) throw Error("myStatusが取得できませんでした");
   status.value = myStatus;
   console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
 }
@@ -204,11 +204,13 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const { status } = toRefs(player.value);
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-  const { myId, enemyId, my, enemy } = await syncPlayer(which);
+  const { my, enemy } = await syncPlayer(which);
 
+  if (which === "primary" && my.check) return;
+  if (which === "second" && enemy.check) return;
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
-  for (let mission of missions.value??[]) {
+  for (let mission of missions.value ?? []) {
     if (mission.achieved) continue;
     //Missionを進捗させる
     mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand, my.donate) ?? 0;

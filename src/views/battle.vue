@@ -172,7 +172,7 @@ watch(components, (newVal) => {
         </div>
       </div>
 
-      <div class="bottom-0 absolute m-3">
+      <div class="bottom-0 fixed m-3">
         <div class="flex justify-start mb-1" style="width: 95vw;">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" player="player" />

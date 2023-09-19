@@ -59,7 +59,7 @@ watch(battleResult, (newVal) => {
         </div>
       </div>
 
-      <div class="flex justify-start">
+      <div class="flex flex-wrap">
         <uiCardBehind v-show="isShowSup" :cards="p.player.field" :attribute="'sup'" />
         <uiCardBehind v-show="isShowDef" :cards="p.player.field" :attribute="'def'" />
         <uiCardBehind v-show="isShowAtk" :cards="p.player.field" :attribute="'atk'" />
