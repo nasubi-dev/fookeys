@@ -129,8 +129,13 @@ watch(components, (newVal) => {
           </button>
           <UiSumField />
           <button @click="cardLock ? null : donate = !donate" class="card-pop">
-            <img v-if="donate" :src="donateImg" class="w-12" />
-            <img v-else :src="battleImg" class="w-12" />
+            <div class="overCard">
+              <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
+              <div class="w-12 overText">
+                <img v-if="donate" :src="donateImg" />
+                <img v-else :src="battleImg"  />
+              </div>
+            </div>
           </button>
         </div>
       </transition-group>
@@ -172,7 +177,8 @@ watch(components, (newVal) => {
         </div>
       </div>
 
-      <img v-if="cardLock && phase === `battle`" :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36" style="width: 40vw;" />
+      <img v-if="cardLock && phase === `battle`" :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36"
+        style="width: 40vw;" />
       <div class="bottom-0 fixed m-3">
         <div class="flex justify-start mb-1" style="width: 95vw;">
           <UiStatus :player="player" />

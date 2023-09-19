@@ -4,6 +4,7 @@ import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import allCharacters from "@/assets/allCharacters";
 import statusImg from "@/assets/img/ui/status.png";
+import nasubiImg from "@/assets/img/nasubi.png";
 
 const { player, components, battleResult, sign } = storeToRefs(playerStore);
 const { name, character, status } = toRefs(player.value);
@@ -27,18 +28,18 @@ watch(battleResult, (newVal) => {
 
 <template>
   <div class="overCard mt-auto" style="width:50dvw;">
-    <img :src="statusImg"  />
-    <div class="overText text-sm font-medium text-gray-900" style="width:50dvw;">
-      <div class="status font-bold text-3xl">
-        <!-- name:{{ name }}
-        {{ allCharacters[player.character].name }} -->
-        ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
-        🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
-        🪙:{{ status.contribution }}
+    <img :src="statusImg" />
+    <div class="overText w-full">
+      <div class="flex justify-start w-full transform -translate-y-4">
+        <img :src="nasubiImg" class="w-36 inline-block ml-4" />
+        <div class="font-bold text-5xl">{{ retainedDef }}</div>
+        <p class="font-bold text-3xl mt-auto ml-auto mr-6">
+          ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
+          🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
+          🪙:{{ status.contribution }}
+        </p>
       </div>
-    </div>
-    <div class="overText">
-      <div class="font-bold text-5xl mr-auto ml-5 transform -translate-x-48 translate-y-6">{{ retainedDef }}</div>
+
     </div>
   </div>
 </template>
