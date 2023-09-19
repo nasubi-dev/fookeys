@@ -172,13 +172,15 @@ watch(components, (newVal) => {
         </div>
       </div>
 
+      <img v-if="cardLock && phase === `battle`" :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36" style="width: 40vw;" />
       <div class="bottom-0 fixed m-3">
         <div class="flex justify-start mb-1" style="width: 95vw;">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />
         </div>
-        <UiHand class=" pt-5" />
+        <UiHand v-if="hand" class=" pt-5" />
+        <div v-else class="cardSize"></div><!--!出来てない-->
       </div>
     </div>
   </div>

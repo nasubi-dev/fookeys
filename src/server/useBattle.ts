@@ -206,8 +206,13 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const { firstAtkPlayer } = toRefs(game.value);
   const { my, enemy } = await syncPlayer(which);
 
-  if (which === "primary" && my.check) return;
-  if (which === "second" && enemy.check) return;
+  if (firstAtkPlayer.value === sign.value) {
+    if (which === "primary" && my.check) return;
+    if (which === "second" && enemy.check) return;
+  } else {
+    if (which === "primary" && enemy.check) return;
+    if (which === "second" && my.check) return;//!出来てない
+  }
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value ?? []) {
