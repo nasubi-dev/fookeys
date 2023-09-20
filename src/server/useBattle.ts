@@ -87,6 +87,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(i, "mySumHungry: ", my.status.hungry);
   if (my.status.hungry > maxHungry) {
     my.check = true;
+    updateDoc(doc(playersRef, myId), { check: my.check });
     console.log(i, "自プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
     if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
@@ -107,7 +108,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(i, "enemySumHungry: ", enemySumHungry);
   if (enemySumHungry > enemyMaxHungry) {
     enemy.check = true;
+    updateDoc(doc(playersRef, enemyId), { check: enemy.check });
     console.log(i, "相手プレイヤー行動不能です");
+    //hungryの値が上限を超えていた場合､上限値にする
+    if (enemySumHungry > enemyMaxHungry) enemySumHungry = enemyMaxHungry;
   }
 
   //支援を行う//!未定
@@ -200,25 +204,26 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 //missionの統括
 async function checkMission(which: "primary" | "second"): Promise<void> {
   console.log(s, "checkMissionを実行しました");
-  const { id, player, sign } = storeToRefs(playerStore);
+  const { id, player, sign, log } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { my, enemy } = await syncPlayer(which);
 
-  if (firstAtkPlayer.value === sign.value) {
-    if (which === "primary" && my.check) return;
-    if (which === "second" && enemy.check) return;
-  } else {
-    if (which === "primary" && enemy.check) return;
-    if (which === "second" && my.check) return;//!出来てない
+  // if (my.donate) {
+  //   log.value = "寄付をしていたのでミッションは進行しませんでした";
+  //   return;
+  // }
+  if (my.check) {
+    log.value = "行動不能だったのでミッションは進行しませんでした";
+    return;
   }
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value ?? []) {
     if (mission.achieved) continue;
     //Missionを進捗させる
-    mission.nowAchievement += mission.checker?.(my.sumFields, my.field, my.hand, my.donate) ?? 0;
+    mission.nowAchievement += mission.checker?.(my.donate, my.sumFields, my.field, my.hand) ?? 0;
     //Missionを達成したら報酬を受け取る
     if (mission.nowAchievement >= mission.goalAchievement) {
       mission.achieved = true;
@@ -226,9 +231,11 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
       if (equalPlayerSign && which === "primary") {
         status.value.contribution += mission.reward;
         console.log(i, "mission: " + mission.name + "を達成したので", mission.reward, "の貢献度を受け取りました");
+        log.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
       } else if (!equalPlayerSign && which === "second") {
         status.value.contribution += mission.reward;
         console.log(i, "mission: " + mission.name + "を達成したので", mission.reward, "の貢献度を受け取りました");
+        log.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
       }
       updateDoc(doc(playersRef, id.value), { status: status.value });
     }
@@ -341,7 +348,6 @@ export async function battle() {
   components.value = "primaryAtk";
 
   console.log(i, "先行の攻撃");
-  log.value = "先行の攻撃";
   await calcDamage("primary");
   await reflectStatus();
   await checkMission("primary");
@@ -351,7 +357,6 @@ export async function battle() {
   components.value = "secondAtk";
 
   console.log(i, "後攻の攻撃");
-  log.value = "後攻の攻撃";
   await calcDamage("second");
   await reflectStatus();
   await checkMission("second");

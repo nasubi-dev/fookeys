@@ -9,7 +9,8 @@ const allMissions: Mission[] = [
     reward: 25,
     goalAchievement: 500,
     nowAchievement: 0,
-    checker: (sumFields) => {
+    checker: (donate, sumFields) => {
+      if (donate) return;
       if (sumFields === undefined) return;
       return sumFields.hungry;
     },
@@ -22,7 +23,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 600,
     nowAchievement: 0,
-    checker: (sumFields) => {
+    checker: (donate, sumFields) => {
+      if (donate) return;
       if (sumFields === undefined) return;
       return sumFields.hungry;
     },
@@ -35,7 +37,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "hanamie").length;
     },
@@ -48,7 +51,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "hanamie").length;
     },
@@ -61,7 +65,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "norma").length;
     },
@@ -74,7 +79,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "norma").length;
     },
@@ -87,7 +93,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "bianca").length;
     },
@@ -100,7 +107,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "bianca").length;
     },
@@ -113,7 +121,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "bulbull").length;
     },
@@ -126,7 +135,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "bulbull").length;
     },
@@ -139,7 +149,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "galdaybee").length;
     },
@@ -152,7 +163,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "galdaybee").length;
     },
@@ -165,7 +177,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "rapidpot").length;
     },
@@ -178,7 +191,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "rapidpot").length;
     },
@@ -191,7 +205,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "unlimit").length;
     },
@@ -204,7 +219,8 @@ const allMissions: Mission[] = [
     reward: 40,
     goalAchievement: 7,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.company === "unlimit").length;
     },
@@ -217,7 +233,8 @@ const allMissions: Mission[] = [
     reward: 35,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.waste <= 3).length;
     },
@@ -230,7 +247,8 @@ const allMissions: Mission[] = [
     reward: 45,
     goalAchievement: 8,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       return field.filter((card) => card.waste <= 3).length;
     },
@@ -243,7 +261,8 @@ const allMissions: Mission[] = [
     reward: 35,
     goalAchievement: 1,
     nowAchievement: 0,
-    checker: (sumFields, field, hand) => {
+    checker: (donate, sumFields, field, hand) => {
+      if (donate) return;
       if (hand === undefined) return;
       return hand.length === 0 ? 1 : 0;
     },
@@ -256,7 +275,8 @@ const allMissions: Mission[] = [
     reward: 15,
     goalAchievement: 1,
     nowAchievement: 0,
-    checker: (sumFields, field, hand) => {
+    checker: (donate, sumFields, field, hand) => {
+      if (donate) return;
       if (hand === undefined) return;
       const ids = hand.map((card) => card.id);
       const uniqueIds = [...new Set(ids)];
@@ -271,7 +291,8 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 1,
     nowAchievement: 0,
-    checker: (sumFields, field) => {
+    checker: (donate, sumFields, field) => {
+      if (donate) return;
       if (field === undefined) return;
       const ids = field.map((card) => card.company);
       const uniqueIds = [...new Set(ids)];
@@ -286,7 +307,7 @@ const allMissions: Mission[] = [
     reward: 20,
     goalAchievement: 5,
     nowAchievement: 0,
-    checker: (sumFields, field, hand, donate) => {
+    checker: (donate, sumFields, field) => {
       if (field === undefined) return;
       if (!donate) return;
       return field.length;
@@ -300,7 +321,7 @@ const allMissions: Mission[] = [
     reward: 30,
     goalAchievement: 8,
     nowAchievement: 0,
-    checker: (sumFields, field, hand, donate) => {
+    checker: (donate, sumFields, field) => {
       if (field === undefined) return;
       if (!donate) return;
       return field.length;
