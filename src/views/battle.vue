@@ -24,7 +24,7 @@ import { usePush } from 'notivue'
 const push = usePush()
 
 const { id, player, cardLock, phase, offer, sign, log, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate, field, sumFields, name } = toRefs(player.value);
+const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -133,7 +133,7 @@ watch(components, (newVal) => {
               <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
               <div class="w-12 overText">
                 <img v-if="donate" :src="donateImg" />
-                <img v-else :src="battleImg"  />
+                <img v-else :src="battleImg" />
               </div>
             </div>
           </button>
@@ -177,16 +177,18 @@ watch(components, (newVal) => {
         </div>
       </div>
 
-      <img v-if="cardLock && phase === `battle`" :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36"
-        style="width: 40vw;" />
+      <img v-if="(cardLock && components === 'afterBattle') || (phase === 'shop' && check)" :src="`/gifs/waiting.gif`"
+        class="bottom-0 fixed mb-36" style="width: 40vw;" />
       <div class="bottom-0 fixed m-3">
-        <div class="flex justify-start mb-1" style="width: 95vw;">
+        <div class="flex justify-start" style="width: 95vw;">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" player="player" />
           <UiMission class="ml-auto" />
         </div>
-        <UiHand v-if="hand" class=" pt-5" />
-        <div v-else class="cardSize"></div><!--!出来てない-->
+        <div v-if="hand.length === 0" class="pt-5 cardSize">
+          <img :src="`/img/companys/bianca.png`" /><!--!ダミーカード-->
+        </div>
+        <UiHand v-else class=" pt-5" />
       </div>
     </div>
   </div>

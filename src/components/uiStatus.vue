@@ -31,8 +31,10 @@ watch(battleResult, (newVal) => {
     <img :src="statusImg" />
     <div class="overText w-full">
       <div class="flex justify-start w-full transform -translate-y-4">
-        <img :src="nasubiImg" class="w-36 inline-block ml-4" />
-        <div class="font-bold text-5xl">{{ retainedDef }}</div>
+        <div class="overCard">
+          <img :src="nasubiImg" class="w-36 inline-block ml-4" />
+          <div class="overText font-bold text-5xl align-text-bottom">{{ retainedDef }}</div>
+        </div>
         <p class="font-bold text-3xl mt-auto ml-auto mr-6">
           ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
           🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}

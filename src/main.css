@@ -26,10 +26,10 @@
   white-space: nowrap;
 }
 .overText .waste{
-  transform: translate(-500%, -50%);
+  transform: translate(-300%, -10%);
 }
 .overText .info{
-  transform: translate(0%,170%);
+  transform: translate(0%,100%);
 }
 .overText .status{
   transform: translate(10%,100%);

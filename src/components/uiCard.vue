@@ -33,24 +33,24 @@ onClickOutside(el, () => {
     </div>
     <div ref="htmlRefHook" class="overCard">
       <img :src="`/img/companys/${card.company}.png`" onselectstart="return false;" onmousedown="return false;" />
-      <div class="overText">
+      <div class="overText text-base">
         <p class="waste">{{ card.waste }}</p>
-        <div class="info flex justify-start">
+        <div class="info flex justify-start text-sm">
           <p>{{ "🍖" + card.hungry }} </p>
           <div v-if="card.atk">
-            <p>{{ "⚔:" + card.atk }}</p>
+            <p>{{ "⚔" + card.atk }}</p>
           </div>
           <div v-if="card.def">
-            <p>{{ "🛡:" + card.def }}</p>
+            <p>{{ "🛡" + card.def }}</p>
           </div>
           <div v-if="card.tech">
-            <p>{{ "🏹:" + card.tech }}</p>
+            <p>{{ "🏹" + card.tech }}</p>
           </div>
           <div v-if="card.priority">
-            <p>{{ "🦶: " + card.priority }}</p>
+            <p>{{ "🦶 " + card.priority }}</p>
           </div>
           <div v-if="card.heal">
-            <p>{{ "💖:" + card.heal }}</p>
+            <p>{{ "💖" + card.heal }}</p>
           </div>
         </div>
       </div>
