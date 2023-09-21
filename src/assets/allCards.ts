@@ -870,6 +870,7 @@ const allCards: Card[] = [
     name: "うな重",
     waste: 5,
     hungry: 50,
+    def:999,
     company: "hanamie",
     attribute: "sup",
     description: "このラウンド中、受けるマッスルダメージを無効化する。",

@@ -57,9 +57,6 @@ watch(phase, (newVal) => {
           <div class="overCard">
             <button style="width: 20vw;">
               <img :src="`img/ui/useGift.png`" />
-              <div class="overText">
-                <img :src="notYet" class="h-auto " />
-              </div>
             </button>
           </div>
         </div>
