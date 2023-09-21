@@ -26,6 +26,10 @@ document.addEventListener('touchstart', touchHandler, { passive: false });
 document.onselectstart = function () {
   return false;
 }
+//テキスト選択禁止
+document.onselectstart = function() {
+  return false;
+}
 //スクロール禁止
 function disableScroll(event: any) {
   event.preventDefault();
