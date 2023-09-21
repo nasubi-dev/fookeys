@@ -1,43 +1,35 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { onClickOutside } from '@vueuse/core'
-import { onLongPress } from '@vueuse/core'
+import VDuringPress from "./VDuringPress.vue";
 import allGifts from "@/assets/allGifts";
 
 defineProps<{
   gift: number;
 }>();
 
-const el = ref()
 const dropDown = ref(false);
-const htmlRefHook = ref<HTMLElement | null>(null)
-
-const onLongPressCallbackHook = () => {
-  dropDown.value = true
+const onLongPressCallbackHook = (): void => {
   console.log("longPress");
-}
-onLongPress(
-  htmlRefHook,
-  onLongPressCallbackHook,
-  { modifiers: { prevent: true } }
-)
-onClickOutside(el, () => {
-  dropDown.value = false
-})
+  dropDown.value = true;
+};
+const onKeyUpCallbackHook = (): void => {
+  console.log("keyUp");
+  dropDown.value = false;
+};
 
 </script>
 
 <template>
-  <div class="flex flex-row w-auto h-auto">
-    <div v-if="dropDown" ref="el" class="bg-white rounded fixed z-10">
-      {{ dropDown }}
-      <p>{{ "name: " +allGifts[gift]?.name }}</p>
-      <p>{{ "description: " + allGifts[gift]?.description }}</p>
+  <div class="mt-auto mx-3" style="user-select: none;">
+    <div v-if="dropDown"  class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-16">
+      <p>{{ allGifts[gift]?.name }}</p>
+      <p>{{ allGifts[gift]?.description }}</p>
     </div>
-    <div ref="htmlRefHook" class="mt-auto overCard mx-3">
-      <button class="rounded-full bg-white p-6" onselectstart="return false;" onmousedown="return false;">
-        <img :src="`/img/gifts/${gift}.png`" class="overText " />
-      </button>
+    <div class="overCard">
+      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
+        <div class="rounded-full bg-white p-6" ></div>
+        <img :src="`/img/gifts/${gift}.png`" class="overText" />
+      </VDuringPress>
     </div>
   </div>
 </template>

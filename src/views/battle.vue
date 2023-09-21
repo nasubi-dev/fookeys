@@ -142,39 +142,33 @@ watch(components, (newVal) => {
 
       <div v-if="components !== 'afterBattle'">
         {{ components }}
-        <div v-if="sign === firstAtkPlayer" style="width: 40vw;">
-          <UiUseCard :player="player" :which="'primary'" v-show="components !== 'secondAtk'" />
-          <UiUseCard :player="enemyPlayer" :which="'second'" />
-        </div>
-        <div v-else style="width: 40vw;">
-          <UiUseCard :player="enemyPlayer" :which="'primary'" v-show="components !== 'secondAtk'" />
-          <UiUseCard :player="player" :which="'second'" />
+        <div style="width: 40vw;">
+          <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :which="'primary'"
+            v-show="components !== 'secondAtk'" />
+          <UiUseCard :player="sign === firstAtkPlayer ? enemyPlayer : player" :which="'second'" />
         </div>
 
-        <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-          leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
-          <div v-if="myTurnAnimation" class="overlay">
-            <img :src="`/gifs/myTurn.png`" style="width: 40vw;" />
-          </div>
-          <div v-else-if="enemyTurnAnimation" class="overlay">
-            <img :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
-          </div>
-          <div v-else class="overlay flex flex-col">
-            <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
-            <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
-          </div>
-        </transition>
+        <div class="overlay">
+          <transition appear enter-from-class="translate-y-[-150%] opacity-0"
+            leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
+            enter-active-class="transition duration-300" mode="out-in">
+            <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />
+            <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
+            <div v-else class="flex flex-col">
+              <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+                :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
+              <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+                :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+            </div>
+          </transition>
+        </div>
       </div>
 
-      <div v-if="phase === 'shop' && turn !== 1" class="overlay gray">
+      <div v-if="phase === 'shop' && turn !== 1" class="overlay">
         <Shop />
       </div>
-      <div v-else>
-        <div v-if="battleAnimation" class="overlay">
-          <img :src="`/gifs/eating.gif`" />
-        </div>
+      <div v-else-if="battleAnimation" class="overlay">
+        <img :src="`/gifs/eating.gif`" />
       </div>
 
       <img v-if="(cardLock && components === 'afterBattle') || (phase === 'shop' && check)" :src="`/gifs/waiting.gif`"
@@ -188,7 +182,7 @@ watch(components, (newVal) => {
         <div v-if="hand.length === 0" class="pt-5 cardSize">
           <img :src="`/img/companys/bianca.png`" /><!--!ダミーカード-->
         </div>
-        <UiHand v-else class=" pt-5" />
+        <UiHand v-else class=" pt-5 " />
       </div>
     </div>
   </div>

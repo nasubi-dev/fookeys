@@ -209,11 +209,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { my, enemy } = await syncPlayer(which);
-
-  // if (my.donate) {
-  //   log.value = "寄付をしていたのでミッションは進行しませんでした";
-  //   return;
-  // }
+  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
   if (my.check) {
     log.value = "行動不能だったのでミッションは進行しませんでした";
     return;
