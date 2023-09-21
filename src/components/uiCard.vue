@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Card } from "@/types";
-import VLongPress from "./VLongPress.vue";
 import VDuringPress from "./VDuringPress.vue";
 
 defineProps<{ card: Card }>();
@@ -19,10 +18,9 @@ const onKeyUpCallbackHook = (): void => {
 
 </script>
 <template>
-  <div class="block">
-    <div v-if="dropDown" class="bg-white rounded fixed z-10">
-      <h5>{{ card.name }}</h5>
-      <p>{{ card.company }}</p>
+  <div class="block user-select-none">
+    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left">
+      <p>{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>
     </div>
     <div class="overCard">

@@ -34,8 +34,9 @@ onClickOutside(el, () => {
       <p>{{ "name: " +allGifts[gift]?.name }}</p>
       <p>{{ "description: " + allGifts[gift]?.description }}</p>
     </div>
-    <div ref="htmlRefHook" class="mt-auto">
-      <button class="mx-1 rounded-full bg-white" style="padding:2vw;" onselectstart="return false;" onmousedown="return false;">
+    <div ref="htmlRefHook" class="mt-auto overCard mx-3">
+      <button class="rounded-full bg-white p-6" onselectstart="return false;" onmousedown="return false;">
+        <img :src="`/img/gifts/${gift}.png`" class="overText " />
       </button>
     </div>
   </div>

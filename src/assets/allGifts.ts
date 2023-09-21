@@ -9,7 +9,6 @@ const allGifts: Gift[] = [
     description: "手札を全て入れ替える",
     requireContribution: 15,
     skill: (timing) => {
-      //?この行でログコンポーネントを呼び出す
       if (timing !== "before") return;
       changeAllHand();
     },
@@ -26,17 +25,17 @@ const allGifts: Gift[] = [
   },
   {
     id: 2,
-    name: "塩漬け",
-    description: "手札の消費期限を🦠+2する",
+    name: "冷凍保存",
+    description: "手札の消費期限を🦠+1する",
     requireContribution: 25,
     skill: (timing) => {
       if (timing !== "before") return;
-      changeHandValue("waste", 2);
+      changeHandValue("waste", 1);
     },
   },
   {
     id: 3,
-    name: "食事制限",
+    name: "ドクターストップ",
     description: "このラウンド中相手は3枚までしかカードを使用できない",
     requireContribution: 30,
     skill: (timing) => {
@@ -46,7 +45,7 @@ const allGifts: Gift[] = [
   },
   {
     id: 4,
-    name: "お昼寝",
+    name: "栄養バランス",
     description: "HPを❤️+200する",
     requireContribution: 35,
     skill: (timing) => {
@@ -66,7 +65,7 @@ const allGifts: Gift[] = [
   },
   {
     id: 6,
-    name: "お散歩",
+    name: "リサーチ",
     description: "自身の満腹度を🍖-100する",
     requireContribution: 45,
     skill: (timing) => {
@@ -76,14 +75,14 @@ const allGifts: Gift[] = [
   },
   {
     id: 7,
-    name: "サプリメント",
+    name: "筋トレ",
     description: "このラウンド中与えるマッスルダメージを2倍にする。",
     requireContribution: 50,
     skill: () => console.log(i, "ギフト8"),
   },
   {
     id: 8,
-    name: "バリア",
+    name: "おなべのふた",
     description: "このラウンド中相手から受けるダメージを無効化する",
     requireContribution: 55,
     skill: () => console.log(i, "ギフト9"),

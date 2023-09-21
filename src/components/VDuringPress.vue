@@ -1,6 +1,6 @@
 <template>
     <div @pointerdown="startPress" @pointerup="endPress" @pointermove="endPress" @pointercancel="endPress" @click="endPress"
-        @contextmenu.prevent>
+        @mouseenter="endPress" @contextmenu.prevent>
         <slot />
     </div>
 </template>
@@ -27,11 +27,3 @@ function endPress(): void {
     pressTimer.value = null
 }
 </script>
-
-<style scoped>
-.long-press-wrapper {
-    user-select: none;
-    pointer-events: none;
-    -webkit-user-select: none;
-}
-</style>
