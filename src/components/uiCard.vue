@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import type { Card } from "@/types";
 import VLongPress from "./VLongPress.vue";
+import VDuringPress from "./VDuringPress.vue";
 
 defineProps<{ card: Card }>();
 
@@ -9,6 +10,10 @@ const dropDown = ref(false);
 const onLongPressCallbackHook = (): void => {
   console.log("longPress");
   dropDown.value = true;
+};
+const onKeyUpCallbackHook = (): void => {
+  console.log("keyUp");
+  dropDown.value = false;
 };
 
 
@@ -21,7 +26,7 @@ const onLongPressCallbackHook = (): void => {
       <p>{{ card.description }}</p>
     </div>
     <div class="overCard">
-      <VLongPress :delay="1000" :onLongPress="onLongPressCallbackHook">
+      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText text-base">
           <p class="waste">{{ card.waste }}</p>
@@ -44,7 +49,7 @@ const onLongPressCallbackHook = (): void => {
             </div>
           </div>
         </div>
-      </VLongPress>
+      </VDuringPress>
     </div>
   </div>
 </template>
