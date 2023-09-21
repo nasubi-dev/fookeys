@@ -18,7 +18,7 @@ const onKeyUpCallbackHook = (): void => {
 
 </script>
 <template>
-  <div class="block">
+  <div class="block" style="user-select: none;">
     <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left">
       <p>{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>
