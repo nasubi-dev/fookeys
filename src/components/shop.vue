@@ -4,7 +4,6 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import ShopDrawCards from './shopDrawCards.vue';
 import ShopUseGifts from './shopUseGifts.vue';
-import notYet from "@/assets/img/notYet.png";
 
 const { cardLock, phase } = storeToRefs(playerStore);
 
@@ -49,16 +48,12 @@ watch(phase, (newVal) => {
           <ShopUseGifts />
         </div>
         <div v-if="!draw && !use" class="flex justify-start">
-          <div class="overCard" style="width: 20vw;">
-            <button @click="draw = !draw">
-              <img :src="`img/ui/drawCard.png`" />
-            </button>
-          </div>
-          <div class="overCard">
-            <button style="width: 20vw;">
-              <img :src="`img/ui/useGift.png`" />
-            </button>
-          </div>
+          <button @click="draw = true" style="width: 20vw;">
+            <img :src="`img/ui/drawCard.png`" />
+          </button>
+          <button @click="use = true" style="width: 20vw;">
+            <img :src="`img/ui/useGift.png`" />
+          </button>
         </div>
       </div>
     </transition>

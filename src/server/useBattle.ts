@@ -97,8 +97,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   await wait(1000);
   await reflectStatus();
   await getEnemyPlayer(); //!
-  battleResult.value = ["hungry", my.check ? 1 : 0]; //?1は行動不能
-  await wait(2000);
+  if (my.check) {
+    battleResult.value = ["hungry", my.check ? 1 : 0]; //?1は行動不能
+    await wait(2000);
+  }
 
   if (my.check) return;
 

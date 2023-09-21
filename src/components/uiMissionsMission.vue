@@ -20,8 +20,8 @@ const onKeyUpCallbackHook = (): void => {
 </script>
 
 <template>
-  <div>
-    <div v-if="dropDown" class="bg-white rounded fixed z-10 overflow-clip">
+  <div style="user-select: none;">
+    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-10">
       {{ mission.description }}
     </div>
     <div class="overCard">
