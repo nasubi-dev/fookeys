@@ -48,6 +48,7 @@ export async function setOffer(): Promise<void> {
   console.log(i, "setOfferを実行しました");
   const { offer } = storeToRefs(playerStore);
 
+  offer.value = [];
   for (let i = 0; i < 3; i++) {
     offer.value.push(drawCard());
     offer.value = [...offer.value].sort((a, b) => a.id - b.id);

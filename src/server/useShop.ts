@@ -1,7 +1,7 @@
 import { toRefs } from "vue";
 import { e, s, i } from "@/log";
 import type { PlayerData } from "@/types";
-import { gameStore, playerStore, enemyPlayerStore } from "@/main";
+import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";

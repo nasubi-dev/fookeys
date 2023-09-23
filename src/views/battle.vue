@@ -30,7 +30,10 @@ const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
 watch(log, (newVal) => {
-  if (newVal) push.info(newVal)
+  if (newVal) {
+    push.info(newVal)
+    log.value = undefined
+  }
 })
 
 //入場したらPlayer型としてIDが保管される
