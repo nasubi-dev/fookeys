@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore, enemyPlayerStore } from "@/main";
+import { playerStore, } from "@/main";
+import type { PlayerData } from "@/types";
 import { storeToRefs } from "pinia";
+import { db } from "../server/firebase";
+import { collection, doc, getDoc } from "firebase/firestore";
+import { converter } from "@/server/converter";
 import { watchTurnEnd } from "@/server/useShop";
 import UiCard from "@/components/uiCard.vue";
 
-const { pushHand, popHand } = playerStore;
-const { player, cardLock } = storeToRefs(playerStore);
-const { hand, field } = toRefs(player.value);
+const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
-const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { isSelectedGift: enemyIsSelectedGift } = toRefs(enemyPlayer.value);
+const { pushHand, popHand } = playerStore;
+const { player, cardLock,log } = storeToRefs(playerStore);
+const { hand, field,idEnemy } = toRefs(player.value);
+
 
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
@@ -33,9 +37,12 @@ watch(cardLock, async (newVal) => {
 //HandからFieldへ
 const pushCard = async (index: number) => {
   if (cardLock.value) return;
-  console.log(i, "isSelectedGift: ", enemyIsSelectedGift.value, "fieldLength: ", field.value.length);
-  if (enemyIsSelectedGift.value === 3 && field.value.length >= 3) {
+  const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
+
+  console.log(i, "isSelectedGift: ", enemyGift, "fieldLength: ", field.value.length);
+  if (enemyGift === 3 && field.value.length >= 3) {
     console.log(i, "field is full");
+    log.value = "setumeiran"
     return;
   }
   if (handSelected.value[index]) throw new Error("failed to pushCard");

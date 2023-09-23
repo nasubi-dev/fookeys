@@ -14,7 +14,6 @@ const onLongPressCallbackHook = (): void => {
   dropDown.value = true;
 };
 const onKeyUpCallbackHook = (): void => {
-  console.log("keyUp");
   dropDown.value = false;
 };
 </script>

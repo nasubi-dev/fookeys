@@ -22,6 +22,12 @@ const isShowDef = ref(true);
 const isShowAtk = ref(true);
 const isShowTech = ref(true);
 watch(battleResult, (newVal) => {
+  if(newVal[0] === 'donate' && components.value.includes(p.which)) {
+    isShowSup.value = false;
+    isShowDef.value = false;
+    isShowAtk.value = false;
+    isShowTech.value = false;
+  }
   if (newVal[0] === 'sup' && components.value.includes(p.which)) {
     isShowSup.value = false;
   }

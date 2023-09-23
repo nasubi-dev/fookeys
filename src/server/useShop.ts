@@ -8,7 +8,7 @@ import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firesto
 import { converter } from "@/server/converter";
 import { setMissions, setHand, setOffer } from "@/server/useShopUtils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { battle,wait } from "@/server/useBattle";
+import { battle, wait } from "@/server/useBattle";
 import allGifts from "@/assets/allGifts";
 
 //Collectionの参照
@@ -18,11 +18,11 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 export async function startShop(): Promise<void> {
   console.log(i, "startShopを実行しました");
   const { phase } = storeToRefs(playerStore);
-  const { game,missions } = storeToRefs(gameStore);
+  const { game, missions } = storeToRefs(gameStore);
 
   phase.value = "shop";
   console.log(i, "phase: ", phase.value);
-  if (game.value.turn % 4 == 1){
+  if (game.value.turn % 4 == 1) {
     missions.value = undefined;
     setMissions();
   }
@@ -35,23 +35,20 @@ export async function startShop(): Promise<void> {
 export async function endShop(): Promise<void> {
   console.log(i, "endShopを実行しました");
   const { id, player, phase, log } = storeToRefs(playerStore);
-  const { isSelectedGift, status, check, idEnemy } = toRefs(player.value);
+  const { isSelectedGift, status, check, idEnemy, name } = toRefs(player.value);
 
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
-  console.log(i, "myGift: ", myGift);
   if (myGift !== undefined) {
-    console.log(i, "myGift: ", allGifts[myGift].name);
     allGifts[myGift].skill("before", id.value);
     status.value.contribution -= allGifts[myGift].requireContribution;
-    log.value = allGifts[myGift].name + "を使用しました";
+    log.value = name.value + "が" + allGifts[myGift].name + "を使用しました";
   }
   //相手のisSelectedGiftを実行する
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
-  console.log(i, "enemyGift: ", enemyGift);
   if (enemyGift !== undefined) {
     console.log(i, "enemyGift: ", allGifts[enemyGift].name);
-    log.value = allGifts[enemyGift].name + "を使用しました";
+    log.value =   "相手が" +allGifts[enemyGift].name + "を使用しました";
     //Logだけ
   }
   //終了時処理
@@ -59,13 +56,13 @@ export async function endShop(): Promise<void> {
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
-  getEnemyPlayer();//!
+  getEnemyPlayer(); //!
 }
 //checkの値の監視
 export async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { check, idEnemy, isSelectedGift,hand } = toRefs(player.value);
+  const { check, idEnemy, isSelectedGift, hand } = toRefs(player.value);
 
   //Firestoreに保存する
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });

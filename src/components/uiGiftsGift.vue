@@ -13,7 +13,6 @@ const onLongPressCallbackHook = (): void => {
   dropDown.value = true;
 };
 const onKeyUpCallbackHook = (): void => {
-  console.log("keyUp");
   dropDown.value = false;
 };
 
@@ -21,13 +20,14 @@ const onKeyUpCallbackHook = (): void => {
 
 <template>
   <div class="mt-auto mx-3" style="user-select: none;">
-    <div v-if="dropDown"  class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-16">
+    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-16">
       <p>{{ allGifts[gift]?.name }}</p>
+      <p>{{ "必要貢献度" + allGifts[gift]?.requireContribution }}</p>
       <p>{{ allGifts[gift]?.description }}</p>
     </div>
     <div class="overCard">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
-        <div class="rounded-full bg-white p-6" ></div>
+        <div class="rounded-full bg-white p-6"></div>
         <img :src="`/img/gifts/${gift}.png`" class="overText" />
       </VDuringPress>
     </div>

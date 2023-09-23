@@ -43,7 +43,7 @@ const offerHand = async () => {
       <button @click="offerHand(), pushed = !pushed">
         <img :src="decide" style="width: 20vw;" />
       </button>
-      <div class="text-xs flex justify-start">
+      <div class="flex justify-start">
         <div v-for="(card, index) in offer" :key="card.id">
           <button @click="isOfferSelected[index] = !isOfferSelected[index]" class="cardSize card-pop"
             :class="isOfferSelected[index] ? 'transform -translate-y-5' : null">

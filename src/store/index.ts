@@ -65,13 +65,6 @@ const usePlayerStore = defineStore("playerData", () => {
   const pushHand = (index: number): void => {
     const { field, hand } = player.value;
     field.push(hand[index]);
-    console.log(
-      i,
-      "pushHand: ",
-      index,
-      "field: ",
-      field.map((card) => card.name)
-    );
   };
   //Fieldのカードをクリックしたら、そのカードをHandに戻す
   const popHand = (index: number, id: number): void => {
@@ -79,13 +72,6 @@ const usePlayerStore = defineStore("playerData", () => {
     const cardIndex = field.findIndex((card) => card.id === id);
     if (cardIndex === -1) throw new Error("when popHard not found");
     field.splice(cardIndex, 1);
-    console.log(
-      i,
-      "popHand: ",
-      index,
-      "field: ",
-      field.map((card) => card.name)
-    );
   };
   //ターン終了時に、Fieldのカードを捨てる
   const deleteField = (): void => {
@@ -102,12 +88,6 @@ const usePlayerStore = defineStore("playerData", () => {
       hand.splice(hand.indexOf(card), 1, allCards[0]);
       hand = hand.sort((a, b) => a.id - b.id);
     });
-    console.log(
-      i,
-      "reduceWaste: ",
-      "hand: ",
-      hand.map((card) => card.name)
-    );
   };
   //腐っている全てのカードを削除する
   const deleteAllWaste0 = (): void => {
