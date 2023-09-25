@@ -20,11 +20,6 @@ const useGift = async () => {
   pushed.value = true;
   await watchShopEnd();
 }
-const unableSelect = () => {
-  log.value = "貢献度が足りません"
-  console.log(i, "貢献度が足りません");
-
-}
 </script>
 
 <template>

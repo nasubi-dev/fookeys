@@ -129,6 +129,15 @@ export async function setMissions(): Promise<void> {
     });
   }
 }
+//SumCardsの値を変更する
+export function changeSumCardsValue(key: "waste" | "hungry" | "priority" | "atk" | "def" | "tech" | "heal", value: number): void {
+  console.log(i, "changeSumCardsValueを実行しました");
+  const { log, sumCards } = storeToRefs(playerStore);
+
+  sumCards.value[key] += value;
+  console.log(i, "changeSumCardsValue: ", key, sumCards.value[key]);
+  log.value = "changeSumCardsValue: " + key + sumCards.value[key];
+}
 //Handの値を変更する
 export function changeHandValue(key: "hungry" | "waste", value: number): void {
   console.log(i, "changeHandValueを実行しました");

@@ -1,6 +1,6 @@
 import { e, s, i } from "@/log";
 import type { Gift } from "@/types";
-import { changeAllHand, changeHandValue, changeStatusValue, setHand, deleteAllWaste0 } from "@/server/useShopUtils";
+import { changeAllHand, changeHandValue, changeStatusValue, setHand, deleteAllWaste0,changeSumCardsValue } from "@/server/useShopUtils";
 
 const allGifts: Gift[] = [
   {
@@ -38,8 +38,7 @@ const allGifts: Gift[] = [
     name: "ドクターストップ",
     description: "このラウンド中相手は3枚までしかカードを使用できない",
     requireContribution: 30,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       console.log(i, "食事制限を実行しました");
     },
   },
@@ -102,14 +101,19 @@ const allGifts: Gift[] = [
     name: "早食い",
     description: "スピード🦶+2する",
     requireContribution: 65,
-    skill: () => console.log(i, "ギフト11"),
+    skill: (timing) => {
+      if (timing !== "before") return;
+      changeSumCardsValue("priority", 2);
+    }
   },
   {
     id: 11,
     name: "飯テロ",
     description: "このラウンド中相手はマッスルカードしか使えない",
     requireContribution: 70,
-    skill: () => console.log(i, "ギフト12"),
+    skill:() => {
+      console.log(i, "飯テロを実行しました");
+    }
   },
 ];
 export default allGifts;

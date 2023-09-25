@@ -48,8 +48,8 @@ export async function endShop(): Promise<void> {
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
   if (enemyGift !== undefined) {
     console.log(i, "enemyGift: ", allGifts[enemyGift].name);
-    log.value =   "相手が" +allGifts[enemyGift].name + "を使用しました";
     //Logだけ
+    log.value =   "相手が" +allGifts[enemyGift].name + "を使用しました";
   }
   //終了時処理
   phase.value = "battle";

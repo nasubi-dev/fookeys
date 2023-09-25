@@ -9,12 +9,13 @@ import { collection, doc, getDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { watchTurnEnd } from "@/server/useShop";
 import UiCard from "@/components/uiCard.vue";
+import allCards from "@/assets/allCards";
 
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
 const { pushHand, popHand } = playerStore;
-const { player, cardLock,log } = storeToRefs(playerStore);
-const { hand, field,idEnemy } = toRefs(player.value);
+const { player, cardLock, log } = storeToRefs(playerStore);
+const { hand, field, idEnemy, isSelectedGift } = toRefs(player.value);
 
 
 
@@ -37,14 +38,23 @@ watch(cardLock, async (newVal) => {
 //HandからFieldへ
 const pushCard = async (index: number) => {
   if (cardLock.value) return;
+  if (isSelectedGift.value === 7 && allCards[hand.value[index].id].attribute === 'atk') {
+    console.log(i, "atk card do double damage");
+    log.value = "atk card do double damage"
+  }
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
-
   console.log(i, "isSelectedGift: ", enemyGift, "fieldLength: ", field.value.length);
   if (enemyGift === 3 && field.value.length >= 3) {
     console.log(i, "field is full");
-    log.value = "setumeiran"
+    log.value = "field is full"
     return;
   }
+  if (enemyGift === 11 && allCards[hand.value[index].id].attribute !== "atk") {
+    console.log(i, "only atk card can be set");
+    log.value = "only atk card can be set"
+    return;
+  }
+
   if (handSelected.value[index]) throw new Error("failed to pushCard");
   handSelected.value[index] = !handSelected.value[index]
   pushHand(index)
