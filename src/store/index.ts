@@ -16,7 +16,7 @@ const usePlayerStore = defineStore("playerData", () => {
     donate: false,
     match: "nothing",
     character: 0,
-    gifts: [7, 11, 10],
+    gifts: [7, 8, 10],
     isSelectedGift: undefined,
     hand: [],
     field: [],
@@ -51,9 +51,9 @@ const usePlayerStore = defineStore("playerData", () => {
         sum.waste += card.waste;
         sum.hungry += card.hungry;
         sum.priority += card.priority ?? 0;
-        sum.atk += (card.atk ?? 0) * (player.value.isSelectedGift === 7 ? 2 : 1);
+        sum.atk += (card.atk ?? 0) * (player.value.isSelectedGift === 7 ? 2 : 1) * (player.value.isSelectedGift === 8 ? 0 : 1);
         sum.def += card.def ?? 0;
-        sum.tech += card.tech ?? 0;
+        sum.tech += card.tech ?? 0 * (player.value.isSelectedGift === 8 ? 0 : 1);
         sum.heal += card.heal ?? 0;
         return sum;
       },

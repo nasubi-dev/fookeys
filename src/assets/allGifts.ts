@@ -1,6 +1,6 @@
 import { e, s, i } from "@/log";
 import type { Gift } from "@/types";
-import { changeAllHand, changeHandValue, changeStatusValue, setHand, deleteAllWaste0,changeSumCardsValue } from "@/server/useShopUtils";
+import { changeAllHand, changeHandValue, changeStatusValue, setHand, deleteAllWaste0, changeSumCardsValue } from "@/server/useShopUtils";
 
 const allGifts: Gift[] = [
   {
@@ -8,8 +8,7 @@ const allGifts: Gift[] = [
     name: "マジック",
     description: "手札を全て入れ替える",
     requireContribution: 15,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       changeAllHand();
     },
   },
@@ -18,8 +17,7 @@ const allGifts: Gift[] = [
     name: "つまみ食い",
     description: "手札のカードの満腹度を🍖-10する",
     requireContribution: 20,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       changeHandValue("hungry", -10);
     },
   },
@@ -28,8 +26,7 @@ const allGifts: Gift[] = [
     name: "冷凍保存",
     description: "手札の消費期限を🦠+1する",
     requireContribution: 25,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       changeHandValue("waste", 1);
     },
   },
@@ -39,7 +36,6 @@ const allGifts: Gift[] = [
     description: "このラウンド中相手は3枚までしかカードを使用できない",
     requireContribution: 30,
     skill: () => {
-      console.log(i, "食事制限を実行しました");
     },
   },
   {
@@ -47,8 +43,7 @@ const allGifts: Gift[] = [
     name: "栄養バランス",
     description: "HPを❤️+200する",
     requireContribution: 35,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       changeStatusValue("hp", 200);
     },
   },
@@ -57,8 +52,7 @@ const allGifts: Gift[] = [
     name: "リサイクル",
     description: "腐ったカードを手札から全部消す",
     requireContribution: 40,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       deleteAllWaste0();
     },
   },
@@ -67,8 +61,7 @@ const allGifts: Gift[] = [
     name: "リサーチ",
     description: "自身の満腹度を🍖-100する",
     requireContribution: 45,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       changeStatusValue("hungry", -100);
     },
   },
@@ -77,22 +70,23 @@ const allGifts: Gift[] = [
     name: "筋トレ",
     description: "このラウンド中与えるマッスルダメージを2倍にする。",
     requireContribution: 50,
-    skill: () => console.log(i, "ギフト8"),
+    skill: () => {
+    },
   },
   {
     id: 8,
     name: "おなべのふた",
     description: "このラウンド中相手から受けるダメージを無効化する",
     requireContribution: 55,
-    skill: () => console.log(i, "ギフト9"),
+    skill: () => {
+    },
   },
   {
     id: 9,
     name: "福袋",
     description: "カードを6枚ドローする",
     requireContribution: 60,
-    skill: (timing: string) => {
-      if (timing !== "before") return;
+    skill: () => {
       setHand();
     },
   },
@@ -101,19 +95,17 @@ const allGifts: Gift[] = [
     name: "早食い",
     description: "スピード🦶+2する",
     requireContribution: 65,
-    skill: (timing) => {
-      if (timing !== "before") return;
+    skill: () => {
       changeSumCardsValue("priority", 2);
-    }
+    },
   },
   {
     id: 11,
     name: "飯テロ",
     description: "このラウンド中相手はマッスルカードしか使えない",
     requireContribution: 70,
-    skill:() => {
-      console.log(i, "飯テロを実行しました");
-    }
+    skill: () => {
+    },
   },
 ];
 export default allGifts;

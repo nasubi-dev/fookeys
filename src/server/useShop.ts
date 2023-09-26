@@ -40,7 +40,7 @@ export async function endShop(): Promise<void> {
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
   if (myGift !== undefined) {
-    allGifts[myGift].skill("before", id.value);
+    allGifts[myGift].skill();
     status.value.contribution -= allGifts[myGift].requireContribution;
     log.value = name.value + "が" + allGifts[myGift].name + "を使用しました";
   }

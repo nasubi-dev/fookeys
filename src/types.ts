@@ -34,7 +34,7 @@ type Gift = {
   name: string;
   description: string;
   requireContribution: number;
-  skill: (timing: Timing, id: string) => void;
+  skill: () => void;
 };
 
 type Mission = {
