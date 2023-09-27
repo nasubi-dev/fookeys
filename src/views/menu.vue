@@ -32,59 +32,42 @@ watch(log, (newVal) => {
 
 <template>
   <div class="h-screen flex flex-col">
-    <router-link to="/">
+    <router-link v-if="!selectCharacter && !selectGift" to="/">
       <button class="p-4 absolute top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md btn-pop">
         戻る
       </button>
     </router-link>
+    <div v-else>
+      <button @click="selectCharacter = false; selectGift = false"
+        class="p-4 absolute top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md btn-pop">
+        メニューへ戻る
+      </button>
+    </div>
 
     <div class="flex flex-1">
-      <div class="w-1/2 p-8 flex flex-col justify-center">
+      <div class="w-1/2 p-8 flex flex-col justify-center text-center items-center">
         <img :src="nasubi" class="w-1/2" />
         <div>
           {{ "character: " + allCharacters[character].name }}
         </div>
-        <div>
-          {{ "gift1: " + allGifts[gifts[0]].name }}
-          {{ "gift2: " + allGifts[gifts[1]].name }}
-          {{ "gift3: " + allGifts[gifts[2]].name }}
+        <div class="flex justify-start w-1/2">
+          <div v-for="gift in gifts" :key="gift">
+            <img :src="`./img/gifts/${gift}.png`" />
+          </div>
         </div>
-
-        <button @click="push.success('text')">success</button>
-        <button
-          @click="push.info('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')">long</button>
-        <button @click="push.error({ title: 'error', message: 'error rrrrrrrrrrrrrrrr \n rrrrrrrr', })">error</button>
       </div>
 
-      <div v-if="selectCharacter">
-        <SelectCharacter />
-        <button @click="selectCharacter = !selectCharacter" class="text-white rounded-md">
-          text
-        </button>
-      </div>
-      <div v-else-if="selectGift">
-        <SelectGifts />
-        <button @click="selectGift = !selectGift" class="text-white rounded-md">
-          text
-        </button>
-      </div>
-      <div v-else class="w-1/2 p-8 flex flex-col justify-center">
-        <button @click="startMatch" class="btn-pop">
-          <img src="@/assets/img/ui/entry.png" class=" w-1/2" />
-        </button>
-        <button  class="text-white rounded-md overCard">
-          <img src="@/assets/img/ui/changeCharacter.png" class=" w-1/2" />
-          <div class="overText">
-            <img :src="notYet" class="h-auto w-1/4" />
-          </div>
-        </button>
-        <button class="text-white rounded-md overCard">
-          <img src="@/assets/img/ui/changeGift.png" class=" w-1/2" />
-          <div class="overText">
-
-            <img :src="notYet" class="h-auto w-1/4" />
-          </div>
-        </button>
+      <div class="w-1/2 flex flex-col justify-center text-center items-center">
+        <SelectCharacter v-if="selectCharacter" />
+        <SelectGifts v-else-if="selectGift" />
+        <div v-else class="w-1/2">
+          <button @click="startMatch" class="btn-pop">
+            <img src="@/assets/img/ui/entry.png" />
+          </button>
+          <button @click="selectGift = !selectGift" class="btn-pop">
+            <img src="@/assets/img/ui/changeGift.png" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
