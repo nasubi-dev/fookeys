@@ -1,17 +1,18 @@
+type Attribute = "atk" | "def" | "tech" | "sup" | "heal";
 type Card = {
   id: number;
   name: string;
   waste: number;
   hungry: number;
   company: string;
-  attribute?: string;
+  attribute?: Attribute;
   description?: string;
   priority?: number;
   atk?: number;
   def?: number;
   tech?: number;
   heal?: number;
-  special?: () => void;
+  special?: (status?:Status) => void;
   rotten?: boolean; //腐ってるかのフラグ
 };
 
@@ -77,4 +78,4 @@ type GameData = {
   firstAtkPlayer: PlayerSign | undefined;
 };
 
-export type { Card, Character, Gift, Mission, Phase, MatchStatus, PlayerSign, Status, PlayerData, SumCards, GameData };
+export type { Attribute,Card, Character, Gift, Mission, Phase, MatchStatus, PlayerSign, Status, PlayerData, SumCards, GameData };

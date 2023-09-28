@@ -32,6 +32,7 @@ defineProps<{
           enter-active-class="transition duration-300">
           <div v-if="after === 'hungry'" class=" text-3xl font-bold">{{ value ? "行動不能✖" : "行動可能✔" }}</div>
           <div v-if="after === 'donate' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "🪙" + value }}</div>
+          <div v-if="after === 'heal' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "🩹:" + value }}</div>
           <div v-if="after === 'def' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "🛡:" + value }}</div>
           <div v-if="after === 'atk' && value" class=" text-5xl font-bold text-fuchsia-600">{{ "⚔:" + value }}</div>
           <div v-if="after === 'tech' && value" class="text-5xl font-bold text-fuchsia-600">{{ "🏹:" + value }}</div>

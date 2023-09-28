@@ -1,6 +1,13 @@
 import { e, s, i } from "@/log";
 import type { Gift } from "@/types";
-import { changeAllHand, changeHandValue, changeStatusValue, setHand, deleteAllWaste0, changeSumCardsValue } from "@/server/useShopUtils";
+import {
+  changeAllHand,
+  changeHandValue,
+  changeStatusValue,
+  setHand,
+  deleteAllRottenCard,
+  changeSumCardsValue,
+} from "@/server/useShopUtils";
 
 const allGifts: Gift[] = [
   {
@@ -35,8 +42,7 @@ const allGifts: Gift[] = [
     name: "ドクターストップ",
     description: "このラウンド中相手は3枚までしかカードを使用できない",
     requireContribution: 30,
-    skill: () => {
-    },
+    skill: () => {},
   },
   {
     id: 4,
@@ -53,7 +59,7 @@ const allGifts: Gift[] = [
     description: "腐ったカードを手札から全部消す",
     requireContribution: 40,
     skill: () => {
-      deleteAllWaste0();
+      deleteAllRottenCard();
     },
   },
   {
@@ -70,16 +76,14 @@ const allGifts: Gift[] = [
     name: "筋トレ",
     description: "このラウンド中与えるマッスルダメージを2倍にする。",
     requireContribution: 50,
-    skill: () => {
-    },
+    skill: () => {},
   },
   {
     id: 8,
     name: "おなべのふた",
     description: "このラウンド中相手から受けるダメージを無効化する",
     requireContribution: 55,
-    skill: () => {
-    },
+    skill: () => {},
   },
   {
     id: 9,
@@ -104,8 +108,7 @@ const allGifts: Gift[] = [
     name: "飯テロ",
     description: "このラウンド中相手はマッスルカードしか使えない",
     requireContribution: 70,
-    skill: () => {
-    },
+    skill: () => {},
   },
 ];
 export default allGifts;

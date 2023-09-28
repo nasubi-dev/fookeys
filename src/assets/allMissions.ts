@@ -277,10 +277,9 @@ const allMissions: Mission[] = [
     nowAchievement: 0,
     checker: (donate, sumFields, field, hand) => {
       if (donate) return;
-      if (hand?.length === 0) return;
       const ids = hand?.map((card) => card.id);
-      const uniqueIds = [...new Set(ids)];
-      return uniqueIds.length === hand?.length ? 1 : 0;
+      const uniqueIds = Array.from(new Set(ids));
+      return uniqueIds.length === ids?.length ? 1 : 0;
     },
   },
   {

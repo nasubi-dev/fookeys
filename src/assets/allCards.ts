@@ -1,4 +1,9 @@
 import type { Card } from "@/types";
+import {
+  changeHandValue,
+  changeStatusValue,
+  changeSumCardsValue,
+} from "@/server/useShopUtils";
 const allCards: Card[] = [
   {
     id: 0,
@@ -6,7 +11,6 @@ const allCards: Card[] = [
     waste: 0,
     hungry: 0,
     company: "none",
-    attribute: "none",
     description: "このカードは使用できない。",
     rotten: true,
   },
@@ -171,6 +175,9 @@ const allCards: Card[] = [
     description: "貢献度を🔔+5する。",
     priority: 1,
     tech: 5,
+    special: () => {
+      changeStatusValue("contribution", 5);
+    },
   },
   {
     id: 18,
@@ -200,6 +207,9 @@ const allCards: Card[] = [
     description: "貢献度を🔔+5する。",
     priority: 1,
     tech: 15,
+    special: () => {
+      changeStatusValue("contribution", 5);
+    },
   },
   {
     id: 21,
@@ -257,6 +267,9 @@ const allCards: Card[] = [
     attribute: "tech",
     description: "貢献度を🔔+20する。",
     tech: 55,
+    special: () => {
+      changeStatusValue("contribution", 20);
+    },
   },
   {
     id: 27,
@@ -538,6 +551,10 @@ const allCards: Card[] = [
     company: "norma",
     attribute: "sup",
     description: "このカードは使用時の自身の満腹度と同じだけシールドを獲得する。",
+    special: (status) => {
+      if (status === undefined) return;
+      changeSumCardsValue("def", status.hungry);
+    },
   },
   {
     id: 57,
@@ -573,7 +590,7 @@ const allCards: Card[] = [
     waste: 4,
     hungry: 40,
     company: "hanamie",
-    attribute: "sup",
+    attribute: "heal",
     description: "HPを❤️+50回復する。",
     heal: 50,
   },
@@ -592,7 +609,7 @@ const allCards: Card[] = [
     waste: 4,
     hungry: 50,
     company: "hanamie",
-    attribute: "sup",
+    attribute: "heal",
     description: "HPを❤️+100回復する。",
     heal: 100,
   },
@@ -613,6 +630,7 @@ const allCards: Card[] = [
     company: "rapidpot",
     attribute: "sup",
     description: "最大満腹度を🍖+20する。",
+    special: () => {},
   },
   {
     id: 65,
@@ -620,7 +638,7 @@ const allCards: Card[] = [
     waste: 4,
     hungry: 60,
     company: "hanamie",
-    attribute: "sup",
+    attribute: "heal",
     description: "HPを❤️+150回復する。",
     heal: 150,
   },
@@ -632,6 +650,7 @@ const allCards: Card[] = [
     company: "galdaybee",
     attribute: "sup",
     description: "このラウンド中、与えるマッスルダメージを2倍にする。",
+    special: () => {},
   },
 ];
 export default allCards;

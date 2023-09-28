@@ -17,16 +17,21 @@ const p = defineProps<{
   which: "primary" | "second";
 }>();
 
+const isShowHeal = ref(true);
 const isShowSup = ref(true);
 const isShowDef = ref(true);
 const isShowAtk = ref(true);
 const isShowTech = ref(true);
 watch(battleResult, (newVal) => {
-  if(newVal[0] === 'donate' && components.value.includes(p.which)) {
+  if (newVal[0] === 'donate' && components.value.includes(p.which)) {
+    isShowHeal.value = false;
     isShowSup.value = false;
     isShowDef.value = false;
     isShowAtk.value = false;
     isShowTech.value = false;
+  }
+  if (newVal[0] === 'heal' && components.value.includes(p.which)) {
+    isShowHeal.value = false;
   }
   if (newVal[0] === 'sup' && components.value.includes(p.which)) {
     isShowSup.value = false;
@@ -66,6 +71,7 @@ watch(battleResult, (newVal) => {
       </div>
 
       <div class="flex flex-wrap">
+        <uiCardBehind v-show="isShowHeal" :cards="p.player.field" :attribute="'heal'" />
         <uiCardBehind v-show="isShowSup" :cards="p.player.field" :attribute="'sup'" />
         <uiCardBehind v-show="isShowDef" :cards="p.player.field" :attribute="'def'" />
         <uiCardBehind v-show="isShowAtk" :cards="p.player.field" :attribute="'atk'" />

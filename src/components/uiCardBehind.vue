@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Card } from "@/types";
+import type { Card, Attribute } from "@/types";
 
 defineProps<{
   cards: Card[] | undefined;
-  attribute?: 'sup' | 'atk' | 'def' | 'tech';
+  attribute?: Attribute;
 }>()
 
 </script>

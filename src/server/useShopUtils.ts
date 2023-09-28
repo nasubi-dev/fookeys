@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import type { Card, GameData, PlayerData } from "@/types";
+import type { Card, GameData, PlayerData, Attribute } from "@/types";
 import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
 import allCards from "@/assets/allCards";
@@ -15,10 +15,15 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //cardをランダムに1枚引く
-export function drawCard(): Card {
-  // console.log(i, "drawCardを実行しました");
-  const selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
-  return selectCard;
+export function drawCard(attribute?: keyof Attribute): Card {
+  if (attribute) {
+    const attributeCards = allCards.filter((card) => card.attribute === attribute);
+    const selectCard = structuredClone(attributeCards[Math.floor(Math.random() * attributeCards.length)]);
+    return selectCard;
+  } else {
+    const selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
+    return selectCard;
+  }
 }
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
@@ -37,11 +42,6 @@ export async function setHand(): Promise<void> {
     hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  console.log(
-    i,
-    "setHand: ",
-    hand.value.map((card) => card.name)
-  );
 }
 //Cardを3枚提示する
 export async function setOffer(): Promise<void> {
@@ -158,7 +158,7 @@ export function changeHandValue(key: "waste" | "hungry" | "priority" | "atk" | "
   log.value = "changeHandValue: " + key + hand.value.map((card) => card[key]);
 }
 //Handの腐ったカードを削除する
-export function deleteAllWaste0(): void {
+export function deleteAllRottenCard(): void {
   console.log(i, "reduceWaste0を実行しました");
   const { deleteAllWaste0 } = playerStore;
   const { id, player, log } = storeToRefs(playerStore);
