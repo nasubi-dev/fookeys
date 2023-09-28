@@ -3,7 +3,7 @@ import { e, s, i } from "@/log";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import type { Card, GameData, PlayerData } from "@/types";
 import allCharacters from "@/assets/allCharacters";
@@ -139,14 +139,14 @@ export function changeSumCardsValue(key: "waste" | "hungry" | "priority" | "atk"
   log.value = "changeSumCardsValue: " + key + sumCards.value[key];
 }
 //Handの値を変更する
-export function changeHandValue(key: "hungry" | "waste", value: number): void {
+export function changeHandValue(key: "waste" | "hungry" | "priority" | "atk" | "def" | "tech" | "heal", value: number): void {
   console.log(i, "changeHandValueを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
   hand.value.forEach((card) => {
+    if (card[key] === undefined) return;
     card[key] += value;
-    if (card[key] < 0) card[key] = 0;
   });
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   console.log(

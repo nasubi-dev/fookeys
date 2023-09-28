@@ -1,6 +1,16 @@
 import type { Card } from "@/types";
 const allCards: Card[] = [
   {
+    id: 0,
+    name: "腐ったカード",
+    waste: 0,
+    hungry: 0,
+    company: "none",
+    attribute: "none",
+    description: "このカードは使用できない。",
+    rotten: true,
+  },
+  {
     id: 1,
     name: "ホットドック",
     waste: 5,

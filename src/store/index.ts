@@ -25,6 +25,8 @@ const usePlayerStore = defineStore("playerData", () => {
       hungry: 0,
       contribution: 0,
     },
+    maxHp: 600,
+    maxHungry: 200,
     sumFields: {
       num: 0,
       waste: 0,
@@ -80,10 +82,9 @@ const usePlayerStore = defineStore("playerData", () => {
     console.log(i, "fieldDelete");
   };
   //ターン終了時に､Handのカードの腐り値を減らす(0になったら腐りカードにする)
-  const reduceWaste = (): void => {
+  const checkRotten = (): void => {
     let { hand } = player.value;
     hand.forEach((card) => {
-      card.waste -= 1;
       if (card.waste > 0) return;
       hand.splice(hand.indexOf(card), 1, allCards[0]);
       hand = hand.sort((a, b) => a.id - b.id);
@@ -119,7 +120,7 @@ const usePlayerStore = defineStore("playerData", () => {
     pushHand,
     popHand,
     deleteField,
-    reduceWaste,
+    checkRotten,
     deleteAllWaste0,
   };
 });
@@ -143,6 +144,8 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       hungry: 0,
       contribution: 0,
     },
+    maxHp: 600,
+    maxHungry: 200,
     sumFields: {
       num: 0,
       waste: 0,

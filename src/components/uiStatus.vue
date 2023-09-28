@@ -7,7 +7,7 @@ import statusImg from "@/assets/img/ui/status.png";
 import nasubiImg from "@/assets/img/nasubi.png";
 
 const { player, components, battleResult, sign } = storeToRefs(playerStore);
-const { name, character, status } = toRefs(player.value);
+const { name, character, status, maxHp, maxHungry } = toRefs(player.value);
 const { game } = toRefs(gameStore);
 const { firstAtkPlayer } = toRefs(game.value);
 
@@ -36,8 +36,8 @@ watch(battleResult, (newVal) => {
           <div class="overText font-bold text-5xl align-text-bottom">{{ retainedDef }}</div>
         </div>
         <p class="font-bold text-3xl mt-auto ml-auto mr-6">
-          ❤:{{ status.hp + "/" + (600 + (allCharacters[character].maxHp ?? 0)) }}
-          🍖:{{ status.hungry + "/" + (200 + (allCharacters[character].maxHungry ?? 0)) }}
+          ❤:{{ status.hp + "/" + maxHp }}
+          🍖:{{ status.hungry + "/" + maxHungry }}
           🪙:{{ status.contribution }}
         </p>
       </div>

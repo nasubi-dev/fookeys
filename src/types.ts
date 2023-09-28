@@ -11,8 +11,8 @@ type Card = {
   def?: number;
   tech?: number;
   heal?: number;
+  special?: () => void;
   rotten?: boolean; //腐ってるかのフラグ
-  // special?: () => void;
 };
 
 type Character = {
@@ -28,7 +28,6 @@ type Character = {
   passive?: () => void;
 };
 
-type Timing = "before" | "after";
 type Gift = {
   id: number;
   name: string;
@@ -66,6 +65,8 @@ type PlayerData = {
   hand: Card[];
   field: Card[];
   status: Status;
+  maxHp: number;
+  maxHungry: number;
   sumFields: SumCards;
 };
 

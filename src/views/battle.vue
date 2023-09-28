@@ -39,10 +39,6 @@ watch(log, (newVal) => {
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
-  status.value.contribution += allCharacters[character.value].initialContribution ?? 0;
-  if (allCharacters[character.value].maxHp !== undefined) {
-    status.value.hp += allCharacters[character.value].maxHp ?? 600;
-  }
   setTimeout(async () => {
     await getEnemyPlayer();//!あとでもっといい方法を考える
   }, 1000);

@@ -6,6 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
+import { changeHandValue, changeStatusValue } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
 import allCharacters from "@/assets/allCharacters";
 import { getEnemyPlayer } from "./usePlayerData";
@@ -59,7 +60,7 @@ async function reflectStatus(): Promise<void> {
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { sign, battleResult } = storeToRefs(playerStore);
+  const { sign, battleResult,log } = storeToRefs(playerStore);
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { myId, enemyId, my, enemy } = await syncPlayer(which);
@@ -82,15 +83,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
 
   //自分のhungryの値が上限を超えていた場合､行動不能にする
-  const maxHungry = 200 + (allCharacters[my.character].maxHungry ?? 0);
   my.status.hungry += my.sumFields.hungry;
   console.log(i, "mySumHungry: ", my.status.hungry);
-  if (my.status.hungry > maxHungry) {
+  if (my.status.hungry > my.maxHungry) {
     my.check = true;
     updateDoc(doc(playersRef, myId), { check: my.check });
     console.log(i, "自プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
-    if (my.status.hungry > maxHungry) my.status.hungry = maxHungry;
+    if (my.status.hungry > my.maxHungry) my.status.hungry = my.maxHungry;
   }
 
   if (a) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
@@ -106,18 +106,18 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //相手のhungryの値が上限を超えていた場合､行動不能にする
   let enemySumHungry = enemy.status.hungry + (which === "primary" ? enemy.sumFields.hungry : 0);
-  const enemyMaxHungry = 200 + (allCharacters[enemy.character].maxHungry ?? 0);
   console.log(i, "enemySumHungry: ", enemySumHungry);
-  if (enemySumHungry > enemyMaxHungry) {
+  if (enemySumHungry > enemy.maxHungry) {
     enemy.check = true;
     updateDoc(doc(playersRef, enemyId), { check: enemy.check });
     console.log(i, "相手プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
-    if (enemySumHungry > enemyMaxHungry) enemySumHungry = enemyMaxHungry;
+    if (enemySumHungry > enemy.maxHungry) enemySumHungry = enemy.maxHungry;
   }
 
   //支援を行う//!未定
   if (my.field.map((card) => card.attribute).includes("sup")) {
+
     await wait(1000);
     await reflectStatus();
     await getEnemyPlayer(); //!
@@ -211,7 +211,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { my, enemy } = await syncPlayer(which);
-  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
+
   if (my.check) {
     log.value = "行動不能だったのでミッションは進行しませんでした";
     return;
@@ -369,7 +369,7 @@ export async function battle() {
 //戦闘後の処理
 export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
-  const { reduceWaste, deleteField } = playerStore;
+  const { checkRotten, deleteField } = playerStore;
   const { id, player, cardLock, sign } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand } = toRefs(player.value);
   const { nextTurn } = gameStore;
@@ -378,11 +378,13 @@ export async function postBattle(): Promise<void> {
 
   //使ったカードを捨てる
   deleteField();
-  //handの腐り値を減らす(腐り値が0になったらhandから削除する)
-  reduceWaste();
+  //handの腐り値を減らす
+  changeHandValue("waste", -1);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
+  //腐っているカードにする
+  checkRotten();
   //満腹値を減らす
-
+  changeStatusValue("hungry", -30);
   //turnを進める
   nextTurn();
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
