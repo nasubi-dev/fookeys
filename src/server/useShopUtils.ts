@@ -1,4 +1,5 @@
 import { toRefs } from "vue";
+import * as _ from "lodash";
 import { e, s, i } from "@/log";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -15,15 +16,26 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //cardをランダムに1枚引く
-export function drawCard(attribute?: keyof Attribute): Card {
+export function drawCard(attribute?: Attribute): Card {
   if (attribute) {
-    const attributeCards = allCards.filter((card) => card.attribute === attribute);
-    const selectCard = structuredClone(attributeCards[Math.floor(Math.random() * attributeCards.length)]);
+    const attributeCards = allCards.filter((card) => {
+      if (attribute === "atk") card.id <= 16;
+      if (attribute === "def") card.id >= 17 && card.id <= 32;
+      if (attribute === "tech") card.id >= 33 && card.id <= 49;
+      if (attribute === "sup") card.id >= 50;
+    });
+    const selectCard = _.cloneDeep(attributeCards[Math.floor(Math.random() * attributeCards.length)]);
     return selectCard;
   } else {
-    const selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
+    const selectCard = _.cloneDeep(allCards[Math.floor(Math.random() * allCards.length)]);
     return selectCard;
   }
+}
+//cardをランダムに1枚引く
+export function drawOneCard(attribute: Attribute): void {
+  const { player } = storeToRefs(playerStore);
+  const { hand } = toRefs(player.value);
+  hand.value = [...hand.value, drawCard(attribute)];
 }
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {

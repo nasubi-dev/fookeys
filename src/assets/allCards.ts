@@ -1,9 +1,5 @@
 import type { Card } from "@/types";
-import {
-  changeHandValue,
-  changeStatusValue,
-  changeSumCardsValue,
-} from "@/server/useShopUtils";
+import { changeHandValue, changeStatusValue, changeSumCardsValue, drawOneCard } from "@/server/useShopUtils";
 const allCards: Card[] = [
   {
     id: 0,
@@ -515,6 +511,10 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、マッスルカードを1枚ドローする。",
+    special:(time,status)=>{
+      if(time!=="after")return;
+      drawOneCard("atk")
+    }
   },
   {
     id: 53,
@@ -524,6 +524,10 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、テクニックカードを1枚ドローする。",
+    special:(time,status)=>{
+      if(time!=="after")return;
+      drawOneCard("tech")
+    }
   },
   {
     id: 54,
@@ -533,6 +537,10 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、シールドカードを1枚ドローする。",
+    special:(time,status)=>{
+      if(time!=="after")return;
+      drawOneCard("def")
+    }
   },
   {
     id: 55,
@@ -542,6 +550,10 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、サポートカードを1枚ドローする。",
+    special:(time,status)=>{
+      if(time!=="after")return;
+      drawOneCard("sup")
+    }
   },
   {
     id: 56,
@@ -551,7 +563,8 @@ const allCards: Card[] = [
     company: "norma",
     attribute: "sup",
     description: "このカードは使用時の自身の満腹度と同じだけシールドを獲得する。",
-    special: (status) => {
+    special: (time, status) => {
+      if (time !== "battle") return;
       if (status === undefined) return;
       changeSumCardsValue("def", status.hungry);
     },

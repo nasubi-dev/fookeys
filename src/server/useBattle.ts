@@ -8,7 +8,6 @@ import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
 import { changeHandValue, changeStatusValue } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
-import allCharacters from "@/assets/allCharacters";
 import { getEnemyPlayer } from "./usePlayerData";
 
 //Collectionの参照
@@ -135,7 +134,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.map((card) => card.attribute).includes("sup")) {
     my.field.forEach((card) => {
       if (card.attribute !== "sup") return;
-      card.special?.(my.status);
+      card.special?.("battle", my.status);
       if (card.id === 64) my.maxHungry += 20;
       log.value = card.description;
     });
@@ -175,7 +174,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.map((card) => card.attribute).includes("atk")) {
     let holdingAtk = 0;
     console.log(i, "mySumFields.atk: ", my.sumFields.atk);
-    if (my.check) log.value="行動不能なので攻撃できない";
+    if (my.check) log.value = "行動不能なので攻撃できない";
     else {
       holdingAtk = my.sumFields.atk - defense;
       if (holdingAtk < 0) holdingAtk = 0;
@@ -192,7 +191,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     await wait(1000);
     await reflectStatus();
     await getEnemyPlayer(); //!
-    battleResult.value = ["atk", holdingAtk];
+    battleResult.value = ["atk", my.sumFields.atk];
     await wait(2000);
   }
 
@@ -393,8 +392,8 @@ export async function battle() {
 export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
-  const { id, player, cardLock, sign } = storeToRefs(playerStore);
-  const { check, idGame, isSelectedGift, hand } = toRefs(player.value);
+  const { id, player, cardLock, sign, log } = storeToRefs(playerStore);
+  const { check, idGame, isSelectedGift, hand, field } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -406,6 +405,18 @@ export async function postBattle(): Promise<void> {
   checkRotten();
   //満腹値を減らす
   changeStatusValue("hungry", -30);
+
+  //supのカードの効果を発動する
+  if (field.value.map((card) => card.attribute).includes("sup")) {
+    field.value.forEach((card) => {
+      if (card.attribute !== "sup") return;
+      card.special?.("after");
+      log.value = card.description;
+    });
+  }
+  await reflectStatus();
+  await getEnemyPlayer(); //!
+
   //使ったカードを捨てる
   deleteField();
   //turnを進める
