@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
-import { changeHandValue, changeStatusValue } from "./useShopUtils";
+import { changeHandValue, changeStatusValue, changeSumCardsValue, drawOneCard } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
 import { getEnemyPlayer } from "./usePlayerData";
 
@@ -51,10 +51,9 @@ async function reflectStatus(): Promise<void> {
   const { player, id } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
   //ダメージを反映する
-  let myStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  if (!myStatus) throw Error("myStatusが取得できませんでした");
-  status.value = myStatus;
-  console.log(i, "status: ", status.value.hp, status.value.hungry, status.value.contribution);
+  let myPlayerData = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
+  if (!myPlayerData) throw Error("myStatusが取得できませんでした");
+  status.value = myPlayerData;
 }
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
@@ -84,12 +83,12 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //自分のhungryの値が上限を超えていた場合､行動不能にする
   my.status.hungry += my.sumFields.hungry;
   console.log(i, "mySumHungry: ", my.status.hungry);
-  if (my.status.hungry > my.maxHungry) {
+  if (my.status.hungry > my.status.maxHungry) {
     my.check = true;
     updateDoc(doc(playersRef, myId), { check: my.check });
     console.log(i, "自プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
-    if (my.status.hungry > my.maxHungry) my.status.hungry = my.maxHungry;
+    if (my.status.hungry > my.status.maxHungry) my.status.hungry = my.status.maxHungry;
   }
 
   if (a) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
@@ -106,19 +105,18 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //相手のhungryの値が上限を超えていた場合､相手を行動不能にする
   let enemySumHungry = enemy.status.hungry + (which === "primary" ? enemy.sumFields.hungry : 0);
-  console.log(i, "enemySumHungry: ", enemySumHungry);
-  if (enemySumHungry > enemy.maxHungry) {
+  if (enemySumHungry > enemy.status.maxHungry) {
     enemy.check = true;
     updateDoc(doc(playersRef, enemyId), { check: enemy.check });
     console.log(i, "相手プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
-    if (enemySumHungry > enemy.maxHungry) enemySumHungry = enemy.maxHungry;
+    if (enemySumHungry > enemy.status.maxHungry) enemySumHungry = enemy.status.maxHungry;
   }
 
   //回復を行う
   if (my.field.map((card) => card.attribute).includes("heal")) {
     my.status.hp += my.sumFields.heal;
-    if (my.status.hp > my.maxHp) my.status.hp = my.maxHp;
+    if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
     console.log(i, "heal: ", my.sumFields.heal);
     log.value = "heal: " + my.sumFields.heal;
 
@@ -134,8 +132,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.map((card) => card.attribute).includes("sup")) {
     my.field.forEach((card) => {
       if (card.attribute !== "sup") return;
-      card.special?.("battle", my.status);
-      if (card.id === 64) my.maxHungry += 20;
+      if (card.id === 64) changeStatusValue("maxHungry", 20);
       log.value = card.description;
     });
 
@@ -208,11 +205,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       console.log(i, "holdingTech: ", holdingTech);
     }
     enemy.status.hp -= my.sumFields.tech;
-    if (techDefense !== 0) {
-      console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingTech, "のダメージ");
-    } else {
-      console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
-    }
+
+    //特殊効果を発動する
+    my.field.forEach((card) => {
+      if (card.attribute !== "tech") return;
+      if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
+      if (card.id === 26) changeStatusValue("contribution", 20);
+      log.value = card.name + "の効果!"+card.description;
+    });
 
     if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     await wait(1000);
@@ -409,8 +409,10 @@ export async function postBattle(): Promise<void> {
   //supのカードの効果を発動する
   if (field.value.map((card) => card.attribute).includes("sup")) {
     field.value.forEach((card) => {
-      if (card.attribute !== "sup") return;
-      card.special?.("after");
+      if (card.id === 52) drawOneCard("atk");
+      if (card.id === 53) drawOneCard("tech");
+      if (card.id === 54) drawOneCard("def");
+      if (card.id === 55) drawOneCard("sup");
       log.value = card.description;
     });
   }

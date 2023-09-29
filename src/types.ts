@@ -13,7 +13,6 @@ type Card = {
   def?: number;
   tech?: number;
   heal?: number;
-  special?: (time?: Time, status?: Status) => void;
   rotten?: boolean; //腐ってるかのフラグ
 };
 
@@ -52,7 +51,7 @@ type Mission = {
 type Phase = "shop" | "battle" | "result" | "none";
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
-type Status = { hp: number; hungry: number; contribution: number };
+type Status = { hp: number; hungry: number; contribution: number; maxHp: number; maxHungry: number };
 type SumCards = { num: number; waste: number; hungry: number; priority: number; atk: number; def: number; tech: number; heal: number };
 type PlayerData = {
   idEnemy: string;
@@ -67,8 +66,6 @@ type PlayerData = {
   hand: Card[];
   field: Card[];
   status: Status;
-  maxHp: number;
-  maxHungry: number;
   sumFields: SumCards;
 };
 

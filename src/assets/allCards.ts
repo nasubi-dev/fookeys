@@ -171,9 +171,6 @@ const allCards: Card[] = [
     description: "貢献度を🔔+5する。",
     priority: 1,
     tech: 5,
-    special: () => {
-      changeStatusValue("contribution", 5);
-    },
   },
   {
     id: 18,
@@ -203,9 +200,6 @@ const allCards: Card[] = [
     description: "貢献度を🔔+5する。",
     priority: 1,
     tech: 15,
-    special: () => {
-      changeStatusValue("contribution", 5);
-    },
   },
   {
     id: 21,
@@ -263,9 +257,6 @@ const allCards: Card[] = [
     attribute: "tech",
     description: "貢献度を🔔+20する。",
     tech: 55,
-    special: () => {
-      changeStatusValue("contribution", 20);
-    },
   },
   {
     id: 27,
@@ -511,10 +502,6 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、マッスルカードを1枚ドローする。",
-    special:(time,status)=>{
-      if(time!=="after")return;
-      drawOneCard("atk")
-    }
   },
   {
     id: 53,
@@ -524,10 +511,6 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、テクニックカードを1枚ドローする。",
-    special:(time,status)=>{
-      if(time!=="after")return;
-      drawOneCard("tech")
-    }
   },
   {
     id: 54,
@@ -537,10 +520,6 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、シールドカードを1枚ドローする。",
-    special:(time,status)=>{
-      if(time!=="after")return;
-      drawOneCard("def")
-    }
   },
   {
     id: 55,
@@ -550,10 +529,6 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、サポートカードを1枚ドローする。",
-    special:(time,status)=>{
-      if(time!=="after")return;
-      drawOneCard("sup")
-    }
   },
   {
     id: 56,
@@ -563,11 +538,6 @@ const allCards: Card[] = [
     company: "norma",
     attribute: "sup",
     description: "このカードは使用時の自身の満腹度と同じだけシールドを獲得する。",
-    special: (time, status) => {
-      if (time !== "battle") return;
-      if (status === undefined) return;
-      changeSumCardsValue("def", status.hungry);
-    },
   },
   {
     id: 57,
@@ -643,7 +613,6 @@ const allCards: Card[] = [
     company: "rapidpot",
     attribute: "sup",
     description: "最大満腹度を🍖+20する。",
-    special: () => {},
   },
   {
     id: 65,
@@ -663,7 +632,6 @@ const allCards: Card[] = [
     company: "galdaybee",
     attribute: "sup",
     description: "このラウンド中、与えるマッスルダメージを2倍にする。",
-    special: () => {},
   },
 ];
 export default allCards;

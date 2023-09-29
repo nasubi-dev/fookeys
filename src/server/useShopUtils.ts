@@ -1,5 +1,4 @@
 import { toRefs } from "vue";
-import * as _ from "lodash";
 import { e, s, i } from "@/log";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -17,25 +16,29 @@ const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //cardをランダムに1枚引く
 export function drawCard(attribute?: Attribute): Card {
+  let selectCard: Card | undefined;
   if (attribute) {
-    const attributeCards = allCards.filter((card) => {
-      if (attribute === "atk") card.id <= 16;
-      if (attribute === "def") card.id >= 17 && card.id <= 32;
-      if (attribute === "tech") card.id >= 33 && card.id <= 49;
-      if (attribute === "sup") card.id >= 50;
-    });
-    const selectCard = _.cloneDeep(attributeCards[Math.floor(Math.random() * attributeCards.length)]);
-    return selectCard;
+    while (!selectCard) {
+      const pickCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
+      if (attribute === "atk" && pickCard.id >= 1 && pickCard.id <= 16) selectCard = pickCard;
+      if (attribute === "tech" && pickCard.id >= 17 && pickCard.id <= 32) selectCard = pickCard;
+      if (attribute === "def" && pickCard.id >= 33 && pickCard.id <= 49) selectCard = pickCard;
+      if (attribute === "sup" && pickCard.id >= 50) selectCard = pickCard;
+    }//!誰か助けて､､､､
   } else {
-    const selectCard = _.cloneDeep(allCards[Math.floor(Math.random() * allCards.length)]);
-    return selectCard;
+    selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
   }
+  return selectCard;
 }
 //cardをランダムに1枚引く
-export function drawOneCard(attribute: Attribute): void {
-  const { player } = storeToRefs(playerStore);
+export function drawOneCard(attribute?: Attribute): void {
+  const { player, id } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
-  hand.value = [...hand.value, drawCard(attribute)];
+
+  if (hand.value.length >= 9) return;
+  hand.value.push(drawCard(attribute));
+  hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
@@ -50,7 +53,6 @@ export async function setHand(): Promise<void> {
     } else {
       hand.value.push(drawCard());
     }
-    if (hand.value.length > 9) hand.value.shift();
     hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
@@ -180,7 +182,7 @@ export function deleteAllRottenCard(): void {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Statusの値を変更する
-export function changeStatusValue(key: "contribution" | "hp" | "hungry", value: number): void {
+export function changeStatusValue(key: "contribution" | "hp" | "hungry" | "maxHp" | "maxHungry", value: number): void {
   console.log(i, "changeStatusValueを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { status, character } = toRefs(player.value);
