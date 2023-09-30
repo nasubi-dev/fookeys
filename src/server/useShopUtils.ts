@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import type { Card, GameData, PlayerData, Attribute } from "@/types";
+import type { Card, GameData, PlayerData, Attribute, Status, SumCards } from "@/types";
 import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
 import allCards from "@/assets/allCards";
@@ -24,19 +24,23 @@ export function drawCard(attribute?: Attribute): Card {
       if (attribute === "tech" && pickCard.id >= 17 && pickCard.id <= 32) selectCard = pickCard;
       if (attribute === "def" && pickCard.id >= 33 && pickCard.id <= 49) selectCard = pickCard;
       if (attribute === "sup" && pickCard.id >= 50) selectCard = pickCard;
-    }//!誰か助けて､､､､
+    } //!誰か助けて､､､､
   } else {
     selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
   }
   return selectCard;
 }
 //cardをランダムに1枚引く
-export function drawOneCard(attribute?: Attribute): void {
+export function drawOneCard(order?: Attribute | number): void {
   const { player, id } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
   if (hand.value.length >= 9) return;
-  hand.value.push(drawCard(attribute));
+  if (typeof order === "number") {
+    hand.value.push(structuredClone(allCards[order]));
+  } else {
+    hand.value.push(drawCard(order));
+  }
   hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
@@ -80,11 +84,6 @@ export async function changeAllHand(): Promise<void> {
     hand.value.push(drawCard());
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  console.log(
-    i,
-    "changeAllHand: ",
-    hand.value.map((card) => card.name)
-  );
   log.value = "changeAllHand: " + hand.value.map((card) => card.name);
 }
 //指定のcardを1枚引く
@@ -144,7 +143,7 @@ export async function setMissions(): Promise<void> {
   }
 }
 //SumCardsの値を変更する
-export function changeSumCardsValue(key: "waste" | "hungry" | "priority" | "atk" | "def" | "tech" | "heal", value: number): void {
+export function changeSumCardsValue(key: keyof SumCards, value: number): void {
   console.log(i, "changeSumCardsValueを実行しました");
   const { log, sumCards } = storeToRefs(playerStore);
 
@@ -153,23 +152,22 @@ export function changeSumCardsValue(key: "waste" | "hungry" | "priority" | "atk"
   log.value = "changeSumCardsValue: " + key + sumCards.value[key];
 }
 //Handの値を変更する
-export function changeHandValue(key: "waste" | "hungry" | "priority" | "atk" | "def" | "tech" | "heal", value: number): void {
+export function changeHandValue(key: keyof SumCards | "waste", value: number, attribute?: Attribute): void {
   console.log(i, "changeHandValueを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
-  hand.value.forEach((card) => {
-    if (card[key] === undefined) return;
-    card[key] += value;
-  });
+  if (!attribute) {
+    hand.value.forEach((card) => {
+      if (card[key] === undefined) return;
+      card[key] += value;
+    });
+  } else {
+    hand.value.forEach((card) => {
+      if (card.attribute === attribute) card[key] += value;
+    });
+  }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  console.log(
-    i,
-    "changeHandValue: ",
-    key,
-    hand.value.map((card) => card[key])
-  );
-  log.value = "changeHandValue: " + key + hand.value.map((card) => card[key]);
 }
 //Handの腐ったカードを削除する
 export function deleteAllRottenCard(): void {
@@ -182,7 +180,7 @@ export function deleteAllRottenCard(): void {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Statusの値を変更する
-export function changeStatusValue(key: "contribution" | "hp" | "hungry" | "maxHp" | "maxHungry", value: number): void {
+export function changeStatusValue(key: keyof Status, value: number): void {
   console.log(i, "changeStatusValueを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { status, character } = toRefs(player.value);

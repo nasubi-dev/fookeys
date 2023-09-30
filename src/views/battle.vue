@@ -5,6 +5,7 @@ import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
+import { drawOneCard } from "@/server/useShopUtils";
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
@@ -104,7 +105,7 @@ watch(components, (newVal) => {
     }
   }
 })
-
+const wantCard=ref()
 </script>
 
 <template>
@@ -117,6 +118,8 @@ watch(components, (newVal) => {
           <p> {{ "sign: " + sign }}</p>
           <p> {{ "phase: " + phase }}</p>
           <p> {{ "turn: " + turn }}</p>
+          <button @click="drawOneCard(wantCard)">drawSelectCard</button>
+          <input v-model="wantCard" type="number" />
         </div>
       </div>
 

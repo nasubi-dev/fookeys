@@ -13,8 +13,6 @@ const { sumCards } = storeToRefs(playerStore);
       <img :src="sumFieldImg" />
       <div class="overText">
         <div class="flex justify-start">
-          <p>{{ "0️⃣"+ sumCards.num }}</p>
-          <p>{{ "🍃" + sumCards.waste }}</p>
           <p>{{ "🍖" + sumCards.hungry }} </p>
           <p>{{ "⚔:" + sumCards.atk }}</p>
           <p>{{ "🛡:" + sumCards.def }}</p>

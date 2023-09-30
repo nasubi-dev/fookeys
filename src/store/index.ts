@@ -28,8 +28,6 @@ const usePlayerStore = defineStore("playerData", () => {
       maxHungry: 200,
     },
     sumFields: {
-      num: 0,
-      waste: 0,
       hungry: 0,
       priority: 0,
       atk: 0,
@@ -49,21 +47,18 @@ const usePlayerStore = defineStore("playerData", () => {
   const sumCards = computed<SumCards>(() =>
     player.value.field.reduce(
       (sum: SumCards, card: Card) => {
-        sum.num += 1;
-        sum.waste += card.waste;
         sum.hungry += card.hungry;
         sum.priority += card.priority ?? 0;
         sum.atk +=
-          (card.atk ?? 0) *
-          (player.value.isSelectedGift === 7 ? 2 : 1) *
-          (player.value.isSelectedGift === 8 ? 0 : 1) *
-          (player.value.field.map((card) => card.id === 66) ? 2 : 1);
-        sum.def += card.def ?? 0;
-        sum.tech += card.tech ?? 0 * (player.value.isSelectedGift === 8 ? 0 : 1);
+          (card.atk ?? 0) * (player.value.isSelectedGift === 7 ? 2 : 1) * (player.value.field.map((card) => card.id).includes(66) ? 2 : 1);
+        sum.def +=
+          card.def ??
+          0 + (player.value.isSelectedGift === 8 ? 999 : 0) + (player.value.field.map((card) => card.id).includes(63) ? 999 : 0);
+        sum.tech += card.tech ?? 0;
         sum.heal += card.heal ?? 0;
         return sum;
       },
-      { num: 0, waste: 0, hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
+      { hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
     )
   );
   //?function/actions
@@ -151,8 +146,6 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       maxHungry: 200,
     },
     sumFields: {
-      num: 0,
-      waste: 0,
       hungry: 0,
       priority: 0,
       atk: 0,

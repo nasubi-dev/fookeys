@@ -81,7 +81,7 @@ const allGifts: Gift[] = [
   {
     id: 8,
     name: "おなべのふた",
-    description: "このラウンド中相手から受けるダメージを無効化する",
+    description: "このラウンド中､防御を+999する｡",
     requireContribution: 55,
     skill: () => {},
   },

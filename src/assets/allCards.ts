@@ -603,7 +603,7 @@ const allCards: Card[] = [
     hungry: 50,
     company: "hanamie",
     attribute: "sup",
-    description: "このラウンド中、受けるマッスルダメージを無効化する。",
+    description: "このラウンド中､防御を+999する｡",
   },
   {
     id: 64,

@@ -118,7 +118,6 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     my.status.hp += my.sumFields.heal;
     if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
     console.log(i, "heal: ", my.sumFields.heal);
-    log.value = "heal: " + my.sumFields.heal;
 
     if (a) updateDoc(doc(playersRef, myId), { "status.hp": my.status.hp });
     await wait(1000);
@@ -131,9 +130,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //支援を行う
   if (my.field.map((card) => card.attribute).includes("sup")) {
     my.field.forEach((card) => {
-      if (card.attribute !== "sup") return;
+      log.value = card.name + "の効果!" + card.description;
+      if (card.id === 58) changeHandValue("atk", 10, "atk");
       if (card.id === 64) changeStatusValue("maxHungry", 20);
-      log.value = card.description;
     });
 
     await wait(1000);
@@ -208,10 +207,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
     //特殊効果を発動する
     my.field.forEach((card) => {
-      if (card.attribute !== "tech") return;
+      log.value = card.name + "の効果!" + card.description;
       if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
       if (card.id === 26) changeStatusValue("contribution", 20);
-      log.value = card.name + "の効果!"+card.description;
     });
 
     if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
@@ -413,7 +411,6 @@ export async function postBattle(): Promise<void> {
       if (card.id === 53) drawOneCard("tech");
       if (card.id === 54) drawOneCard("def");
       if (card.id === 55) drawOneCard("sup");
-      log.value = card.description;
     });
   }
   await reflectStatus();
