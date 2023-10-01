@@ -9,6 +9,7 @@ import { startShop } from "./useShop";
 import { changeHandValue, changeStatusValue, changeSumCardsValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
 import { getEnemyPlayer } from "./usePlayerData";
+import { idText } from "typescript";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -143,15 +144,13 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     await wait(2000);
   }
 
+  //防御力を計算する
   let defense = 0;
   if (which === "primary") {
     console.log(i, "先行なので防御できない");
   } else {
     if (enemy.check) {
       console.log(i, "敵は行動不能なので防御できない");
-    } else if (enemy.donate) {
-      console.log(i, "敵は寄付をしていたので防御できない");
-      log.value = "敵は寄付をしていたので防御できない";
     } else {
       defense = enemy.sumFields.def;
       console.log(i, "enemySumFields.def: ", defense);
@@ -160,6 +159,13 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //防御を行う//?エフェクトのみ
   if (my.field.map((card) => card.attribute).includes("def")) {
+    console.log(i, "防御!!!");
+    //特殊効果を発動する
+    my.field.forEach((card) => {
+      if (!card.description) return;
+      if (card.id === 45 || card.id === 48) changeStatusValue("hungry", -card.hungry);
+    });
+
     await wait(1000);
     await reflectStatus();
     await getEnemyPlayer(); //!
