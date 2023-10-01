@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
-import { changeHandValue, changeStatusValue, changeSumCardsValue, drawOneCard } from "./useShopUtils";
+import { changeHandValue, changeStatusValue, changeSumCardsValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
 import { getEnemyPlayer } from "./usePlayerData";
 
@@ -199,7 +199,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
       if (card.id === 26) changeStatusValue("contribution", 20);
-      if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) my.sumFields.tech += 30;//!できない
+      if (card.id === 29 || card.id === 31) enemy.status.hungry >= 100 ? (my.sumFields.tech += 30) : null;
     });
 
     let techDefense = 0;
@@ -392,7 +392,7 @@ export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
   const { id, player, cardLock, sign, log } = storeToRefs(playerStore);
-  const { check, idGame, isSelectedGift, hand, field } = toRefs(player.value);
+  const { check, idGame, isSelectedGift, hand, field, status } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -402,19 +402,20 @@ export async function postBattle(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   //腐っているカードにする
   checkRotten();
-  //満腹値を減らす
-  changeStatusValue("hungry", -30);
 
   //supのカードの効果を発動する
-  if (field.value.map((card) => card.attribute).includes("sup")) {
+  if (field.value.map((card) => card.attribute).includes("sup") && status.value.hungry < 200) {
     field.value.forEach((card) => {
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
       if (card.id === 54) drawOneCard("def");
       if (card.id === 55) drawOneCard("sup");
+      if (card.id === 61) draw3ExchangedCard();
     });
   }
 
+  //満腹値を減らす
+  changeStatusValue("hungry", -30);
   //使ったカードを捨てる
   deleteField();
   //turnを進める

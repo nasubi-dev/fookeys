@@ -44,6 +44,25 @@ export function drawOneCard(order?: Attribute | number): void {
   hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
+//drawExchangedCardを実行する
+export async function draw3ExchangedCard() {
+  console.log(i, "draw3ExchangedCardを実行しました");
+  const { id, player, log } = storeToRefs(playerStore);
+  const { hand } = toRefs(player.value);
+
+  let selectCards: Card[] = [];
+  for (let i = 0; i < 3; i++) {
+    if (hand.value.length >= 9) return;
+    let selectCard = drawCard();
+    selectCard.waste = 8;
+    selectCard.hungry = 0;
+    selectCards[i] = selectCard;
+    hand.value.push(selectCard);
+    hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+  }
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
+  log.value = "draw3ExchangedCard: " + selectCards.map((card) => card.name);
+}
 //cardをHandに6枚セットする
 export async function setHand(): Promise<void> {
   console.log(i, "setHandを実行しました");
