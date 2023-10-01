@@ -1,26 +1,31 @@
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
-import { playerStore, gameStore } from "@/main";
+import { playerStore, gameStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import statusImg from "@/assets/img/ui/status.png";
 import nasubiImg from "@/assets/img/nasubi.png";
 
 const { player, components, battleResult, sign } = storeToRefs(playerStore);
-const { name, character, status } = toRefs(player.value);
+const { status, sumFields } = toRefs(player.value);
+const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game } = toRefs(gameStore);
 const { firstAtkPlayer } = toRefs(game.value);
 
 const retainedDef = ref<number | undefined>();
 watch(battleResult, (newVal) => {
-  if (newVal[0] === 'def' && typeof newVal[1] === 'number') {
+  if (newVal[0] === 'def') {
     if (firstAtkPlayer.value === sign.value) {
-      if (components.value === 'primaryAtk' && newVal[1]) retainedDef.value = newVal[1];
+      if (components.value === 'primaryAtk' && newVal[1]) retainedDef.value = sumFields.value.def
     } else {
-      if (components.value === 'secondAtk' && newVal[1]) retainedDef.value = newVal[1];
+      if (components.value === 'secondAtk' && newVal[1]) retainedDef.value = sumFields.value.def
     }
-  }//!あとでもっといい方法考える
-  if ((newVal[0] === 'atk' && components.value === 'secondAtk') || (newVal[0] === 'none' && components.value === 'secondAtk')) {//!変更タイミング帰るかも
-    retainedDef.value = undefined;
+  }
+  if (newVal[0] === "atk" && components.value === 'secondAtk') {
+    retainedDef.value = sumFields.value.def - enemyPlayer.value.sumFields.atk
+    retainedDef.value = retainedDef.value < 0 ? 0 : retainedDef.value
+  }
+  if (newVal[0] === 'none' && components.value === 'secondAtk') {
+    retainedDef.value = undefined
   }
 })
 </script>
