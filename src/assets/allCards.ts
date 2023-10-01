@@ -481,7 +481,7 @@ const allCards: Card[] = [
     waste: 4,
     hungry: 15,
     company: "galdaybee",
-    attribute: "sup",
+    attribute: "atk",
     description: "このカードは後攻のとき、マッスルダメージを💪+75する。",
   },
   {
