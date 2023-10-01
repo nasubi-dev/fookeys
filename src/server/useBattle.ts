@@ -130,6 +130,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //支援を行う
   if (my.field.map((card) => card.attribute).includes("sup")) {
     my.field.forEach((card) => {
+      if(!card.description) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 58) changeHandValue("atk", 10, "atk");
       if (card.id === 64) changeStatusValue("maxHungry", 20);
@@ -168,6 +169,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //マッスル攻撃を行う
   if (my.field.map((card) => card.attribute).includes("atk")) {
+    console.log(i, "マッスル攻撃!!!");
+    //特殊効果を発動する
+    my.field.forEach((card) => {
+      if(!card.description) return;
+      log.value = card.name + "の効果!" + card.description;
+      if (card.id === 10) defense = 0;
+    });
+
     let holdingAtk = 0;
     console.log(i, "mySumFields.atk: ", my.sumFields.atk);
     if (my.check) log.value = "行動不能なので攻撃できない";
@@ -196,6 +205,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "テクニック攻撃!!!");
     //特殊効果を発動する
     my.field.forEach((card) => {
+      if(!card.description) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
       if (card.id === 26) changeStatusValue("contribution", 20);
@@ -406,6 +416,7 @@ export async function postBattle(): Promise<void> {
   //supのカードの効果を発動する
   if (field.value.map((card) => card.attribute).includes("sup") && status.value.hungry < 200) {
     field.value.forEach((card) => {
+      if(!card.description) return;
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
       if (card.id === 54) drawOneCard("def");
