@@ -194,6 +194,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //テクニック攻撃を行う
   if (my.field.map((card) => card.attribute).includes("tech")) {
     console.log(i, "テクニック攻撃!!!");
+    //特殊効果を発動する
+    my.field.forEach((card) => {
+      log.value = card.name + "の効果!" + card.description;
+      if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
+      if (card.id === 26) changeStatusValue("contribution", 20);
+      if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) my.sumFields.tech += 30;//!できない
+    });
+
     let techDefense = 0;
     let holdingTech = 0;
     if (my.check) {
@@ -204,13 +212,6 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       console.log(i, "holdingTech: ", holdingTech);
     }
     enemy.status.hp -= my.sumFields.tech;
-
-    //特殊効果を発動する
-    my.field.forEach((card) => {
-      log.value = card.name + "の効果!" + card.description;
-      if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
-      if (card.id === 26) changeStatusValue("contribution", 20);
-    });
 
     if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     await wait(1000);
@@ -413,8 +414,6 @@ export async function postBattle(): Promise<void> {
       if (card.id === 55) drawOneCard("sup");
     });
   }
-  await reflectStatus();
-  await getEnemyPlayer(); //!
 
   //使ったカードを捨てる
   deleteField();

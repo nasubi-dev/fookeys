@@ -44,22 +44,23 @@ const usePlayerStore = defineStore("playerData", () => {
   const battleResult = ref<(string | number)[]>(["none", 0]);
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
-  const sumCards = computed<SumCards>(() =>
-    player.value.field.reduce(
-      (sum: SumCards, card: Card) => {
-        sum.hungry += card.hungry;
-        sum.priority += card.priority ?? 0;
-        sum.atk +=
-          (card.atk ?? 0) * (player.value.isSelectedGift === 7 ? 2 : 1) * (player.value.field.map((card) => card.id).includes(66) ? 2 : 1);
-        sum.def +=
-          card.def ??
-          0 + (player.value.isSelectedGift === 8 ? 999 : 0) + (player.value.field.map((card) => card.id).includes(63) ? 999 : 0);
-        sum.tech += card.tech ?? 0;
-        sum.heal += card.heal ?? 0;
-        return sum;
-      },
-      { hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
-    )
+  const sumCards = computed<SumCards>(
+    () =>
+      player.value.field.reduce(
+        (sum: SumCards, card: Card) => {
+          sum.hungry += card.hungry;
+          sum.priority += card.priority ?? 0;
+          sum.atk +=
+            (card.atk ?? 0) *
+            (player.value.isSelectedGift === 7 ? 2 : 1) *
+            (player.value.field.map((card) => card.id).includes(66) ? 2 : 1);
+          sum.def += card.def ?? 0;
+          sum.tech += card.tech ?? 0;
+          sum.heal += card.heal ?? 0;
+          return sum;
+        },
+        { hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
+      ) //!ギフトで999のときにバグる
   );
   //?function/actions
   //Handのカードをクリックしたら、そのカードをFieldに出す

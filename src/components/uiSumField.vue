@@ -4,7 +4,8 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import sumFieldImg from "@/assets/img/ui/info.png";
 
-const { sumCards } = storeToRefs(playerStore);
+const { sumCards, player } = storeToRefs(playerStore);
+const { isSelectedGift } = toRefs(player.value)
 </script>
 
 <template>

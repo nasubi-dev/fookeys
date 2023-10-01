@@ -16,7 +16,7 @@ const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //cardをランダムに1枚引く
 export function drawCard(attribute?: Attribute): Card {
-  let selectCard: Card | undefined;
+  let selectCard;
   if (attribute) {
     while (!selectCard) {
       const pickCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);

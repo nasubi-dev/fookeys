@@ -604,6 +604,7 @@ const allCards: Card[] = [
     company: "hanamie",
     attribute: "sup",
     description: "このラウンド中､防御を+999する｡",
+    def: 999,
   },
   {
     id: 64,
