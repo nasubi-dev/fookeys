@@ -153,6 +153,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       console.log(i, "敵は行動不能なので防御できない");
     } else {
       defense = enemy.sumFields.def;
+      if (enemy.field.map((card) => card.id === 56)) defense += enemy.status.hungry;
       console.log(i, "enemySumFields.def: ", defense);
     }
   }
@@ -164,6 +165,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     my.field.forEach((card) => {
       if (!card.description) return;
       if (card.id === 45 || card.id === 48) changeStatusValue("hungry", -card.hungry);
+      if (card.id===56) my.sumFields.def += my.status.hungry;
     });
 
     await wait(1000);
@@ -419,6 +421,8 @@ export async function postBattle(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   //腐っているカードにする
   checkRotten();
+  //使ったカードを捨てる
+  deleteField();
 
   //supのカードの効果を発動する
   if (field.value.map((card) => card.attribute).includes("sup") && status.value.hungry < 200) {
@@ -434,8 +438,6 @@ export async function postBattle(): Promise<void> {
 
   //満腹値を減らす
   changeStatusValue("hungry", -30);
-  //使ったカードを捨てる
-  deleteField();
   //turnを進める
   nextTurn();
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });

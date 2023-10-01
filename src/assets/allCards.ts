@@ -536,7 +536,7 @@ const allCards: Card[] = [
     waste: 4,
     hungry: 25,
     company: "norma",
-    attribute: "sup",
+    attribute: "def",
     description: "このカードは使用時の自身の満腹度と同じだけシールドを獲得する。",
   },
   {
