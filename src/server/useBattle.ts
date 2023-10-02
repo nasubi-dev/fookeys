@@ -9,7 +9,6 @@ import { startShop } from "./useShop";
 import { changeHandValue, changeStatusValue, changeSumCardsValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
 import { getEnemyPlayer } from "./usePlayerData";
-import { idText } from "typescript";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -50,11 +49,14 @@ export async function syncPlayer(
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
-  const { status } = toRefs(player.value);
+  const { status, defense } = toRefs(player.value);
   //ダメージを反映する
-  let myPlayerData = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
-  if (!myPlayerData) throw Error("myStatusが取得できませんでした");
-  status.value = myPlayerData;
+  let myPlayerStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
+  let myPlayerDefense = (await getDoc(doc(playersRef, id.value))).data()?.defense as number;
+  if (!myPlayerStatus) throw Error("myStatusが取得できませんでした");
+  if (myPlayerDefense === undefined) throw Error("myDefenseが取得できませんでした");
+  status.value = myPlayerStatus;
+  defense.value = myPlayerDefense;
 }
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
@@ -134,6 +136,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       if (!card.description) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 58) changeHandValue("atk", 10, "atk");
+      if (card.id === 59) changeHandValue("def", 20, "def");
       if (card.id === 64) changeStatusValue("maxHungry", 20);
     });
 
@@ -153,7 +156,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       console.log(i, "敵は行動不能なので防御できない");
     } else {
       defense = enemy.sumFields.def;
-      if (enemy.field.map((card) => card.id === 56)) defense += enemy.status.hungry;
+      //もしIDが56のカードがあったら､hungryの値を加算する
+      enemy.field.forEach((card) => {
+        if (card.id === 56) defense += enemy.status.hungry;
+      });
       console.log(i, "enemySumFields.def: ", defense);
     }
   }
@@ -165,7 +171,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     my.field.forEach((card) => {
       if (!card.description) return;
       if (card.id === 45 || card.id === 48) changeStatusValue("hungry", -card.hungry);
-      if (card.id===56) my.sumFields.def += my.status.hungry;
+      if (card.id === 56) my.sumFields.def += my.status.hungry;
     });
 
     await wait(1000);
@@ -191,9 +197,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     if (my.check) log.value = "行動不能なので攻撃できない";
     else {
       holdingAtk = my.sumFields.atk - defense;
-      if (holdingAtk < 0) holdingAtk = 0;
-      console.log(i, "holdingAtk: ", holdingAtk);
+      defense = enemy.sumFields.def - my.sumFields.atk;
+      if (defense < 0) defense = 0;//?これだと相手が攻撃してこないと､この行は実行されない
     }
+      if (holdingAtk < 0) holdingAtk = 0;
     enemy.status.hp -= holdingAtk;
     if (defense !== 0) {
       console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
@@ -202,6 +209,8 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     }
 
     if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
+    if (a) updateDoc(doc(playersRef, enemyId), { defense: defense });
+    else updateDoc(doc(playersRef, myId), { defense: my.sumFields.def });
     await wait(1000);
     await reflectStatus();
     await getEnemyPlayer(); //!
@@ -411,7 +420,7 @@ export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
   const { id, player, cardLock, sign, log } = storeToRefs(playerStore);
-  const { check, idGame, isSelectedGift, hand, field, status } = toRefs(player.value);
+  const { check, idGame, isSelectedGift, hand, field, status, donate, defense } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -421,32 +430,39 @@ export async function postBattle(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   //腐っているカードにする
   checkRotten();
-  //使ったカードを捨てる
-  deleteField();
 
-  //supのカードの効果を発動する
-  if (field.value.map((card) => card.attribute).includes("sup") && status.value.hungry < 200) {
+  //このターン使用したカードの効果を発動する
+  if (!check.value && !donate.value) {
     field.value.forEach((card) => {
-      if (!card.description) return;
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
       if (card.id === 54) drawOneCard("def");
       if (card.id === 55) drawOneCard("sup");
       if (card.id === 61) draw3ExchangedCard();
+      if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 20) : null; //?card.hungryだけ減らすでもいいかも
+      if (card.id === 44) changeHandValue("def", defense.value, "def");
     });
   }
-
+  hand.value.forEach((card) => {
+    if (card.id === 6) {
+      log.value=card.name + "の効果!" + card.description;
+      changeHandValue("hungry", -10);
+    }
+  });
   //満腹値を減らす
   changeStatusValue("hungry", -30);
+  //使ったカードを捨てる
+  deleteField();
   //turnを進める
   nextTurn();
   if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
-
   //checkの値をfalseにする(初期値に戻す)
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
+  //defenseの値を0にする
+  defense.value = 0;
   //isSelectedGiftの値をundefinedにする
   isSelectedGift.value = undefined;
   //firstAtkPlayerの値をundefinedにする

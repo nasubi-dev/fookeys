@@ -176,16 +176,11 @@ export function changeHandValue(key: keyof SumCards | "waste", value: number, at
   const { id, player, log } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
-  if (!attribute) {
-    hand.value.forEach((card) => {
-      if (card[key] === undefined) return;
-      card[key] += value;
-    });
-  } else {
-    hand.value.forEach((card) => {
-      if (card.attribute === attribute) card[key] += value;
-    });
-  }
+  hand.value.forEach((card) => {
+    if (!attribute) card[key] += value;
+    else if (card.attribute === attribute) card[key] += value;
+  });
+
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Handの腐ったカードを削除する
@@ -210,5 +205,4 @@ export function changeStatusValue(key: keyof Status, value: number): void {
   if (key === "hungry" && status.value.hungry < 0) status.value.hungry = 0;
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);
-  log.value = "changeStatusValue: " + key + status.value[key];
 }

@@ -1,5 +1,4 @@
 import type { Card } from "@/types";
-import { changeHandValue, changeStatusValue, changeSumCardsValue, drawOneCard } from "@/server/useShopUtils";
 const allCards: Card[] = [
   {
     id: 0,
@@ -74,7 +73,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "rapidpot",
     attribute: "atk",
-    description: "このカードは自身の満腹度🍖50ごとに満腹度を🍖-5する。",
+    description: "ラウンド終了時、自身の満腹度が🍖100以上のとき、自身の満腹度を🍖-20する。",
     atk: 85,
   },
   {
@@ -245,7 +244,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "rapidpot",
     attribute: "tech",
-    description: "このカードは自身の満腹度🍖50ごとに満腹度を🍖-5する。",
+    description: "ラウンド終了時、自身の満腹度が🍖100以上のとき、自身の満腹度を🍖-20する。",
     tech: 50,
   },
   {
@@ -406,7 +405,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "rapidpot",
     attribute: "def",
-    description: "このカードは自身の満腹度🍖50ごとに満腹度を🍖-5する。",
+    description: "ラウンド終了時、自身の満腹度が🍖100以上のとき、自身の満腹度を🍖-20する。",
     def: 130,
   },
   {
@@ -420,12 +419,12 @@ const allCards: Card[] = [
   },
   {
     id: 44,
-    name: "改造おにぎり",
+    name: "改造焼き芋",
     waste: 4,
     hungry: 40,
     company: "unlimit",
     attribute: "def",
-    description: "2ラウンドの間、スピード🦶+100で行動する。",
+    description: "ラウンド終了時、手札にあるシールドカードのシールドを自身のシールドと同じだけを増やす。",
     def: 145,
   },
   {
@@ -565,7 +564,7 @@ const allCards: Card[] = [
     hungry: 30,
     company: "norma",
     attribute: "sup",
-    description: "ラウンド終了時、残っているシールドを次のラウンドに持ち越す。",
+    description: "手札にあるシールドカードのシールドを🛡️+20する。",
   },
   {
     id: 60,
