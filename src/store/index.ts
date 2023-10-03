@@ -40,7 +40,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const phase = ref<Phase>("none");
   const cardLock = ref(false);
   const offer = ref<Card[]>([]);
-  const log = ref<string>();
+  const log = ref<string>("");
   const components = ref<string>("afterBattle");
   const battleResult = ref<(string | number)[]>(["none", 0]);
   //?Computed/Getter

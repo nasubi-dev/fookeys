@@ -168,7 +168,6 @@ export function changeSumCardsValue(key: keyof SumCards, value: number): void {
 
   sumCards.value[key] += value;
   console.log(i, "changeSumCardsValue: ", key, sumCards.value[key]);
-  log.value = "changeSumCardsValue: " + key + sumCards.value[key];
 }
 //Handの値を変更する
 export function changeHandValue(key: keyof SumCards | "waste", value: number, attribute?: Attribute): void {

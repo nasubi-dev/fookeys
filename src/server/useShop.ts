@@ -42,7 +42,7 @@ export async function endShop(): Promise<void> {
   if (myGift !== undefined) {
     allGifts[myGift].skill();
     status.value.contribution -= allGifts[myGift].requireContribution;
-    log.value = name.value + "が" + allGifts[myGift].name + "を使用しました";
+    log.value = "あなたが" + allGifts[myGift].name + "を使用しました";
   }
   //相手のisSelectedGiftを実行する
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;

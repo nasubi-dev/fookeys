@@ -7,8 +7,9 @@ import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc 
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
 import { changeHandValue, changeStatusValue, changeSumCardsValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
-import type { GameData, PlayerData, PlayerSign, Status, SumCards } from "@/types";
+import type { GameData, PlayerData, PlayerSign, Status, SumCards,Card } from "@/types";
 import { getEnemyPlayer } from "./usePlayerData";
+import { intervalForEach } from "./utils";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -132,13 +133,13 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
   //支援を行う
   if (my.field.map((card) => card.attribute).includes("sup")) {
-    my.field.forEach((card) => {
+    intervalForEach((card:Card) => {
       if (!card.description) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 58) changeHandValue("atk", 10, "atk");
       if (card.id === 59) changeHandValue("def", 20, "def");
       if (card.id === 64) changeStatusValue("maxHungry", 20);
-    });
+    }, my.field, 100);
 
     await wait(1000);
     await reflectStatus();
@@ -157,9 +158,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     } else {
       defense = enemy.sumFields.def;
       //もしIDが56のカードがあったら､hungryの値を加算する
-      enemy.field.forEach((card) => {
+      intervalForEach((card:Card) => {
         if (card.id === 56) defense += enemy.status.hungry;
-      });
+      },enemy.field,100);
       console.log(i, "enemySumFields.def: ", defense);
     }
   }
@@ -168,11 +169,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.map((card) => card.attribute).includes("def")) {
     console.log(i, "防御!!!");
     //特殊効果を発動する
-    my.field.forEach((card) => {
+    intervalForEach((card:Card) => {
       if (!card.description) return;
       if (card.id === 45 || card.id === 48) changeStatusValue("hungry", -card.hungry);
       if (card.id === 56) my.sumFields.def += my.status.hungry;
-    });
+    },my.field,100);
 
     await wait(1000);
     await reflectStatus();
@@ -185,12 +186,12 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.map((card) => card.attribute).includes("atk")) {
     console.log(i, "マッスル攻撃!!!");
     //特殊効果を発動する
-    my.field.forEach((card) => {
+    intervalForEach((card:Card) => {
       if (!card.description) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 10) defense = 0;
       if (card.id === 50) which === "second" ? (my.sumFields.atk += 75) : null;
-    });
+    },my.field,100);
 
     let holdingAtk = 0;
     console.log(i, "mySumFields.atk: ", my.sumFields.atk);
@@ -222,13 +223,13 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.map((card) => card.attribute).includes("tech")) {
     console.log(i, "テクニック攻撃!!!");
     //特殊効果を発動する
-    my.field.forEach((card) => {
+    intervalForEach((card:Card) => {
       if (!card.description) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
       if (card.id === 26) changeStatusValue("contribution", 20);
       if (card.id === 29 || card.id === 31) enemy.status.hungry >= 100 ? (my.sumFields.tech += 30) : null;
-    });
+    },my.field,100);
 
     let techDefense = 0;
     let holdingTech = 0;
@@ -261,10 +262,8 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
   const { firstAtkPlayer } = toRefs(game.value);
   const { my, enemy } = await syncPlayer(which);
 
-  if (my.check) {
-    log.value = "行動不能だったのでミッションは進行しませんでした";
-    return;
-  }
+  if (my.check) return;
+
   //missionを進捗させる
   const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value ?? []) {
@@ -386,8 +385,6 @@ export async function battle() {
   await compareSumField("priority");
   await judgeDonate();
   if (firstAtkPlayer.value === undefined) throw new Error("firstAtkPlayerの値がundefinedです");
-  else console.log(i, "結果...firstAtkPlayer: ", firstAtkPlayer.value);
-  log.value = "結果...firstAtkPlayer: " + firstAtkPlayer.value;
 
   components.value = "afterDecideFirstAtkPlayer";
   await wait(1000);
@@ -433,7 +430,7 @@ export async function postBattle(): Promise<void> {
 
   //このターン使用したカードの効果を発動する
   if (!check.value && !donate.value) {
-    field.value.forEach((card) => {
+    intervalForEach((card:Card) => {
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
       if (card.id === 54) drawOneCard("def");
@@ -441,14 +438,14 @@ export async function postBattle(): Promise<void> {
       if (card.id === 61) draw3ExchangedCard();
       if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 20) : null; //?card.hungryだけ減らすでもいいかも
       if (card.id === 44) changeHandValue("def", defense.value, "def");
-    });
+    },field.value,100);
   }
-  hand.value.forEach((card) => {
+  intervalForEach((card:Card) => {
     if (card.id === 6) {
       log.value=card.name + "の効果!" + card.description;
       changeHandValue("hungry", -10);
     }
-  });
+  },hand.value,100);
   //満腹値を減らす
   changeStatusValue("hungry", -30);
   //使ったカードを捨てる

@@ -31,10 +31,7 @@ const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
 watch(log, (newVal) => {
-  if (newVal) {
-    push.info(newVal)
-    log.value = undefined
-  }
+  push.info(log.value)
 })
 
 //入場したらPlayer型としてIDが保管される
@@ -105,7 +102,7 @@ watch(components, (newVal) => {
     }
   }
 })
-const wantCard=ref()
+const wantCard = ref()
 </script>
 
 <template>

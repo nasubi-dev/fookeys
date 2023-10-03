@@ -38,10 +38,6 @@ watch(cardLock, async (newVal) => {
 //HandからFieldへ
 const pushCard = async (index: number) => {
   if (cardLock.value) return;
-  if (isSelectedGift.value === 7 && allCards[hand.value[index].id].attribute === 'atk') {
-    console.log(i, "atk card do double damage");
-    log.value = "atk card do double damage"
-  }
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
   console.log(i, "isSelectedGift: ", enemyGift, "fieldLength: ", field.value.length);
   if (enemyGift === 3 && field.value.length >= 3) {
