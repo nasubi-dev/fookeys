@@ -2,10 +2,12 @@
 import { onMounted, toRefs, watch, ref } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
+import { useSound } from '@vueuse/sound'
 import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import { drawOneCard } from "@/server/useShopUtils";
+import { intervalForEach } from "../server/utils";
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
@@ -20,10 +22,14 @@ import allCharacters from "@/assets/allCharacters";
 import decide from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
-import { intervalForEach } from "../server/utils";
+import tap1 from "@/assets/sound/tap1.mp3";
+import cooking from "@/assets/sound/cooking.mp3";
 
 import { usePush } from 'notivue'
 const push = usePush()
+
+const tap1Sound = useSound(tap1)
+const cookingSound = useSound(cooking)
 
 const { id, player, cardLock, phase, offer, sign, log, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
@@ -36,18 +42,6 @@ watch(log, (newVal) => {
   push.info(log.value)
   log.value = ""
 })
-const watchValue = ref()
-const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-watch(watchValue, () => {
-  if (watchValue.value === undefined) return
-  push.info(" " + watchValue.value)
-  watchValue.value = undefined
-})
-const loopNumber = () => {
-  array.forEach((num) => {
-    watchValue.value = num
-  })
-}
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -132,7 +126,7 @@ const wantCard = ref()
           <p> {{ "turn: " + turn }}</p>
           <button @click="drawOneCard(wantCard)">drawSelectCard</button>
           <input v-model="wantCard" type="number" />
-          <button @click="loopNumber()">logNumber</button>
+          <button @click="tap1Sound.play()">tap1Sound</button>
         </div>
       </div>
 
