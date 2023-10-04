@@ -20,6 +20,7 @@ import allCharacters from "@/assets/allCharacters";
 import decide from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
+import { intervalForEach } from "../server/utils";
 
 import { usePush } from 'notivue'
 const push = usePush()
@@ -31,8 +32,22 @@ const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
 watch(log, (newVal) => {
+  if (log.value === "") return
   push.info(log.value)
+  log.value = ""
 })
+const watchValue = ref()
+const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+watch(watchValue, () => {
+  if (watchValue.value === undefined) return
+  push.info(" " + watchValue.value)
+  watchValue.value = undefined
+})
+const loopNumber = () => {
+  array.forEach((num) => {
+    watchValue.value = num
+  })
+}
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -117,6 +132,7 @@ const wantCard = ref()
           <p> {{ "turn: " + turn }}</p>
           <button @click="drawOneCard(wantCard)">drawSelectCard</button>
           <input v-model="wantCard" type="number" />
+          <button @click="loopNumber()">logNumber</button>
         </div>
       </div>
 

@@ -100,12 +100,6 @@ const usePlayerStore = defineStore("playerData", () => {
       if (hand[i].waste === 0) hand.splice(i, 1);
       else i++;
     }
-    console.log(
-      i,
-      "deleteAllWaste0: ",
-      "hand: ",
-      hand.map((card) => card.name)
-    );
   };
   return {
     id,
