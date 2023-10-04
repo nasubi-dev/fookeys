@@ -205,7 +205,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
         log.value = card.name + "の効果!" + card.description;
         if ((a && which === "second") || (!a && which === "primary")) return;
         if (card.id === 10) defense = 0;
-        if (card.id === 50) which === "second" ? (my.sumFields.atk += 75) : null;
+        if (card.id === 50 && which === "second") my.sumFields.atk += 75;
       },
       my.field,
       100
