@@ -8,6 +8,10 @@ import decide from "@/assets/img/ui/decide.png";
 import allGifts from "@/assets/allGifts";
 import UiGiftsGift from "./uiGiftsGift.vue";
 
+import { useSound } from "@vueuse/sound";
+import { tap2 } from "@/assets/sounds";
+const useTap2 = useSound(tap2);
+
 const { player, log } = storeToRefs(playerStore);
 const { gifts, status, isSelectedGift } = toRefs(player.value);
 
@@ -28,7 +32,7 @@ const useGift = async () => {
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
 
       <div v-if="!pushed" class="flex justify-start">
-        <button @click="useGift()">
+        <button @click="useGift();useTap2.play()">
           <img :src="decide" style="width: 20vw;" />
         </button>
         <div class="flex flex-row w-auto h-auto">

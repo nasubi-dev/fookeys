@@ -11,6 +11,10 @@ import { watchTurnEnd } from "@/server/useShop";
 import UiCard from "@/components/uiCard.vue";
 import allCards from "@/assets/allCards";
 
+import { useSound } from "@vueuse/sound";
+import { tap1 } from "@/assets/sounds";
+const useTap1 = useSound(tap1);
+
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
 const { pushHand, popHand } = playerStore;
@@ -70,7 +74,7 @@ const popCard = (index: number, id: number) => {
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
-          <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id)"
+          <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); useTap1.play()"
             :class="handSelected[index] ? 'transform -translate-y-4' : null" class="cardSize">
             <UiCard :card="card" />
           </button>

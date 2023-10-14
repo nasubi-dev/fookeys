@@ -5,6 +5,11 @@ import { storeToRefs } from "pinia";
 import ShopDrawCards from './shopDrawCards.vue';
 import ShopUseGifts from './shopUseGifts.vue';
 
+import { useSound } from "@vueuse/sound";
+import { tap2 } from "@/assets/sounds";
+const useTap2 = useSound(tap2);
+
+
 const { cardLock, phase } = storeToRefs(playerStore);
 
 const use = ref(false);
@@ -19,17 +24,10 @@ watch(cardLock, (newVal) => {
 
 const shopAnimation = ref(true);
 onMounted(() => {
+  shopAnimation.value = true;
   setTimeout(() => {
     shopAnimation.value = false;
   }, 1000);
-})
-watch(phase, (newVal) => {
-  if (newVal === 'shop') {
-    shopAnimation.value = true;
-    setTimeout(async () => {
-      shopAnimation.value = false;
-    }, 2000);
-  }
 })
 </script>
 
@@ -48,10 +46,10 @@ watch(phase, (newVal) => {
           <ShopUseGifts />
         </div>
         <div v-if="!draw && !use" class="flex justify-start">
-          <button @click="draw = true" style="width: 20vw;">
+          <button @click="draw = true; useTap2.play()" style="width: 20vw;">
             <img :src="`img/ui/drawCard.png`" />
           </button>
-          <button @click="use = true" style="width: 20vw;">
+          <button @click="use = true; useTap2.play()" style="width: 20vw;">
             <img :src="`img/ui/useGift.png`" />
           </button>
         </div>

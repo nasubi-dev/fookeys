@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref } from "vue";
-import { e, s, i } from "@/log";
+import { e, i } from "@/log";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
-import { useSound } from '@vueuse/sound'
 import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
@@ -22,20 +21,48 @@ import allCharacters from "@/assets/allCharacters";
 import decide from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
-import tap1 from "@/assets/sound/tap1.mp3";
-import cooking from "@/assets/sound/cooking.mp3";
 
-import { usePush } from 'notivue'
-const push = usePush()
 
-const tap1Sound = useSound(tap1)
-const cookingSound = useSound(cooking)
 
 const { id, player, cardLock, phase, offer, sign, log, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
+
+import { useSound } from "@vueuse/sound";
+import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, enemyCardIn, atk, def, tech } from "@/assets/sounds";
+const useTap2 = useSound(tap2);
+const useEnemyTurn = useSound(enemyTurn);
+const useMyTurn = useSound(myTurn);
+const useEnemyCardIn = useSound(enemyCardIn);
+const useBattlePhase = useSound(battlePhase);
+const useBattleStart = useSound(battleStart);
+const useShopping = useSound(shopping);
+const useAtk = useSound(atk);
+const useDef = useSound(def);
+const useTech = useSound(tech);
+
+watch(battleResult, (newVal) => {
+  if (newVal[0] === "atk") {
+    useAtk.play()
+  }
+  if (newVal[0] === "def") {
+    useDef.play()
+  }
+  if (newVal[0] === "tech") {
+    useTech.play()
+  }
+})
+
+watch(enemyPlayer.value.hand, (newVal, oldVal) => {
+  if (newVal.length !== oldVal.length) {
+    useEnemyCardIn.play()//!これ出来ないかも
+  }
+})
+
+import { usePush } from 'notivue'
+const push = usePush()
 
 watch(log, (newVal) => {
   if (log.value === "") return
@@ -46,6 +73,7 @@ watch(log, (newVal) => {
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
+  useBattleStart.play()
   setTimeout(async () => {
     await getEnemyPlayer();//!あとでもっといい方法を考える
   }, 1000);
@@ -75,9 +103,13 @@ const battleAnimation = ref(true);
 watch(phase, (newVal) => {
   if (newVal === 'battle') {
     battleAnimation.value = true;
+    useBattlePhase.play()
     setTimeout(async () => {
       battleAnimation.value = false;
     }, 1500);
+  }
+  if (newVal === 'shop') {
+    useShopping.play()
   }
 })
 
@@ -87,11 +119,13 @@ watch(components, (newVal) => {
   if (newVal === "primaryAtk") {
     if (sign.value === firstAtkPlayer.value) {
       myTurnAnimation.value = true;
+      useMyTurn.play()
       setTimeout(async () => {
         myTurnAnimation.value = false;
       }, 2000);
     } else {
       enemyTurnAnimation.value = true;
+      useEnemyTurn.play()
       setTimeout(async () => {
         enemyTurnAnimation.value = false;
       }, 2000);
@@ -100,11 +134,13 @@ watch(components, (newVal) => {
   if (newVal === "secondAtk") {
     if (sign.value !== firstAtkPlayer.value) {
       myTurnAnimation.value = true;
+      useMyTurn.play()
       setTimeout(async () => {
         myTurnAnimation.value = false;
       }, 2000);
     } else {
       enemyTurnAnimation.value = true;
+      useEnemyTurn.play()
       setTimeout(async () => {
         enemyTurnAnimation.value = false;
       }, 2000);
@@ -126,14 +162,13 @@ const wantCard = ref()
           <p> {{ "turn: " + turn }}</p>
           <button @click="drawOneCard(wantCard)">drawSelectCard</button>
           <input v-model="wantCard" type="number" />
-          <button @click="tap1Sound.play()">tap1Sound</button>
         </div>
       </div>
 
       <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
         <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
-          <button @click="turnEnd()">
+          <button @click="turnEnd(); useTap2.play()">
             <img :src="decide" style="width: 20vw;" />
           </button>
           <UiSumField />

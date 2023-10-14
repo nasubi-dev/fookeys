@@ -8,6 +8,11 @@ import type { Card } from "@/types";
 import UiCard from "./uiCard.vue";
 import decide from "@/assets/img/ui/decide.png";
 
+import { useSound } from "@vueuse/sound";
+import { tap1, tap2 } from "@/assets/sounds";
+const useTap1 = useSound(tap1);
+const useTap2 = useSound(tap2);
+
 const { offer, player, phase, log } = storeToRefs(playerStore);
 const { hand, check } = toRefs(player.value);
 
@@ -37,21 +42,21 @@ const offerHand = async () => {
 <template>
   <div>
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
 
-    <div v-if="phase === 'shop' && !pushed" class="flex justify-start">
-      <button @click="offerHand(), pushed = !pushed">
-        <img :src="decide" style="width: 20vw;" />
-      </button>
-      <div class="flex justify-start">
-        <div v-for="(card, index) in offer" :key="card.id">
-          <button @click="isOfferSelected[index] = !isOfferSelected[index]" class="cardSize card-pop"
-            :class="isOfferSelected[index] ? 'transform -translate-y-5' : null">
-            <UiCard :card="card" />
-          </button>
+      <div v-if="phase === 'shop' && !pushed" class="flex justify-start">
+        <button @click="offerHand(); useTap2.play(), pushed = !pushed">
+          <img :src="decide" style="width: 20vw;" />
+        </button>
+        <div class="flex justify-start">
+          <div v-for="(card, index) in offer" :key="card.id">
+            <button @click="isOfferSelected[index] = !isOfferSelected[index]; useTap1.play()" class="cardSize card-pop"
+              :class="isOfferSelected[index] ? 'transform -translate-y-5' : null">
+              <UiCard :card="card" />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </transition-group>
   </div>
 </template>
