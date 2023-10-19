@@ -34,7 +34,7 @@ export async function startShop(): Promise<void> {
 //shopフェーズの終了
 export async function endShop(): Promise<void> {
   console.log(i, "endShopを実行しました");
-  const { id, player, phase, log } = storeToRefs(playerStore);
+  const { id, player, phase, log, enemyLog, cardLock } = storeToRefs(playerStore);
   const { isSelectedGift, status, check, idEnemy, name } = toRefs(player.value);
 
   //自分のisSelectedGiftを実行する
@@ -42,18 +42,20 @@ export async function endShop(): Promise<void> {
   if (myGift !== undefined) {
     allGifts[myGift].skill();
     status.value.contribution -= allGifts[myGift].requireContribution;
-    log.value = "あなたが" + allGifts[myGift].name + "を使用しました";
+    log.value = allGifts[myGift].name + "を使用しました";
   }
   //相手のisSelectedGiftを実行する
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
   if (enemyGift !== undefined) {
     console.log(i, "enemyGift: ", allGifts[enemyGift].name);
     //Logだけ
-    log.value =   "相手が" +allGifts[enemyGift].name + "を使用しました";
+    enemyLog.value = allGifts[enemyGift].name + "を使用しました";
   }
   //終了時処理
   phase.value = "battle";
   check.value = false;
+  //cardLockの値をfalseにする(初期値に戻す)
+  cardLock.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   console.log(i, "check: " + check.value);
   getEnemyPlayer(); //!

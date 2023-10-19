@@ -24,7 +24,7 @@ import donateImg from "@/assets/img/ui/donate.png"
 
 
 
-const { id, player, cardLock, phase, offer, sign, log, sumCards, components, battleResult } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
@@ -68,6 +68,11 @@ watch(log, (newVal) => {
   if (log.value === "") return
   push.info(log.value)
   log.value = ""
+})
+watch(enemyLog, (newVal) => {
+  if (enemyLog.value === "") return
+  push.error(enemyLog.value)
+  enemyLog.value = ""
 })
 
 //入場したらPlayer型としてIDが保管される
@@ -162,6 +167,7 @@ const wantCard = ref()
           <p> {{ "turn: " + turn }}</p>
           <button @click="drawOneCard(wantCard)">drawSelectCard</button>
           <input v-model="wantCard" type="number" />
+          <button @click="enemyLog = 'test'">test</button>
         </div>
       </div>
 
@@ -215,8 +221,8 @@ const wantCard = ref()
         <img :src="`/gifs/eating.gif`" />
       </div>
 
-      <img v-if="(cardLock && components === 'afterBattle') || (phase === 'shop' && check)" :src="`/gifs/waiting.gif`"
-        class="bottom-0 fixed mb-36" style="width: 40vw;" />
+      <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
+        :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36" style="width: 40vw;" />
       <div class="bottom-0 fixed m-3">
         <div class="flex justify-start" style="width: 95vw;">
           <UiStatus :player="player" />

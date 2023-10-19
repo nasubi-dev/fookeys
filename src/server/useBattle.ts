@@ -59,10 +59,34 @@ async function reflectStatus(): Promise<void> {
   status.value = myPlayerStatus;
   defense.value = myPlayerDefense;
 }
+//特殊効果を発動する
+async function specialEffect(id: number[], which: "primary" | "second") {
+  const { player, sign, log, enemyLog } = storeToRefs(playerStore);
+  const { game } = toRefs(gameStore);
+  const { firstAtkPlayer } = toRefs(game.value);
+  const { myId, enemyId, my, enemy } = await syncPlayer(which);
+  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
+
+  intervalForEach(
+    (card: Card) => {
+      if (!(card.id === 58 || card.id === 59 || card.id === 64)) return;
+      log.value = card.name + "の効果!" + card.description;
+      if ((a && which === "second") || (!a && which === "primary")) {
+        enemyLog.value = card.name + "の効果!" + card.description;
+        return;
+      }
+      if (card.id === 58) changeHandValue("atk", 10, "atk");
+      if (card.id === 59) changeHandValue("def", 20, "def");
+      if (card.id === 64) changeStatusValue("maxHungry", 20);
+    },
+    my.field,
+    100
+  );
+}
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { sign, battleResult, log } = storeToRefs(playerStore);
+  const { sign, battleResult, log, enemyLog } = storeToRefs(playerStore);
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { myId, enemyId, my, enemy } = await syncPlayer(which);
@@ -134,8 +158,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 58 || card.id === 59 || card.id === 64)) return;
+        if ((a && which === "second") || (!a && which === "primary")) {
+          enemyLog.value = card.name + "の効果!" + card.description;
+          return;
+        }
         log.value = card.name + "の効果!" + card.description;
-        if ((a && which === "second") || (!a && which === "primary")) return;
         if (card.id === 58) changeHandValue("atk", 10, "atk");
         if (card.id === 59) changeHandValue("def", 20, "def");
         if (card.id === 64) changeStatusValue("maxHungry", 20);
@@ -164,6 +191,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       intervalForEach(
         (card: Card) => {
           if (!(card.id === 56)) return;
+          if (a && which === "second") {
+            enemyLog.value = card.name + "の効果!" + card.description;
+            return;
+          }
           log.value = card.name + "の効果!" + card.description;
           defense += enemy.status.hungry;
         },
@@ -180,7 +211,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 45 || card.id === 48 || card.id === 56)) return;
-        if ((a && which === "second") || (!a && which === "primary")) return;
+        if ((a && which === "second") || (!a && which === "primary")) {
+          enemyLog.value = card.name + "の効果!" + card.description;
+          return;
+        }
         if (card.id === 45 || card.id === 48) changeStatusValue("hungry", -card.hungry);
         if (card.id === 56) my.sumFields.def += my.status.hungry;
       },
@@ -203,7 +237,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       (card: Card) => {
         if (!(card.id === 10 || card.id === 50)) return;
         log.value = card.name + "の効果!" + card.description;
-        if ((a && which === "second") || (!a && which === "primary")) return;
+        if ((a && which === "second") || (!a && which === "primary")) {
+          enemyLog.value = card.name + "の効果!" + card.description;
+          return;
+        }
         if (card.id === 10) defense = 0;
         if (card.id === 50 && which === "second") my.sumFields.atk += 75;
       },
@@ -245,7 +282,10 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       (card: Card) => {
         if (!(card.id === 17 || card.id === 20 || card.id === 26 || card.id === 29 || card.id === 31)) return;
         log.value = card.name + "の効果!" + card.description;
-        if ((a && which === "second") || (!a && which === "primary")) return;
+        if ((a && which === "second") || (!a && which === "primary")) {
+          enemyLog.value = card.name + "の効果!" + card.description;
+          return;
+        }
         if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
         if (card.id === 26) changeStatusValue("contribution", 20);
         if (card.id === 29 || card.id === 31) enemy.status.hungry >= 100 ? (my.sumFields.tech += 30) : null;
@@ -279,16 +319,16 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 //missionの統括
 async function checkMission(which: "primary" | "second"): Promise<void> {
   console.log(s, "checkMissionを実行しました");
-  const { id, player, sign, log } = storeToRefs(playerStore);
+  const { id, player, sign, log, enemyLog } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { my, enemy } = await syncPlayer(which);
+  const a = sign.value === firstAtkPlayer.value;
 
   if (my.check) return;
 
   //missionを進捗させる
-  const equalPlayerSign = sign.value === firstAtkPlayer.value;
   for (let mission of missions.value ?? []) {
     if (mission.achieved) continue;
     //Missionを進捗させる
@@ -297,14 +337,11 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
     if (mission.nowAchievement >= mission.goalAchievement) {
       mission.achieved = true;
       mission.nowAchievement = mission.goalAchievement;
-      if (equalPlayerSign && which === "primary") {
+      if ((a && which === "primary") || (!a && which === "second")) {
         status.value.contribution += mission.reward;
-        console.log(i, "mission: " + mission.name + "を達成したので", mission.reward, "の貢献度を受け取りました");
         log.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
-      } else if (!equalPlayerSign && which === "second") {
-        status.value.contribution += mission.reward;
-        console.log(i, "mission: " + mission.name + "を達成したので", mission.reward, "の貢献度を受け取りました");
-        log.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
+      } else {
+        enemyLog.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
       }
       updateDoc(doc(playersRef, id.value), { status: status.value });
     }
@@ -432,14 +469,14 @@ export async function battle() {
   getEnemyPlayer(); //!
 
   //戦後処理
-  components.value = "afterBattle";
+  components.value = "postBattle";
   await postBattle();
 }
 //戦闘後の処理
 export async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
-  const { id, player, cardLock, sign, log } = storeToRefs(playerStore);
+  const { id, player, cardLock, sign, log, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, field, status, donate, defense } = toRefs(player.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
@@ -466,8 +503,7 @@ export async function postBattle(): Promise<void> {
           card.id === 42 ||
           card.id === 44
         )
-      )
-        return;
+      )return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
@@ -493,8 +529,6 @@ export async function postBattle(): Promise<void> {
   //checkの値をfalseにする(初期値に戻す)
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
-  //cardLockの値をfalseにする(初期値に戻す)
-  cardLock.value = false;
   //defenseの値を0にする
   defense.value = 0;
   //isSelectedGiftの値をundefinedにする

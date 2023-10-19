@@ -35,7 +35,7 @@ async function deletePlayer(): Promise<void> {
 }
 //enemyPlayer情報常時取得
 async function getEnemyPlayer(): Promise<void> {
-  console.log(i, "getEnemyPlayerを実行しました");
+  // console.log(i, "getEnemyPlayerを実行しました");
   const { player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
@@ -44,8 +44,8 @@ async function getEnemyPlayer(): Promise<void> {
   const data = (await getDoc(doc(playersRef, idEnemy.value))).data() as PlayerData;
   if (!data) return;
   enemyPlayer.value = data;
-  console.log(i, "getEnemyPlayerが完了しました");
-  console.log(i, enemyPlayer.value);
+  // console.log(i, "getEnemyPlayerが完了しました");
+  // console.log(i, enemyPlayer.value);
 }
 
 export { registerPlayer, deletePlayer, getEnemyPlayer };
