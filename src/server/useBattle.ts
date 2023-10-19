@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { startShop } from "./useShop";
-import { changeHandValue, changeStatusValue, changeSumCardsValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
+import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards, Card } from "@/types";
 import { getEnemyPlayer } from "./usePlayerData";
 import { intervalForEach } from "./utils";
@@ -59,6 +59,15 @@ async function reflectStatus(): Promise<void> {
   status.value = myPlayerStatus;
   defense.value = myPlayerDefense;
 }
+//情報更新処理
+export async function everyUtil(params: [string, number]): Promise<void> {
+  const { player, sign, log, enemyLog, battleResult } = storeToRefs(playerStore);
+
+  await wait(1000);
+  await reflectStatus();
+  battleResult.value = params;
+  await wait(2000);
+}
 //特殊効果を発動する
 async function specialEffect(id: number[], which: "primary" | "second") {
   const { player, sign, log, enemyLog } = storeToRefs(playerStore);
@@ -99,11 +108,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "寄付をしていたのでダメージ計算を行いません");
     my.status.contribution += my.field.length * 50;
     if (a) updateDoc(doc(playersRef, myId), { status: my.status });
-    await wait(1000);
-    await reflectStatus();
-    await getEnemyPlayer(); //!ここでenemyPlayerの値を更新する
-    battleResult.value = ["donate", my.field.length * 50];
-    await wait(2000);
+    await everyUtil(["donate", my.field.length * 50]);
     battleResult.value = ["none", 0];
     return;
   }
@@ -120,16 +125,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   }
 
   if (a) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
-  await wait(1000);
-  await reflectStatus();
-  await getEnemyPlayer(); //!
+  //?自分がこのターン､寄付を行ったか行動不能の場合､ダメージ計算を行わない
   if (my.check) {
-    battleResult.value = ["hungry", 1]; //?1は行動不能
-    await wait(2000);
+    await everyUtil(["hungry", 1]); //?行動不能
+    return;
   }
-
-  //自分がこのターン､寄付を行ったか行動不能の場合､ダメージ計算を行わない
-  if (my.check) return;
 
   //相手のhungryの値が上限を超えていた場合､相手を行動不能にする
   let enemySumHungry = enemy.status.hungry;
@@ -147,10 +147,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     console.log(i, "heal: ", my.sumFields.heal);
 
     if (a) updateDoc(doc(playersRef, myId), { "status.hp": my.status.hp });
-    await wait(1000);
-    await reflectStatus();
-    battleResult.value = ["heal", my.sumFields.heal];
-    await wait(2000);
+    await everyUtil(["heal", my.sumFields.heal]);
   }
 
   //支援を行う
@@ -171,11 +168,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       100
     );
 
-    await wait(1000);
-    await reflectStatus();
-    await getEnemyPlayer(); //!
-    battleResult.value = ["sup", 0]; //!未定
-    await wait(2000);
+    await everyUtil(["sup", 0]);
   }
 
   //防御力を計算する
@@ -222,11 +215,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
       100
     );
 
-    await wait(1000);
-    await reflectStatus();
-    await getEnemyPlayer(); //!
-    battleResult.value = ["def", my.sumFields.def];
-    await wait(2000);
+    await everyUtil(["def", my.sumFields.def]);
   }
 
   //マッスル攻撃を行う
@@ -267,11 +256,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     if (a) updateDoc(doc(playersRef, enemyId), { defense: defense });
     else updateDoc(doc(playersRef, myId), { defense: my.sumFields.def });
-    await wait(1000);
-    await reflectStatus();
-    await getEnemyPlayer(); //!
-    battleResult.value = ["atk", my.sumFields.atk];
-    await wait(2000);
+    await everyUtil(["atk", my.sumFields.atk]);
   }
 
   //テクニック攻撃を行う
@@ -306,11 +291,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     enemy.status.hp -= my.sumFields.tech;
 
     if (a) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
-    await wait(1000);
-    await reflectStatus();
-    await getEnemyPlayer(); //!
-    battleResult.value = ["tech", holdingTech];
-    await wait(2000);
+    await everyUtil(["tech", holdingTech]);
   }
 
   battleResult.value = ["none", 0];
@@ -503,7 +484,8 @@ export async function postBattle(): Promise<void> {
           card.id === 42 ||
           card.id === 44
         )
-      )return;
+      )
+        return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
