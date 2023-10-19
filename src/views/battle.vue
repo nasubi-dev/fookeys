@@ -190,7 +190,7 @@ const wantCard = ref()
         </div>
       </transition-group>
 
-      <div v-if="components !== 'afterBattle'">
+      <div v-if="components !== 'postBattle'">
         {{ components }}
         <div style="width: 40vw;">
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :which="'primary'"

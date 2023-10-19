@@ -42,7 +42,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const offer = ref<Card[]>([]);
   const log = ref<string>("");
   const enemyLog = ref<string>("");
-  const components = ref<string>("afterBattle");
+  const components = ref<string>("postBattle");
   const battleResult = ref<(string | number)[]>(["none", 0]);
   //?Computed/Getter
   //Fieldに出ているカードの値を合計する
