@@ -10,7 +10,7 @@ import { tap2 } from "@/assets/sounds";
 const useTap2 = useSound(tap2);
 
 
-const { cardLock, phase } = storeToRefs(playerStore);
+const { cardLock } = storeToRefs(playerStore);
 
 const use = ref(false);
 const draw = ref(false);

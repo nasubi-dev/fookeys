@@ -20,16 +20,16 @@ export {
   atk,
   battlePhase,
   battleStart,
-  battleTo, //
-  cardSort, //
-  cooking, //
+  battleTo,
+  cardSort,
+  cooking,
   def,
   enemyCardIn,
   enemyTurn,
-  missionSort, //
+  missionSort,
   myTurn,
   shopping,
-  swipe, //
+  swipe,
   tap1,
   tap2,
   tech,

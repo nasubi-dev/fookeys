@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref } from "vue";
-import { e, i } from "@/log";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
+import { e, i } from "@/log";
+import { usePush } from 'notivue'
+import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { startShop } from "@/server/useShop";
 import { drawOneCard } from "@/server/useShopUtils";
 import { intervalForEach } from "../server/utils";
+//components
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
@@ -16,13 +19,15 @@ import UiSumField from "@/components/uiSumField.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
+//assets
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
+//img
 import decide from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
-
-
+//sound
+import{ tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, atk, def, tech } from "@/assets/sounds";
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
@@ -30,8 +35,18 @@ const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
-import { useSound } from "@vueuse/sound";
-import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, enemyCardIn, atk, def, tech } from "@/assets/sounds";
+const push = usePush()
+watch(log, (newVal) => {
+  if (log.value === "") return
+  push.info(log.value)
+  log.value = ""
+})
+watch(enemyLog, (newVal) => {
+  if (enemyLog.value === "") return
+  push.error(enemyLog.value)
+  enemyLog.value = ""
+})
+
 const useTap2 = useSound(tap2);
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
@@ -42,7 +57,6 @@ const useShopping = useSound(shopping);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
 const useTech = useSound(tech);
-
 watch(battleResult, (newVal) => {
   if (newVal[0] === "atk") {
     useAtk.play()
@@ -54,25 +68,10 @@ watch(battleResult, (newVal) => {
     useTech.play()
   }
 })
-
 watch(enemyPlayer.value.hand, (newVal, oldVal) => {
   if (newVal.length !== oldVal.length) {
     useEnemyCardIn.play()//!これ出来ないかも
   }
-})
-
-import { usePush } from 'notivue'
-const push = usePush()
-
-watch(log, (newVal) => {
-  if (log.value === "") return
-  push.info(log.value)
-  log.value = ""
-})
-watch(enemyLog, (newVal) => {
-  if (enemyLog.value === "") return
-  push.error(enemyLog.value)
-  enemyLog.value = ""
 })
 
 //入場したらPlayer型としてIDが保管される
