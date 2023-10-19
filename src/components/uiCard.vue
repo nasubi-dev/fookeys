@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useSound } from "@vueuse/sound";
+import { cardSort } from "@/assets/sounds";//仮
 import type { Card } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 
 defineProps<{ card: Card }>();
 
+const useTap1 = useSound(cardSort);
+
 const dropDown = ref(false);
 const onLongPressCallbackHook = (): void => {
   console.log("longPress");
   dropDown.value = true;
+  useTap1.play();
 };
 const onKeyUpCallbackHook = (): void => {
   dropDown.value = false;

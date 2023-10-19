@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { toRefs, ref, watch } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore, } from "@/main";
-import type { PlayerData } from "@/types";
+import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { useSound } from "@vueuse/sound";
+import { tap1 } from "@/assets/sounds";
+import type { PlayerData } from "@/types";
 import { db } from "../server/firebase";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
@@ -11,17 +13,13 @@ import { watchTurnEnd } from "@/server/useShop";
 import UiCard from "@/components/uiCard.vue";
 import allCards from "@/assets/allCards";
 
-import { useSound } from "@vueuse/sound";
-import { tap1 } from "@/assets/sounds";
 const useTap1 = useSound(tap1);
 
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock, log } = storeToRefs(playerStore);
-const { hand, field, idEnemy, isSelectedGift } = toRefs(player.value);
-
-
+const { hand, field, idEnemy } = toRefs(player.value);
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する

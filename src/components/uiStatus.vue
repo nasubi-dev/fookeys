@@ -3,7 +3,8 @@ import { ref, toRefs, watch } from "vue";
 import { playerStore, gameStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import statusImg from "@/assets/img/ui/status.png";
-import nasubiImg from "@/assets/img/nasubi.png";
+import blankissImg from "@/assets/img/characters/blankiss/plain.png";
+import blankissImg2 from "@/assets/img/characters/blankiss/lose.png";
 
 const { player, components, battleResult, sign } = storeToRefs(playerStore);
 const { status, sumFields } = toRefs(player.value);
@@ -36,7 +37,8 @@ watch(battleResult, (newVal) => {
     <div class="overText w-full">
       <div class="flex justify-start w-full transform -translate-y-4">
         <div class="overCard">
-          <img :src="nasubiImg" class="w-36 inline-block ml-4" />
+          <img v-if="sign === 0" :src="blankissImg" class="w-36 inline-block ml-4" />
+          <img v-else :src="blankissImg2" class="w-36 inline-block ml-4" />
           <div class="overText font-bold text-5xl align-text-bottom">{{ retainedDef }}</div>
         </div>
         <p class="font-bold text-3xl mt-auto ml-auto mr-6">

@@ -23,11 +23,11 @@ import Shop from "@/components/shop.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 //img
-import decide from "@/assets/img/ui/decide.png";
+import decideImg from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
 //sound
-import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, atk, def, tech } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, cardSort, swipe, atk, def, tech } from "@/assets/sounds";
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
@@ -54,6 +54,8 @@ const useEnemyCardIn = useSound(enemyCardIn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useShopping = useSound(shopping);
+const useCardSort = useSound(swipe);
+const useSwipe = useSound(swipe);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
 const useTech = useSound(tech);
@@ -72,13 +74,15 @@ watch(enemyPlayer.value.hand, (newVal, oldVal) => {
   if (newVal.length !== oldVal.length) {
     useEnemyCardIn.play()//!これ出来ないかも
   }
-})
+})//?自分と相手の手札の長さが変わったら再生したい
+//Missionが入れ替わったら再生したい
+//
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
-  useBattleStart.play()
   setTimeout(async () => {
+    useBattleStart.play()
     await getEnemyPlayer();//!あとでもっといい方法を考える
   }, 1000);
 
@@ -161,9 +165,7 @@ const wantCard = ref()
         <UiEnemyInfo :p="enemyPlayer" />
         <div class="flex flex-col">
           <p> {{ "id: " + id }}</p>
-          <p> {{ "sign: " + sign }}</p>
-          <p> {{ "phase: " + phase }}</p>
-          <p> {{ "turn: " + turn }}</p>
+          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
           <button @click="drawOneCard(wantCard)">drawSelectCard</button>
           <input v-model="wantCard" type="number" />
           <button @click="enemyLog = 'test'">test</button>
@@ -174,10 +176,10 @@ const wantCard = ref()
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
         <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
           <button @click="turnEnd(); useTap2.play()">
-            <img :src="decide" style="width: 20vw;" />
+            <img :src="decideImg" style="width: 20vw;" />
           </button>
           <UiSumField />
-          <button @click="cardLock ? null : donate = !donate" class="card-pop">
+          <button @click="donate = !donate; useSwipe.play()" class="card-pop">
             <div class="overCard">
               <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
               <div class="w-12 overText">

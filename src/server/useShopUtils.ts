@@ -17,16 +17,17 @@ const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 //cardをランダムに1枚引く
 export function drawCard(attribute?: Attribute): Card {
   let selectCard;
-  if (attribute) {
-    while (!selectCard) {
+  while (!selectCard) {
+    if (attribute) {
       const pickCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
       if (attribute === "atk" && pickCard.id >= 1 && pickCard.id <= 16) selectCard = pickCard;
       if (attribute === "tech" && pickCard.id >= 17 && pickCard.id <= 32) selectCard = pickCard;
       if (attribute === "def" && pickCard.id >= 33 && pickCard.id <= 49) selectCard = pickCard;
       if (attribute === "sup" && pickCard.id >= 50) selectCard = pickCard;
-    } //!誰か助けて､､､､
-  } else {
-    selectCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
+    } else {
+      let pickCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
+      if (pickCard.id !== 0) selectCard = pickCard;
+    }
   }
   return selectCard;
 }
