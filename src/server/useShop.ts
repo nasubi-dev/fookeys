@@ -6,9 +6,10 @@ import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import { setMissions, setHand, setOffer } from "@/server/useShopUtils";
+import { wait } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { battle, wait } from "@/server/useBattle";
+import { setMissions, setHand, setOffer } from "@/server/useShopUtils";
+import { battle } from "@/server/useBattle";
 import allGifts from "@/assets/allGifts";
 
 //Collectionの参照

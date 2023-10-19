@@ -5,10 +5,10 @@ import { e, i } from "@/log";
 import { usePush } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
+import { intervalForEach, wait } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { startShop } from "@/server/useShop";
 import { drawOneCard } from "@/server/useShopUtils";
-import { intervalForEach } from "../server/utils";
+import { startShop } from "@/server/useShop";
 //components
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
@@ -19,7 +19,7 @@ import UiSumField from "@/components/uiSumField.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
-//assets
+//asset
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 //img
@@ -27,7 +27,7 @@ import decide from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
 //sound
-import{ tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, atk, def, tech } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, atk, def, tech } from "@/assets/sounds";
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);

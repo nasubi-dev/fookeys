@@ -4,21 +4,17 @@ import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
-import { converter } from "@/server/converter";
-import { startShop } from "./useShop";
-import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawOneCard } from "./useShopUtils";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards, Card } from "@/types";
-import { getEnemyPlayer } from "./usePlayerData";
-import { intervalForEach } from "./utils";
+import { converter } from "@/server/converter";
+import { intervalForEach, wait } from "@/server/utils";
+import { getEnemyPlayer } from "@/server/usePlayerData";
+import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawOneCard } from "@/server/useShopUtils";
+import { startShop } from "./useShop";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
-//指定されたmsだけ待機する
-export const wait = async (ms: number): Promise<void> => {
-  return new Promise((resolve) => setTimeout(() => resolve(), ms));
-};
 //Playerを同期する
 export async function syncPlayer(
   which: "primary" | "second"
@@ -45,7 +41,6 @@ export async function syncPlayer(
   if (!enemy) throw Error("相手の情報が取得できませんでした");
   return { myId, enemyId, my, enemy };
 }
-
 //ダメージを反映する
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
@@ -59,7 +54,7 @@ async function reflectStatus(): Promise<void> {
   status.value = myPlayerStatus;
   defense.value = myPlayerDefense;
 }
-//情報更新処理
+//情報更新処理//!paramsはないだろ
 export async function everyUtil(params: [string, number]): Promise<void> {
   const { player, sign, log, enemyLog, battleResult } = storeToRefs(playerStore);
 

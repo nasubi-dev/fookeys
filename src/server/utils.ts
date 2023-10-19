@@ -1,6 +1,6 @@
+//foreachをintervalを設けて実行する
 const intervalForEach = (callback: (item: any, index: number) => void, array: any[], intervalTime: number) => {
   const length: number = array.length;
-
   let index: number = 0;
   const intervalId: number = window.setInterval(() => {
     if (index > length - 1) {
@@ -11,4 +11,8 @@ const intervalForEach = (callback: (item: any, index: number) => void, array: an
     }
   }, intervalTime);
 };
-export { intervalForEach };
+//指定されたmsだけ待機する
+const wait = async (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(() => resolve(), ms));
+};
+export { intervalForEach, wait };

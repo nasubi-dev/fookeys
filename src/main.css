@@ -2,15 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .btn-pop {
   transition: all 0.3s ease;
 }
 .btn-pop:active {
-	-webkit-transform: translate(0,2px);
-	-moz-transform: translate(0,2px);
-	transform: translate(0,2px);
-	border-bottom:none;
+  -webkit-transform: translate(0, 2px);
+  -moz-transform: translate(0, 2px);
+  transform: translate(0, 2px);
+  border-bottom: none;
 }
 .overCard {
   position: relative;
@@ -25,51 +24,51 @@
   align-items: center;
   white-space: nowrap;
 }
-.overText .waste{
+.overText .waste {
   transform: translate(-300%, -10%);
 }
-.overText .info{
-  transform: translate(0%,100%);
+.overText .info {
+  transform: translate(0%, 100%);
 }
-.overText .status{
-  transform: translate(10%,100%);
+.overText .status {
+  transform: translate(10%, 100%);
 }
-.overlay{
-  z-index:0;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+.overlay {
+  z-index: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.gray{
-  background-color:rgba(0,0,0,0.5);
+.gray {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 .dropDown {
   position: relative;
   display: inline-block;
   z-index: 1;
 }
-.background{
+.background {
   background-image: url(../src/assets/img/ui/background.png);
   background-position: 50%, 50%;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.backgroundHand{
+.backgroundHand {
   background-image: url(../src/assets/img/ui/backgroundHand.png);
   background-position: 50%, 100%;
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
-.cardSize{
+.cardSize {
   width: 10vw;
   height: auto;
 }
-.gauge{
+.gauge {
   border: 3px solid #393332;
   border-radius: 5px;
   width: 200px;
@@ -85,10 +84,8 @@
   transition: 1s ease;
 }
 img {
-  -webkit-touch-callout:none;
-  -webkit-user-select:none;
-  -moz-touch-callout:none;
-  -moz-user-select:none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   pointer-events: none;
   user-select: none;
   overflow: hidden;
