@@ -32,6 +32,7 @@ import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shoppin
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
+const { hand: enemyHand } = toRefs(enemyPlayer.value)
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
@@ -54,11 +55,12 @@ const useEnemyCardIn = useSound(enemyCardIn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useShopping = useSound(shopping);
-const useCardSort = useSound(swipe);
+const useCardSort = useSound(cardSort);
 const useSwipe = useSound(swipe);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
 const useTech = useSound(tech);
+//カード使用時に再生
 watch(battleResult, (newVal) => {
   if (newVal[0] === "atk") {
     useAtk.play()
@@ -70,13 +72,20 @@ watch(battleResult, (newVal) => {
     useTech.play()
   }
 })
-watch(enemyPlayer.value.hand, (newVal, oldVal) => {
-  if (newVal.length !== oldVal.length) {
-    useEnemyCardIn.play()//!これ出来ないかも
-  }
-})//?自分と相手の手札の長さが変わったら再生したい
-//Missionが入れ替わったら再生したい
-//
+//missionが入れ替わったら再生
+watch(missions, (newVal) => {
+  if (!newVal) return;
+  useBattleStart.play();
+})
+//手札が入れ替わったら再生
+watch(hand, (newVal) => {
+  if (!newVal) return;
+  useCardSort.play();//!確定音で結構かき消されちゃう
+})
+watch(enemyHand, (newVal) => {
+  if (!newVal) return;
+  useEnemyCardIn.play()//?なんで反応しないのかUNKNOWN
+})
 
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
