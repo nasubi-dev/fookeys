@@ -93,8 +93,7 @@ onMounted(async () => {
   setTimeout(async () => {
     useBattleStart.play()
     await getEnemyPlayer();//!あとでもっといい方法を考える
-  }, 1000);
-
+  }, 1500);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
@@ -129,7 +128,6 @@ watch(phase, (newVal) => {
     useShopping.play()
   }
 })
-
 const myTurnAnimation = ref(false);
 const enemyTurnAnimation = ref(false);
 watch(components, (newVal) => {
@@ -164,14 +162,14 @@ watch(components, (newVal) => {
     }
   }
 })
-const wantCard = ref()
+const wantCard = ref()//!test用
 </script>
 
 <template>
   <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <div class="flex flex-row-reverse">
-        <UiEnemyInfo :p="enemyPlayer" />
+        <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
         <div class="flex flex-col">
           <p> {{ "id: " + id }}</p>
           <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
