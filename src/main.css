@@ -25,7 +25,7 @@
   white-space: nowrap;
 }
 .overText .waste {
-  transform: translate(-300%, -10%);
+  transform: translate(-250%, -10%);
 }
 .overText .info {
   transform: translate(0%, 100%);
@@ -34,7 +34,6 @@
   transform: translate(10%, 100%);
 }
 .overlay {
-  z-index: 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -53,6 +52,7 @@
   z-index: 1;
 }
 .background {
+  z-index: -100;
   background-image: url(../src/assets/img/ui/background.png);
   background-position: 50%, 50%;
   background-repeat: no-repeat;

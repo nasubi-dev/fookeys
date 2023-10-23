@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toRefs, ref, onMounted, watch } from "vue";
+import { toRefs, ref, onMounted } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -24,12 +24,11 @@ onMounted(() => {
 const giftClickEvent = (gift: number) => {
   if (status.value.contribution < allGifts[gift].requireContribution) {
     log.value = "貢献度が足りません"
-  } else if (isSelectedGift.value !== gift) {
-    isSelectedGift.value = gift
-  } else {
+  } else if (isSelectedGift.value === gift) {
     isSelectedGift.value = undefined
+  } else {
+    isSelectedGift.value = gift
   }
-
 }
 const useGift = async () => {
   pushed.value = true;
@@ -46,7 +45,7 @@ const useGift = async () => {
         <button @click="useGift(); useTap2.play()">
           <img :src="decide" style="width: 20vw;" />
         </button>
-        <div class="flex flex-row w-auto h-auto">
+        <div class="flex my-auto">
           <div v-for="gift in gifts" :key="gift">
             <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
               <button @click="giftClickEvent(gift); useTap1.play()" class="cardSize">

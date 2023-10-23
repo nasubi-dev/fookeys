@@ -27,7 +27,7 @@ import decideImg from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
 //sound
-import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, cardSort, swipe, atk, def, tech } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, missionSort, cardSort, swipe, atk, def, tech } from "@/assets/sounds";
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
@@ -37,12 +37,12 @@ const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
 const push = usePush()
-watch(log, (newVal) => {
+watch(log, () => {
   if (log.value === "") return
   push.info(log.value)
   log.value = ""
 })
-watch(enemyLog, (newVal) => {
+watch(enemyLog, () => {
   if (enemyLog.value === "") return
   push.error(enemyLog.value)
   enemyLog.value = ""
@@ -54,8 +54,9 @@ const useMyTurn = useSound(myTurn);
 const useEnemyCardIn = useSound(enemyCardIn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
-const useShopping = useSound(shopping);
+const useMissionSort = useSound(missionSort);
 const useCardSort = useSound(cardSort);
+const useShopping = useSound(shopping);
 const useSwipe = useSound(swipe);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
@@ -75,7 +76,7 @@ watch(battleResult, (newVal) => {
 //missionが入れ替わったら再生
 watch(missions, (newVal) => {
   if (!newVal) return;
-  useBattleStart.play();
+  useMissionSort.play();
 })
 //手札が入れ替わったら再生
 watch(hand, (newVal) => {
@@ -92,7 +93,7 @@ onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   setTimeout(async () => {
     useBattleStart.play()
-    await getEnemyPlayer();//!あとでもっといい方法を考える
+    await getEnemyPlayer();
   }, 1500);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
@@ -181,20 +182,31 @@ const wantCard = ref()//!test用
 
       <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-        <div v-if="phase === 'battle' && !cardLock" class="flex justify-center mt-5">
-          <button @click="turnEnd(); useTap2.play()">
-            <img :src="decideImg" style="width: 20vw;" />
-          </button>
-          <UiSumField />
-          <button @click="donate = !donate; useSwipe.play()" class="card-pop">
-            <div class="overCard">
-              <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
-              <div class="w-12 overText">
-                <img v-if="donate" :src="donateImg" />
-                <img v-else :src="battleImg" />
+        <div class="overlay">
+          <div v-if="phase === 'battle' && !cardLock" class="flex">
+            <button @click="turnEnd(); useTap2.play()">
+              <img :src="decideImg" style="width: 20vw;" />
+            </button>
+            <UiSumField />
+            <button @click="donate = !donate; useSwipe.play()" class="card-pop">
+              <div class="overCard">
+                <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
+                <div class="w-12 overText">
+                  <img v-if="donate" :src="donateImg" />
+                  <img v-else :src="battleImg" />
+                </div>
               </div>
+            </button>
+          </div>
+
+          <div>
+            <div v-if="phase === 'shop' && turn !== 1">
+              <Shop />
             </div>
-          </button>
+            <div v-else-if="battleAnimation" class="overlay">
+              <img :src="`/gifs/eating.gif`" />
+            </div>
+          </div>
         </div>
       </transition-group>
 
@@ -222,19 +234,13 @@ const wantCard = ref()//!test用
         </div>
       </div>
 
-      <div v-if="phase === 'shop' && turn !== 1" class="overlay">
-        <Shop />
-      </div>
-      <div v-else-if="battleAnimation" class="overlay">
-        <img :src="`/gifs/eating.gif`" />
-      </div>
 
       <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
         :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36" style="width: 40vw;" />
       <div class="bottom-0 fixed m-3">
-        <div class="flex justify-start" style="width: 95vw;">
+        <div class="flex justify-start z-10" style="width: 95vw;">
           <UiStatus :player="player" />
-          <UiGifts :gifts="gifts" player="player" />
+          <UiGifts :gifts="gifts" :p="player" />
           <UiMission class="ml-auto" />
         </div>
         <div v-if="hand.length === 0" class="pt-5 cardSize">

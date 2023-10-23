@@ -32,8 +32,8 @@ const onKeyUpCallbackHook = (): void => {
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText text-base">
-          <p class="waste">{{ card.waste }}</p>
-          <div class="info flex justify-start text-sm">
+          <p class="waste text-lg font-bold">{{ card.waste }}</p>
+          <div class="info flex text-sm">
             <p>{{ "🍖" + card.hungry }} </p>
             <div v-if="card.atk">
               <p>{{ "⚔" + card.atk }}</p>
