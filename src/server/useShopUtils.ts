@@ -165,21 +165,24 @@ export async function setMissions(): Promise<void> {
 //SumCardsの値を変更する
 export function changeSumCardsValue(key: keyof SumCards, value: number): void {
   console.log(i, "changeSumCardsValueを実行しました");
-  const { log, sumCards } = storeToRefs(playerStore);
+  const { sumCards } = storeToRefs(playerStore);
 
   sumCards.value[key] += value;
-  console.log(i, "changeSumCardsValue: ", key, sumCards.value[key]);
 }
 //Handの値を変更する
-export function changeHandValue(key: keyof SumCards | "waste", value: number, attribute?: Attribute): void {
+export function changeHandValue(key: keyof SumCards, value: number, attribute?: Attribute): void {
   console.log(i, "changeHandValueを実行しました");
-  const { id, player, log } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
-  hand.value.forEach((card) => {
-    if (!attribute) card[key] += value;
-    else if (card.attribute === attribute) card[key] += value;
-  });
+  if (hand.value) {
+    hand.value.forEach((card) => {
+      if (card && (!attribute || card.attribute === attribute)) {
+        const test = (card[key] += value);
+        if (test < 0) card[key] = 0;
+      }
+    });
+  }
 
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }

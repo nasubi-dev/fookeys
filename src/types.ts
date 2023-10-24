@@ -52,7 +52,7 @@ type Phase = "shop" | "battle" | "result" | "none";
 type MatchStatus = "matching" | "nothing" | "waiting" | "battle";
 type PlayerSign = 0 | 1;
 type Status = { hp: number; hungry: number; contribution: number; maxHp: number; maxHungry: number };
-type SumCards = { hungry: number; priority: number; atk: number; def: number; tech: number; heal: number };
+type SumCards = { waste: number; hungry: number; priority: number; atk: number; def: number; tech: number; heal: number };
 type PlayerData = {
   idEnemy: string;
   idGame: string;
@@ -67,7 +67,7 @@ type PlayerData = {
   field: Card[];
   status: Status;
   sumFields: SumCards;
-  defense:number;
+  defense: number;
 };
 
 type GameData = {

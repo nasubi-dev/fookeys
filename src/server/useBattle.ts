@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { e, i, s } from "@/log";
-import { gameStore, playerStore } from "@/main";
+import { enemyPlayerStore, gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
@@ -45,7 +45,7 @@ export async function syncPlayer(
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
-  const { status, defense,check } = toRefs(player.value);
+  const { status, defense, check } = toRefs(player.value);
   //ダメージを反映する
   let myPlayerStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
   let myPlayerDefense = (await getDoc(doc(playersRef, id.value))).data()?.defense as number;
@@ -264,11 +264,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 17 || card.id === 20 || card.id === 26 || card.id === 29 || card.id === 31)) return;
-        log.value = card.name + "の効果!" + card.description;
         if ((a && which === "second") || (!a && which === "primary")) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
+        log.value = card.name + "の効果!" + card.description;
         if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
         if (card.id === 26) changeStatusValue("contribution", 20);
         if (card.id === 29 || card.id === 31) enemy.status.hungry >= 100 ? (my.sumFields.tech += 30) : null;
@@ -406,8 +406,10 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 //戦闘処理を統括する
 export async function battle() {
   console.log(s, "battleを実行しました");
-  const { id, player, log, components } = storeToRefs(playerStore);
+  const { id, player, log, enemyLog, components } = storeToRefs(playerStore);
   const { check } = toRefs(player.value);
+  const { enemyPlayer } = storeToRefs(enemyPlayerStore);
+  const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 
@@ -457,9 +459,28 @@ export async function postBattle(): Promise<void> {
   const { checkRotten, deleteField } = playerStore;
   const { id, player, cardLock, sign, log, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, field, status, donate, defense } = toRefs(player.value);
+  const { enemyPlayer } = storeToRefs(enemyPlayerStore);
+  const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
+  const judgeDrawCard = (card: Card): boolean => {
+    if (
+      !(
+        card.id === 52 ||
+        card.id === 53 ||
+        card.id === 54 ||
+        card.id === 55 ||
+        card.id === 61 ||
+        card.id === 7 ||
+        card.id === 25 ||
+        card.id === 42 ||
+        card.id === 44
+      )
+    ) {
+      return true;
+    } else return false;
+  };
 
   //handの腐り値を減らす
   changeHandValue("waste", -1);
@@ -468,22 +489,15 @@ export async function postBattle(): Promise<void> {
   checkRotten();
 
   //このターン使用したカードの効果を発動する
+  if (!enemyCheck.value && !enemyDonate.value) {
+    enemyField.value.forEach((card: Card) => {
+      if (judgeDrawCard(card)) return;
+      enemyLog.value = card.name + "の効果!" + card.description;
+    });
+  }
   if (!check.value && !donate.value) {
     field.value.forEach((card: Card) => {
-      if (
-        !(
-          card.id === 52 ||
-          card.id === 53 ||
-          card.id === 54 ||
-          card.id === 55 ||
-          card.id === 61 ||
-          card.id === 7 ||
-          card.id === 25 ||
-          card.id === 42 ||
-          card.id === 44
-        )
-      )
-        return;
+      if (judgeDrawCard(card)) return;
       log.value = card.name + "の効果!" + card.description;
       if (card.id === 52) drawOneCard("atk");
       if (card.id === 53) drawOneCard("tech");
@@ -494,11 +508,13 @@ export async function postBattle(): Promise<void> {
       if (card.id === 44) changeHandValue("def", defense.value, "def");
     });
   }
+  //手札にあるカードの効果を発動する
   hand.value.forEach((card: Card) => {
     if (!(card.id === 6)) return;
     log.value = card.name + "の効果!" + card.description;
     changeHandValue("hungry", -10);
   });
+
   //満腹値を減らす
   changeStatusValue("hungry", -30);
   //使ったカードを捨てる

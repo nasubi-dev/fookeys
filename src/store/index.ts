@@ -28,6 +28,7 @@ const usePlayerStore = defineStore("playerData", () => {
       maxHungry: 200,
     },
     sumFields: {
+      waste: 0,
       hungry: 0,
       priority: 0,
       atk: 0,
@@ -50,6 +51,7 @@ const usePlayerStore = defineStore("playerData", () => {
     () =>
       player.value.field.reduce(
         (sum: SumCards, card: Card) => {
+          sum.waste += card.waste;
           sum.hungry += card.hungry;
           sum.priority += card.priority ?? 0;
           sum.atk +=
@@ -61,7 +63,15 @@ const usePlayerStore = defineStore("playerData", () => {
           sum.heal += card.heal ?? 0;
           return sum;
         },
-        { hungry: 0, priority: 0, atk: 0, def: 0, tech: 0, heal: 0 }
+        {
+          waste: 0,
+          hungry: 0,
+          priority: 0,
+          atk: 0,
+          def: 0,
+          tech: 0,
+          heal: 0,
+        }
       ) //!ギフトで999のときにバグる
   );
   //?function/actions
@@ -144,6 +154,7 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       maxHungry: 200,
     },
     sumFields: {
+      waste: 0,
       hungry: 0,
       priority: 0,
       atk: 0,
