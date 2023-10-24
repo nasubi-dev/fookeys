@@ -45,14 +45,17 @@ export async function syncPlayer(
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
-  const { status, defense } = toRefs(player.value);
+  const { status, defense,check } = toRefs(player.value);
   //ダメージを反映する
   let myPlayerStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
   let myPlayerDefense = (await getDoc(doc(playersRef, id.value))).data()?.defense as number;
+  let myPlayerCheck = (await getDoc(doc(playersRef, id.value))).data()?.check as boolean;
   if (!myPlayerStatus) throw Error("myStatusが取得できませんでした");
   if (myPlayerDefense === undefined) throw Error("myDefenseが取得できませんでした");
+  if (myPlayerCheck === undefined) throw Error("myCheckが取得できませんでした");
   status.value = myPlayerStatus;
   defense.value = myPlayerDefense;
+  check.value = myPlayerCheck;
 }
 //情報更新処理//!paramsはないだろ
 export async function everyUtil(params: [string, number]): Promise<void> {

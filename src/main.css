@@ -16,12 +16,11 @@
 }
 .overText {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   white-space: nowrap;
 }
 .overText .waste {
@@ -35,10 +34,8 @@
 }
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,10 +46,9 @@
 .dropDown {
   position: relative;
   display: inline-block;
-  z-index: 1;
+  z-index: 10;
 }
 .background {
-  z-index: -100;
   background-image: url(../src/assets/img/ui/background.png);
   background-position: 50%, 50%;
   background-repeat: no-repeat;

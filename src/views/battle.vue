@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref } from "vue";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
-import { e, i } from "@/log";
+import { e, s, i } from "@/log";
 import { usePush } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
@@ -167,22 +167,11 @@ const wantCard = ref()//!test用
 </script>
 
 <template>
-  <div>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <div class="flex flex-row-reverse">
-        <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
-        <div class="flex flex-col">
-          <p> {{ "id: " + id }}</p>
-          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
-          <button @click="drawOneCard(wantCard)">drawSelectCard</button>
-          <input v-model="wantCard" type="number" />
-          <button @click="enemyLog = 'test'">test</button>
-        </div>
-      </div>
 
       <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-        <div class="overlay">
+        <div class="overlay relative z-0">
           <div v-if="phase === 'battle' && !cardLock" class="flex">
             <button @click="turnEnd(); useTap2.play()">
               <img :src="decideImg" style="width: 20vw;" />
@@ -210,6 +199,18 @@ const wantCard = ref()//!test用
         </div>
       </transition-group>
 
+      <div class="flex flex-row-reverse z-10">
+        <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
+        <div class="flex flex-col">
+          <p> {{ "id: " + id }}</p>
+          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+          <button @click="drawOneCard(wantCard)">drawSelectCard</button>
+          <input v-model="wantCard" type="number" />
+          <button @click="enemyLog = 'test'">test</button>
+        </div>
+      </div>
+
+
       <div v-if="components !== 'postBattle'">
         {{ components }}
         <div style="width: 40vw;">
@@ -235,19 +236,16 @@ const wantCard = ref()//!test用
       </div>
 
 
-      <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
-        :src="`/gifs/waiting.gif`" class="bottom-0 fixed mb-36" style="width: 40vw;" />
-      <div class="bottom-0 fixed m-3">
-        <div class="flex justify-start z-10" style="width: 95vw;">
+      <div class="bottom-0 fixed mb-3">
+        <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
+          src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
+        <div class="flex justify-start relative z-0" style="width: 95vw;">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" :p="player" />
           <UiMission class="ml-auto" />
         </div>
-        <div v-if="hand.length === 0" class="pt-5 cardSize">
-          <img :src="`/img/companys/bianca.png`" /><!--!ダミーカード-->
-        </div>
-        <UiHand v-else class=" pt-5 " />
+        <UiHand class="pt-5" />
       </div>
-    </div>
+
   </div>
 </template>

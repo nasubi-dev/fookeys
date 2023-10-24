@@ -70,7 +70,10 @@ const popCard = (index: number, id: number) => {
   <div class=" flex justify-start overflow-clip">
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-      <div v-for="(card, index) in hand" :key="card.id">
+      <div v-if="hand.length === 0" class="cardSize">
+        <img width="912" src="../assets/img/alpha.png"  />
+      </div>
+      <div v-else v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
           <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); useTap1.play()"
             :class="handSelected[index] ? 'transform -translate-y-4' : null" class="cardSize">
