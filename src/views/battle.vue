@@ -27,7 +27,7 @@ import decideImg from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
 //sound
-import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, missionSort, cardSort, swipe, atk, def, tech } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, missionSort, popUp, swipe, atk, def, tech } from "@/assets/sounds";
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
@@ -55,8 +55,8 @@ const useEnemyCardIn = useSound(enemyCardIn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort);
-const useCardSort = useSound(cardSort);
 const useShopping = useSound(shopping);
+const usePopUp = useSound(popUp);
 const useSwipe = useSound(swipe);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
@@ -77,11 +77,6 @@ watch(battleResult, (newVal) => {
 watch(missions, (newVal) => {
   if (!newVal) return;
   useMissionSort.play();
-})
-//手札が入れ替わったら再生
-watch(hand, (newVal) => {
-  if (!newVal) return;
-  useCardSort.play();//!確定音で結構かき消されちゃう
 })
 watch(enemyHand, (newVal) => {
   if (!newVal) return;
@@ -167,85 +162,84 @@ const wantCard = ref()//!test用
 </script>
 
 <template>
-    <div class="flex flex-col h-screen w-screen p-5 relative">
+  <div class="flex flex-col h-screen w-screen p-5 relative">
 
-      <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-        <div class="overlay relative z-0">
-          <div v-if="phase === 'battle' && !cardLock" class="flex">
-            <button @click="turnEnd(); useTap2.play()">
-              <img :src="decideImg" style="width: 20vw;" />
-            </button>
-            <UiSumField />
-            <button @click="donate = !donate; useSwipe.play()" class="card-pop">
-              <div class="overCard">
-                <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
-                <div class="w-12 overText">
-                  <img v-if="donate" :src="donateImg" />
-                  <img v-else :src="battleImg" />
-                </div>
+    <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+      <div class="overlay relative z-0">
+        <div v-if="phase === 'battle' && !cardLock" class="flex">
+          <button @click="turnEnd(); useTap2.play()">
+            <img :src="decideImg" style="width: 20vw;" />
+          </button>
+          <UiSumField />
+          <button @click="donate = !donate; useSwipe.play()" class="card-pop">
+            <div class="overCard">
+              <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
+              <div class="w-12 overText">
+                <img v-if="donate" :src="donateImg" />
+                <img v-else :src="battleImg" />
               </div>
-            </button>
+            </div>
+          </button>
+        </div>
+
+        <div>
+          <div v-if="phase === 'shop' && turn !== 1">
+            <Shop />
           </div>
-
-          <div>
-            <div v-if="phase === 'shop' && turn !== 1">
-              <Shop />
-            </div>
-            <div v-else-if="battleAnimation" class="overlay">
-              <img :src="`/gifs/eating.gif`" />
-            </div>
+          <div v-else-if="battleAnimation" class="overlay">
+            <img :src="`/gifs/eating.gif`" />
           </div>
         </div>
-      </transition-group>
+      </div>
+    </transition-group>
 
-      <div class="flex flex-row-reverse z-10">
-        <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
-        <div class="flex flex-col">
-          <p> {{ "id: " + id }}</p>
-          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
-          <button @click="drawOneCard(wantCard)">drawSelectCard</button>
-          <input v-model="wantCard" type="number" />
-          <button @click="enemyLog = 'test'">test</button>
-        </div>
+    <div class="flex flex-row-reverse z-10">
+      <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
+      <div class="flex flex-col">
+        <p> {{ "id: " + id }}</p>
+        <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+        <button @click="drawOneCard(wantCard)">drawSelectCard</button>
+        <input v-model="wantCard" type="number" />
+        <button @click="enemyLog = 'test'">test</button>
+      </div>
+    </div>
+
+
+    <div v-if="components !== 'postBattle'">
+      {{ components }}
+      <div style="width: 40vw;">
+        <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :which="'primary'"
+          v-show="components !== 'secondAtk'" />
+        <UiUseCard :player="sign === firstAtkPlayer ? enemyPlayer : player" :which="'second'" />
       </div>
 
-
-      <div v-if="components !== 'postBattle'">
-        {{ components }}
-        <div style="width: 40vw;">
-          <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :which="'primary'"
-            v-show="components !== 'secondAtk'" />
-          <UiUseCard :player="sign === firstAtkPlayer ? enemyPlayer : player" :which="'second'" />
-        </div>
-
-        <div class="overlay">
-          <transition appear enter-from-class="translate-y-[-150%] opacity-0"
-            leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
-            enter-active-class="transition duration-300" mode="out-in">
-            <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />
-            <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
-            <div v-else class="flex flex-col">
-              <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-                :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
-              <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-                :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
-            </div>
-          </transition>
-        </div>
+      <div class="overlay">
+        <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+          leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
+          <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />
+          <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
+          <div v-else class="flex flex-col">
+            <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+              :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
+            <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+              :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+          </div>
+        </transition>
       </div>
+    </div>
 
 
-      <div class="bottom-0 fixed mb-3">
-        <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
-          src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
-        <div class="flex justify-start relative z-0" style="width: 95vw;">
-          <UiStatus :player="player" />
-          <UiGifts :gifts="gifts" :p="player" />
-          <UiMission class="ml-auto" />
-        </div>
-        <UiHand class="pt-5" />
+    <div class="bottom-0 fixed mb-3">
+      <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
+        src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
+      <div class="flex justify-start relative z-0" style="width: 95vw;">
+        <UiStatus :player="player" />
+        <UiGifts :gifts="gifts" :p="player" />
+        <UiMission class="ml-auto" />
       </div>
+      <UiHand class="pt-5" />
+    </div>
 
   </div>
 </template>
