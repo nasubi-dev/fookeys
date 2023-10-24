@@ -1,7 +1,12 @@
 {
   "name": "fookeys",
+  "version": "0.0.0",
   "license": "MIT",
+  "author": "nasubi",
   "private": true,
+  "engines": {
+    "node": ">=20.x"
+  },
   "scripts": {
     "dev": "vite --host",
     "build": "run-p type-check build-only",

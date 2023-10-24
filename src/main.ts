@@ -1,10 +1,10 @@
 import { createApp } from "vue";
-import "./main.css";
-import App from "./App.vue";
-import router from "./router";
 import { createPinia } from "pinia";
 import { notivue } from "notivue";
 import { usePlayerStore, useEnemyPlayerStore, useGameStore } from "./store";
+import App from "./App.vue";
+import router from "./router";
+import "./main.css";
 import "notivue/notifications.css";
 import "notivue/animations.css";
 
