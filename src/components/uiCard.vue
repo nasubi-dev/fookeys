@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useSound } from "@vueuse/sound";
-import { popUp } from "@/assets/sounds";//仮
+import { popUp } from "@/assets/sounds";
 import type { Card } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 
-defineProps<{ card: Card }>();
+defineProps<{ card: Card }>()
 
 const usePopUp = useSound(popUp);
 
@@ -18,9 +18,8 @@ const onLongPressCallbackHook = (): void => {
 const onKeyUpCallbackHook = (): void => {
   dropDown.value = false;
 };
-
-
 </script>
+
 <template>
   <div class="block" style="user-select: none;">
     <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform"
@@ -48,6 +47,12 @@ const onKeyUpCallbackHook = (): void => {
             </div>
           </div>
 
+        </div>
+        <div v-if="card.description" class="absolute top-0 right-5">
+          <div class="relative flex h-10 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full bg-yellow-300 opacity-25"></span>
+            <span class="relative inline-flex h-10 w-3 bg-yellow-400"></span>
+          </div>
         </div>
       </VDuringPress>
     </div>

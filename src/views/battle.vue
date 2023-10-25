@@ -15,24 +15,20 @@ import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
-import UiSumField from "@/components/uiSumField.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
+import Battle from "@/components/battle.vue";
 //asset
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
-//img
-import decideImg from "@/assets/img/ui/decide.png";
-import battleImg from "@/assets/img/ui/battle.png"
-import donateImg from "@/assets/img/ui/donate.png"
 //sound
-import { tap2, enemyTurn, myTurn, enemyCardIn, battlePhase, battleStart, shopping, missionSort, popUp, swipe, atk, def, tech } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech } from "@/assets/sounds";
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { hand: enemyHand } = toRefs(enemyPlayer.value)
+const { field: enemyField } = toRefs(enemyPlayer.value);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
@@ -51,38 +47,28 @@ watch(enemyLog, () => {
 const useTap2 = useSound(tap2);
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
-const useEnemyCardIn = useSound(enemyCardIn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort);
 const useShopping = useSound(shopping);
-const usePopUp = useSound(popUp);
-const useSwipe = useSound(swipe);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
 const useTech = useSound(tech);
 //カード使用時に再生
 watch(battleResult, (newVal) => {
-  if (newVal[0] === "atk") {
-    useAtk.play()
-  }
-  if (newVal[0] === "def") {
-    useDef.play()
-  }
-  if (newVal[0] === "tech") {
-    useTech.play()
-  }
+  if (newVal[0] === "atk") useAtk.play()
+  if (newVal[0] === "def") useDef.play()
+  if (newVal[0] === "tech") useTech.play()
 })
 //missionが入れ替わったら再生
 watch(missions, (newVal) => {
-  if (!newVal) return;
-  useMissionSort.play();
+  if (newVal) useMissionSort.play();
 })
-watch(enemyHand, (newVal) => {
-  if (!newVal) return;
-  useEnemyCardIn.play()//?なんで反応しないのかUNKNOWN
+//Phaseが変わったら再生
+watch(phase, (newVal) => {
+  if (newVal === 'battle') useBattlePhase.play()
+  if (newVal === 'shop') useShopping.play()
 })
-
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
@@ -102,28 +88,6 @@ onMounted(async () => {
     console.log(i, "turn: ", turn.value);
   });
 });
-//ターンを終了時
-const turnEnd = () => {
-  if (cardLock.value) return;
-  console.log(i, "turnEnd");
-  //cardLockをtrueにする
-  cardLock.value = true;
-  //!手札がFirestoreに保存するためにhand.vueから移動する
-};
-
-const battleAnimation = ref(true);
-watch(phase, (newVal) => {
-  if (newVal === 'battle') {
-    battleAnimation.value = true;
-    useBattlePhase.play()
-    setTimeout(async () => {
-      battleAnimation.value = false;
-    }, 1500);
-  }
-  if (newVal === 'shop') {
-    useShopping.play()
-  }
-})
 const myTurnAnimation = ref(false);
 const enemyTurnAnimation = ref(false);
 watch(components, (newVal) => {
@@ -163,36 +127,18 @@ const wantCard = ref()//!test用
 
 <template>
   <div class="flex flex-col h-screen w-screen p-5 relative">
-
-    <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+    <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-      <div class="overlay relative z-0">
-        <div v-if="phase === 'battle' && !cardLock" class="flex">
-          <button @click="turnEnd(); useTap2.play()">
-            <img :src="decideImg" style="width: 20vw;" />
-          </button>
-          <UiSumField />
-          <button @click="donate = !donate; useSwipe.play()" class="card-pop">
-            <div class="overCard">
-              <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
-              <div class="w-12 overText">
-                <img v-if="donate" :src="donateImg" />
-                <img v-else :src="battleImg" />
-              </div>
-            </div>
-          </button>
+      <div class="overlay">
+        <div v-if="phase === 'shop'">
+          <Shop />
         </div>
 
-        <div>
-          <div v-if="phase === 'shop' && turn !== 1">
-            <Shop />
-          </div>
-          <div v-else-if="battleAnimation" class="overlay">
-            <img :src="`/gifs/eating.gif`" />
-          </div>
+        <div v-if="phase === 'battle'">
+          <Battle />
         </div>
       </div>
-    </transition-group>
+    </transition>
 
     <div class="flex flex-row-reverse z-10">
       <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
@@ -221,9 +167,9 @@ const wantCard = ref()//!test用
           <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
           <div v-else class="flex flex-col">
             <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
+              :cards="components === 'primaryAtk' ? field : enemyField" />
             <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+              :cards="components === 'primaryAtk' ? enemyField : field" />
           </div>
         </transition>
       </div>
@@ -233,7 +179,7 @@ const wantCard = ref()//!test用
     <div class="bottom-0 fixed mb-3">
       <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
         src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
-      <div class="flex justify-start relative z-0" style="width: 95vw;">
+      <div class="flex justify-start" style="width: 95vw;">
         <UiStatus :player="player" />
         <UiGifts :gifts="gifts" :p="player" />
         <UiMission class="ml-auto" />

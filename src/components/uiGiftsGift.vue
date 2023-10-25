@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useSound } from "@vueuse/sound";
+import { popUp } from "@/assets/sounds";
 import VDuringPress from "./VDuringPress.vue";
 import allGifts from "@/assets/allGifts";
 
-defineProps<{
-  gift: number;
-}>();
+defineProps<{ gift: number }>();
+
+const usePopUp = useSound(popUp);
 
 const dropDown = ref(false);
 const onLongPressCallbackHook = (): void => {
   console.log("longPress");
   dropDown.value = true;
+  usePopUp.play();
 };
 const onKeyUpCallbackHook = (): void => {
   dropDown.value = false;
 };
-
 </script>
 
 <template>

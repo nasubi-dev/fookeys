@@ -17,8 +17,8 @@ defineProps<{
         <UiGift :gift="gift" />
         <div v-if="p.status.contribution >= allGifts[gift].requireContribution" class="absolute top-0 right-0">
           <div class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-400"></span>
           </div>
         </div>
       </div>
