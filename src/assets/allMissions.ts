@@ -271,7 +271,7 @@ const allMissions: Mission[] = [
     id: 10,
     name: "買い物メモ",
     achieved: false,
-    description: "自身の行動後、同じ名称のカードを持たない。",
+    description: "自身の行動後、同じ会社のカードを持たない。",
     reward: 15,
     goalAchievement: 1,
     nowAchievement: 0,

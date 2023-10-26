@@ -26,7 +26,7 @@ defineProps<{
       <img :src="enemyStatusImg" />
       <div class="overText w-full">
         <div class="flex flex-row-reverse justify-center items-center w-full px-4">
-          <div class="ml-3">
+          <div class="ml-3 transform translate-y-8">
             <img v-if="sign !== 0" :src="blankissImg" class="w-36" />
             <img v-else :src="blankissImg2" class="w-36" />
           </div>
@@ -38,7 +38,7 @@ defineProps<{
         </div>
 
         <div>
-          <UiGifts :gifts="p.gifts" :p="p" class="transform -translate-x-10 -translate-y-5" />
+          <UiGifts :gifts="p.gifts" :p="p" class="transform -translate-x-10 -translate-y-8" />
         </div>
       </div>
     </div>

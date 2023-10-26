@@ -175,7 +175,6 @@ const wantCard = ref()//!test用
       </div>
     </div>
 
-
     <div class="bottom-0 fixed mb-3">
       <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
         src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
