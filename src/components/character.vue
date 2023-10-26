@@ -20,7 +20,6 @@ onMounted(async () => {
   characterName.value = a ? "blankiss" : "petit&spot"
 })
 
-const test = (firstAtkPlayer.value === sign.value)
 const c = XOR(!(firstAtkPlayer.value === sign.value), (components.value === 'primaryAtk'))
 const retainedDef = ref<number>(0);
 watch(battleResult, (newVal) => {
@@ -32,20 +31,21 @@ watch(battleResult, (newVal) => {
     retainedDef.value = sumFields.value.def - enemySumField.value.atk
     if (retainedDef.value < 0) retainedDef.value = 0
   }
-
 })
 watch(components, (newVal) => {
   if (newVal === 'postBattle') {
     retainedDef.value = 0
   }
 })
-
-
 </script>
 
 <template>
   <div class="overCard w-1/4">
     <img v-if="battleResult[0] === 'atk'" :src="`/img/characters/${characterName}/atk.png`" />
+    <img v-else-if="battleResult[0] === 'def'" :src="`/img/characters/${characterName}/def.png`" />
+    <img v-else-if="battleResult[0] === 'tech'" :src="`/img/characters/${characterName}/damage.png`" />
+    <!-- 敗北時の画像 -->
+    <!-- 勝利時の画像 -->
     <img v-else :src="`/img/characters/${characterName}/normal.png`" />
     <div class="overText font-bold text-5xl text-red-500">{{ retainedDef }}</div>
   </div>
