@@ -38,7 +38,7 @@ defineProps<{
         </div>
 
         <div>
-          <UiGifts :gifts="p.gifts" :p="p" class="transform -translate-x-10 -translate-y-8" />
+          <UiGifts :gifts="p.gifts" :p="p" class="transform -translate-x-10 -translate-y-4" />
         </div>
       </div>
     </div>
