@@ -15,4 +15,6 @@ const intervalForEach = (callback: (item: any, index: number) => void, array: an
 const wait = async (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 };
-export { intervalForEach, wait };
+
+const XOR = (a: boolean, b: boolean) => { return (a || b) && !(a && b) }
+export { intervalForEach, wait, XOR };

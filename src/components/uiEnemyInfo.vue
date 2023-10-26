@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { PlayerData } from "@/types";
+import Character from "./character.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import uiCardBehind from "./uiCardBehind.vue";
 import enemyStatusImg from "@/assets/img/ui/enemyStatus.png";
-import blankissImg from "@/assets/img/characters/blankiss/plain.png";
-import blankissImg2 from "@/assets/img/characters/blankiss/lose.png";
 
 defineProps<{
   p: PlayerData
@@ -26,10 +25,7 @@ defineProps<{
       <img :src="enemyStatusImg" />
       <div class="overText w-full">
         <div class="flex flex-row-reverse justify-center items-center w-full px-4">
-          <div class="ml-3 transform translate-y-8">
-            <img v-if="sign !== 0" :src="blankissImg" class="w-36" />
-            <img v-else :src="blankissImg2" class="w-36" />
-          </div>
+          <Character status="enemy" class="ml-auto" />
           <p class="font-bold text-xl text-gray-900">
             {{ "❤" + p.status.hp + "/" + p.status.maxHp }}
             {{ "🍖" + p.status.hungry + "/" + p.status.maxHungry }}
@@ -38,7 +34,7 @@ defineProps<{
         </div>
 
         <div>
-          <UiGifts :gifts="p.gifts" :p="p" class="transform -translate-x-10 -translate-y-4" />
+          <UiGifts :gifts="p.gifts" :player="p" class="transform -translate-x-10 -translate-y-4" />
         </div>
       </div>
     </div>

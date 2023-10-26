@@ -5,7 +5,7 @@ import { e, s, i } from "@/log";
 import { usePush } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
-import { intervalForEach, wait } from "@/server/utils";
+import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { drawOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
@@ -147,7 +147,6 @@ const wantCard = ref()//!test用
         <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
         <button @click="drawOneCard(wantCard)">drawSelectCard</button>
         <input v-model="wantCard" type="number" />
-        <button @click="enemyLog = 'test'">test</button>
       </div>
     </div>
 
@@ -180,7 +179,7 @@ const wantCard = ref()//!test用
         src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
       <div class="flex justify-start" style="width: 95vw;">
         <UiStatus :player="player" />
-        <UiGifts :gifts="gifts" :p="player" />
+        <UiGifts :gifts="gifts" :player="player" />
         <UiMission class="ml-auto" />
       </div>
       <UiHand class="pt-5" />

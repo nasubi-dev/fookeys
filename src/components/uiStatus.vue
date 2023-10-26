@@ -1,34 +1,10 @@
 <script setup lang="ts">
-import { ref, toRefs, watch } from "vue";
-import { playerStore, gameStore, enemyPlayerStore } from "@/main";
-import { storeToRefs } from "pinia";
+import Character from "./character.vue";
 import statusImg from "@/assets/img/ui/status.png";
-import blankissImg from "@/assets/img/characters/blankiss/plain.png";
-import blankissImg2 from "@/assets/img/characters/blankiss/lose.png";
+import type { PlayerData } from "@/types";
 
-const { player, components, battleResult, sign } = storeToRefs(playerStore);
-const { status, sumFields } = toRefs(player.value);
-const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { game } = toRefs(gameStore);
-const { firstAtkPlayer } = toRefs(game.value);
+defineProps<{ player: PlayerData }>()
 
-const retainedDef = ref<number | undefined>();
-watch(battleResult, (newVal) => {
-  if (newVal[0] === 'def') {
-    if (firstAtkPlayer.value === sign.value) {
-      if (components.value === 'primaryAtk' && newVal[1]) retainedDef.value = sumFields.value.def
-    } else {
-      if (components.value === 'secondAtk' && newVal[1]) retainedDef.value = sumFields.value.def
-    }
-  }
-  if (newVal[0] === "atk" && components.value === 'secondAtk') {
-    retainedDef.value = sumFields.value.def - enemyPlayer.value.sumFields.atk
-    retainedDef.value = retainedDef.value < 0 ? 0 : retainedDef.value
-  }
-  if (newVal[0] === 'none' && components.value === 'secondAtk') {
-    retainedDef.value = undefined
-  }
-})
 </script>
 
 <template>
@@ -36,18 +12,13 @@ watch(battleResult, (newVal) => {
     <img :src="statusImg" />
     <div class="overText w-full">
       <div class="flex justify-start w-full transform -translate-y-4">
-        <div class="overCard">
-          <img v-if="sign === 0" :src="blankissImg" class="w-36 inline-block ml-4" />
-          <img v-else :src="blankissImg2" class="w-36 inline-block ml-4" />
-          <div class="overText font-bold text-5xl align-text-bottom">{{ retainedDef }}</div>
-        </div>
+        <Character status="my" />
         <p class="font-bold text-3xl mt-auto ml-auto mr-6">
-          ❤:{{ status.hp + "/" + status.maxHp }}
-          🍖:{{ status.hungry + "/" + status.maxHungry }}
-          🪙:{{ status.contribution }}
+          ❤:{{ player.status.hp + "/" + player.status.maxHp }}
+          🍖:{{ player.status.hungry + "/" + player.status.maxHungry }}
+          🪙:{{ player.status.contribution }}
         </p>
       </div>
-
     </div>
   </div>
 </template>
