@@ -271,13 +271,13 @@ const allMissions: Mission[] = [
     id: 10,
     name: "買い物メモ",
     achieved: false,
-    description: "ラウンド終了時同じ名称のカードを持たない。",
+    description: "自身の行動後、同じ名称のカードを持たない。",
     reward: 15,
     goalAchievement: 1,
     nowAchievement: 0,
     checker: (donate, sumFields, field, hand) => {
       if (donate) return;
-      const ids = hand?.map((card) => card.id);
+      const ids = hand?.map((card) => card.attribute);
       const uniqueIds = Array.from(new Set(ids));
       return uniqueIds.length === ids?.length ? 1 : 0;
     },

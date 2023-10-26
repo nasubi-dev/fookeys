@@ -13,7 +13,7 @@ const { missions } = storeToRefs(gameStore);
     <transition-group enter-from-class="translate-x-[150%] opacity-0" leave-to-class="translate-x-[-150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div v-for="mission in missions" :key="mission.id">
-        <UiMission :mission="mission" class=" -m-2 overflow-y-scroll"/>
+        <UiMission :mission="mission" class=" -m-2 overflow-clip"/>
       </div>
     </transition-group>
   </div>

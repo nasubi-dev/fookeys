@@ -62,7 +62,7 @@ onMounted(() => {
                 <p>{{ "💖" + sumCards.heal }}</p>
               </div>
               <div v-else class="flex justify-start">
-                <p>{{ "🪙" + field.length * 10 }} </p>
+                <p>{{ "🪙" + field.length * 5 }} </p>
               </div>
             </div>
           </div>

@@ -66,30 +66,6 @@ export async function everyUtil(params: [string, number]): Promise<void> {
   battleResult.value = params;
   await wait(2000);
 }
-//特殊効果を発動する
-async function specialEffect(id: number[], which: "primary" | "second") {
-  const { player, sign, log, enemyLog } = storeToRefs(playerStore);
-  const { game } = toRefs(gameStore);
-  const { firstAtkPlayer } = toRefs(game.value);
-  const { myId, enemyId, my, enemy } = await syncPlayer(which);
-  const a = firstAtkPlayer.value === sign.value ? 1 : 0;
-
-  intervalForEach(
-    (card: Card) => {
-      if (!(card.id === 58 || card.id === 59 || card.id === 64)) return;
-      log.value = card.name + "の効果!" + card.description;
-      if ((a && which === "second") || (!a && which === "primary")) {
-        enemyLog.value = card.name + "の効果!" + card.description;
-        return;
-      }
-      if (card.id === 58) changeHandValue("atk", 10, "atk");
-      if (card.id === 59) changeHandValue("def", 20, "def");
-      if (card.id === 64) changeStatusValue("maxHungry", 20);
-    },
-    my.field,
-    100
-  );
-}
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
@@ -104,9 +80,9 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //寄付をしていた場合､ダメージ計算を行わない
   if (my.donate) {
     console.log(i, "寄付をしていたのでダメージ計算を行いません");
-    my.status.contribution += my.field.length * 50;
+    my.status.contribution += my.field.length * 5;
     if (a) updateDoc(doc(playersRef, myId), { status: my.status });
-    await everyUtil(["donate", my.field.length * 50]);
+    await everyUtil(["donate", my.field.length * 5]);
     battleResult.value = ["none", 0];
     return;
   }
@@ -126,6 +102,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //?自分がこのターン､寄付を行ったか行動不能の場合､ダメージ計算を行わない
   if (my.check) {
     await everyUtil(["hungry", 1]); //?行動不能
+    battleResult.value = ["none", 0];
     return;
   }
 
@@ -406,10 +383,8 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 //戦闘処理を統括する
 export async function battle() {
   console.log(s, "battleを実行しました");
-  const { id, player, log, enemyLog, components } = storeToRefs(playerStore);
+  const { id, player, components } = storeToRefs(playerStore);
   const { check } = toRefs(player.value);
-  const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-  const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
 

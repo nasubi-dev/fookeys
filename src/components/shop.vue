@@ -4,6 +4,8 @@ import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import ShopDrawCards from './shopDrawCards.vue';
 import ShopUseGifts from './shopUseGifts.vue';
+import drawCardImg from "@/assets/img/ui/drawCard.png";
+import useGiftImg from "@/assets/img/ui/useGift.png";
 
 import { useSound } from "@vueuse/sound";
 import { tap2 } from "@/assets/sounds";
@@ -46,10 +48,10 @@ onMounted(() => {
         </div>
         <div v-if="!draw && !use" class="flex justify-start">
           <button @click="draw = true; useTap2.play()" style="width: 20vw;">
-            <img :src="`img/ui/drawCard.png`" />
+            <img :src="drawCardImg" />
           </button>
           <button @click="use = true; useTap2.play()" style="width: 20vw;">
-            <img :src="`img/ui/useGift.png`" />
+            <img :src="useGiftImg" />
           </button>
         </div>
       </div>

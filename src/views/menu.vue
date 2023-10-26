@@ -10,8 +10,6 @@ import SelectCharacter from "@/components/selectCharacter.vue";
 import SelectGifts from "@/components/selectGifts.vue";
 import nasubi from "@/assets/img/nasubi.png";
 
-
-
 import { usePush } from 'notivue'
 const push = usePush()
 
