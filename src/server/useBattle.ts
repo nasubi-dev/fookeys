@@ -200,11 +200,11 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 10 || card.id === 50)) return;
-        log.value = card.name + "の効果!" + card.description;
         if ((a && which === "second") || (!a && which === "primary")) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
+        log.value = card.name + "の効果!" + card.description;
         if (card.id === 10) defense = 0;
         if (card.id === 50 && which === "second") my.sumFields.atk += 75;
       },
