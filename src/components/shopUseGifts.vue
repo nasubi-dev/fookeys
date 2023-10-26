@@ -45,10 +45,10 @@ const useGift = async () => {
         <button @click="useGift(); useTap2.play()">
           <img :src="decide" style="width: 20vw;" />
         </button>
-        <div class="flex my-auto">
+        <div class="flex items-center  w-1/3">
           <div v-for="gift in gifts" :key="gift">
             <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
-              <button @click="giftClickEvent(gift); useTap1.play()" class="cardSize">
+              <button @click="giftClickEvent(gift); useTap1.play()">
                 <UiGiftsGift :gift="gift" />
               </button>
             </div>

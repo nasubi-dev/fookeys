@@ -78,14 +78,12 @@ const popCard = (index: number, id: number) => {
           <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); useTap1.play()"
             :class="handSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
             <UiCard :card="card" />
-
           </button>
         </div>
         <div v-else>
-          <div :class="handSelected[index] ? 'bg-red-100' : 'bg-blue-100'"
-            class="rounded-lg p-4 flex flex-col items-center">
-            <h5 class="text-bold">腐ってます!</h5>
-          </div>
+          <button @click="log='腐ったカードは使えない'" class="cardSize relative">
+            <UiCard :card="card" />
+          </button>
         </div>
       </div>
     </transition-group>

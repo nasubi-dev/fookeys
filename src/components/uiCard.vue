@@ -22,9 +22,9 @@ const onKeyUpCallbackHook = (): void => {
 
 <template>
   <div class="block" style="user-select: none;">
-    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform"
+    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-gray-900 text-left"
       :class="card.description ? ' -translate-y-16' : '-translate-y-10'">
-      <p>{{ card.company + " : " + card.name }}</p>
+      <p class="font-bold">{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>
     </div>
     <div class="overCard">
@@ -32,23 +32,17 @@ const onKeyUpCallbackHook = (): void => {
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
 
-          <p class="waste text-lg font-bold">{{ card.waste }}</p>
+          <p v-if="card.waste" class="waste text-lg font-bold">{{ card.waste }}</p>
 
           <div class="info flex text-xs font-bold">
-            <p>{{ "🍖" + card.hungry }} </p>
-            <div v-if="card.atk">
-              <p>{{ "⚔" + card.atk }}</p>
-            </div>
-            <div v-if="card.def">
-              <p>{{ "🛡" + card.def }}</p>
-            </div>
-            <div v-if="card.tech">
-              <p>{{ "🏹" + card.tech }}</p>
-            </div>
+            <p v-if="card.hungry">{{ "🍖" + card.hungry }} </p>
+            <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
+            <p v-if="card.def">{{ "🛡" + card.def }}</p>
+            <p v-if="card.tech">{{ "🏹" + card.tech }}</p>
           </div>
 
         </div>
-        <div v-if="card.description" class="absolute top-0 right-5">
+        <div v-if="card.description && card.id !== 0" class="absolute top-0 right-5">
           <div class="relative flex h-10 w-3">
             <span class="animate-ping absolute inline-flex h-full w-full bg-yellow-300 opacity-25"></span>
             <span class="relative inline-flex h-10 w-3 bg-yellow-400"></span>

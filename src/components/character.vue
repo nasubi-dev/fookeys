@@ -24,7 +24,7 @@ const test = (firstAtkPlayer.value === sign.value)
 const c = XOR(!(firstAtkPlayer.value === sign.value), (components.value === 'primaryAtk'))
 const retainedDef = ref<number>(0);
 watch(battleResult, (newVal) => {
-  // if (!c) return
+  if (!c) return
   if (newVal[0] === 'def') {
     retainedDef.value = p.status === "my" ? sumFields.value.def : enemySumField.value.def
   }
@@ -47,6 +47,6 @@ watch(components, (newVal) => {
   <div class="overCard w-1/4">
     <img v-if="battleResult[0] === 'atk'" :src="`/img/characters/${characterName}/atk.png`" />
     <img v-else :src="`/img/characters/${characterName}/normal.png`" />
-    <div class="overText font-bold text-5xl align-text-bottom text-red-500">{{ retainedDef }}</div>
+    <div class="overText font-bold text-5xl text-red-500">{{ retainedDef }}</div>
   </div>
 </template>

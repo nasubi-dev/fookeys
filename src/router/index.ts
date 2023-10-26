@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "../views/index.vue";
-import Menu from "../views/menu.vue";
-import Battle from "../views/battle.vue";
+const Home = () => import("../views/index.vue");
+const Menu = () => import("../views/menu.vue");
+const Battle = () => import("../views/battle.vue");
 
 export const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),

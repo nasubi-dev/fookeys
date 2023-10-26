@@ -53,7 +53,7 @@ onMounted(() => {
           <div class="overCard" style="width: 35dvw;">
             <img :src="sumFieldImg" />
             <div class="overText">
-              <div v-if="!donate" class="flex justify-start">
+              <div v-if="!donate" class="flex items-center mb-3">
                 <p>{{ "🍖" + sumCards.hungry }} </p>
                 <p>{{ "⚔" + sumCards.atk }}</p>
                 <p>{{ "🛡" + sumCards.def }}</p>
@@ -66,7 +66,6 @@ onMounted(() => {
               </div>
             </div>
           </div>
-
           <button @click="donate = !donate; useSwipe.play()" class="card-pop">
             <div class="overCard">
               <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />

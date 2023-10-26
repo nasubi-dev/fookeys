@@ -33,8 +33,8 @@ defineProps<{
           </p>
         </div>
 
-        <div>
-          <UiGifts :gifts="p.gifts" :player="p" class="transform -translate-x-10 -translate-y-4" />
+        <div class="transform -translate-x-10 -translate-y-4 w-1/2">
+          <UiGifts :gifts="p.gifts" :player="p" />
         </div>
       </div>
     </div>

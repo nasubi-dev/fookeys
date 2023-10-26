@@ -39,14 +39,10 @@ onMounted(() => {
       <div v-if="shopAnimation">
         <img :src="`/gifs/shopping.gif`" />
       </div>
-      <div v-else>
-        <div v-show="draw">
-          <ShopDrawCards />
-        </div>
-        <div v-show="use">
-          <ShopUseGifts />
-        </div>
-        <div v-if="!draw && !use" class="flex justify-start">
+      <div v-else class="overlay">
+        <ShopDrawCards v-show="draw" />
+        <ShopUseGifts v-show="use" />
+        <div v-if="!draw && !use">
           <button @click="draw = true; useTap2.play()" style="width: 20vw;">
             <img :src="drawCardImg" />
           </button>

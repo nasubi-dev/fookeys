@@ -5,7 +5,7 @@ const allCards: Card[] = [
     name: "腐ったカード",
     waste: 0,
     hungry: 0,
-    company: "none",
+    company: "nothing",
     description: "このカードは使用できない。",
     rotten: true,
   },

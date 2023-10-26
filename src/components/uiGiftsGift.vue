@@ -21,16 +21,16 @@ const onKeyUpCallbackHook = (): void => {
 </script>
 
 <template>
-  <div class="mt-auto mx-1" style="user-select: none;">
-    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-16">
-      <p>{{ allGifts[gift]?.name + "🪙" + allGifts[gift]?.requireContribution }}</p>
-      <p>{{ allGifts[gift]?.description }}</p>
+  <div class="mt-auto mx-1">
+    <div v-if="dropDown" class="fixed z-10 w-48 p-2 bg-white rounded  transform -translate-y-20 ">
+      <p class="flex flex-row-reverse mb-1 font-bold  text-gray-900">
+        <span class="ml-auto">{{ "🪙 " + allGifts[gift]?.requireContribution }}</span>
+        <span>{{ allGifts[gift]?.name }}</span>
+      </p>
+      <p class="whitespace-pre-wrap  text-gray-900">{{ allGifts[gift]?.description }}</p>
     </div>
-    <div class="overCard">
-      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
-        <div class="rounded-full bg-white p-6"></div>
-        <img :src="`/img/gifts/${gift}.png`" class="overText" />
-      </VDuringPress>
-    </div>
+    <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
+      <img :src="`/img/gifts/${gift}.png`" class="" />
+    </VDuringPress>
   </div>
 </template>

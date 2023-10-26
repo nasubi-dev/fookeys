@@ -179,7 +179,7 @@ const wantCard = ref()//!test用
         src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
       <div class="flex justify-start" style="width: 95vw;">
         <UiStatus :player="player" />
-        <UiGifts :gifts="gifts" :player="player" />
+        <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
         <UiMission class="ml-auto" />
       </div>
       <UiHand class="pt-5" />
