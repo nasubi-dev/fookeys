@@ -44,8 +44,8 @@ async function getEnemyPlayer(): Promise<void> {
   const data = (await getDoc(doc(playersRef, idEnemy.value))).data() as PlayerData;
   if (!data) return;
   enemyPlayer.value = data;
-  // console.log(i, "getEnemyPlayerが完了しました");
-  // console.log(i, enemyPlayer.value);
+  console.log(i, "getEnemyPlayerが完了しました");
+  console.log(i, enemyPlayer.value);
 }
 
 export { registerPlayer, deletePlayer, getEnemyPlayer };

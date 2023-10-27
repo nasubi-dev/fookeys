@@ -23,7 +23,8 @@ import Battle from "@/components/battle.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 //sound
-import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech } from "@/assets/sounds";
+import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech } from "@/assets/sounds";
+import bgm from "@/assets/sounds/bgm.mp3"
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
@@ -32,6 +33,7 @@ const { field: enemyField } = toRefs(enemyPlayer.value);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
+//logの監視
 const push = usePush()
 watch(log, () => {
   if (log.value === "") return
@@ -44,7 +46,7 @@ watch(enemyLog, () => {
   enemyLog.value = ""
 })
 
-const useTap2 = useSound(tap2);
+const useBGM = useSound(bgm, { volume: 0.1, loop: true });
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
 const useBattlePhase = useSound(battlePhase);
@@ -54,6 +56,12 @@ const useShopping = useSound(shopping);
 const useAtk = useSound(atk);
 const useDef = useSound(def);
 const useTech = useSound(tech);
+//BGMの再生
+const bgmTF = ref(false)
+watch(bgmTF, (newVal) => {
+  if (newVal) useBGM.play()
+  else useBGM.pause()
+})
 //カード使用時に再生
 watch(battleResult, (newVal) => {
   if (newVal[0] === "atk") useAtk.play()
@@ -147,6 +155,9 @@ const wantCard = ref()//!test用
         <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
         <button @click="drawOneCard(wantCard)">drawSelectCard</button>
         <input v-model="wantCard" type="number" />
+        <button @click="bgmTF = !bgmTF">bgm: <span :class="bgmTF ? ` text-red-600` : `text-blue-600`">{{ bgmTF ? "ON" :
+          "OFF"
+        }}</span></button>
       </div>
     </div>
 

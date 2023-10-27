@@ -1,5 +1,4 @@
 type Attribute = "atk" | "def" | "tech" | "sup" | "heal";
-type Time = "battle" | "after";
 type Card = {
   id: number;
   name: string;
