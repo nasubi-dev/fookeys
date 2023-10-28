@@ -14,12 +14,12 @@ const useTap1 = useSound(tap1);
 const useTap2 = useSound(tap2);
 
 const { offer, player, phase, log } = storeToRefs(playerStore);
-const { hand, check } = toRefs(player.value);
+const { hand } = toRefs(player.value);
 
 const isOfferSelected = ref([false, false, false]);
 const pushed = ref(false);
 //選択を確定させたらHandにtrueのカードを追加して､offerを空にする
-const offerHand = async () => {
+const offer2Hand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
@@ -29,8 +29,7 @@ const offerHand = async () => {
     hand.value.splice(9, hand.value.length - 9);
   }
   hand.value = [...hand.value].sort((a, b) => a.id - b.id);
-  console.log(i, "offer2Hand");
-  //!今のままだと選択確定を押さなければofferが残るが､ポップアップになる予定なのでOk
+
   offer.value.splice(0, offer.value.length);
   isOfferSelected.value = [false, false, false];
   pushed.value = false;
@@ -45,7 +44,7 @@ const offerHand = async () => {
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
 
       <div v-if="phase === 'shop' && !pushed" class="flex justify-start">
-        <button @click="offerHand(); useTap2.play(), pushed = !pushed">
+        <button @click="offer2Hand(); useTap2.play(), pushed = !pushed">
           <img :src="decide" style="width: 20vw;" />
         </button>
         <div class="flex justify-start w-1/3">

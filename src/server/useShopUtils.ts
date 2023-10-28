@@ -32,7 +32,7 @@ export function drawCard(attribute?: Attribute): Card {
   return selectCard;
 }
 //cardをランダムに1枚引く
-export function drawOneCard(order?: Attribute | number): void {
+export function drawRandomOneCard(order?: Attribute | number): void {
   const { player, id } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
@@ -45,7 +45,7 @@ export function drawOneCard(order?: Attribute | number): void {
   hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
-//drawExchangedCardを実行する
+//draw3ExchangedCardを実行する
 export async function draw3ExchangedCard() {
   console.log(i, "draw3ExchangedCardを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
@@ -106,7 +106,6 @@ export async function changeAllHand(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   log.value = "changeAllHand: " + hand.value.map((card) => card.name);
 }
-//指定のcardを1枚引く
 //missionを3つセットする
 export async function setMissions(): Promise<void> {
   console.log(i, "setMissionsを実行しました");
@@ -190,7 +189,7 @@ export function changeHandValue(key: keyof SumCards, value: number, attribute?: 
 export function deleteAllRottenCard(): void {
   console.log(i, "reduceWaste0を実行しました");
   const { deleteAllWaste0 } = playerStore;
-  const { id, player, log } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
   deleteAllWaste0();

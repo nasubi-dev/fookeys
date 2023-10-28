@@ -7,7 +7,7 @@ import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
 import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { drawOneCard } from "@/server/useShopUtils";
+import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
 //components
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
@@ -57,8 +57,8 @@ const useAtk = useSound(atk);
 const useDef = useSound(def);
 const useTech = useSound(tech);
 //BGMの再生
-const bgmTF = ref(false)
-watch(bgmTF, (newVal) => {
+const isBGM = ref(false)
+watch(isBGM, (newVal) => {
   if (newVal) useBGM.play()
   else useBGM.pause()
 })
@@ -153,9 +153,9 @@ const wantCard = ref()//!test用
       <div class="flex flex-col">
         <p> {{ "id: " + id }}</p>
         <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
-        <button @click="drawOneCard(wantCard)">drawSelectCard</button>
+        <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
         <input v-model="wantCard" type="number" />
-        <button @click="bgmTF = !bgmTF">bgm: <span :class="bgmTF ? ` text-red-600` : `text-blue-600`">{{ bgmTF ? "ON" :
+        <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
           "OFF"
         }}</span></button>
       </div>

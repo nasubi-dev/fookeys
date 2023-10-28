@@ -3,7 +3,7 @@ import { e, s, i } from "@/log";
 import { playerStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, doc, addDoc, deleteDoc, onSnapshot, getDoc } from "firebase/firestore";
+import { collection, doc, addDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import type { PlayerData } from "@/types";
 

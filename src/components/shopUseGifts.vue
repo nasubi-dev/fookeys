@@ -21,7 +21,7 @@ onMounted(() => {
   pushed.value = false;
 })
 
-const giftClickEvent = (gift: number) => {
+const selectGift = (gift: number) => {
   if (status.value.contribution < allGifts[gift].requireContribution) {
     log.value = "貢献度が足りません"
   } else if (isSelectedGift.value === gift) {
@@ -48,7 +48,7 @@ const useGift = async () => {
         <div class="flex items-center  w-1/3">
           <div v-for="gift in gifts" :key="gift">
             <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
-              <button @click="giftClickEvent(gift); useTap1.play()">
+              <button @click="selectGift(gift); useTap1.play()">
                 <UiGiftsGift :gift="gift" />
               </button>
             </div>

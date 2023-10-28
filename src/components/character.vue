@@ -23,10 +23,10 @@ const reactionImg = ref<string>("normal");
 watch(battleResult, (newVal) => {
   if (typeof newVal[1] !== "number") return
   const isPrimaryAtk = components.value === "primaryAtk"
-  const changingValueAllocation = !XOR(firstAtkPlayer.value === sign.value, p.status === "my")// X-NOR
-  const attackOrderAllocation = !XOR(isPrimaryAtk, changingValueAllocation)// X-NOR
+  const isChangingValue = !XOR(firstAtkPlayer.value === sign.value, p.status === "my")// X-NOR
+  const attackOrder = !XOR(isPrimaryAtk, isChangingValue)// X-NOR
 
-  if (attackOrderAllocation) {
+  if (attackOrder) {
     if (newVal[0] === "def") {
       reactionImg.value = "def"
       retainedDef.value = newVal[1]

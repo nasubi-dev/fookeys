@@ -8,7 +8,7 @@ import type { GameData, PlayerData, PlayerSign, Status, SumCards, Card } from "@
 import { converter } from "@/server/converter";
 import { intervalForEach, wait } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawOneCard } from "@/server/useShopUtils";
+import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
 
 //Collectionの参照
@@ -474,10 +474,10 @@ export async function postBattle(): Promise<void> {
     field.value.forEach((card: Card) => {
       if (judgeDrawCard(card)) return;
       log.value = card.name + "の効果!" + card.description;
-      if (card.id === 52) drawOneCard("atk");
-      if (card.id === 53) drawOneCard("tech");
-      if (card.id === 54) drawOneCard("def");
-      if (card.id === 55) drawOneCard("sup");
+      if (card.id === 52) drawRandomOneCard("atk");
+      if (card.id === 53) drawRandomOneCard("tech");
+      if (card.id === 54) drawRandomOneCard("def");
+      if (card.id === 55) drawRandomOneCard("sup");
       if (card.id === 61) draw3ExchangedCard();
       if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 20) : null; //?card.hungryだけ減らすでもいいかも
       if (card.id === 44) changeHandValue("def", defense.value, "def");
