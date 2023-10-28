@@ -3,7 +3,6 @@ import { ref, toRefs, watch, onMounted } from "vue";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { wait, XOR } from "@/server/utils";
 import { storeToRefs } from "pinia";
-import { s } from "@/log";
 
 const p = defineProps<{ status: "my" | "enemy" }>()
 
@@ -24,60 +23,64 @@ onMounted(async () => {
 const retainedDef = ref<number>(0);
 const reactionImg = ref<string>("normal");
 watch(battleResult, (newVal) => {
-// if (!c) {
-//   if (b) {
-//     if (newVal[0] === "def") {
-//       reactionImg.value = "def"
-//       if (p.status === "my") {
-//         retainedDef.value = sumFields.value.def;
-//       } else {
-//         retainedDef.value = enemyPlayer.value.sumFields.def;
-//       }
-//     } else if (newVal[0] === "atk") {
-//       reactionImg.value = "atk"
-//     }
-//   } else if (newVal[0] === "atk" && typeof newVal[1] === "number") {
-//     reactionImg.value = "damage"
-//     retainedDef.value -= newVal[1];
-//     if (retainedDef.value < 0) retainedDef.value = 0
-//   }
-// } else {
-//   if (b) {
-//     if (newVal[0] === "def") {
-//       reactionImg.value = "def"
-//       if (p.status === "my") {
-//         retainedDef.value = sumFields.value.def;
-//       } else {
-//         retainedDef.value = enemyPlayer.value.sumFields.def;
-//       }
-//     } else if (newVal[0] === "atk") {
-//       reactionImg.value = "atk"
-//     }
-//   } else if (newVal[0] === "atk" && typeof newVal[1] === "number") {
-//     reactionImg.value = "damage"
-//     retainedDef.value -= newVal[1];
-//     if (retainedDef.value < 0) retainedDef.value = 0
-//   }
-// }
-
-// //このままだと先行後攻に依存しないため､行動が1/2で逆になる
-//   const b = XOR(components.value === "primaryAtk", a)// X-OR
-//   if (b) {
-//     if (newVal[0] === "def") {
-//       reactionImg.value = "def"
-//       if (p.status === "my") {
-//         retainedDef.value = enemyPlayer.value.sumFields.def;
-//       } else {
-//         retainedDef.value = sumFields.value.def;
-//       }
-//     } else if (newVal[0] === "atk") {
-//       reactionImg.value = "atk"
-//     }
-//   } else if (newVal[0] === "atk" && typeof newVal[1] === "number") {
-//     reactionImg.value = "damage"
-//     retainedDef.value -= newVal[1];
-//     if (retainedDef.value < 0) retainedDef.value = 0
-//   }
+  const c = firstAtkPlayer.value === sign.value
+  // const d = XOR(c, p.status === "my")
+  if (!(typeof newVal[1] === "number")) return
+  if (components.value === "primaryAtk") {
+    if (c && p.status === "my") {
+      if (newVal[0] === "def") {
+        reactionImg.value = "def"
+        retainedDef.value = newVal[1]
+      } else if (newVal[0] === "atk") {
+        reactionImg.value = "atk"
+      }
+    } else if (!c && p.status === "enemy") {
+      if (newVal[0] === "def") {
+        reactionImg.value = "def"
+        retainedDef.value = newVal[1]
+      } else if (newVal[0] === "atk") {
+        reactionImg.value = "atk"
+      }
+    } else if (!c && p.status === "my") {
+      if (newVal[0] === "atk") {
+        reactionImg.value = "damage"
+        if (retainedDef.value < 0) retainedDef.value = 0
+      }
+    } else if (c && p.status === "enemy") {
+      if (newVal[0] === "atk") {
+        reactionImg.value = "damage"
+        if (retainedDef.value < 0) retainedDef.value = 0
+      }
+    }
+  } else if (components.value === "secondAtk") {
+    if (!c && p.status === "my") {
+      if (newVal[0] === "def") {
+        reactionImg.value = "def"
+        retainedDef.value = newVal[1]
+      } else if (newVal[0] === "atk") {
+        reactionImg.value = "atk"
+      }
+    } else if (c && p.status === "enemy") {
+      if (newVal[0] === "def") {
+        reactionImg.value = "def"
+        retainedDef.value = newVal[1]
+      } else if (newVal[0] === "atk") {
+        reactionImg.value = "atk"
+      }
+    } else if (c && p.status === "my") {
+      if (newVal[0] === "atk") {
+        reactionImg.value = "damage"
+        retainedDef.value -= newVal[1]
+        if (retainedDef.value < 0) retainedDef.value = 0
+      }
+    } else if (!c && p.status === "enemy") {
+      if (newVal[0] === "atk") {
+        reactionImg.value = "damage"
+        retainedDef.value -= newVal[1]
+        if (retainedDef.value < 0) retainedDef.value = 0
+      }
+    }
+  }
 })
 watch(components, (newVal) => {
   if (newVal === "postBattle") retainedDef.value = 0
@@ -88,6 +91,6 @@ watch(components, (newVal) => {
 <template>
   <div class="overCard w-1/4">
     <img :src="`/img/characters/${characterName}/${reactionImg}.png`" />
-    <div class="overText font-bold text-5xl text-red-500">{{ retainedDef }}</div>
+    <div v-if="retainedDef" class="overText font-bold text-5xl text-red-500">{{ retainedDef }}</div>
   </div>
 </template>

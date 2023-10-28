@@ -611,7 +611,7 @@ const allCards: Card[] = [
     waste: 4,
     hungry: 55,
     company: "rapidpot",
-    attribute: "sup",
+    attribute: "def",
     description: "最大満腹度を🍖+20する。",
   },
   {
