@@ -29,7 +29,6 @@ import bgm from "@/assets/sounds/bgm.mp3"
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-const { field: enemyField } = toRefs(enemyPlayer.value);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
@@ -105,13 +104,13 @@ watch(components, (newVal) => {
       useMyTurn.play()
       setTimeout(async () => {
         myTurnAnimation.value = false;
-      }, 2000);
+      }, 1000);
     } else {
       enemyTurnAnimation.value = true;
       useEnemyTurn.play()
       setTimeout(async () => {
         enemyTurnAnimation.value = false;
-      }, 2000);
+      }, 1000);
     }
   }
   if (newVal === "secondAtk") {
@@ -120,13 +119,13 @@ watch(components, (newVal) => {
       useMyTurn.play()
       setTimeout(async () => {
         myTurnAnimation.value = false;
-      }, 2000);
+      }, 1000);
     } else {
       enemyTurnAnimation.value = true;
       useEnemyTurn.play()
       setTimeout(async () => {
         enemyTurnAnimation.value = false;
-      }, 2000);
+      }, 1000);
     }
   }
 })
@@ -177,9 +176,9 @@ const wantCard = ref()//!test用
           <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
           <div v-else class="flex flex-col">
             <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? field : enemyField" />
+              :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
             <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? enemyField : field" />
+              :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
           </div>
         </transition>
       </div>

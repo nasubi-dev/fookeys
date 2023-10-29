@@ -52,8 +52,8 @@ onMounted(() => {
 
           <div class="overCard" style="width: 35dvw;">
             <img :src="sumFieldImg" />
-            <div class="overText">
-              <div v-if="!donate" class="flex items-center mb-3">
+            <div class="overText text-lg font-bold">
+              <div v-if="!donate" class="flex items-center mb-3 animate-rotate-x animate-duration-300">
                 <p>{{ "🍖" + sumCards.hungry }} </p>
                 <p>{{ "⚔" + sumCards.atk }}</p>
                 <p>{{ "🛡" + sumCards.def }}</p>
@@ -61,7 +61,7 @@ onMounted(() => {
                 <p>{{ "🦶 " + sumCards.priority }}</p>
                 <p>{{ "💖" + sumCards.heal }}</p>
               </div>
-              <div v-else class="flex justify-start">
+              <div v-else class="flex items-center mb-3 animate-rotate-x">
                 <p>{{ "🪙" + field.length * 5 }} </p>
               </div>
             </div>

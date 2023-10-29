@@ -31,12 +31,13 @@ const onKeyUpCallbackHook = (): void => {
         <img :src="missionImg" style="width: 25vw;" />
         <div class="overText ">
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">
-            <span class="ml-auto">{{ "🪙" + mission.reward }}</span>
+            <span class="ml-auto font-bold">{{ "🪙" + mission.reward }}</span>
             <span class="font-bold">{{ mission.name }}</span>
           </span>
           <div class="gauge w-10/12">
-            <span v-if="mission.achieved" class="text-sm font-medium text-gray-900 truncate mr-2">✔</span>
-            <span v-else class=" text-white text-sm font-medium truncate fixed">{{ mission.nowAchievement + "/" +
+            <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mr-2">✔</span>
+            <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/"
+              +
               mission.goalAchievement }}</span>
             <div class="bar" :style="{ width: (100 - ((mission.nowAchievement / mission.goalAchievement) * 100)) + '%' }">
             </div>

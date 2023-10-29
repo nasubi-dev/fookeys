@@ -50,8 +50,10 @@ watch(battleResult, (newVal) => {
 </script>
 
 <template>
-  <div class="overCard w-1/4">
-    <img :src="`/img/characters/${characterName}/${reactionImg}.png`" />
-    <div v-if="retainedDef" class="overText font-bold text-5xl text-red-500">{{ retainedDef }}</div>
+  <div class="overCard w-1/4 animate-rotate-y animate-once animate-delay-100">
+    <img :class="reactionImg === 'damage' ? `animate-shake` : null"
+      :src="`/img/characters/${characterName}/${reactionImg}.png`" />
+    <div v-if="retainedDef" class="overText font-bold text-5xl text-red-500"
+      :class="reactionImg === 'def' ? `animate-jump` : null">{{ retainedDef }}</div>
   </div>
 </template>

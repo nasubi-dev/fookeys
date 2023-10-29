@@ -39,6 +39,7 @@ const onKeyUpCallbackHook = (): void => {
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
             <p v-if="card.def">{{ "🛡" + card.def }}</p>
             <p v-if="card.tech">{{ "🏹" + card.tech }}</p>
+            <p v-if="card.heal">{{ "💖" + card.heal }}</p>
           </div>
 
         </div>

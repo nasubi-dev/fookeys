@@ -41,7 +41,7 @@ const useGift = async () => {
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
 
-      <div v-if="!pushed" class="flex justify-start">
+      <div v-if="!pushed" class="flex justify-center">
         <button @click="useGift(); useTap2.play()">
           <img :src="decide" style="width: 20vw;" />
         </button>

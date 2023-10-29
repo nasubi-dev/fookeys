@@ -25,6 +25,7 @@
     "lodash": "^4.17.21",
     "notivue": "^1.0.5",
     "pinia": "^2.0.34",
+    "tailwindcss-animated": "^1.0.1",
     "vue": "^3.3.3",
     "vue-router": "^4.1.6"
   },
