@@ -75,13 +75,14 @@ const popCard = (index: number, id: number) => {
       </div>
       <div v-else v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
-          <button @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); useTap1.play()"
+          <button
+            @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
             :class="handSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
             <UiCard :card="card" />
           </button>
         </div>
         <div v-else>
-          <button @click="log='腐ったカードは使えない'" class="cardSize relative">
+          <button @click="log = '腐ったカードは使えない'" class="cardSize relative">
             <UiCard :card="card" />
           </button>
         </div>

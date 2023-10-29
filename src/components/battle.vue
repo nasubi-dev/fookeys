@@ -61,7 +61,7 @@ onMounted(() => {
                 <p>{{ "🦶 " + sumCards.priority }}</p>
                 <p>{{ "💖" + sumCards.heal }}</p>
               </div>
-              <div v-else class="flex items-center mb-3 animate-rotate-x">
+              <div v-else class="flex items-center mb-3 animate-rotate-x animate-duration-300">
                 <p>{{ "🪙" + field.length * 5 }} </p>
               </div>
             </div>

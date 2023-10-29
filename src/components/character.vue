@@ -5,6 +5,10 @@ import { wait, XOR } from "@/server/utils";
 import { storeToRefs } from "pinia";
 
 const p = defineProps<{ status: "my" | "enemy" }>()
+const emit = defineEmits<{
+  (event: "isShake", reactionImg: string): void
+}>()
+
 
 const { components, battleResult, sign } = storeToRefs(playerStore);
 const { game } = storeToRefs(gameStore);
@@ -38,6 +42,8 @@ watch(battleResult, (newVal) => {
       reactionImg.value = "damage"
       retainedDef.value -= isPrimaryAtk ? 0 : newVal[1]
       if (retainedDef.value < 0) retainedDef.value = 0
+    } else if (newVal[0] === "tech") {
+      reactionImg.value = "damage"
     }
   }
 
@@ -46,13 +52,13 @@ watch(battleResult, (newVal) => {
     if (!isPrimaryAtk) retainedDef.value = 0
     reactionImg.value = "normal"
   }
+  emit("isShake", reactionImg.value)
 })
 </script>
 
 <template>
   <div class="overCard w-1/4 animate-rotate-y animate-once animate-delay-100">
-    <img :class="reactionImg === 'damage' ? `animate-shake` : null"
-      :src="`/img/characters/${characterName}/${reactionImg}.png`" />
+    <img :src="`/img/characters/${characterName}/${reactionImg}.png`" />
     <div v-if="retainedDef" class="overText font-bold text-5xl text-red-500"
       :class="reactionImg === 'def' ? `animate-jump` : null">{{ retainedDef }}</div>
   </div>

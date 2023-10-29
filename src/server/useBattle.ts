@@ -237,6 +237,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //テクニック攻撃を行う
   if (my.field.map((card) => card.attribute).includes("tech")) {
     console.log(i, "テクニック攻撃!!!");
+    battleResult.value = ["none", 0];//DamageAnimationのための処理
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
@@ -412,7 +413,7 @@ export async function battle() {
   await reflectStatus();
   await checkMission("primary");
 
-  await wait(3000);
+  await wait(1000);
   getEnemyPlayer(); //!
   components.value = "secondAtk";
 
@@ -421,7 +422,7 @@ export async function battle() {
   await reflectStatus();
   await checkMission("second");
 
-  await wait(3000);
+  await wait(1000);
   getEnemyPlayer(); //!
 
   //戦後処理
