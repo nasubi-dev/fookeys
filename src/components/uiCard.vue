@@ -35,7 +35,7 @@ const onKeyUpCallbackHook = (): void => {
           }}</p>
 
           <div class="transform -translate-x-[10%] translate-y-full flex text-xs font-bold">
-            <p v-if="card.hungry">{{ "🍖" + card.hungry }} </p>
+            <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
             <p v-if="card.def">{{ "🛡" + card.def }}</p>
             <p v-if="card.tech">{{ "🏹" + card.tech }}</p>

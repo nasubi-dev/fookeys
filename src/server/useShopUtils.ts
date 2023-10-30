@@ -109,12 +109,13 @@ async function changeAllHand(): Promise<void> {
 //missionを3つセットする
 async function setMissions(): Promise<void> {
   console.log(i, "setMissionsを実行しました");
-  const { player, sign, log } = storeToRefs(playerStore);
+  const { player, sign } = storeToRefs(playerStore);
   const { idGame } = toRefs(player.value);
   const { game, missions } = storeToRefs(gameStore);
   const { missionsNum } = toRefs(game.value);
 
   if (!sign.value) {
+    missions.value= [];
     for (let i = 0; i < 3; i++) {
       const selectMission = Math.floor(Math.random() * allMissions.length);
       missionsNum.value[i] = selectMission;
@@ -129,8 +130,6 @@ async function setMissions(): Promise<void> {
     }
     updateDoc(doc(gamesRef, idGame.value), { missionsNum: missionsNum.value });
     missions.value = missionsNum.value.map((num) => allMissions[num]);
-    console.log(i, "missionにミッションを追加しました");
-    log.value = "missionにミッションを追加しました";
     console.log(
       i,
       "missions: ",
@@ -146,7 +145,6 @@ async function setMissions(): Promise<void> {
       if (updateMissions?.length === 3) {
         missionsNum.value = updateMissions;
         missions.value = missionsNum.value.map((num) => allMissions[num]);
-        console.log(i, "missionsにミッションを追加しました");
         console.log(
           i,
           "missions: ",

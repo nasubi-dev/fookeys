@@ -6,7 +6,7 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, getDoc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import type { GameData, PlayerData, PlayerSign, Status, SumCards, Card } from "@/types";
 import { converter } from "@/server/converter";
-import { intervalForEach, wait } from "@/server/utils";
+import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
@@ -16,9 +16,7 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //Playerを同期する
-async function syncPlayer(
-  which: "primary" | "second"
-): Promise<{ myId: string; enemyId: string; my: PlayerData; enemy: PlayerData }> {
+async function syncPlayer(which: "primary" | "second"): Promise<{ myId: string; enemyId: string; my: PlayerData; enemy: PlayerData }> {
   const { id, player, sign } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
   const { game } = storeToRefs(gameStore);
@@ -75,26 +73,25 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   const { firstAtkPlayer } = toRefs(game.value);
   const { myId, enemyId, my, enemy } = await syncPlayer(which);
   const playerAllocation = firstAtkPlayer.value === sign.value ? 1 : 0;
+  const attackOrder = XOR(playerAllocation === 0, which === "primary");
 
   //fieldが空の場合､ダメージ計算を行わない
   if (my.field.length === 0) return;
   //寄付をしていた場合､ダメージ計算を行わない
   if (my.donate) {
-    console.log(i, "寄付をしていたのでダメージ計算を行いません");
+    console.log(i, "寄付をしたのでダメージ計算を行いません");
     my.status.contribution += my.field.length * 5;
-    if (playerAllocation) updateDoc(doc(playersRef, myId), { status: my.status });
+    if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.contribution": my.status.contribution });
     await everyUtil(["donate", my.field.length * 5]);
     battleResult.value = ["none", 0];
     return;
   }
 
-  //自分のhungryの値が上限を超えていた場合､行動不能にする
+  //自分のhungryの値が上限を超えていた場合､自分を行動不能にする
   my.status.hungry += my.sumFields.hungry;
-  console.log(i, "mySumHungry: ", my.status.hungry);
   if (my.status.hungry > my.status.maxHungry) {
     my.check = true;
     updateDoc(doc(playersRef, myId), { check: my.check });
-    console.log(i, "自プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
     if (my.status.hungry > my.status.maxHungry) my.status.hungry = my.status.maxHungry;
   }
@@ -106,32 +103,20 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     battleResult.value = ["none", 0];
     return;
   }
-
   //相手のhungryの値が上限を超えていた場合､相手を行動不能にする
   let enemySumHungry = enemy.status.hungry;
   if (enemySumHungry > enemy.status.maxHungry) {
     enemy.check = true;
-    console.log(i, "相手プレイヤー行動不能です");
     //hungryの値が上限を超えていた場合､上限値にする
     if (enemySumHungry > enemy.status.maxHungry) enemySumHungry = enemy.status.maxHungry;
-  }
-
-  //回復を行う
-  if (my.field.map((card) => card.attribute).includes("heal")) {
-    my.status.hp += my.sumFields.heal;
-    if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
-    console.log(i, "heal: ", my.sumFields.heal);
-
-    if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.hp": my.status.hp });
-    await everyUtil(["heal", my.sumFields.heal]);
   }
 
   //支援を行う
   if (my.field.map((card) => card.attribute).includes("sup")) {
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 58 || card.id === 59 || card.id === 64)) return;
-        if ((playerAllocation && which === "second") || (!playerAllocation && which === "primary")) {
+        if (!(card.id === 57 || card.id === 58 || card.id === 59 || card.id === 63 || card.id === 64 || card.id === 66)) return;
+        if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
@@ -145,6 +130,27 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     );
 
     await everyUtil(["sup", 0]);
+  }
+
+  //回復を行う
+  if (my.field.map((card) => card.attribute).includes("heal")) {
+    my.status.hp += my.sumFields.heal;
+    if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
+    intervalForEach(
+      (card: Card) => {
+        if (!(card.id === 60 || card.id === 62 || card.id === 65)) return;
+        if (!attackOrder) {
+          enemyLog.value = card.name + "の効果!" + card.description;
+          return;
+        }
+        log.value = card.name + "の効果!" + card.description;
+      },
+      my.field,
+      100
+    );
+
+    if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.hp": my.status.hp });
+    await everyUtil(["heal", my.sumFields.heal]);
   }
 
   //防御力を計算する
@@ -180,7 +186,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 45 || card.id === 48 || card.id === 56)) return;
-        if ((playerAllocation && which === "second") || (!playerAllocation && which === "primary")) {
+        if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
@@ -201,7 +207,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 10 || card.id === 50)) return;
-        if ((playerAllocation && which === "second") || (!playerAllocation && which === "primary")) {
+        if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
@@ -243,7 +249,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 17 || card.id === 20 || card.id === 26 || card.id === 29 || card.id === 31)) return;
-        if ((playerAllocation && which === "second") || (!playerAllocation && which === "primary")) {
+        if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
@@ -434,7 +440,7 @@ async function battle() {
 async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
-  const { id, player, cardLock, sign, log, enemyLog, components } = storeToRefs(playerStore);
+  const { id, player, sign, log, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, field, status, donate, defense } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
   const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
@@ -456,7 +462,8 @@ async function postBattle(): Promise<void> {
       )
     ) {
       return true;
-    } else return false;
+    }
+    return false;
   };
 
   //handの腐り値を減らす
