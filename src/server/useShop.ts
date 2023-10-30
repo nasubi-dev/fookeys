@@ -16,7 +16,7 @@ import allGifts from "@/assets/allGifts";
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
 //shopフェーズの開始
-export async function startShop(): Promise<void> {
+async function startShop(): Promise<void> {
   console.log(i, "startShopを実行しました");
   const { phase } = storeToRefs(playerStore);
   const { game, missions } = storeToRefs(gameStore);
@@ -33,10 +33,10 @@ export async function startShop(): Promise<void> {
   } else setOffer();
 }
 //shopフェーズの終了
-export async function endShop(): Promise<void> {
+async function endShop(): Promise<void> {
   console.log(i, "endShopを実行しました");
   const { id, player, phase, log, enemyLog, cardLock } = storeToRefs(playerStore);
-  const { isSelectedGift, status, check, idEnemy, name } = toRefs(player.value);
+  const { isSelectedGift, status, check, idEnemy } = toRefs(player.value);
 
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
@@ -62,7 +62,7 @@ export async function endShop(): Promise<void> {
   getEnemyPlayer(); //!
 }
 //checkの値の監視
-export async function watchShopEnd(): Promise<void> {
+async function watchShopEnd(): Promise<void> {
   console.log(i, "watchShopEndを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { check, idEnemy, isSelectedGift, hand } = toRefs(player.value);
@@ -92,7 +92,7 @@ export async function watchShopEnd(): Promise<void> {
   }
 }
 //checkの値の監視
-export async function watchTurnEnd(): Promise<void> {
+async function watchTurnEnd(): Promise<void> {
   console.log(i, "watchTurnEndを実行しました");
   const { id, player, sumCards } = storeToRefs(playerStore);
   const { check, idEnemy, sumFields, donate, field, hand } = toRefs(player.value);
@@ -121,3 +121,4 @@ export async function watchTurnEnd(): Promise<void> {
     });
   }
 }
+export { startShop, watchShopEnd, watchTurnEnd };

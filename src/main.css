@@ -23,15 +23,6 @@
   justify-content: center;
   white-space: nowrap;
 }
-.overText .waste {
-  transform: translate(-250%, -10%);
-}
-.overText .info {
-  transform: translate(-10%, 100%);
-}
-.overText .status {
-  transform: translate(10%, 100%);
-}
 .overlay {
   position: fixed;
   top: 0;

@@ -130,7 +130,5 @@ async function startMatchmaking(): Promise<void> {
     log.value = "rooting complete";
   }
 }
-//gameを削除する
-async function deleteGame(): Promise<void> {}
 
 export { startMatchmaking };

@@ -1,31 +1,49 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import type { PlayerData } from "@/types";
 import Character from "./character.vue";
 import statusImg from "@/assets/img/ui/status.png";
-import type { PlayerData } from "@/types";
 
-defineProps<{ player: PlayerData }>()
+const p = defineProps<{ player: PlayerData }>()
 
-const shakeClass = ref()
 const wiggleClass = ref()
-const shakeStatus = (reactionImg: string) => {
-  shakeClass.value = reactionImg === "damage" ? "animate-shake" : null
+const wiggleStatus = (reactionImg: string) => {
   wiggleClass.value = reactionImg === "damage" ? "animate-wiggle animate-once" : null
 }
+
+const hpClass = ref()
+const hungryClass = ref()
+const contributionClass = ref()
+watch(() => p.player.status, (newVal, oldVal) => {
+  //初期化
+  hpClass.value = hungryClass.value = contributionClass.value = null
+
+  if (newVal.hp !== oldVal.hp) {
+    hpClass.value = "animate-shake"
+    console.log("hp")
+  }
+  if (newVal.hungry !== oldVal.hungry) {
+    hungryClass.value = "animate-jump"
+    console.log("hungry")
+  }
+  if (newVal.contribution !== oldVal.contribution) {
+    contributionClass.value = "animate-bounce"
+    console.log("contribution")
+  }
+
+}, { deep: true })
 </script>
 
 <template>
-  <div class="overCard mt-auto" style="width:50dvw;" :class="shakeClass">
-    <div :class="wiggleClass">
-      <img :src="statusImg" />
-      <div class="overText w-full">
-        <div class="flex justify-start w-full transform -translate-y-4">
-          <Character status="my" @isShake="shakeStatus" />
-          <p class="font-bold text-3xl mt-auto ml-auto mr-6">
-            ❤:{{ player.status.hp + "/" + player.status.maxHp }}
-            🍖:{{ player.status.hungry + "/" + player.status.maxHungry }}
-            🪙:{{ player.status.contribution }}
-          </p>
+  <div class="overCard mt-auto" style="width:50dvw;" :class="wiggleClass">
+    <img :src="statusImg" />
+    <div class="overText w-full">
+      <div class="flex justify-start w-full transform -translate-y-4">
+        <Character status="my" @isWiggle="wiggleStatus" />
+        <div class="flex justify-start font-bold text-gray-900 text-3xl mt-auto ml-auto mr-6">
+          <div :class="hpClass">❤:{{ player.status.hp + "/" + player.status.maxHp }}</div>
+          <div :class="hungryClass">🍖:{{ player.status.hungry + "/" + player.status.maxHungry }}</div>
+          <div :class="contributionClass">🪙:{{ player.status.contribution }}</div>
         </div>
       </div>
     </div>

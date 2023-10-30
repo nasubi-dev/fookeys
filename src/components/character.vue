@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 
 const p = defineProps<{ status: "my" | "enemy" }>()
 const emit = defineEmits<{
-  (event: "isShake", reactionImg: string): void
+  (event: "isWiggle", reactionImg: string): void
 }>()
 
 
@@ -52,14 +52,15 @@ watch(battleResult, (newVal) => {
     if (!isPrimaryAtk) retainedDef.value = 0
     reactionImg.value = "normal"
   }
-  emit("isShake", reactionImg.value)
+  emit("isWiggle", reactionImg.value)
 })
 </script>
 
 <template>
   <div class="overCard w-1/4 animate-rotate-y animate-once animate-delay-100">
     <img :src="`/img/characters/${characterName}/${reactionImg}.png`" />
-    <div v-if="retainedDef" class="overText font-bold text-5xl text-red-500"
-      :class="reactionImg === 'def' ? `animate-jump` : null">{{ retainedDef }}</div>
+    <div v-show="retainedDef" class="fixed inset-0 top-2/3 font-bold text-5xl text-red-500"
+      :class="[p.status === 'my' ? `text-5xl` : `text-2xl`, reactionImg === 'def' ? `animate-jump` : null]">{{ "🛡" +
+        retainedDef }}</div>
   </div>
 </template>

@@ -16,7 +16,7 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //Playerを同期する
-export async function syncPlayer(
+async function syncPlayer(
   which: "primary" | "second"
 ): Promise<{ myId: string; enemyId: string; my: PlayerData; enemy: PlayerData }> {
   const { id, player, sign } = storeToRefs(playerStore);
@@ -58,11 +58,12 @@ async function reflectStatus(): Promise<void> {
   check.value = myPlayerCheck;
 }
 //情報更新処理//!paramsはないだろ
-export async function everyUtil(params: [string, number]): Promise<void> {
+async function everyUtil(params: [string, number]): Promise<void> {
   const { battleResult } = storeToRefs(playerStore);
 
   await wait(1000);
   await reflectStatus();
+  await getEnemyPlayer(); //!
   battleResult.value = params;
   await wait(2000);
 }
@@ -237,7 +238,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   //テクニック攻撃を行う
   if (my.field.map((card) => card.attribute).includes("tech")) {
     console.log(i, "テクニック攻撃!!!");
-    battleResult.value = ["none", 0];//DamageAnimationのための処理
+    battleResult.value = ["none", 0]; //DamageAnimationのための処理
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
@@ -382,7 +383,7 @@ async function watchFirstAtkPlayerField(): Promise<void> {
 }
 
 //戦闘処理を統括する
-export async function battle() {
+async function battle() {
   console.log(s, "battleを実行しました");
   const { id, player, components } = storeToRefs(playerStore);
   const { check } = toRefs(player.value);
@@ -413,8 +414,8 @@ export async function battle() {
   await reflectStatus();
   await checkMission("primary");
 
-  await wait(1000);
   getEnemyPlayer(); //!
+  await wait(1000);
   components.value = "secondAtk";
 
   console.log(i, "後攻の攻撃");
@@ -422,14 +423,15 @@ export async function battle() {
   await reflectStatus();
   await checkMission("second");
 
-  await wait(1000);
   getEnemyPlayer(); //!
+  await wait(1000);
+  components.value = "postBattle";
 
   //戦後処理
   await postBattle();
 }
 //戦闘後の処理
-export async function postBattle(): Promise<void> {
+async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
   const { id, player, cardLock, sign, log, enemyLog, components } = storeToRefs(playerStore);
@@ -457,7 +459,6 @@ export async function postBattle(): Promise<void> {
     } else return false;
   };
 
-  components.value = "postBattle";
   //handの腐り値を減らす
   changeHandValue("waste", -1);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
@@ -512,4 +513,4 @@ export async function postBattle(): Promise<void> {
   //shopを開く
   startShop();
 }
-//!export5日まとめる
+export { battle };

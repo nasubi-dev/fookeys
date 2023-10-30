@@ -148,7 +148,7 @@ const wantCard = ref()//!test用
     </transition>
 
     <div class="flex flex-row-reverse z-10">
-      <UiEnemyInfo :p="enemyPlayer" :sign="sign" />
+      <UiEnemyInfo :player="enemyPlayer" :sign="sign" />
       <div class="flex flex-col">
         <p> {{ "id: " + id }}</p>
         <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>

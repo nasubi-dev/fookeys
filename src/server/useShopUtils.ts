@@ -15,7 +15,7 @@ const playersRef = collection(db, "players").withConverter(converter<PlayerData>
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //cardをランダムに1枚引く
-export function drawCard(attribute?: Attribute): Card {
+function drawCard(attribute?: Attribute): Card {
   let selectCard;
   while (!selectCard) {
     if (attribute) {
@@ -32,7 +32,7 @@ export function drawCard(attribute?: Attribute): Card {
   return selectCard;
 }
 //cardをランダムに1枚引く
-export function drawRandomOneCard(order?: Attribute | number): void {
+function drawRandomOneCard(order?: Attribute | number): void {
   const { player, id } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
@@ -46,7 +46,7 @@ export function drawRandomOneCard(order?: Attribute | number): void {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //draw3ExchangedCardを実行する
-export async function draw3ExchangedCard() {
+async function draw3ExchangedCard() {
   console.log(i, "draw3ExchangedCardを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
@@ -65,7 +65,7 @@ export async function draw3ExchangedCard() {
   log.value = "draw3ExchangedCard: " + selectCards.map((card) => card.name);
 }
 //cardをHandに6枚セットする
-export async function setHand(): Promise<void> {
+async function setHand(): Promise<void> {
   console.log(i, "setHandを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
@@ -82,7 +82,7 @@ export async function setHand(): Promise<void> {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Cardを3枚提示する
-export async function setOffer(): Promise<void> {
+async function setOffer(): Promise<void> {
   console.log(i, "setOfferを実行しました");
   const { offer } = storeToRefs(playerStore);
 
@@ -93,7 +93,7 @@ export async function setOffer(): Promise<void> {
   }
 }
 //Handをすべて入れ替える
-export async function changeAllHand(): Promise<void> {
+async function changeAllHand(): Promise<void> {
   console.log(i, "changeAllHandを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
@@ -107,7 +107,7 @@ export async function changeAllHand(): Promise<void> {
   log.value = "changeAllHand: " + hand.value.map((card) => card.name);
 }
 //missionを3つセットする
-export async function setMissions(): Promise<void> {
+async function setMissions(): Promise<void> {
   console.log(i, "setMissionsを実行しました");
   const { player, sign, log } = storeToRefs(playerStore);
   const { idGame } = toRefs(player.value);
@@ -162,14 +162,14 @@ export async function setMissions(): Promise<void> {
   }
 }
 //SumCardsの値を変更する
-export function changeSumCardsValue(key: keyof SumCards, value: number): void {
+function changeSumCardsValue(key: keyof SumCards, value: number): void {
   console.log(i, "changeSumCardsValueを実行しました");
   const { sumCards } = storeToRefs(playerStore);
 
   sumCards.value[key] += value;
 }
 //Handの値を変更する
-export function changeHandValue(key: keyof SumCards, value: number, attribute?: Attribute): void {
+function changeHandValue(key: keyof SumCards, value: number, attribute?: Attribute): void {
   console.log(i, "changeHandValueを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
@@ -186,7 +186,7 @@ export function changeHandValue(key: keyof SumCards, value: number, attribute?: 
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Handの腐ったカードを削除する
-export function deleteAllRottenCard(): void {
+function deleteAllRottenCard(): void {
   console.log(i, "reduceWaste0を実行しました");
   const { deleteAllWaste0 } = playerStore;
   const { id, player } = storeToRefs(playerStore);
@@ -196,7 +196,7 @@ export function deleteAllRottenCard(): void {
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Statusの値を変更する
-export function changeStatusValue(key: keyof Status, value: number): void {
+function changeStatusValue(key: keyof Status, value: number): void {
   console.log(i, "changeStatusValueを実行しました");
   const { id, player, log } = storeToRefs(playerStore);
   const { status, character } = toRefs(player.value);
@@ -208,3 +208,15 @@ export function changeStatusValue(key: keyof Status, value: number): void {
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);
 }
+export {
+  drawRandomOneCard,
+  draw3ExchangedCard,
+  setHand,
+  setOffer,
+  changeAllHand,
+  setMissions,
+  changeSumCardsValue,
+  changeHandValue,
+  deleteAllRottenCard,
+  changeStatusValue,
+};
