@@ -22,7 +22,6 @@ import Shop from "@/components/shop.vue";
 import Battle from "@/components/battle.vue";
 //asset
 import allGifts from "@/assets/allGifts";
-import allCharacters from "@/assets/allCharacters";
 //sound
 import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
@@ -53,7 +52,7 @@ const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort);
 const useShopping = useSound(shopping);
-const useHp = useSound(hp);
+const useHp = useSound(hp, { volume: 0.8 });
 const useDef = useSound(def);
 const useAtk = useSound(atk);
 const useTech = useSound(tech);

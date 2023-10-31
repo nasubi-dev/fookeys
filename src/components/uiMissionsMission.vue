@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useSound } from "@vueuse/sound";
-import { popUp } from "@/assets/sounds";
+import { popUp, success } from "@/assets/sounds";
 import type { Mission } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 import missionImg from '@/assets/img/ui/mission.png'
 
-defineProps<{ mission: Mission }>();
+const p = defineProps<{ mission: Mission }>();
 
 const usePopUp = useSound(popUp);
+const useSuccess = useSound(success, { volume: 0.3 });
+
+watch(() => p.mission.achieved, (newVal) => {
+  if (newVal) useSuccess.play();
+});
 
 const dropDown = ref(false);
 const onLongPressCallbackHook = (): void => {
