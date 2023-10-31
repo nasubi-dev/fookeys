@@ -15,6 +15,7 @@ import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
+import UiCard from "@/components/uiCard.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
@@ -159,6 +160,7 @@ const wantCard = ref()//!test用
         <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
           "OFF"
         }}</span></button>
+        <UiCard v-if="hand[0]" style="width: 15vw;" :card="hand[0]" :size="'big'" />
       </div>
     </div>
 

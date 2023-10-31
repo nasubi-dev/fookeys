@@ -5,7 +5,7 @@ import { popUp } from "@/assets/sounds";
 import type { Card } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 
-defineProps<{ card: Card }>()
+defineProps<{ card: Card; size: "normal" | "big" }>()
 
 const usePopUp = useSound(popUp);
 
@@ -31,10 +31,13 @@ const onKeyUpCallbackHook = (): void => {
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
-          <p v-if="card.waste" class="transform -translate-x-[250%] -translate-y-[10%]  text-lg font-bold">{{ card.waste
-          }}</p>
+          <p v-if="card.waste" class="font-bold transform"
+            :class="size === 'normal' ? `text- -translate-x-[250%] -translate-y-[10%] ` : `text-2xl -translate-x-[280%] -translate-y-[20%]`">
+            {{ card.waste }}
+          </p>
 
-          <div class="transform -translate-x-[10%] translate-y-full flex text-xs font-bold">
+          <div class="flex font-bold transform"
+            :class="size === 'normal' ? `text-xs -translate-x-[10%] translate-y-full` : `text-xl -translate-x-[10%] translate-y-full`">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
             <p v-if="card.def">{{ "🛡" + card.def }}</p>

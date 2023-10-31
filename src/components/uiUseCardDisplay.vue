@@ -27,8 +27,8 @@ defineProps<{
     <div class="flex justify-start"
       v-for="card in (after === 'donate' ? cards : (cards.map((card) => { if (card.attribute === after) { return card } })))"
       :key="card?.id">
-      <div v-if="card" class="cardSize" style="width: 15vw;">
-        <UiCard :card="card" />
+      <div v-if="card" style="width: 15vw;">
+        <UiCard :card="card" size="big"/>
       </div>
     </div>
   </div>

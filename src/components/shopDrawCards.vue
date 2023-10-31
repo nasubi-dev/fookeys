@@ -42,16 +42,15 @@ const offer2Hand = async () => {
   <div>
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-
       <div v-if="phase === 'shop' && !pushed" class="flex justify-center">
         <button @click="offer2Hand(); useTap2.play(), pushed = !pushed">
           <img :src="decide" style="width: 20vw;" />
         </button>
-        <div class="flex justify-start w-1/3">
+        <div class="flex justify-start w-full">
           <div v-for="(card, index) in offer" :key="card.id">
             <button @click="isOfferSelected[index] = !isOfferSelected[index]; useTap1.play()" class="card-pop"
               :class="isOfferSelected[index] ? 'transform -translate-y-5' : null">
-              <UiCard :card="card" />
+              <UiCard :card="card" size="big" style="width: 15vw;"/>
             </button>
           </div>
         </div>

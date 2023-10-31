@@ -34,7 +34,7 @@ watch(() => p.player.status, (newVal, oldVal) => {
 <template>
   <div class="flex flex-col ml-auto">
     <div>
-      <div v-if="player.hand.length > 0">
+      <div v-if="player.hand.length > 0" class="flex justify-end">
         <uiCardBehind :cards="player.hand" />
       </div>
       <div v-else>
