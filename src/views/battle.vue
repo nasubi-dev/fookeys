@@ -15,7 +15,6 @@ import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
-import UiCard from "@/components/uiCard.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
@@ -55,7 +54,7 @@ const useShopping = useSound(shopping);
 const useHp = useSound(hp, { volume: 0.8 });
 const useDef = useSound(def);
 const useAtk = useSound(atk);
-const useTech = useSound(tech);
+const useTech = useSound(tech, { volume: 0.8 });
 //BGMの再生
 const isBGM = ref(false)
 watch(isBGM, (newVal) => {
@@ -81,8 +80,9 @@ watch(phase, (newVal) => {
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
-  character.value = sign.value === 0 ? 'blankiss' : 'petit&spot';
   setTimeout(async () => {
+    character.value = sign.value === 0 ? "blankiss" : "petit&spot";
+    enemyPlayerStore.updateCharacter(sign.value !== 0 ? "blankiss" : "petit&spot")
     useBattleStart.play()
     await getEnemyPlayer();
   }, 1500);
@@ -167,9 +167,10 @@ const wantCard = ref()//!test用
     <div v-if="components !== 'postBattle'">
       {{ components }}
       <div style="width: 40vw;">
-        <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :which="'primary'"
-          v-show="components !== 'secondAtk'" />
-        <UiUseCard :player="sign === firstAtkPlayer ? enemyPlayer : player" :which="'second'" />
+        <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
+          :character="sign === firstAtkPlayer ? character : enemyPlayer.character" v-show="components !== 'secondAtk'" />
+        <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer"
+          :character="sign !== firstAtkPlayer ? character : enemyPlayer.character" />
       </div>
 
       <div class="overlay">

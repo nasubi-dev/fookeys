@@ -9,7 +9,6 @@ const emit = defineEmits<{
   (event: "isWiggle", reactionImg: string): void
 }>()
 
-
 const { components, battleResult, sign } = storeToRefs(playerStore);
 const { game } = storeToRefs(gameStore);
 const { firstAtkPlayer } = toRefs(game.value)
@@ -57,7 +56,8 @@ watch(battleResult, (newVal) => {
 </script>
 
 <template>
-  <div class="overCard w-1/4 animate-rotate-y animate-once animate-delay-100" :class="p.status === 'my' ? `left-2` : `right-2 top-5`">
+  <div class="overCard w-1/4 animate-rotate-y animate-once animate-delay-100"
+    :class="p.status === 'my' ? `left-2` : `right-2 top-5`">
     <img :src="`/img/characters/${characterName}/${reactionImg}.png`" />
     <div v-if="retainedDef" class="fixed top-2/3 font-bold text-5xl text-red-500"
       :class="[p.status === 'my' ? `text-3xl` : `text-xl`, reactionImg === 'def' ? `animate-jump` : null]">{{ "🛡" +
