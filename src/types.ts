@@ -59,7 +59,7 @@ type PlayerData = {
   check: boolean;
   donate: boolean;
   match: MatchStatus;
-  character: number;
+  character: string;
   gifts: number[];
   isSelectedGift: number | undefined;
   hand: Card[];

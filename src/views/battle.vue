@@ -82,6 +82,7 @@ watch(phase, (newVal) => {
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
+  character.value = sign.value === 0 ? 'blankiss' : 'petit&spot';
   setTimeout(async () => {
     useBattleStart.play()
     await getEnemyPlayer();
@@ -90,7 +91,7 @@ onMounted(async () => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
-    console.log(i, "character: ", allCharacters[character.value].name);
+    console.log(i, "character: ", character.value);
     console.log(i, "gift: ", allGifts[gifts.value[0]]?.name, allGifts[gifts.value[1]]?.name, allGifts[gifts.value[2]]?.name);
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));

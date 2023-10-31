@@ -115,7 +115,7 @@ async function setMissions(): Promise<void> {
   const { missionsNum } = toRefs(game.value);
 
   if (!sign.value) {
-    missions.value= [];
+    missions.value = [];
     for (let i = 0; i < 3; i++) {
       const selectMission = Math.floor(Math.random() * allMissions.length);
       missionsNum.value[i] = selectMission;
@@ -196,12 +196,11 @@ function deleteAllRottenCard(): void {
 //Statusの値を変更する
 function changeStatusValue(key: keyof Status, value: number): void {
   console.log(i, "changeStatusValueを実行しました");
-  const { id, player, log } = storeToRefs(playerStore);
-  const { status, character } = toRefs(player.value);
+  const { id, player } = storeToRefs(playerStore);
+  const { status } = toRefs(player.value);
 
   status.value[key] += value;
-  const maxHp = 600 + (allCharacters[character.value].maxHp ?? 0);
-  if (key === "hp" && status.value.hp > maxHp) status.value.hp = maxHp;
+  if (key === "hp" && status.value.hp > status.value.maxHp) status.value.hp = status.value.maxHp;
   if (key === "hungry" && status.value.hungry < 0) status.value.hungry = 0;
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);
