@@ -7,6 +7,7 @@ import cooking from "./cooking.mp3";
 import def from "./def.mp3";
 import enemyCardIn from "./enemyCardIn.mp3";
 import enemyTurn from "./enemyTurn.mp3";
+import hp from "./hp.mp3";
 import missionSort from "./missionSort.mp3";
 import myTurn from "./myTurn.mp3";
 import popUp from "./popUp.mp3";
@@ -25,6 +26,7 @@ export {
   def,
   enemyCardIn,
   enemyTurn,
+  hp,
   missionSort,
   myTurn,
   popUp,

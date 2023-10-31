@@ -17,10 +17,14 @@ const contributionClass = ref()
 watch(() => p.player.status, (newVal, oldVal) => {
   //初期化
   hpClass.value = hungryClass.value = contributionClass.value = null
-
-  if (newVal.hp !== oldVal.hp) hpClass.value = "animate-shake"
-  if (newVal.hungry !== oldVal.hungry) hungryClass.value = "animate-jump"
-  if (newVal.contribution !== oldVal.contribution) contributionClass.value = "animate-bounce"
+  //増えたらshake
+  if (newVal.hp > oldVal.hp) hpClass.value = "animate-jump"
+  if (newVal.hungry > oldVal.hungry) hungryClass.value = "animate-jump"
+  if (newVal.contribution > oldVal.contribution) contributionClass.value = "animate-jump"
+  //減ったらjump
+  // if (newVal.hp < oldVal.hp) hpClass.value = "animate-shake"
+  if (newVal.hungry < oldVal.hungry) hungryClass.value = "animate-shake"
+  if (newVal.contribution < oldVal.contribution) contributionClass.value = "animate-shake"
 }, { deep: true })
 </script>
 

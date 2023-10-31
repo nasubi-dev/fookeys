@@ -23,7 +23,7 @@ import Battle from "@/components/battle.vue";
 import allGifts from "@/assets/allGifts";
 import allCharacters from "@/assets/allCharacters";
 //sound
-import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech } from "@/assets/sounds";
+import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
 
 const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
@@ -52,8 +52,9 @@ const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort);
 const useShopping = useSound(shopping);
-const useAtk = useSound(atk);
+const useHp = useSound(hp);
 const useDef = useSound(def);
+const useAtk = useSound(atk);
 const useTech = useSound(tech);
 //BGMの再生
 const isBGM = ref(false)
@@ -63,8 +64,9 @@ watch(isBGM, (newVal) => {
 })
 //カード使用時に再生
 watch(battleResult, (newVal) => {
-  if (newVal[0] === "atk") useAtk.play()
+  if (newVal[0] === "heal") useHp.play()
   if (newVal[0] === "def") useDef.play()
+  if (newVal[0] === "atk") useAtk.play()
   if (newVal[0] === "tech") useTech.play()
 })
 //missionが入れ替わったら再生
