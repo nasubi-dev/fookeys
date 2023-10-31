@@ -37,7 +37,7 @@ const onKeyUpCallbackHook = (): void => {
           </p>
 
           <div class="flex font-bold transform"
-            :class="size === 'normal' ? `text-xs -translate-x-[10%] translate-y-full` : `text-xl -translate-x-[10%] translate-y-full`">
+            :class="size === 'normal' ? `text-xs -translate-x-[10%] translate-y-full` : `text-lg -translate-x-[10%] translate-y-full`">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
             <p v-if="card.def">{{ "🛡" + card.def }}</p>
@@ -46,10 +46,10 @@ const onKeyUpCallbackHook = (): void => {
           </div>
 
         </div>
-        <div v-if="card.description && card.id !== 0" class="absolute top-0 right-5">
-          <div class="relative flex h-10 w-3">
+        <div v-if="card.description && card.id !== 0" class="absolute" :class="size === 'normal' ? `top-0 right-5` : `top-0 right-8`">
+          <div class="relative flex" :class="size === 'normal' ? `h-10 w-3` : `h-16 w-5`">
             <span class="animate-ping absolute inline-flex h-full w-full bg-yellow-300 opacity-25"></span>
-            <span class="relative inline-flex h-10 w-3 bg-yellow-400"></span>
+            <span class="relative inline-flex h-full w-full bg-yellow-400"></span>
           </div>
         </div>
       </VDuringPress>
