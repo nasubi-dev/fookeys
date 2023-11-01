@@ -40,7 +40,7 @@ async function startMatch(): Promise<void> {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col overflow-hidden">
+  <div class="h-screen flex flex-col">
     <div class="z-10">
       <router-link v-if="!selectCharacter && !selectGift" to="/">
         <button @click="useTap2.play()" class="p-4 absolute top-4 left-4 btn-pop">
@@ -68,7 +68,7 @@ async function startMatch(): Promise<void> {
         <SelectCharacter v-if="selectCharacter" />
         <SelectGifts v-else-if="selectGift" />
         <div v-else class="overCard">
-          <img :src="menuBackground" class=" overflow-y-clip" style="height: fit-content;"/>
+          <img :src="menuBackground" class="h-screen"/>
           <div class="overText p-8">
             <button @click="startMatch(); useTap1.play()" class="btn-pop">
               <img src="@/assets/img/ui/entry.png" />
