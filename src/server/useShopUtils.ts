@@ -62,7 +62,7 @@ async function draw3ExchangedCard() {
     hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  log.value = "draw3ExchangedCard: " + selectCards.map((card) => card.name);
+  console.log("draw3ExchangedCard: " + selectCards.map((card) => card.name))
 }
 //cardをHandに6枚セットする
 async function setHand(): Promise<void> {

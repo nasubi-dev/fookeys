@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
+import { Notivue, Notifications } from 'notivue'
 import { e, s, i } from "@/log";
 import { storeToRefs } from "pinia";
 import { playerStore } from "@/main";
@@ -41,8 +42,12 @@ async function startMatch(): Promise<void> {
 
 <template>
   <div class="h-screen flex flex-col">
-    <div class="z-10">
-      <router-link v-if="!selectCharacter && !selectGift" to="/">
+    <Notivue v-slot="item">
+      <Notifications :item="item" />
+    </Notivue>
+    <div>
+      <div class="z-10">
+        <router-link v-if="!selectCharacter && !selectGift" to="/">
         <button @click="useTap2.play()" class="p-4 absolute top-4 left-4 btn-pop">
           <img :src="back" class="w-32" />
         </button>
@@ -80,5 +85,6 @@ async function startMatch(): Promise<void> {
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>

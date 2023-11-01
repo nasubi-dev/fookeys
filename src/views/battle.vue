@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, toRefs, watch, ref } from "vue";
+import { onMounted, toRefs, watch, ref, markRaw } from "vue";
+import { Notivue, Notifications, filledIcons } from 'notivue'
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { e, s, i } from "@/log";
 import { usePush } from 'notivue'
@@ -19,6 +20,9 @@ import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
 import Battle from "@/components/battle.vue";
+//svg
+import BlankissSVG from "@/components/blankissSVG.vue";
+import PetitAndSpotSVG from "@/components/petitAndSpotSVG.vue";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
@@ -31,7 +35,14 @@ const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
-//logの監視
+//log
+const customIcons = {
+  success: character.value === "blankiss" ? markRaw(BlankissSVG) : markRaw(PetitAndSpotSVG),
+  error: character.value !== "blankiss" ? markRaw(BlankissSVG) : markRaw(PetitAndSpotSVG),
+  info: filledIcons.info,
+  close: filledIcons.close,
+  promise: filledIcons.promise
+}
 const push = usePush()
 watch(log, () => {
   if (log.value === "") return
@@ -48,7 +59,7 @@ watch(enemyLog, () => {
   push.error(enemyLog.value)
   enemyLog.value = ""
 })
-
+//sound
 const useBGM = useSound(bgm, { volume: 0.1, loop: true });
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
@@ -142,68 +153,74 @@ const wantCard = ref()//!test用
 
 <template>
   <div class="flex flex-col h-screen w-screen p-5 relative">
-    <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-      <div class="overlay">
-        <div v-if="phase === 'shop'">
-          <Shop />
-        </div>
-
-        <div v-if="phase === 'battle'">
-          <Battle />
-        </div>
-      </div>
-    </transition>
-
-    <div class="flex flex-row-reverse z-10">
-      <UiEnemyInfo :player="enemyPlayer" :sign="sign" />
-      <div class="flex flex-col">
-        <p> {{ "id: " + id }}</p>
-        <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
-        <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
-        <input v-model="wantCard" type="number" />
-        <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
-          "OFF"
-        }}</span></button>
-      </div>
-    </div>
-
-
-    <div v-if="components !== 'postBattle'">
-      {{ components }}
-      <div style="width: 40vw;">
-        <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
-          :playerAllocation="!XOR(sign === firstAtkPlayer, sign === 0) ? true : false"
-          v-show="components !== 'secondAtk'" />
-        <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer"
-          :playerAllocation="!XOR(sign !== firstAtkPlayer, sign === 0) ? true : false" />
-      </div>
-
-      <div class=" overlay">
-        <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-          leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
-          <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />
-          <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
-          <div v-else class="flex flex-col">
-            <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
-            <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-              :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+    <Notivue v-slot="item">
+      <Notifications :item="item" :icons="customIcons"  />
+    </Notivue>
+    <div>
+      <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+        <div class="overlay">
+          <div v-if="phase === 'shop'">
+            <Shop />
           </div>
-        </transition>
-      </div>
-    </div>
 
-    <div class="bottom-0 fixed mb-3">
-      <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
-        src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
-      <div class="flex justify-start" style="width: 95vw;">
-        <UiStatus :player="player" />
-        <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
-        <UiMission class="ml-auto" />
-      </div>
-      <UiHand class="pt-5" />
-    </div>
+          <div v-if="phase === 'battle'">
+            <Battle />
+          </div>
+        </div>
+      </transition>
 
+      <div class="flex flex-row-reverse z-10">
+        <UiEnemyInfo :player="enemyPlayer" :sign="sign" />
+        <div class="flex flex-col">
+          <p> {{ "id: " + id }}</p>
+          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+          <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
+          <input v-model="wantCard" type="number" />
+          <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
+            "OFF"
+          }}</span></button>
+        </div>
+      </div>
+
+
+      <div v-if="components !== 'postBattle'">
+        {{ components }}
+        <div style="width: 40vw;">
+          <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
+            :playerAllocation="!XOR(sign === firstAtkPlayer, sign === 0) ? true : false"
+            v-show="components !== 'secondAtk'" />
+          <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer"
+            :playerAllocation="!XOR(sign !== firstAtkPlayer, sign === 0) ? true : false" />
+        </div>
+
+        <div class=" overlay">
+          <transition appear enter-from-class="translate-y-[-150%] opacity-0"
+            leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
+            enter-active-class="transition duration-300" mode="out-in">
+            <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />
+            <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
+            <div v-else class="flex flex-col">
+              <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+                :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
+              <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
+                :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+            </div>
+          </transition>
+        </div>
+      </div>
+
+      <div class="bottom-0 fixed mb-3">
+        <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
+          src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
+        <div class="flex justify-start" style="width: 95vw;">
+          <UiStatus :player="player" />
+          <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
+          <UiMission class="ml-auto" />
+        </div>
+        <UiHand class="pt-5" />
+      </div>
+
+    </div>
   </div>
 </template>

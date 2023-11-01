@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { Notivue, Notifications } from 'notivue'
 
 //ピンチアウト禁止
 const touchHandler = (event: any) => {
@@ -14,7 +13,7 @@ document.onselectstart = function () {
   return false;
 }
 //テキスト選択禁止
-document.onselectstart = function() {
+document.onselectstart = function () {
   return false;
 }
 //スクロール禁止
@@ -27,9 +26,6 @@ document.addEventListener('touchmove', disableScroll, { passive: false });
 
 <template>
   <div class="background">
-    <Notivue v-slot="item">
-      <Notifications :item="item" />
-    </Notivue>
     <RouterView />
   </div>
 </template>
