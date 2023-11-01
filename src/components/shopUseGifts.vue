@@ -23,7 +23,7 @@ onMounted(() => {
 
 const selectGift = (gift: number) => {
   if (status.value.contribution < allGifts[gift].requireContribution) {
-    log.value = "貢献度が足りません"
+    log.value = "貢献度が足りなくて" + allGifts[gift].name + "が使えない！"
   } else if (isSelectedGift.value === gift) {
     isSelectedGift.value = undefined
   } else {

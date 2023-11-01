@@ -68,7 +68,7 @@ async function everyUtil(params: [string, number]): Promise<void> {
 //ダメージを計算する
 async function calcDamage(which: "primary" | "second"): Promise<void> {
   console.log(s, "calcDamageを実行しました");
-  const { sign, battleResult, log, enemyLog } = storeToRefs(playerStore);
+  const { sign, battleResult, log, myLog, enemyLog } = storeToRefs(playerStore);
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { myId, enemyId, my, enemy } = await syncPlayer(which);
@@ -79,7 +79,6 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   if (my.field.length === 0) return;
   //寄付をしていた場合､ダメージ計算を行わない
   if (my.donate) {
-    console.log(i, "寄付をしたのでダメージ計算を行いません");
     my.status.contribution += my.field.length * 5;
     if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.contribution": my.status.contribution });
     await everyUtil(["donate", my.field.length * 5]);
@@ -120,7 +119,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
-        log.value = card.name + "の効果!" + card.description;
+        myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 58) changeHandValue("atk", 10, "atk");
         if (card.id === 59) changeHandValue("def", 20, "def");
         if (card.id === 64) changeStatusValue("maxHungry", 20);
@@ -143,7 +142,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
-        log.value = card.name + "の効果!" + card.description;
+        myLog.value = card.name + "の効果!" + card.description;
       },
       my.field,
       100
@@ -170,7 +169,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
             enemyLog.value = card.name + "の効果!" + card.description;
             return;
           }
-          log.value = card.name + "の効果!" + card.description;
+          myLog.value = card.name + "の効果!" + card.description;
           defense += enemy.status.hungry;
         },
         enemy.field,
@@ -211,7 +210,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
-        log.value = card.name + "の効果!" + card.description;
+        myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 10) defense = 0;
         if (card.id === 50 && which === "second") my.sumFields.atk += 75;
       },
@@ -253,7 +252,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
-        log.value = card.name + "の効果!" + card.description;
+        myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
         if (card.id === 26) changeStatusValue("contribution", 20);
         if (card.id === 29 || card.id === 31) enemy.status.hungry >= 100 ? (my.sumFields.tech += 30) : null;
@@ -283,7 +282,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 //missionの統括
 async function checkMission(which: "primary" | "second"): Promise<void> {
   console.log(s, "checkMissionを実行しました");
-  const { id, player, sign, log, enemyLog } = storeToRefs(playerStore);
+  const { id, player, sign, myLog, enemyLog } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
   const { game, missions } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -303,7 +302,7 @@ async function checkMission(which: "primary" | "second"): Promise<void> {
       mission.nowAchievement = mission.goalAchievement;
       if ((playerAllocation && which === "primary") || (!playerAllocation && which === "second")) {
         status.value.contribution += mission.reward;
-        log.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
+        myLog.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
       } else {
         enemyLog.value = "mission: " + mission.name + "を達成したので" + mission.reward + "の貢献度を受け取りました";
       }
@@ -440,10 +439,10 @@ async function battle() {
 async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
-  const { id, player, sign, log, enemyLog } = storeToRefs(playerStore);
+  const { id, player, sign, log, myLog, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, field, status, donate, defense } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-  const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
+  const { field: enemyField, donate: enemyDonate, check: enemyCheck, hand: enemyHand } = toRefs(enemyPlayer.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
@@ -482,7 +481,7 @@ async function postBattle(): Promise<void> {
   if (!check.value && !donate.value) {
     field.value.forEach((card: Card) => {
       if (judgeDrawCard(card)) return;
-      log.value = card.name + "の効果!" + card.description;
+      myLog.value = card.name + "の効果!" + card.description;
       if (card.id === 52) drawRandomOneCard("atk");
       if (card.id === 53) drawRandomOneCard("tech");
       if (card.id === 54) drawRandomOneCard("def");
@@ -493,9 +492,13 @@ async function postBattle(): Promise<void> {
     });
   }
   //手札にあるカードの効果を発動する
+  enemyHand.value.forEach((card: Card) => {
+    if (!(card.id === 6)) return;
+    enemyLog.value = card.name + "の効果!" + card.description;
+  });
   hand.value.forEach((card: Card) => {
     if (!(card.id === 6)) return;
-    log.value = card.name + "の効果!" + card.description;
+    myLog.value = card.name + "の効果!" + card.description;
     changeHandValue("hungry", -10);
   });
 

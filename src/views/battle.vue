@@ -25,7 +25,7 @@ import allGifts from "@/assets/allGifts";
 import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
 
-const { id, player, cardLock, phase, offer, sign, log, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign, log,myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
@@ -37,6 +37,11 @@ watch(log, () => {
   if (log.value === "") return
   push.info(log.value)
   log.value = ""
+})
+watch(myLog, () => {
+  if (myLog.value === "") return
+  push.success(myLog.value)
+  myLog.value = ""
 })
 watch(enemyLog, () => {
   if (enemyLog.value === "") return

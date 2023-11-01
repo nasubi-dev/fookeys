@@ -7,7 +7,7 @@ import { useSound } from "@vueuse/sound";
 import { tap1 } from "@/assets/sounds";
 
 //storeの参照
-const { id, player } = storeToRefs(playerStore);
+const { id, player, log } = storeToRefs(playerStore);
 const { name } = toRefs(player.value);
 
 const useTap1 = useSound(tap1);
@@ -16,7 +16,7 @@ const newName = ref("");
 //アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name
 async function register() {
   newName.value === "" ? (name.value = "No name") : (name.value = newName.value);
-  id.value == "" ? await registerPlayer() : console.log("既に登録されています");
+  id.value == "" ? await registerPlayer() : log.value = "既に登録されています"
 }
 </script>
 

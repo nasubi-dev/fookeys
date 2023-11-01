@@ -42,6 +42,7 @@ const usePlayerStore = defineStore("playerData", () => {
   const cardLock = ref(false);
   const offer = ref<Card[]>([]);
   const log = ref<string>("");
+  const myLog = ref<string>("");
   const enemyLog = ref<string>("");
   const components = ref<string>("postBattle");
   const battleResult = ref<(string | number)[]>(["none", 0]);
@@ -120,6 +121,7 @@ const usePlayerStore = defineStore("playerData", () => {
     cardLock,
     offer,
     log,
+    myLog,
     enemyLog,
     components,
     battleResult,

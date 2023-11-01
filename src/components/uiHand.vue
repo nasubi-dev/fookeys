@@ -18,10 +18,14 @@ const useTap1 = useSound(tap1);
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
 const { pushHand, popHand } = playerStore;
-const { player, cardLock, log } = storeToRefs(playerStore);
-const { hand, field, idEnemy } = toRefs(player.value);
+const { player, cardLock, log, sumCards } = storeToRefs(playerStore);
+const { hand, field, idEnemy, status, donate } = toRefs(player.value);
 
 const handSelected = ref([false, false, false, false, false, false, false, false, false]);
+watch(donate, () => {
+  handSelected.value = [false, false, false, false, false, false, false, false, false];
+  field.value = [];
+})
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
 watch(cardLock, async (newVal) => {
   if (newVal) {
@@ -40,16 +44,17 @@ watch(cardLock, async (newVal) => {
 //HandからFieldへ
 const pushCard = async (index: number) => {
   if (cardLock.value) return;
+  if (!donate.value && status.value.hungry + sumCards.value.hungry + allCards[hand.value[index].id].hungry > status.value.maxHungry) {
+    log.value = "お腹がいっぱいでこれ以上食べれない！"
+    return;
+  }
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
-  console.log(i, "isSelectedGift: ", enemyGift, "fieldLength: ", field.value.length);
   if (enemyGift === 3 && field.value.length >= 3) {
-    console.log(i, "field is full");
-    log.value = "field is full"
+    log.value = "相手のギフトの効果により､このラウンド中3枚までしか使えない"
     return;
   }
   if (enemyGift === 11 && allCards[hand.value[index].id].attribute !== "atk") {
-    console.log(i, "only atk card can be set");
-    log.value = "only atk card can be set"
+    log.value = "相手のギフトの効果により､このラウンド中マッスルカードしか使えない"
     return;
   }
 
