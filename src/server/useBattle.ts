@@ -71,7 +71,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   const { sign, battleResult, log, enemyLog } = storeToRefs(playerStore);
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
-  const { myId, enemyId, my, enemy } = await syncPlayer(which;
+  const { myId, enemyId, my, enemy } = await syncPlayer(which);
   const playerAllocation = firstAtkPlayer.value === sign.value ? 1 : 0;
   const attackOrder = XOR(playerAllocation === 0, which === "primary");
 

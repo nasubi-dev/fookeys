@@ -46,11 +46,9 @@ const onKeyUpCallbackHook = (): void => {
           </div>
 
         </div>
-        <div v-if="card.description && card.id !== 0" class="absolute" :class="size === 'normal' ? `top-0 right-5` : `top-0 right-8`">
-          <div class="relative flex" :class="size === 'normal' ? `h-10 w-3` : `h-16 w-5`">
-            <span class="animate-ping absolute inline-flex h-full w-full bg-yellow-300 opacity-25"></span>
-            <span class="relative inline-flex h-full w-full bg-yellow-400"></span>
-          </div>
+        <div v-if="card.description && card.id !== 0" class="absolute"
+          :class="size === 'normal' ? `top-5 right-5 w-5` : `top-7 right-8 w-8`">
+          <img :src="`/img/showSpecial/${card.company}.png`" class=" absolute" />
         </div>
       </VDuringPress>
     </div>
