@@ -13,8 +13,11 @@ const { battleResult } = storeToRefs(playerStore);
 
 const p = defineProps<{
   player: PlayerData;
-  character: string
+  playerAllocation: boolean;
 }>();
+const characterName = ref()
+if (p.playerAllocation) characterName.value = "blankiss"
+else characterName.value = "petit&spot"
 
 const isShowHeal = ref(true);
 const isShowSup = ref(true);
@@ -45,7 +48,7 @@ watch(battleResult, (newVal) => {
         <img :src="infoImg" />
         <div class="overText">
           <div class="flex justify-start items-center">
-            <img :src="`/img/characters/${p.character}/normal.png`" class="w-1/3  bottom-5 bg-clip-border" />
+            <img :src="`/img/characters/${characterName}/normal.png`" class="w-1/3  bottom-5 bg-clip-border" />
             <p>{{ "🍖" + p.player.sumFields.hungry }} </p>
             <p v-if="p.player.sumFields.priority && !p.player.donate">{{ "🦶: " + p.player.sumFields.priority }}</p>
             <div class="ml-auto mr-3 w-5">

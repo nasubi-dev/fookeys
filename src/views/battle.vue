@@ -25,7 +25,7 @@ import allGifts from "@/assets/allGifts";
 import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
 
-const { id, player, cardLock, phase, offer, sign, log,myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
+const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
@@ -87,7 +87,7 @@ onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   setTimeout(async () => {
     character.value = sign.value === 0 ? "blankiss" : "petit&spot";
-    enemyPlayerStore.updateCharacter(sign.value !== 0 ? "blankiss" : "petit&spot")
+    enemyPlayer.value.character = sign.value !== 0 ? "blankiss" : "petit&spot"
     useBattleStart.play()
     await getEnemyPlayer();
   }, 1500);
@@ -173,12 +173,13 @@ const wantCard = ref()//!test用
       {{ components }}
       <div style="width: 40vw;">
         <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
-          :character="sign === firstAtkPlayer ? character : enemyPlayer.character" v-show="components !== 'secondAtk'" />
+          :playerAllocation="!XOR(sign === firstAtkPlayer, sign === 0) ? true : false"
+          v-show="components !== 'secondAtk'" />
         <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer"
-          :character="sign !== firstAtkPlayer ? character : enemyPlayer.character" />
+          :playerAllocation="!XOR(sign !== firstAtkPlayer, sign === 0) ? true : false" />
       </div>
 
-      <div class="overlay">
+      <div class=" overlay">
         <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
           leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
           <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />

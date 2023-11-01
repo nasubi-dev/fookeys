@@ -32,7 +32,7 @@ const selectGift = ref(false);
 const selectCharacter = ref(false);
 async function startMatch(): Promise<void> {
   if (!id.value) {
-    push.error("IDがありません｡")
+    push.error("IDがありません")
     return
   }
   await startMatchmaking();

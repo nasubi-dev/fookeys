@@ -166,12 +166,7 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
     },
     defense: 0,
   });
-  //?Computed/Getter
-  //?function/actions
-  const updateCharacter = (character: string): void => {
-    enemyPlayer.value.character = character;
-  };
-  return { enemyPlayer, updateCharacter };
+  return { enemyPlayer };
 });
 
 const useGameStore = defineStore("gameData", () => {
