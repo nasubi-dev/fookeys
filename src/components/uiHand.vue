@@ -83,7 +83,7 @@ const popCard = (index: number, id: number) => {
           <button
             @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
             :class="handSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
-            <UiCard :card="card" size="normal" />
+            <UiCard :card="card" size="normal" :state="handSelected[index]" />
           </button>
         </div>
         <div v-else>

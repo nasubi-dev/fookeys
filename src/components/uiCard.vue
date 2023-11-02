@@ -5,7 +5,11 @@ import { popUp } from "@/assets/sounds";
 import type { Card } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 
-defineProps<{ card: Card; size: "normal" | "big" }>()
+defineProps<{
+  card: Card;
+  size: "normal" | "big"
+  state?: boolean
+}>()
 
 const usePopUp = useSound(popUp);
 
@@ -23,7 +27,7 @@ const onKeyUpCallbackHook = (): void => {
 <template>
   <div class="block">
     <div v-if="dropDown" class="bg-white rounded w-48 z-20 mx-3  p-2 fixed  text-gray-900 text-left"
-      :class="card.description ? ' -translate-y-16  z-20' : '-translate-y-10'">
+      :class="[card.description ? ' -translate-y-16  z-20' : '-translate-y-10', state ? `` : `max-w-fit`]">
       <p class="font-bold">{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>
     </div>

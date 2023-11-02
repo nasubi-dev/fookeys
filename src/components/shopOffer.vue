@@ -35,7 +35,6 @@ const offer2Hand = async () => {
   pushed.value = false;
   await watchShopEnd();
 }
-
 </script>
 
 <template>
