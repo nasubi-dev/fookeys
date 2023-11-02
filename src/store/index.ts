@@ -100,8 +100,8 @@ const usePlayerStore = defineStore("playerData", () => {
     hand.forEach((card) => {
       if (card.waste > 0) return;
       hand.splice(hand.indexOf(card), 1, allCards[0]);
-      hand = hand.sort((a, b) => a.id - b.id);
     });
+    hand = [...hand].sort((a, b) => a.id - b.id);
   };
   //腐っている全てのカードを削除する
   const deleteAllWaste0 = (): void => {

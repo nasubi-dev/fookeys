@@ -72,7 +72,7 @@ const popCard = (index: number, id: number) => {
 </script>
 
 <template>
-  <div class=" flex justify-start overflow-clip">
+  <div class=" flex justify-start overflow-x-visible">
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div v-if="hand.length === 0" class="cardSize">

@@ -26,7 +26,7 @@ import PetitAndSpotSVG from "@/components/petitAndSpotSVG.vue";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
-import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp } from "@/assets/sounds";
+import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
@@ -67,10 +67,12 @@ const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort);
 const useShopping = useSound(shopping);
-const useHp = useSound(hp, { volume: 0.8 });
+const useRotten = useSound(rotten);
+const useHp = useSound(hp);
+const useSup = useSound(sup);
 const useDef = useSound(def);
 const useAtk = useSound(atk);
-const useTech = useSound(tech, { volume: 0.8 });
+const useTech = useSound(tech);
 //BGMの再生
 const isBGM = ref(false)
 watch(isBGM, (newVal) => {
@@ -80,6 +82,7 @@ watch(isBGM, (newVal) => {
 //カード使用時に再生
 watch(battleResult, (newVal) => {
   if (newVal[0] === "heal") useHp.play()
+  if (newVal[0] === "sup") useSup.play()
   if (newVal[0] === "def") useDef.play()
   if (newVal[0] === "atk") useAtk.play()
   if (newVal[0] === "tech") useTech.play()
@@ -92,6 +95,17 @@ watch(missions, (newVal) => {
 watch(phase, (newVal) => {
   if (newVal === 'battle') useBattlePhase.play()
   if (newVal === 'shop') useShopping.play()
+})
+const rottenCard = ref(0)
+watch(() => hand.value, (newVal) => {//動くのが遅い
+  const preRottenCard = rottenCard.value
+  rottenCard.value = hand.value.reduce((acc, card) => {
+    if (card.id === 0) acc++
+    return acc
+  }, 0) - preRottenCard
+  if (!rottenCard.value) return
+  log.value = rottenCard.value + "枚のカードが腐ってしまった！"
+  if (rottenCard.value) useRotten.play()
 })
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
@@ -152,11 +166,24 @@ const wantCard = ref()//!test用
 </script>
 
 <template>
-  <div class="flex flex-col h-screen w-screen p-5 relative">
+  <div>
     <Notivue v-slot="item">
-      <Notifications :item="item" :icons="customIcons"  />
+      <Notifications :item="item" :icons="customIcons" />
     </Notivue>
-    <div>
+    <div class="flex flex-col h-screen w-screen p-5 relative">
+      <div class="flex flex-row-reverse z-20 fixed w-full">
+        <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
+        <div class="flex flex-col">
+          <p> {{ "id: " + id }}</p>
+          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+          <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
+          <input v-model="wantCard" type="number" />
+          <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
+            "OFF"
+          }}</span></button>
+        </div>
+      </div>
+
       <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
         <div class="overlay">
@@ -170,23 +197,9 @@ const wantCard = ref()//!test用
         </div>
       </transition>
 
-      <div class="flex flex-row-reverse z-10">
-        <UiEnemyInfo :player="enemyPlayer" :sign="sign" />
-        <div class="flex flex-col">
-          <p> {{ "id: " + id }}</p>
-          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
-          <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
-          <input v-model="wantCard" type="number" />
-          <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
-            "OFF"
-          }}</span></button>
-        </div>
-      </div>
-
-
       <div v-if="components !== 'postBattle'">
         {{ components }}
-        <div style="width: 40vw;">
+        <div style="width: 40vw;" class="inset-0 top-1/3 left-0 fixed ml-2">
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
             :playerAllocation="!XOR(sign === firstAtkPlayer, sign === 0) ? true : false"
             v-show="components !== 'secondAtk'" />
@@ -194,7 +207,7 @@ const wantCard = ref()//!test用
             :playerAllocation="!XOR(sign !== firstAtkPlayer, sign === 0) ? true : false" />
         </div>
 
-        <div class=" overlay">
+        <div class="overlay">
           <transition appear enter-from-class="translate-y-[-150%] opacity-0"
             leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
             enter-active-class="transition duration-300" mode="out-in">

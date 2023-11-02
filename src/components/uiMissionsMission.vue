@@ -32,7 +32,7 @@ const onKeyUpCallbackHook = (): void => {
       {{ mission.description }}
     </div>
     <div class="overCard">
-      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
+      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="missionImg" style="width: 25vw;" />
         <div class="overText ">
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">

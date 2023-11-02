@@ -21,14 +21,14 @@ const onKeyUpCallbackHook = (): void => {
 </script>
 
 <template>
-  <div class="block" style="user-select: none;">
-    <div v-if="dropDown" class="bg-white rounded fixed  z-10 p-2 text-gray-900 text-left"
-      :class="card.description ? ' -translate-y-16' : '-translate-y-10'">
+  <div class="block">
+    <div v-if="dropDown" class="bg-white rounded w-48 z-20 mx-3  p-2 fixed  text-gray-900 text-left"
+      :class="card.description ? ' -translate-y-16  z-20' : '-translate-y-10'">
       <p class="font-bold">{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>
     </div>
     <div class="overCard">
-      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
+      <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
           <p v-if="card.waste" class="font-bold transform"

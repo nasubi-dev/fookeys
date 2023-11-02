@@ -2,7 +2,7 @@
 import { ref, watch, onMounted } from "vue";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import ShopDrawCards from './shopDrawCards.vue';
+import ShopOffer from './shopOffer.vue';
 import ShopUseGifts from './shopUseGifts.vue';
 import drawCardImg from "@/assets/img/ui/drawCard.png";
 import useGiftImg from "@/assets/img/ui/useGift.png";
@@ -40,7 +40,7 @@ onMounted(() => {
         <img :src="`/gifs/shopping.gif`" />
       </div>
       <div v-else class="overlay">
-        <ShopDrawCards v-show="draw" />
+        <ShopOffer v-show="draw" />
         <ShopUseGifts v-show="use" />
         <div v-if="!draw && !use">
           <button @click="draw = true; useTap2.play()" style="width: 20vw;">

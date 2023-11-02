@@ -41,50 +41,50 @@ async function startMatch(): Promise<void> {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col">
+  <div>
     <Notivue v-slot="item">
       <Notifications :item="item" />
     </Notivue>
-    <div>
+    <div class="h-screen flex flex-col">
       <div class="z-10">
         <router-link v-if="!selectCharacter && !selectGift" to="/">
-        <button @click="useTap2.play()" class="p-4 absolute top-4 left-4 btn-pop">
+          <button @click="useTap2.play()" class="p-4 absolute top-4 left-4 btn-pop">
+            <img :src="back" class="w-32" />
+          </button>
+        </router-link>
+        <button v-else class="p-4 absolute top-4 left-4 btn-pop"
+          @click="selectCharacter = false; selectGift = false; useTap2.play()">
           <img :src="back" class="w-32" />
         </button>
-      </router-link>
-      <button v-else class="p-4 absolute top-4 left-4 btn-pop"
-        @click="selectCharacter = false; selectGift = false; useTap2.play()">
-        <img :src="back" class="w-32" />
-      </button>
-    </div>
-
-    <div class="flex flex-1">
-      <div class="overCard w-1/2 p-8 flex flex-col justify-center items-center text-center">
-        <img :src="characterBackground" />
-        <div class="overText items-center ">
-          <img :src="`/img/characters/${character}/normal.png`" class="w-1/2" />
-          <div class="flex justify-start w-1/2">
-            <UiGifts :gifts="gifts" :player="player" />
-          </div>
-        </div>
       </div>
 
-      <div class="w-1/2 px-3 flex flex-col justify-center text-center items-center">
-        <SelectCharacter v-if="selectCharacter" />
-        <SelectGifts v-else-if="selectGift" />
-        <div v-else class="overCard">
-          <img :src="menuBackground" class="h-screen"/>
-          <div class="overText p-8">
-            <button @click="startMatch(); useTap1.play()" class="btn-pop">
-              <img src="@/assets/img/ui/entry.png" />
-            </button>
-            <button @click="selectGift = !selectGift; useTap1.play()" class="btn-pop">
-              <img src="@/assets/img/ui/changeGift.png" />
-            </button>
+      <div class="flex flex-1">
+        <div class="overCard w-1/2 p-8 flex flex-col justify-center items-center text-center">
+          <img :src="characterBackground" />
+          <div class="overText items-center ">
+            <img :src="`/img/characters/${character}/normal.png`" class="w-1/2" />
+            <div class="flex justify-start w-1/2">
+              <UiGifts :gifts="gifts" :player="player" />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-1/2 px-3 flex flex-col justify-center text-center items-center">
+          <SelectCharacter v-if="selectCharacter" />
+          <SelectGifts v-else-if="selectGift" />
+          <div v-else class="overCard">
+            <img :src="menuBackground" class="h-screen" />
+            <div class="overText p-8">
+              <button @click="startMatch(); useTap1.play()" class="btn-pop">
+                <img src="@/assets/img/ui/entry.png" />
+              </button>
+              <button @click="selectGift = !selectGift; useTap1.play()" class="btn-pop">
+                <img src="@/assets/img/ui/changeGift.png" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>

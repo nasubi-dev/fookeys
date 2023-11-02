@@ -11,7 +11,9 @@ import hp from "./hp.mp3";
 import missionSort from "./missionSort.mp3";
 import myTurn from "./myTurn.mp3";
 import popUp from "./popUp.mp3";
+import rotten from "./rotten.mp3";
 import success from "./success.mp3";
+import sup from "./sup.mp3";
 import shopping from "./shopping.mp3";
 import swipe from "./swipe.mp3";
 import tap1 from "./tap1.mp3";
@@ -31,7 +33,9 @@ export {
   missionSort,
   myTurn,
   popUp,
+  rotten,
   success,
+  sup,
   shopping,
   swipe,
   tap1,

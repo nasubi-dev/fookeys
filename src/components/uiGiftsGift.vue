@@ -29,7 +29,7 @@ const onKeyUpCallbackHook = (): void => {
       </p>
       <p class="whitespace-pre-wrap  text-gray-900">{{ allGifts[gift]?.description }}</p>
     </div>
-    <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="500">
+    <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
       <img :src="`/img/gifts/${gift}.png`" class="" />
     </VDuringPress>
   </div>
