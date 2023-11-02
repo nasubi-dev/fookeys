@@ -26,7 +26,7 @@ const onKeyUpCallbackHook = (): void => {
 
 <template>
   <div class="block">
-    <div v-if="dropDown" class="bg-white rounded w-48 z-20 mx-3  p-2 fixed  text-gray-900 text-left"
+    <div v-if="dropDown" class="bg-white rounded w-56 z-20 mx-3  p-2 fixed  text-gray-900 text-left"
       :class="[card.description ? ' -translate-y-16  z-20' : '-translate-y-10', state ? `` : `max-w-fit`]">
       <p class="font-bold">{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>

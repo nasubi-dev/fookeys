@@ -23,17 +23,22 @@ const offer2Hand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  if (hand.value.length >= 9) {
-    console.log(i, "hand is full");
-    log.value = "手札がいっぱいです"
-    hand.value.splice(9, hand.value.length - 9);
-  }
   hand.value = [...hand.value].sort((a, b) => a.id - b.id);
 
+  //offerを空にする
   offer.value.splice(0, offer.value.length);
   isOfferSelected.value = [false, false, false];
   pushed.value = false;
   await watchShopEnd();
+}
+const offerSelect = (index: number) => {
+  if ((hand.value.length + isOfferSelected.value.filter((bool) => bool).length) >= 9) {
+    if (!isOfferSelected.value[index]) {
+      log.value = "手札がいっぱいでこれ以上買い物できない！"
+      return
+    }
+  }
+  isOfferSelected.value[index] = !isOfferSelected.value[index];
 }
 </script>
 
@@ -47,9 +52,9 @@ const offer2Hand = async () => {
         </button>
         <div class="flex justify-start w-full">
           <div v-for="(card, index) in offer" :key="card.id">
-            <button @click="isOfferSelected[index] = !isOfferSelected[index]; useTap1.play()" class="card-pop"
+            <button @click="offerSelect(index); useTap1.play()" class="card-pop"
               :class="isOfferSelected[index] ? 'transform -translate-y-5' : null">
-              <UiCard :card="card" size="big" style="width: 15vw;"/>
+              <UiCard :card="card" size="big" style="width: 15vw;" />
             </button>
           </div>
         </div>

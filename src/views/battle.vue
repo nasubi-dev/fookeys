@@ -198,8 +198,8 @@ const wantCard = ref()//!test用
       </transition>
 
       <div v-if="components !== 'postBattle'">
-        {{ components }}
         <div style="width: 40vw;" class="inset-0 top-1/3 left-0 fixed ml-2">
+          {{ components }}
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
             :playerAllocation="!XOR(sign === firstAtkPlayer, sign === 0) ? true : false"
             v-show="components !== 'secondAtk'" />
