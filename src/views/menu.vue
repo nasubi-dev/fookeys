@@ -74,11 +74,11 @@ async function startMatch(): Promise<void> {
           <SelectGifts v-else-if="selectGift" />
           <div v-else class="overCard">
             <img :src="menuBackground" class="h-screen" />
-            <div class="overText p-8">
-              <button @click="startMatch(); useTap1.play()" class="btn-pop">
+            <div class="overText w-full">
+              <button @click="startMatch(); useTap1.play()" class="btn-pop my-4">
                 <img src="@/assets/img/ui/entry.png" />
               </button>
-              <button @click="selectGift = !selectGift; useTap1.play()" class="btn-pop">
+              <button @click="selectGift = !selectGift; useTap1.play()" class="btn-pop my-4">
                 <img src="@/assets/img/ui/changeGift.png" />
               </button>
             </div>
