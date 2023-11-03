@@ -25,7 +25,9 @@ import Battle from "@/components/battle.vue";
 import BlankissSVG from "@/components/blankissSVG.vue";
 import PetitAndSpotSVG from "@/components/petitAndSpotSVG.vue";
 //img
-import back from "@/assets/img/ui/back.png";
+import backImg from "@/assets/img/ui/back.png";
+import winImg from "@/assets/img/ui/win.png";
+import loseImg from "@/assets/img/ui/lose.png";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
@@ -169,6 +171,15 @@ watch(components, (newVal) => {
     }
   }
 })
+const deathAnimation = ref(false);
+watch(death, (newVal) => {
+  if (newVal) {
+    deathAnimation.value = true;
+    setTimeout(async () => {
+      deathAnimation.value = false;
+    }, 1200);
+  }
+})
 const wantCard = ref()//!test用
 </script>
 
@@ -179,16 +190,13 @@ const wantCard = ref()//!test用
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <div v-if="death" class="flex flex-col overlay z-10">
-        <div class="text-8xl animate-jump-in animate-duration-500 animate-ease-in-out">
-          <p v-if="status.hp <= 0">負け</p>
-          <p v-else>勝ち</p>
-        </div>
+        <div v-if="status.hp <= 0"><img :src="deathAnimation ? `/gifs/lose.gif` : loseImg" /></div>
+        <div v-else><img :src="deathAnimation ? `/gifs/win.gif` : winImg" /></div>
         <RouterLink to="/">
-          <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop">
-            <img :src="back" class="w-32" />
+          <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
+            <img :src="backImg" class="w-32" />
           </button>
         </RouterLink>
-        <!-- <img src="/gifs/lose.gif" style="width: 40vw;" /> -->
       </div>
 
       <div class="flex flex-row-reverse z-20 fixed w-full">
