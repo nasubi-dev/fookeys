@@ -5,6 +5,7 @@ import battleStart from "./battleStart.mp3";
 import battleTo from "./battleTo.mp3";
 import cooking from "./cooking.mp3";
 import def from "./def.mp3";
+import donate from "./donate.mp3";
 import enemyCardIn from "./enemyCardIn.mp3";
 import enemyTurn from "./enemyTurn.mp3";
 import hp from "./hp.mp3";
@@ -27,6 +28,7 @@ export {
   battleTo,
   cooking,
   def,
+  donate,
   enemyCardIn,
   enemyTurn,
   hp,

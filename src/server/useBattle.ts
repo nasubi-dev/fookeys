@@ -43,22 +43,19 @@ async function syncPlayer(which: "primary" | "second"): Promise<{ myId: string; 
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
-  const { status, defense, check } = toRefs(player.value);
+  const { status, check } = toRefs(player.value);
   //ダメージを反映する
   let myPlayerStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
-  let myPlayerDefense = (await getDoc(doc(playersRef, id.value))).data()?.defense as number;
   let myPlayerCheck = (await getDoc(doc(playersRef, id.value))).data()?.check as boolean;
   if (!myPlayerStatus) throw Error("myStatusが取得できませんでした");
-  if (myPlayerDefense === undefined) throw Error("myDefenseが取得できませんでした");
   if (myPlayerCheck === undefined) throw Error("myCheckが取得できませんでした");
   status.value = myPlayerStatus;
-  defense.value = myPlayerDefense;
   check.value = myPlayerCheck;
 }
 //死亡判定
 async function checkDeath(p: PlayerData, playerId: string): Promise<void> {
   console.log(s, "checkDeathを実行しました");
-  const { log, id,player } = storeToRefs(playerStore);
+  const { log, id, player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
 
   if (p.status.hp <= 0) {
@@ -228,19 +225,14 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     );
 
     let holdingAtk = my.sumFields.atk - defense;
-    defense = enemy.sumFields.def - my.sumFields.atk;
-    console.log(i, "mySumFields.atk: ", my.sumFields.atk);
-    if (defense < 0) defense = 0; //?これだと相手が攻撃してこないと､この行は実行されない
-
     if (holdingAtk < 0) holdingAtk = 0;
+    console.log(i, "mySumFields.atk: ", my.sumFields.atk);
     enemy.status.hp -= holdingAtk;
     if (enemy.status.hp < 0) enemy.status.hp = 0;
     if (defense !== 0) console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
     else console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
 
     if (playerAllocation) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
-    if (playerAllocation) updateDoc(doc(playersRef, enemyId), { defense: defense });
-    else updateDoc(doc(playersRef, myId), { defense: my.sumFields.def });
     await everyUtil(["atk", my.sumFields.atk]);
     //死亡判定
     await checkDeath(enemy, enemyId);
@@ -270,6 +262,7 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
 
     let holdingTech = my.sumFields.tech;
     enemy.status.hp -= holdingTech;
+    console.log(i, "mySumFields.tech: ", my.sumFields.tech);
     if (enemy.status.hp < 0) enemy.status.hp = 0;
     console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
 
@@ -444,7 +437,7 @@ async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField } = playerStore;
   const { id, player, sign, log, myLog, enemyLog } = storeToRefs(playerStore);
-  const { check, idGame, isSelectedGift, hand, field, status, donate, defense } = toRefs(player.value);
+  const { check, idGame, isSelectedGift, hand, field, status, donate } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
   const { field: enemyField, donate: enemyDonate, check: enemyCheck, hand: enemyHand } = toRefs(enemyPlayer.value);
   const { nextTurn } = gameStore;
@@ -475,6 +468,28 @@ async function postBattle(): Promise<void> {
   //腐っているカードにする
   checkRotten();
 
+  //特殊効果用
+  let defense = 0;
+  let sumAtk = enemyField.value.map((card) => card.attribute).includes("atk")
+    ? enemyField.value
+        .map((card) => card.atk)
+        .reduce((acc, cur) => {
+          if (acc && cur) cur += acc;
+          return cur;
+        }, 0)
+    : 0;
+  if (sign.value !== firstAtkPlayer.value) sumAtk = 0;
+  let sumDef = field.value.map((card) => card.attribute).includes("def")
+    ? field.value
+        .map((card) => card.def)
+        .reduce((acc, cur) => {
+          if (acc && cur) cur += acc;
+          return cur;
+        }, 0)
+    : 0;
+  if (sumAtk !== undefined && sumDef !== undefined) defense = sumDef - sumAtk;
+  if (defense < 0) defense = 0;
+
   //このターン使用したカードの効果を発動する
   if (!enemyCheck.value && !enemyDonate.value) {
     enemyField.value.forEach((card: Card) => {
@@ -492,7 +507,7 @@ async function postBattle(): Promise<void> {
       if (card.id === 55) drawRandomOneCard("sup");
       if (card.id === 61) draw3ExchangedCard();
       if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 20) : null; //?card.hungryだけ減らすでもいいかも
-      if (card.id === 44) changeHandValue("def", defense.value, "def");
+      if (card.id === 44) changeHandValue("def", defense, "def");
     });
   }
   //手札にあるカードの効果を発動する
@@ -517,7 +532,7 @@ async function postBattle(): Promise<void> {
   check.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   //defenseの値を0にする
-  defense.value = 0;
+  defense = 0;
   //isSelectedGiftの値をundefinedにする
   isSelectedGift.value = undefined;
   //firstAtkPlayerの値をundefinedにする

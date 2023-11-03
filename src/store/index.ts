@@ -37,7 +37,6 @@ const usePlayerStore = defineStore("playerData", () => {
       tech: 0,
       heal: 0,
     },
-    defense: 0,
   });
   const phase = ref<Phase>("none");
   const cardLock = ref(false);
@@ -166,7 +165,6 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       tech: 0,
       heal: 0,
     },
-    defense: 0,
   });
   return { enemyPlayer };
 });

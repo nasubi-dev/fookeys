@@ -67,7 +67,6 @@ type PlayerData = {
   field: Card[];
   status: Status;
   sumFields: SumCards;
-  defense: number;
 };
 
 type GameData = {

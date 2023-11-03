@@ -26,11 +26,11 @@ import PetitAndSpotSVG from "@/components/petitAndSpotSVG.vue";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
-import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
+import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort,donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, death, donate, field, sumFields, name, check } = toRefs(player.value);
+const { idGame, character, gifts, status, hand, death, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -68,6 +68,7 @@ const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort);
 const useShopping = useSound(shopping);
 const useRotten = useSound(rotten);
+const useDonate = useSound(donate);
 const useHp = useSound(hp);
 const useSup = useSound(sup);
 const useDef = useSound(def);
@@ -81,6 +82,7 @@ watch(isBGM, (newVal) => {
 })
 //カード使用時に再生
 watch(battleResult, (newVal) => {
+  if(newVal[0] === "donate") useDonate.play()
   if (newVal[0] === "heal") useHp.play()
   if (newVal[0] === "sup") useSup.play()
   if (newVal[0] === "def") useDef.play()
