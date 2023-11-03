@@ -1,9 +1,9 @@
 import { toRefs } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore, enemyPlayerStore } from "@/main";
+import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, doc, addDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { collection, doc, addDoc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import type { PlayerData } from "@/types";
 
@@ -20,6 +20,25 @@ async function registerPlayer(): Promise<void> {
   } catch (error) {
     console.error(e, "Error adding Your ID: ", error);
   }
+}
+//player情報初期化 残す情報はid,name,character,gifts
+async function initPlayer(): Promise<void> {
+  const { id, player } = storeToRefs(playerStore);
+  let keepId = id.value;
+  let keepName = player.value.name;
+  let keepCharacter = player.value.character;
+  let keepGifts = player.value.gifts;
+
+  playerStore.$reset();
+  enemyPlayerStore.$reset();
+  gameStore.$reset();
+
+  id.value = keepId;
+  player.value.name = keepName;
+  player.value.character = keepCharacter;
+  player.value.gifts = keepGifts;
+  await updateDoc(doc(playersRef, id.value), player.value);
+  console.log(i, "Player initialized: ", id.value, player.value);
 }
 //player削除
 async function deletePlayer(): Promise<void> {
@@ -48,4 +67,4 @@ async function getEnemyPlayer(): Promise<void> {
   console.log(i, enemyPlayer.value);
 }
 
-export { registerPlayer, deletePlayer, getEnemyPlayer };
+export { registerPlayer, initPlayer, deletePlayer, getEnemyPlayer };

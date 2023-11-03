@@ -7,7 +7,8 @@ import { usePush } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
 import { intervalForEach, wait, XOR } from "@/server/utils";
-import { getEnemyPlayer } from "@/server/usePlayerData";
+import { getEnemyPlayer, initPlayer } from "@/server/usePlayerData";
+import { deleteGame } from "@/server/useMatchMaking";
 import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
 //components
@@ -23,10 +24,12 @@ import Battle from "@/components/battle.vue";
 //svg
 import BlankissSVG from "@/components/blankissSVG.vue";
 import PetitAndSpotSVG from "@/components/petitAndSpotSVG.vue";
+//img
+import back from "@/assets/img/ui/back.png";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
-import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort,donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3"
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
@@ -61,6 +64,7 @@ watch(enemyLog, () => {
 })
 //sound
 const useBGM = useSound(bgm, { volume: 0.1, loop: true });
+const useTap2 = useSound(tap2);
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
 const useBattlePhase = useSound(battlePhase);
@@ -82,7 +86,7 @@ watch(isBGM, (newVal) => {
 })
 //カード使用時に再生
 watch(battleResult, (newVal) => {
-  if(newVal[0] === "donate") useDonate.play()
+  if (newVal[0] === "donate") useDonate.play()
   if (newVal[0] === "heal") useHp.play()
   if (newVal[0] === "sup") useSup.play()
   if (newVal[0] === "def") useDef.play()
@@ -98,10 +102,11 @@ watch(phase, (newVal) => {
   if (newVal === 'battle') useBattlePhase.play()
   if (newVal === 'shop') useShopping.play()
 })
+//手札に腐ったカードができたら再生
 const rottenCard = ref(0)
-watch(() => hand.value, (newVal) => {//動くのが遅い
+watch(() => hand.value, (newVal) => {
   const preRottenCard = rottenCard.value
-  rottenCard.value = hand.value.reduce((acc, card) => {
+  rottenCard.value = newVal.reduce((acc, card) => {
     if (card.id === 0) acc++
     return acc
   }, 0) - preRottenCard
@@ -173,16 +178,19 @@ const wantCard = ref()//!test用
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <div v-if="death" class="overlay text-8xl">
-        <p v-if="status.hp <= 0" class="text-8xl overlay">
-          負け
-          <!-- <img src="/gifs/lose.gif" style="width: 40vw;" /> -->
-        </p>
-        <p v-else class="text-8xl overlay">
-          勝ち
-          <!-- <img src="/gifs/win.gif" style="width: 40vw;" /> -->
-        </p>
+      <div v-if="death" class="flex flex-col overlay z-10">
+        <div class="text-8xl animate-jump-in animate-duration-500 animate-ease-in-out">
+          <p v-if="status.hp <= 0">負け</p>
+          <p v-else>勝ち</p>
+        </div>
+        <RouterLink to="/">
+          <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop">
+            <img :src="back" class="w-32" />
+          </button>
+        </RouterLink>
+        <!-- <img src="/gifs/lose.gif" style="width: 40vw;" /> -->
       </div>
+
       <div class="flex flex-row-reverse z-20 fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
         <div class="flex flex-col">

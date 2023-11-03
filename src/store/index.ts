@@ -113,6 +113,48 @@ const usePlayerStore = defineStore("playerData", () => {
       else i++;
     }
   };
+  const $reset = () => {
+    id.value = "";
+    sign.value = 0;
+    player.value = {
+      idEnemy: "",
+      idGame: "",
+      name: "",
+      check: false,
+      death: false,
+      donate: false,
+      match: "nothing",
+      character: "blankiss",
+      gifts: [4, 5, 6],
+      isSelectedGift: undefined,
+      hand: [],
+      field: [],
+      status: {
+        hp: 600,
+        hungry: 0,
+        contribution: 0,
+        maxHp: 600,
+        maxHungry: 200,
+      },
+      sumFields: {
+        waste: 0,
+        hungry: 0,
+        priority: 0,
+        atk: 0,
+        def: 0,
+        tech: 0,
+        heal: 0,
+      },
+    };
+    phase.value = "none";
+    cardLock.value = false;
+    offer.value = [];
+    log.value = "";
+    myLog.value = "";
+    enemyLog.value = "";
+    components.value = "postBattle";
+    battleResult.value = ["none", 0];
+  };
   return {
     id,
     sign,
@@ -131,6 +173,7 @@ const usePlayerStore = defineStore("playerData", () => {
     deleteField,
     checkRotten,
     deleteAllWaste0,
+    $reset,
   };
 });
 
@@ -166,7 +209,39 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       heal: 0,
     },
   });
-  return { enemyPlayer };
+  const $reset = () => {
+    enemyPlayer.value = {
+      idEnemy: "",
+      idGame: "",
+      name: "",
+      check: false,
+      death: false,
+      donate: false,
+      match: "nothing",
+      character: "blankiss",
+      gifts: [4, 5, 6],
+      isSelectedGift: undefined,
+      hand: [],
+      field: [],
+      status: {
+        hp: 600,
+        hungry: 0,
+        contribution: 0,
+        maxHp: 600,
+        maxHungry: 200,
+      },
+      sumFields: {
+        waste: 0,
+        hungry: 0,
+        priority: 0,
+        atk: 0,
+        def: 0,
+        tech: 0,
+        heal: 0,
+      },
+    };
+  };
+  return { enemyPlayer, $reset };
 });
 
 const useGameStore = defineStore("gameData", () => {
@@ -185,8 +260,17 @@ const useGameStore = defineStore("gameData", () => {
     game.value.turn += 1;
     console.log(i, "turn: ", game.value.turn);
   };
+  const $reset = () => {
+    game.value = {
+      turn: 1,
+      players: [],
+      firstAtkPlayer: undefined,
+      missionsNum: [],
+    };
+    missions.value = [];
+  };
 
-  return { game, missions, nextTurn };
+  return { game, missions, nextTurn, $reset };
 });
 
 export { useGameStore, useEnemyPlayerStore, usePlayerStore };

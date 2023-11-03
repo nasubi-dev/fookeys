@@ -3,7 +3,7 @@ import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot,deleteDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { router } from "@/router";
 import type { MatchStatus, PlayerData, GameData } from "@/types";
@@ -126,5 +126,11 @@ async function startMatchmaking(): Promise<void> {
     log.value = idGame.value + "にエントリー！";
   }
 }
+//gameを削除する
+async function deleteGame(): Promise<void>{
+  const { idGame } = toRefs(playerStore.player);
+  await deleteDoc(doc(gamesRef, idGame.value));
+  console.log(i, "delete game: ", idGame.value);
+}
 
-export { startMatchmaking };
+export { startMatchmaking, deleteGame };

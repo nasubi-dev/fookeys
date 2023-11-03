@@ -43,28 +43,30 @@ async function syncPlayer(which: "primary" | "second"): Promise<{ myId: string; 
 async function reflectStatus(): Promise<void> {
   console.log(s, "reflectDamageを実行しました");
   const { player, id } = storeToRefs(playerStore);
-  const { status, check } = toRefs(player.value);
+  const { status, check, death } = toRefs(player.value);
   //ダメージを反映する
   let myPlayerStatus = (await getDoc(doc(playersRef, id.value))).data()?.status as Status;
   let myPlayerCheck = (await getDoc(doc(playersRef, id.value))).data()?.check as boolean;
+  let myPlayerDeath = (await getDoc(doc(playersRef, id.value))).data()?.death as boolean;
   if (!myPlayerStatus) throw Error("myStatusが取得できませんでした");
   if (myPlayerCheck === undefined) throw Error("myCheckが取得できませんでした");
+  if (myPlayerDeath === undefined) throw Error("myDeathが取得できませんでした");
   status.value = myPlayerStatus;
   check.value = myPlayerCheck;
+  death.value = myPlayerDeath;
 }
 //死亡判定
-async function checkDeath(p: PlayerData, playerId: string): Promise<void> {
+async function checkDeath(p: PlayerData): Promise<boolean> {
   console.log(s, "checkDeathを実行しました");
-  const { log, id, player } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
 
   if (p.status.hp <= 0) {
-    p.death = true;
-    updateDoc(doc(playersRef, id.value), { death: p.death });
-    updateDoc(doc(playersRef, idEnemy.value), { death: p.death });
-    if (id.value === p.idEnemy) log.value = "勝ち";
-    else log.value = "負け";
+    updateDoc(doc(playersRef, id.value), { death: true });
+    updateDoc(doc(playersRef, idEnemy.value), { death: true });
+    return false;
   }
+  return true;
 }
 //情報更新処理//!paramsはないだろ
 async function everyUtil(params: [string, number]): Promise<void> {
@@ -77,7 +79,7 @@ async function everyUtil(params: [string, number]): Promise<void> {
   await wait(2000);
 }
 //ダメージを計算する
-async function calcDamage(which: "primary" | "second"): Promise<void> {
+async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   console.log(s, "calcDamageを実行しました");
   const { sign, battleResult, log, myLog, enemyLog } = storeToRefs(playerStore);
   const { game } = toRefs(gameStore);
@@ -87,33 +89,33 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
   const attackOrder = XOR(playerAllocation === 0, which === "primary");
 
   //fieldが空の場合､ダメージ計算を行わない
-  if (my.field.length === 0) return;
+  if (my.field.length === 0) return false;
   //寄付をしていた場合､ダメージ計算を行わない
   if (my.donate) {
     my.status.contribution += my.field.length * 5;
     if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.contribution": my.status.contribution });
     await everyUtil(["donate", my.field.length * 5]);
     battleResult.value = ["none", 0];
-    return;
+    return false;
   }
 
   //自分がこのターン､行動不能の場合､ダメージ計算を行わない
   my.status.hungry += my.sumFields.hungry;
   if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
   if (my.status.hungry > my.status.maxHungry) {
-    my.check = true;
+    my.check = false;
     updateDoc(doc(playersRef, myId), { check: my.check });
     //hungryの値が上限を超えていた場合､上限値にする
     if (my.status.hungry > my.status.maxHungry) my.status.hungry = my.status.maxHungry;
     await everyUtil(["hungry", 1]); //?行動不能
     battleResult.value = ["none", 0];
-    return;
+    return false;
   }
 
   //相手がこのターン､行動不能の場合､ダメージ計算を行わない
   let enemySumHungry = enemy.status.hungry;
   if (enemySumHungry > enemy.status.maxHungry) {
-    enemy.check = true;
+    enemy.check = false;
     //hungryの値が上限を超えていた場合､上限値にする
     if (enemySumHungry > enemy.status.maxHungry) enemySumHungry = enemy.status.maxHungry;
   }
@@ -235,8 +237,12 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     if (playerAllocation) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     await everyUtil(["atk", my.sumFields.atk]);
     //死亡判定
-    await checkDeath(enemy, enemyId);
-    await checkDeath(my, myId);
+    const isEnemyDeath = await checkDeath(enemy);
+    const isMyDeath = await checkDeath(my);
+    if (!isEnemyDeath || !isMyDeath) {
+      battleResult.value = ["none", 0];
+      return true;
+    }
   }
 
   //テクニック攻撃を行う
@@ -269,11 +275,16 @@ async function calcDamage(which: "primary" | "second"): Promise<void> {
     if (playerAllocation) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     await everyUtil(["tech", holdingTech]);
     //死亡判定
-    await checkDeath(enemy, enemyId);
-    await checkDeath(my, myId);
+    const isEnemyDeath = await checkDeath(enemy);
+    const isMyDeath = await checkDeath(my);
+    if (!isEnemyDeath || !isMyDeath) {
+      battleResult.value = ["none", 0];
+      return true;
+    }
   }
 
   battleResult.value = ["none", 0];
+  return false;
 }
 
 //missionの統括
@@ -412,8 +423,9 @@ async function battle() {
   components.value = "primaryAtk";
 
   console.log(i, "先行の攻撃");
-  await calcDamage("primary");
+  const isPrimaryDeath = await calcDamage("primary");
   await reflectStatus();
+  if (isPrimaryDeath) return;
   await checkMission("primary");
 
   getEnemyPlayer(); //!
@@ -421,8 +433,9 @@ async function battle() {
   components.value = "secondAtk";
 
   console.log(i, "後攻の攻撃");
-  await calcDamage("second");
+  const isSecondDeath = await calcDamage("second");
   await reflectStatus();
+  if (isSecondDeath) return;
   await checkMission("second");
 
   getEnemyPlayer(); //!

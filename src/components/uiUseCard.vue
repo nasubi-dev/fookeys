@@ -47,7 +47,7 @@ watch(battleResult, (newVal) => {
       <div class="overCard flex justify-start">
         <img :src="infoImg" />
         <div class="overText">
-          <div class="flex justify-start items-center">
+          <div class="flex justify-start items-center font-bold text-base">
             <img :src="`/img/characters/${characterName}/normal.png`" class="w-1/3  bottom-5 bg-clip-border" />
             <p>{{ "🍖" + p.player.sumFields.hungry }} </p>
             <p v-if="p.player.sumFields.priority && !p.player.donate">{{ "🦶: " + p.player.sumFields.priority }}</p>
