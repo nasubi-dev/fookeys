@@ -18,6 +18,16 @@ const { hand } = toRefs(player.value);
 
 const isOfferSelected = ref([false, false, false]);
 const pushed = ref(false);
+//カードを選択する
+const offerSelect = (index: number) => {
+  if ((hand.value.length + isOfferSelected.value.filter((bool) => bool).length) >= 9) {
+    if (!isOfferSelected.value[index]) {
+      log.value = "手札がいっぱいでこれ以上買い物できない！"
+      return
+    }
+  }
+  isOfferSelected.value[index] = !isOfferSelected.value[index];
+}
 //選択を確定させたらHandにtrueのカードを追加して､offerを空にする
 const offer2Hand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
@@ -30,15 +40,6 @@ const offer2Hand = async () => {
   isOfferSelected.value = [false, false, false];
   pushed.value = false;
   await watchShopEnd();
-}
-const offerSelect = (index: number) => {
-  if ((hand.value.length + isOfferSelected.value.filter((bool) => bool).length) >= 9) {
-    if (!isOfferSelected.value[index]) {
-      log.value = "手札がいっぱいでこれ以上買い物できない！"
-      return
-    }
-  }
-  isOfferSelected.value[index] = !isOfferSelected.value[index];
 }
 </script>
 

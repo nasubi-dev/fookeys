@@ -30,7 +30,7 @@ import { enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, atk
 import bgm from "@/assets/sounds/bgm.mp3"
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, donate, field, sumFields, name, check } = toRefs(player.value);
+const { idGame, character, gifts, status, hand, death, donate, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -171,6 +171,16 @@ const wantCard = ref()//!test用
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
+      <div v-if="death" class="overlay text-8xl">
+        <p v-if="status.hp <= 0" class="text-8xl overlay">
+          負け
+          <!-- <img src="/gifs/lose.gif" style="width: 40vw;" /> -->
+        </p>
+        <p v-else class="text-8xl overlay">
+          勝ち
+          <!-- <img src="/gifs/win.gif" style="width: 40vw;" /> -->
+        </p>
+      </div>
       <div class="flex flex-row-reverse z-20 fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
         <div class="flex flex-col">
