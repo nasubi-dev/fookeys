@@ -21,9 +21,8 @@ import UiUseCard from "@/components/uiUseCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
 import Battle from "@/components/battle.vue";
-//svg
-import BlankissSVG from "@/components/blankissSVG.vue";
-import PetitAndSpotSVG from "@/components/petitAndSpotSVG.vue";
+import myLogImg from "@/components/myLog.vue";
+import enemyLogImg from "@/components/enemyLog.vue";
 //img
 import backImg from "@/assets/img/ui/back.png";
 import winImg from "@/assets/img/ui/win.png";
@@ -57,8 +56,8 @@ const { players, turn, firstAtkPlayer } = toRefs(game.value);
 
 //log
 const customIcons = {
-  success: character.value === "blankiss" ? markRaw(BlankissSVG) : markRaw(PetitAndSpotSVG),
-  error: character.value !== "blankiss" ? markRaw(BlankissSVG) : markRaw(PetitAndSpotSVG),
+  success: myLogImg,
+  error: enemyLogImg,
   info: filledIcons.info,
   close: filledIcons.close,
   promise: filledIcons.promise
