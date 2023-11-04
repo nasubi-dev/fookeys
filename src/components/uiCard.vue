@@ -40,7 +40,7 @@ const onKeyUpCallbackHook = (): void => {
             {{ card.waste }}
           </p>
 
-          <div class="flex font-bold text-border transform"
+          <div class="flex font-bold text-border-thin transform"
             :class="size === 'normal' ? `text-xs -translate-x-[10%] translate-y-full` : `text-lg -translate-x-[10%] translate-y-full`">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
