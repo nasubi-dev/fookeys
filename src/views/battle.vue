@@ -32,7 +32,22 @@ import loseImg from "@/assets/img/ui/lose.png";
 import allGifts from "@/assets/allGifts";
 //sound
 import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
-import bgm from "@/assets/sounds/bgm.mp3"
+import bgm from "@/assets/sounds/bgm.mp3";
+const useBGM = useSound(bgm, { volume: 0.1, loop: true });
+const useTap2 = useSound(tap2);
+const useEnemyTurn = useSound(enemyTurn);
+const useMyTurn = useSound(myTurn);
+const useBattlePhase = useSound(battlePhase);
+const useBattleStart = useSound(battleStart);
+const useMissionSort = useSound(missionSort);
+const useShopping = useSound(shopping);
+const useRotten = useSound(rotten);
+const useDonate = useSound(donate);
+const useHp = useSound(hp);
+const useSup = useSound(sup);
+const useDef = useSound(def);
+const useAtk = useSound(atk);
+const useTech = useSound(tech);
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, character, gifts, status, hand, death, field, sumFields, name, check } = toRefs(player.value);
@@ -52,6 +67,7 @@ const push = usePush()
 watch(log, () => {
   if (log.value === "") return
   push.info(log.value)
+  log.value.includes("枚のカードが腐ってしまった！") ? useRotten.play() : null
   log.value = ""
 })
 watch(myLog, () => {
@@ -64,22 +80,7 @@ watch(enemyLog, () => {
   push.error(enemyLog.value)
   enemyLog.value = ""
 })
-//sound
-const useBGM = useSound(bgm, { volume: 0.1, loop: true });
-const useTap2 = useSound(tap2);
-const useEnemyTurn = useSound(enemyTurn);
-const useMyTurn = useSound(myTurn);
-const useBattlePhase = useSound(battlePhase);
-const useBattleStart = useSound(battleStart);
-const useMissionSort = useSound(missionSort);
-const useShopping = useSound(shopping);
-const useRotten = useSound(rotten);
-const useDonate = useSound(donate);
-const useHp = useSound(hp);
-const useSup = useSound(sup);
-const useDef = useSound(def);
-const useAtk = useSound(atk);
-const useTech = useSound(tech);
+
 //BGMの再生
 const isBGM = ref(false)
 watch(isBGM, (newVal) => {
@@ -104,15 +105,7 @@ watch(phase, (newVal) => {
   if (newVal === 'battle') useBattlePhase.play()
   if (newVal === 'shop') useShopping.play()
 })
-//手札に腐ったカードができたら再生
-const rottenCard = ref(0)
-watch(() => hand.value, (newVal) => {
-  const preRottenCard = rottenCard.value
-  rottenCard.value = newVal.filter((card) => card.id === 0).length
-  if ((rottenCard.value - preRottenCard) === 0) return
-  log.value = rottenCard.value - preRottenCard + "枚のカードが腐ってしまった！"
-  useRotten.play()
-})
+
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
@@ -134,6 +127,7 @@ onMounted(async () => {
     console.log(i, "turn: ", turn.value);
   });
 });
+
 const myTurnAnimation = ref(false);
 const enemyTurnAnimation = ref(false);
 watch(components, (newVal) => {

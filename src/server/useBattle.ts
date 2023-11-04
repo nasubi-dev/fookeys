@@ -448,7 +448,7 @@ async function battle() {
 //戦闘後の処理
 async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
-  const { checkRotten, deleteField,decMaxHungry } = playerStore;
+  const { checkRotten, deleteField, decMaxHungry } = playerStore;
   const { id, player, sign, log, myLog, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, field, status, donate } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
@@ -479,13 +479,15 @@ async function postBattle(): Promise<void> {
   changeHandValue("waste", -1);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   //腐っているカードにする
-  const oldHandNum = hand.value.filter((card) => card.id=== 0).length;
+  const oldHandNum = hand.value.filter((card) => card.id === 0).length;
   checkRotten();
   const newHandNum = hand.value.filter((card) => card.id === 0).length;
-  log.value= newHandNum - oldHandNum + "枚のカードが腐ってしまった！";
-  decMaxHungry(newHandNum - oldHandNum);
-  updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  updateDoc(doc(playersRef, id.value), { status: status.value });
+  if ((newHandNum - oldHandNum) !== 0) {
+    log.value = newHandNum - oldHandNum + "枚のカードが腐ってしまった！";
+    decMaxHungry(newHandNum - oldHandNum);
+    updateDoc(doc(playersRef, id.value), { hand: hand.value });
+    updateDoc(doc(playersRef, id.value), { status: status.value });
+  }
   //特殊効果用
   let defense = 0;
   let sumAtk = enemyField.value.map((card) => card.attribute).includes("atk")
