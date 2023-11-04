@@ -59,7 +59,8 @@ const allGifts: Gift[] = [
     description: "腐ったカードを手札から全部消す",
     requireContribution: 40,
     skill: () => {
-      deleteAllRottenCard();
+      const num = deleteAllRottenCard();
+      changeStatusValue("maxHungry", num * 20);
     },
   },
   {
@@ -85,7 +86,7 @@ const allGifts: Gift[] = [
     requireContribution: 55,
     skill: () => {
       changeSumCardsValue("def", 999);
-    }
+    },
   },
   {
     id: 9,

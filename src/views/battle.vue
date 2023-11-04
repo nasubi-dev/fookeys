@@ -108,13 +108,10 @@ watch(phase, (newVal) => {
 const rottenCard = ref(0)
 watch(() => hand.value, (newVal) => {
   const preRottenCard = rottenCard.value
-  rottenCard.value = newVal.reduce((acc, card) => {
-    if (card.id === 0) acc++
-    return acc
-  }, 0) - preRottenCard
-  if (!rottenCard.value) return
-  log.value = rottenCard.value + "枚のカードが腐ってしまった！"
-  if (rottenCard.value) useRotten.play()
+  rottenCard.value = newVal.filter((card) => card.id === 0).length
+  if ((rottenCard.value - preRottenCard) === 0) return
+  log.value = rottenCard.value - preRottenCard + "枚のカードが腐ってしまった！"
+  useRotten.play()
 })
 //入場したらPlayer型としてIDが保管される
 onMounted(async () => {

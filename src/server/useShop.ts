@@ -55,9 +55,10 @@ async function endShop(): Promise<void> {
   //終了時処理
   phase.value = "battle";
   check.value = false;
-  //cardLockの値をfalseにする(初期値に戻す)
   cardLock.value = false;
   updateDoc(doc(playersRef, id.value), { check: check.value });
+  updateDoc(doc(playersRef, id.value), { status: status.value });
+  updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
   console.log(i, "check: " + check.value);
   getEnemyPlayer(); //!
 }

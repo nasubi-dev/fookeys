@@ -62,7 +62,7 @@ async function draw3ExchangedCard() {
     hand.value = [...hand.value].sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  console.log("draw3ExchangedCard: " + selectCards.map((card) => card.name))
+  console.log("draw3ExchangedCard: " + selectCards.map((card) => card.name));
 }
 //cardをHandに6枚セットする
 async function setHand(): Promise<void> {
@@ -184,14 +184,15 @@ function changeHandValue(key: keyof SumCards, value: number, attribute?: Attribu
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //Handの腐ったカードを削除する
-function deleteAllRottenCard(): void {
+function deleteAllRottenCard(): number {
   console.log(i, "reduceWaste0を実行しました");
   const { deleteAllWaste0 } = playerStore;
   const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
-  deleteAllWaste0();
+  const num = deleteAllWaste0();
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
+  return num;
 }
 //Statusの値を変更する
 function changeStatusValue(key: keyof Status, value: number): void {
@@ -202,6 +203,8 @@ function changeStatusValue(key: keyof Status, value: number): void {
   status.value[key] += value;
   if (key === "hp" && status.value.hp > status.value.maxHp) status.value.hp = status.value.maxHp;
   if (key === "hungry" && status.value.hungry < 0) status.value.hungry = 0;
+  if (key === "maxHp" && status.value.maxHp > 600) status.value.maxHp = 600;
+  if (key === "maxHungry" && status.value.maxHungry > 200) status.value.maxHungry = 200;
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);
 }
