@@ -9,6 +9,8 @@ import decideImg from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
 import sumFieldImg from "@/assets/img/ui/info.png";
+//gif
+import eatingGif from "@/assets/gifs/eating.gif";
 //sound
 import { tap2, battlePhase, swipe } from "@/assets/sounds";
 const useTap2 = useSound(tap2);
@@ -44,7 +46,7 @@ onMounted(() => {
     <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div v-if="battleAnimation" class="overlay">
-        <img :src="`/gifs/eating.gif`" />
+        <img :src="eatingGif" />
       </div>
       <div v-else>
         <div v-if="phase === 'battle' && !cardLock" class="flex">

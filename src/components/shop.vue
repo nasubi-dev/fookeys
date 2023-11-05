@@ -6,6 +6,7 @@ import ShopOffer from './shopOffer.vue';
 import ShopUseGifts from './shopUseGifts.vue';
 import drawCardImg from "@/assets/img/ui/drawCard.png";
 import useGiftImg from "@/assets/img/ui/useGift.png";
+import shoppingGif from "@/assets/gifs/shopping.gif";
 
 import { useSound } from "@vueuse/sound";
 import { tap2 } from "@/assets/sounds";
@@ -37,7 +38,7 @@ onMounted(() => {
     <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
       <div v-if="shopAnimation">
-        <img :src="`/gifs/shopping.gif`" />
+        <img :src="shoppingGif" />
       </div>
       <div v-else class="overlay">
         <ShopOffer v-show="draw" />

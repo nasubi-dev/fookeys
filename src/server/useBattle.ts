@@ -526,10 +526,6 @@ async function postBattle(): Promise<void> {
     });
   }
   //手札にあるカードの効果を発動する
-  enemyHand.value.forEach((card: Card) => {
-    if (!(card.id === 6)) return;
-    enemyLog.value = card.name + "の効果!" + card.description;
-  });
   hand.value.forEach((card: Card) => {
     if (!(card.id === 6)) return;
     myLog.value = card.name + "の効果!" + card.description;

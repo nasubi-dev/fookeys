@@ -27,6 +27,13 @@ import enemyLogImg from "@/components/enemyLog.vue";
 import backImg from "@/assets/img/ui/back.png";
 import winImg from "@/assets/img/ui/win.png";
 import loseImg from "@/assets/img/ui/lose.png";
+import myTurnImg from "@/assets/gifs/myTurn.png";
+import enemyTurnImg from "@/assets/gifs/enemyTurn.png";
+//gifs
+import waitingGif from "@/assets/gifs/waiting.gif";
+import startGif from "@/assets/gifs/start.gif";
+import winGif from "@/assets/gifs/win.gif";
+import loseGif from "@/assets/gifs/lose.gif";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
@@ -190,10 +197,10 @@ const wantCard = ref()//!test用
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <img  v-if="startAnimation" :src="`/gifs/start.gif`"  class="flex flex-col overlay z-10" />
+      <img  v-if="startAnimation" :src="startGif"  class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
-        <div v-if="status.hp <= 0"><img :src="deathAnimation ? `/gifs/lose.gif` : loseImg" /></div>
-        <div v-else><img :src="deathAnimation ? `/gifs/win.gif` : winImg" /></div>
+        <div v-if="status.hp <= 0"><img :src="deathAnimation ? loseGif : loseImg" /></div>
+        <div v-else><img :src="deathAnimation ? winGif : winImg" /></div>
         <RouterLink to="/">
           <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
             <img :src="backImg" class="w-32" />
@@ -245,8 +252,8 @@ const wantCard = ref()//!test用
           <transition appear enter-from-class="translate-y-[-150%] opacity-0"
             leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
             enter-active-class="transition duration-300" mode="out-in">
-            <img v-if="myTurnAnimation" :src="`/gifs/myTurn.png`" style="width: 40vw;" />
-            <img v-else-if="enemyTurnAnimation" :src="`/gifs/enemyTurn.png`" style="width: 40vw;" />
+            <img v-if="myTurnAnimation" :src="myTurnImg" style="width: 40vw;" />
+            <img v-else-if="enemyTurnAnimation" :src="enemyTurnImg" style="width: 40vw;" />
             <div v-else class="flex flex-col">
               <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
                 :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
@@ -259,7 +266,7 @@ const wantCard = ref()//!test用
 
       <div class="bottom-0 fixed mb-3">
         <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
-          src="/gifs/waiting.gif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
+          :src="waitingGif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
         <div class="flex justify-start" style="width: 95vw;">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
