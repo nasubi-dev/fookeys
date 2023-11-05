@@ -233,7 +233,6 @@ const loadStartGif = () => {
           <button @click="status.hp -= 10">hp-10</button>
           <button @click="status.hungry -= 10">hungry-10</button>
           <button @click="status.contribution += 100">contribution+100</button>
-          <UiCard v-if="hand[0]" :card="hand[0]" :size="'big'" style="width: 15vw;" />
         </div>
       </div>
 
