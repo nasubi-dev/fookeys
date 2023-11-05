@@ -199,7 +199,6 @@ const wantCard = ref()//!test用
           <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
             "OFF"
           }}</span></button>
-          <p class="text-border font-bold text-lg"> text</p>
         </div>
       </div>
 

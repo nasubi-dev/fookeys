@@ -195,16 +195,16 @@ function deleteAllRottenCard(): number {
   return num;
 }
 //Statusの値を変更する
-function changeStatusValue(key: keyof Status, value: number): void {
+function changeStatusValue(key: keyof Status, value: number, isBreak?: boolean): void {
   console.log(i, "changeStatusValueを実行しました");
   const { id, player } = storeToRefs(playerStore);
   const { status } = toRefs(player.value);
 
   status.value[key] += value;
-  if (key === "hp" && status.value.hp > status.value.maxHp) status.value.hp = status.value.maxHp;
-  if (key === "hungry" && status.value.hungry < 0) status.value.hungry = 0;
-  if (key === "maxHp" && status.value.maxHp > 600) status.value.maxHp = 600;
-  if (key === "maxHungry" && status.value.maxHungry > 200) status.value.maxHungry = 200;
+  if (key === "hp" && status.value.hp > status.value.maxHp && !isBreak) status.value.hp = status.value.maxHp;
+  if (key === "hungry" && status.value.hungry < 0 && !isBreak) status.value.hungry = 0;
+  if (key === "maxHp" && status.value.maxHp > 600 && !isBreak) status.value.maxHp = 600;
+  if (key === "maxHungry" && status.value.maxHungry > 200 && !isBreak) status.value.maxHungry = 200;
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);
 }

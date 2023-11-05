@@ -135,11 +135,12 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
         myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 58) changeHandValue("atk", 10, "atk");
         if (card.id === 59) changeHandValue("def", 20, "def");
-        if (card.id === 64) changeStatusValue("maxHungry", 20);
+        if (card.id === 64) changeStatusValue("maxHungry", 20, true);
       },
       my.field,
       100
     );
+    await reflectStatus();
 
     await everyUtil(["sup", 0]);
   }
@@ -194,6 +195,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
       100
     );
     await reflectStatus();
+
     await everyUtil(["def", my.sumFields.def]);
   }
 
@@ -204,17 +206,15 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     intervalForEach(
       (card: Card) => {
         if (!(card.id === 10 || card.id === 50)) return;
-        if (!attackOrder) {
-          enemyLog.value = card.name + "の効果!" + card.description;
-          return;
-        }
-        myLog.value = card.name + "の効果!" + card.description;
+        if (!attackOrder) enemyLog.value = card.name + "の効果!" + card.description;
+        else myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 10) defense = 0;
         if (card.id === 50 && which === "second") my.sumFields.atk += 75;
       },
       my.field,
       100
     );
+    await reflectStatus();
 
     let holdingAtk = my.sumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
