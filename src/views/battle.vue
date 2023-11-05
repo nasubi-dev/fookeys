@@ -200,7 +200,7 @@ const loadStartGif = () => {
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
-        <div v-if="status.hp <= 0">
+        <div v-if="status.hp <= 0" class="flex flex-col items-center justify-center">
           <img @load="loadDeathGif()" :src="deathAnimation ? loseGif : loseImg" />
           <RouterLink to="/">
             <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
@@ -208,7 +208,7 @@ const loadStartGif = () => {
             </button>
           </RouterLink>
         </div>
-        <div v-else>
+        <div v-else class="flex flex-col items-center justify-center">
           <img @load="loadDeathGif()" :src="deathAnimation ? winGif : winImg" />
           <RouterLink to="/">
             <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
