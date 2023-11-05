@@ -120,12 +120,12 @@ watch(phase, (newVal) => {
 })
 
 //入場したらPlayer型としてIDが保管される
-const startAnimation = ref(false);
+const startAnimation = ref(true);
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
-  startAnimation.value = true;
+  // startAnimation.value = true;
   setTimeout(async () => {
-    startAnimation.value = false;
+    // startAnimation.value = false;
     character.value = sign.value === 0 ? "blankiss" : "petit&spot";
     enemyPlayer.value.character = sign.value !== 0 ? "blankiss" : "petit&spot"
     useBattleStart.play()
@@ -189,6 +189,12 @@ watch(death, (newVal) => {
   }
 })
 const wantCard = ref()//!test用
+const loadImg = () => {
+  setTimeout(async () => {
+    startAnimation.value = false;
+  console.log(i, "startAnimation2");
+  }, 1700);
+}
 </script>
 
 <template>
@@ -197,7 +203,7 @@ const wantCard = ref()//!test用
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <img  v-if="startAnimation" :src="startGif"  class="flex flex-col overlay z-10" />
+      <img v-if="startAnimation"  :load="loadImg()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="status.hp <= 0"><img :src="deathAnimation ? loseGif : loseImg" /></div>
         <div v-else><img :src="deathAnimation ? winGif : winImg" /></div>
