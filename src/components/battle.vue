@@ -36,8 +36,8 @@ onMounted(() => {
   battleAnimation.value = true;
 })
 const loadBattleGif = () => {
+  useBattlePhase.play();
   setTimeout(() => {
-    useBattlePhase.play();
     battleAnimation.value = false;
   }, 1500);
 }

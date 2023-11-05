@@ -147,33 +147,31 @@ watch(components, (newVal) => {
     if (sign.value === firstAtkPlayer.value) {
       myTurnAnimation.value = true;
       useMyTurn.play()
-      setTimeout(() => {
-        myTurnAnimation.value = false;
-      }, 1000);
     } else {
       enemyTurnAnimation.value = true;
       useEnemyTurn.play()
-      setTimeout(() => {
-        enemyTurnAnimation.value = false;
-      }, 1000);
     }
   }
   if (newVal === "secondAtk") {
     if (sign.value !== firstAtkPlayer.value) {
       myTurnAnimation.value = true;
       useMyTurn.play()
-      setTimeout(() => {
-        myTurnAnimation.value = false;
-      }, 1000);
     } else {
       enemyTurnAnimation.value = true;
       useEnemyTurn.play()
-      setTimeout(() => {
-        enemyTurnAnimation.value = false;
-      }, 1000);
     }
   }
 })
+const loadMyTurnImg = () => {
+  setTimeout(() => {
+    myTurnAnimation.value = false;
+  }, 1000);
+}
+const loadEnemyTurnImg = () => {
+  setTimeout(() => {
+    enemyTurnAnimation.value = false;
+  }, 1000);
+}
 const deathAnimation = ref(false);
 watch(death, (newVal) => {
   if (newVal) {
@@ -253,8 +251,8 @@ const loadStartGif = () => {
           <transition appear enter-from-class="translate-y-[-150%] opacity-0"
             leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
             enter-active-class="transition duration-300" mode="out-in">
-            <img v-if="myTurnAnimation" :src="myTurnImg" style="width: 40vw;" />
-            <img v-else-if="enemyTurnAnimation" :src="enemyTurnImg" style="width: 40vw;" />
+            <img v-if="myTurnAnimation" @load="loadMyTurnImg()" :src="myTurnImg" style="width: 40vw;" />
+            <img v-else-if="enemyTurnAnimation" @load="loadEnemyTurnImg()" :src="enemyTurnImg" style="width: 40vw;" />
             <div v-else class="flex flex-col">
               <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
                 :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
