@@ -22,7 +22,7 @@ const usePlayerStore = defineStore("playerData", () => {
     hand: [],
     field: [],
     status: {
-      hp: 600,
+      hp: 10,
       hungry: 0,
       contribution: 0,
       maxHp: 600,

@@ -176,11 +176,13 @@ const deathAnimation = ref(false);
 watch(death, (newVal) => {
   if (newVal) {
     deathAnimation.value = true;
-    setTimeout(() => {
-      deathAnimation.value = false;
-    }, 1200);
   }
 })
+const loadDeathGif = () => {
+  setTimeout(() => {
+    deathAnimation.value = false;
+  }, 1200);
+}
 const wantCard = ref()//!test用
 const startAnimation = ref(true);
 const loadStartGif = () => {
@@ -196,10 +198,10 @@ const loadStartGif = () => {
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <img v-if="startAnimation"  @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
+      <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
-        <div v-if="status.hp <= 0"><img :src="deathAnimation ? loseGif : loseImg" /></div>
-        <div v-else><img :src="deathAnimation ? winGif : winImg" /></div>
+        <div v-if="status.hp <= 0"><img @load="loadDeathGif()" :src="deathAnimation ? loseGif : loseImg" /></div>
+        <div v-else><img @load="loadDeathGif()" :src="deathAnimation ? winGif : winImg" /></div>
         <RouterLink to="/">
           <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
             <img :src="backImg" class="w-32" />
