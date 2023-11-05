@@ -25,12 +25,17 @@ watch(cardLock, (newVal) => {
 })
 
 const shopAnimation = ref(true);
-onMounted(() => {
-  shopAnimation.value = true;
+// onMounted(() => {
+//   shopAnimation.value = true;
+//   setTimeout(() => {
+//     shopAnimation.value = false;
+//   }, 1000);
+// })
+const loadShoppingGif = () => {
   setTimeout(() => {
     shopAnimation.value = false;
   }, 1000);
-})
+}
 </script>
 
 <template>
@@ -38,7 +43,7 @@ onMounted(() => {
     <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300" mode="out-in">
       <div v-if="shopAnimation">
-        <img :src="shoppingGif" />
+        <img @load="loadShoppingGif()" :src="shoppingGif" />
       </div>
       <div v-else class="overlay">
         <ShopOffer v-show="draw" />

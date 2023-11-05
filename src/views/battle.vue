@@ -187,7 +187,7 @@ watch(death, (newVal) => {
 })
 const wantCard = ref()//!test用
 const startAnimation = ref(true);
-const loadImg = () => {
+const loadStartGif = () => {
   setTimeout(() => {
     startAnimation.value = false;
   }, 1700);
@@ -200,7 +200,7 @@ const loadImg = () => {
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <img v-if="startAnimation"  @load="loadImg()" :src="startGif" class="flex flex-col overlay z-10" />
+      <img v-if="startAnimation"  @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="status.hp <= 0"><img :src="deathAnimation ? loseGif : loseImg" /></div>
         <div v-else><img :src="deathAnimation ? winGif : winImg" /></div>
