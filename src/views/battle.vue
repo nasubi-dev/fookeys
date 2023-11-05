@@ -18,6 +18,7 @@ import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import UiUseCard from "@/components/uiUseCard.vue";
+import UiCard from "@/components/uiCard.vue";
 import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
 import Shop from "@/components/shop.vue";
 import Battle from "@/components/battle.vue";
@@ -232,6 +233,7 @@ const loadStartGif = () => {
           <button @click="status.hp -= 10">hp-10</button>
           <button @click="status.hungry -= 10">hungry-10</button>
           <button @click="status.contribution += 100">contribution+100</button>
+          <UiCard v-if="hand[0]" :card="hand[0]" :size="'big'" style="width: 15vw;" />
         </div>
       </div>
 

@@ -45,25 +45,6 @@ function drawRandomOneCard(order?: Attribute | number): void {
   hand.value =hand.value.slice().sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
-//draw3ExchangedCardを実行する
-async function draw3ExchangedCard() {
-  console.log(i, "draw3ExchangedCardを実行しました");
-  const { id, player } = storeToRefs(playerStore);
-  const { hand } = toRefs(player.value);
-
-  let selectCards: Card[] = [];
-  for (let i = 0; i < 3; i++) {
-    if (hand.value.length >= 9) return;
-    let selectCard = drawCard();
-    selectCard.waste = 8;
-    selectCard.hungry = 0;
-    selectCards[i] = selectCard;
-    hand.value.push(selectCard);
-    hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
-  }
-  updateDoc(doc(playersRef, id.value), { hand: hand.value });
-  console.log("draw3ExchangedCard: " + selectCards.map((card) => card.name));
-}
 //cardをHandに6枚セットする
 async function setHand(): Promise<void> {
   console.log(i, "setHandを実行しました");
@@ -210,7 +191,6 @@ function changeStatusValue(key: keyof Status, value: number, isBreak?: boolean):
 }
 export {
   drawRandomOneCard,
-  draw3ExchangedCard,
   setHand,
   setOffer,
   changeAllHand,

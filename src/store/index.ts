@@ -58,7 +58,7 @@ const usePlayerStore = defineStore("playerData", () => {
           sum.atk +=
             (card.atk ?? 0) *
             (player.value.isSelectedGift === 7 ? 2 : 1) *
-            (player.value.field.map((card) => card.id).includes(66) ? 2 : 1);
+            (player.value.field.map((card) => card.id).includes(64) ? 2 : 1);
           sum.def += card.def ?? 0;
           sum.tech += card.tech ?? 0;
           sum.heal += card.heal ?? 0;

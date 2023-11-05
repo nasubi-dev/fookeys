@@ -36,12 +36,13 @@ const onKeyUpCallbackHook = (): void => {
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
           <p v-if="card.waste" class="font-bold transform"
-            :class="size === 'normal' ? `text- -translate-x-[250%] -translate-y-[10%] ` : `text-2xl -translate-x-[280%] -translate-y-[20%]`">
+            :class="size === 'normal' ? `text- -translate-x-[270%] translate-y-[90%] ` : `text-2xl -translate-x-[280%] translate-y-[110%]`">
             {{ card.waste }}
           </p>
+          <img :src="`/img/foods/${card.id}.png`" />
 
           <div class="flex font-bold text-border-thin transform"
-            :class="size === 'normal' ? `text-xs -translate-x-[10%] translate-y-full` : `text-lg -translate-x-[10%] translate-y-full`">
+            :class="size === 'normal' ? `text-xs -translate-x-[10%]  -translate-y-[60%]` : `text-lg -translate-x-[10%] -translate-y-[40%]`">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
             <p v-if="card.def">{{ "🛡" + card.def }}</p>

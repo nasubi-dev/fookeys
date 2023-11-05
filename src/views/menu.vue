@@ -62,7 +62,7 @@ async function startMatch(): Promise<void> {
         <div class="overCard w-1/2 p-8 flex flex-col justify-center items-center text-center">
           <img :src="characterBackground" />
           <div class="overText items-center ">
-            <img :src="`/img/characters/${character}/normal.png`" class="w-1/2" />
+            <img :src="`/img/characters/${character}/normal.png`" />
             <div class="flex justify-start w-1/2">
               <UiGifts :gifts="gifts" :player="player" />
             </div>

@@ -8,7 +8,7 @@ import type { GameData, PlayerData, PlayerSign, Status, SumCards, Card } from "@
 import { converter } from "@/server/converter";
 import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
-import { changeHandValue, changeStatusValue, draw3ExchangedCard, drawRandomOneCard } from "@/server/useShopUtils";
+import { changeHandValue, changeStatusValue, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
 
 //Collectionの参照
@@ -127,15 +127,13 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   if (my.field.map((card) => card.attribute).includes("sup")) {
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 57 || card.id === 58 || card.id === 59 || card.id === 63 || card.id === 64 || card.id === 66)) return;
+        if (!(card.id === 50 || card.id === 56 || card.id === 62)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
-        if (card.id === 58) changeHandValue("atk", 10, "atk");
-        if (card.id === 59) changeHandValue("def", 20, "def");
-        if (card.id === 64) changeStatusValue("maxHungry", 20, true);
+        if (card.id === 62) changeStatusValue("maxHungry", 20, true);
       },
       my.field,
       100
@@ -151,7 +149,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 60 || card.id === 62 || card.id === 65)) return;
+        if (!(card.id === 60 || card.id === 61 || card.id === 63)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
@@ -180,13 +178,13 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 45 || card.id === 48 || card.id === 56)) return;
+        if (!(card.id === 44 || card.id === 47 || card.id === 55)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
-        if (card.id === 45 || card.id === 48) changeStatusValue("hungry", -card.hungry);
-        if (card.id === 56) {
+        if (card.id === 44 || card.id === 47) changeStatusValue("hungry", -card.hungry);
+        if (card.id === 55) {
           my.sumFields.def += my.status.hungry;
           updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });
         }
@@ -205,11 +203,11 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 10 || card.id === 50)) return;
+        if (!(card.id === 10 || card.id === 49 || card.id === 64)) return;
         if (!attackOrder) enemyLog.value = card.name + "の効果!" + card.description;
         else myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 10) defense = 0;
-        if (card.id === 50 && which === "second") my.sumFields.atk += 75;
+        if (card.id === 49 && which === "second") my.sumFields.atk += 75;
       },
       my.field,
       100
@@ -446,22 +444,24 @@ async function postBattle(): Promise<void> {
   const { id, player, sign, log, myLog, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, field, status, donate } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
-  const { field: enemyField, donate: enemyDonate, check: enemyCheck, hand: enemyHand } = toRefs(enemyPlayer.value);
+  const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
   const { nextTurn } = gameStore;
   const { game } = storeToRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const judgeDrawCard = (card: Card): boolean => {
     if (
       !(
-        card.id === 52 ||
-        card.id === 53 ||
-        card.id === 54 ||
-        card.id === 55 ||
-        card.id === 61 ||
         card.id === 7 ||
         card.id === 25 ||
         card.id === 42 ||
-        card.id === 44
+        card.id === 59 ||
+        card.id === 51 ||
+        card.id === 52 ||
+        card.id === 53 ||
+        card.id === 54 ||
+        card.id === 57 ||
+        card.id === 58 ||
+        card.id === 59
       )
     ) {
       return true;
@@ -516,13 +516,14 @@ async function postBattle(): Promise<void> {
     field.value.forEach((card: Card) => {
       if (judgeDrawCard(card)) return;
       myLog.value = card.name + "の効果!" + card.description;
-      if (card.id === 52) drawRandomOneCard("atk");
-      if (card.id === 53) drawRandomOneCard("tech");
-      if (card.id === 54) drawRandomOneCard("def");
-      if (card.id === 55) drawRandomOneCard("sup");
-      if (card.id === 61) draw3ExchangedCard();
-      if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 20) : null; //?card.hungryだけ減らすでもいいかも
-      if (card.id === 44) changeHandValue("def", defense, "def");
+      if (card.id === 51) drawRandomOneCard("atk");
+      if (card.id === 52) drawRandomOneCard("tech");
+      if (card.id === 53) drawRandomOneCard("def");
+      if (card.id === 54) drawRandomOneCard("sup");
+      if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 25) : null;
+      if (card.id === 57) changeHandValue("atk", 10, "atk");
+      if (card.id === 58) changeHandValue("def", 20, "def");
+      if (card.id === 59) changeHandValue("def", defense, "def");
     });
   }
   //手札にあるカードの効果を発動する
@@ -534,20 +535,14 @@ async function postBattle(): Promise<void> {
 
   //満腹値を減らす
   changeStatusValue("hungry", -30);
-  //使ったカードを捨てる
   deleteField();
-  //turnを進める
   nextTurn();
-  if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
-  //checkの値をfalseにする(初期値に戻す)
-  check.value = false;
-  updateDoc(doc(playersRef, id.value), { check: check.value });
-  //defenseの値を0にする
   defense = 0;
-  //isSelectedGiftの値をundefinedにする
+  check.value = false;
   isSelectedGift.value = undefined;
-  //firstAtkPlayerの値をundefinedにする
   firstAtkPlayer.value = undefined;
+  updateDoc(doc(playersRef, id.value), { check: check.value });
+  if (sign.value) updateDoc(doc(gamesRef, idGame.value), { turn: increment(1) });
 
   getEnemyPlayer(); //!
   //shopを開く
