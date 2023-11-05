@@ -120,12 +120,9 @@ watch(phase, (newVal) => {
 })
 
 //入場したらPlayer型としてIDが保管される
-const startAnimation = ref(true);
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
-  // startAnimation.value = true;
   setTimeout(async () => {
-    // startAnimation.value = false;
     character.value = sign.value === 0 ? "blankiss" : "petit&spot";
     enemyPlayer.value.character = sign.value !== 0 ? "blankiss" : "petit&spot"
     useBattleStart.play()
@@ -152,13 +149,13 @@ watch(components, (newVal) => {
     if (sign.value === firstAtkPlayer.value) {
       myTurnAnimation.value = true;
       useMyTurn.play()
-      setTimeout(async () => {
+      setTimeout(() => {
         myTurnAnimation.value = false;
       }, 1000);
     } else {
       enemyTurnAnimation.value = true;
       useEnemyTurn.play()
-      setTimeout(async () => {
+      setTimeout(() => {
         enemyTurnAnimation.value = false;
       }, 1000);
     }
@@ -167,13 +164,13 @@ watch(components, (newVal) => {
     if (sign.value !== firstAtkPlayer.value) {
       myTurnAnimation.value = true;
       useMyTurn.play()
-      setTimeout(async () => {
+      setTimeout(() => {
         myTurnAnimation.value = false;
       }, 1000);
     } else {
       enemyTurnAnimation.value = true;
       useEnemyTurn.play()
-      setTimeout(async () => {
+      setTimeout(() => {
         enemyTurnAnimation.value = false;
       }, 1000);
     }
@@ -183,16 +180,16 @@ const deathAnimation = ref(false);
 watch(death, (newVal) => {
   if (newVal) {
     deathAnimation.value = true;
-    setTimeout(async () => {
+    setTimeout(() => {
       deathAnimation.value = false;
     }, 1200);
   }
 })
 const wantCard = ref()//!test用
+const startAnimation = ref(true);
 const loadImg = () => {
-  setTimeout(async () => {
+  setTimeout(() => {
     startAnimation.value = false;
-  console.log(i, "startAnimation2");
   }, 1700);
 }
 </script>
@@ -203,7 +200,7 @@ const loadImg = () => {
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
-      <img v-if="startAnimation"  :load="loadImg()" :src="startGif" class="flex flex-col overlay z-10" />
+      <img v-if="startAnimation"  @load="loadImg()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="status.hp <= 0"><img :src="deathAnimation ? loseGif : loseImg" /></div>
         <div v-else><img :src="deathAnimation ? winGif : winImg" /></div>
