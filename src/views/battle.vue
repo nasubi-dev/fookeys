@@ -190,6 +190,7 @@ const wantCard = ref()//!test用
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col h-screen w-screen p-5 relative">
+      <img  v-if="startAnimation" :src="`/gifs/start.gif`"  class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="status.hp <= 0"><img :src="deathAnimation ? `/gifs/lose.gif` : loseImg" /></div>
         <div v-else><img :src="deathAnimation ? `/gifs/win.gif` : winImg" /></div>
@@ -200,9 +201,6 @@ const wantCard = ref()//!test用
         </RouterLink>
       </div>
 
-      <div class="flex flex-col overlay z-10">
-        <div v-if="startAnimation"><img :src="`/gifs/start.gif`" /></div>
-      </div>
 
       <div class="flex flex-row-reverse z-20 fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
