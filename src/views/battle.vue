@@ -49,7 +49,7 @@ const useAtk = useSound(atk);
 const useTech = useSound(tech);
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, character, gifts, status, hand, death, field, sumFields, name, check } = toRefs(player.value);
+const { idGame, match, character, gifts, status, hand, death, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -113,14 +113,17 @@ watch(phase, (newVal) => {
 })
 
 //入場したらPlayer型としてIDが保管される
+const startAnimation = ref(false);
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
+  startAnimation.value = true;
   setTimeout(async () => {
+    startAnimation.value = false;
     character.value = sign.value === 0 ? "blankiss" : "petit&spot";
     enemyPlayer.value.character = sign.value !== 0 ? "blankiss" : "petit&spot"
     useBattleStart.play()
     await getEnemyPlayer();
-  }, 1500);
+  }, 1700);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
@@ -133,6 +136,7 @@ onMounted(async () => {
     console.log(i, "turn: ", turn.value);
   });
 });
+
 
 const myTurnAnimation = ref(false);
 const enemyTurnAnimation = ref(false);
@@ -194,6 +198,10 @@ const wantCard = ref()//!test用
             <img :src="backImg" class="w-32" />
           </button>
         </RouterLink>
+      </div>
+
+      <div class="flex flex-col overlay z-10">
+        <div v-if="startAnimation"><img :src="`/gifs/start.gif`" /></div>
       </div>
 
       <div class="flex flex-row-reverse z-20 fixed w-full">

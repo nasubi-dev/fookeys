@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, toRefs, ref } from "vue";
-import { playerStore } from "@/main";
+import { playerStore, gameStore } from "@/main";
 import { e, s, i } from "@/log";
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
@@ -17,6 +17,7 @@ const useSwipe = useSound(swipe);
 
 const { player, cardLock, phase, sumCards } = storeToRefs(playerStore);
 const { donate, field } = toRefs(player.value);
+const { game } = storeToRefs(gameStore)
 
 //ターンを終了時
 const turnEnd = () => {
@@ -27,8 +28,9 @@ const turnEnd = () => {
   //!手札がFirestoreに保存するためにhand.vueから移動する
 };
 
-const battleAnimation = ref(true);
+const battleAnimation = ref(false);
 onMounted(() => {
+  if (game.value.turn === 1) return;
   battleAnimation.value = true;
   useBattlePhase.play()
   setTimeout(async () => {
