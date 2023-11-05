@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref, markRaw } from "vue";
 import { Notivue, Notifications, filledIcons } from 'notivue'
-import { playerStore, enemyPlayerStore, gameStore } from "@/main";
-import { e, s, i } from "@/log";
 import { usePush } from 'notivue'
 import { useSound } from "@vueuse/sound";
+import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { e, s, i } from "@/log";
 import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer, initPlayer } from "@/server/usePlayerData";
 import { deleteGame } from "@/server/useMatchMaking";
