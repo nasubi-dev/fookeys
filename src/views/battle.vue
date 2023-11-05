@@ -110,9 +110,7 @@ watch(missions, (newVal) => {
 })
 //Phaseが変わったら再生
 watch(phase, (newVal) => {
-  if (newVal === 'battle') useBattlePhase.play()
   if (newVal === 'shop') {
-    useShopping.play()
     setTimeout(async () => {
       await getEnemyPlayer();
     }, 2000);

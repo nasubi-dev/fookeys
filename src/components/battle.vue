@@ -12,8 +12,9 @@ import sumFieldImg from "@/assets/img/ui/info.png";
 //gif
 import eatingGif from "@/assets/gifs/eating.gif";
 //sound
-import { tap2, swipe } from "@/assets/sounds";
+import { tap2,battlePhase, swipe } from "@/assets/sounds";
 const useTap2 = useSound(tap2);
+const useBattlePhase = useSound(battlePhase);
 const useSwipe = useSound(swipe);
 
 const { player, cardLock, phase, sumCards } = storeToRefs(playerStore);
@@ -36,6 +37,7 @@ onMounted(() => {
 })
 const loadBattleGif = () => {
   setTimeout(() => {
+    useBattlePhase.play();
     battleAnimation.value = false;
   }, 1500);
 }

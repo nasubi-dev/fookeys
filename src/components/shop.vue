@@ -9,8 +9,9 @@ import useGiftImg from "@/assets/img/ui/useGift.png";
 import shoppingGif from "@/assets/gifs/shopping.gif";
 
 import { useSound } from "@vueuse/sound";
-import { tap2 } from "@/assets/sounds";
+import { tap2,shopping } from "@/assets/sounds";
 const useTap2 = useSound(tap2);
+const useShopping = useSound(shopping);
 
 const { cardLock } = storeToRefs(playerStore);
 
@@ -32,6 +33,7 @@ const shopAnimation = ref(true);
 //   }, 1000);
 // })
 const loadShoppingGif = () => {
+  useShopping.play();
   setTimeout(() => {
     shopAnimation.value = false;
   }, 1000);
