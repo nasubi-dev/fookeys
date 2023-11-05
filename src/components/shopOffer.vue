@@ -33,10 +33,10 @@ const offer2Hand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+  hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
 
   //offerを空にする
-  offer.value.splice(0, offer.value.length);
+  offer.value = [];
   isOfferSelected.value = [false, false, false];
   pushed.value = false;
   await watchShopEnd();

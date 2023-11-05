@@ -42,13 +42,13 @@ function drawRandomOneCard(order?: Attribute | number): void {
   } else {
     hand.value.push(drawCard(order));
   }
-  hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+  hand.value =hand.value.slice().sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //draw3ExchangedCardを実行する
 async function draw3ExchangedCard() {
   console.log(i, "draw3ExchangedCardを実行しました");
-  const { id, player, log } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
   let selectCards: Card[] = [];
@@ -59,7 +59,7 @@ async function draw3ExchangedCard() {
     selectCard.hungry = 0;
     selectCards[i] = selectCard;
     hand.value.push(selectCard);
-    hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+    hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   console.log("draw3ExchangedCard: " + selectCards.map((card) => card.name));
@@ -77,7 +77,7 @@ async function setHand(): Promise<void> {
     } else {
       hand.value.push(drawCard());
     }
-    hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+    hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
   }
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
@@ -89,7 +89,7 @@ async function setOffer(): Promise<void> {
   offer.value = [];
   for (let i = 0; i < 3; i++) {
     offer.value.push(drawCard());
-    offer.value = [...offer.value].sort((a, b) => a.id - b.id);
+    offer.value =offer.value.slice().sort((a, b) => a.id - b.id);
   }
 }
 //Handをすべて入れ替える

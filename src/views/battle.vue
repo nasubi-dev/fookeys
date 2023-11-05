@@ -66,7 +66,9 @@ const push = usePush()
 watch(log, () => {
   if (log.value === "") return
   push.info(log.value)
-  log.value.includes("枚のカードが腐ってしまった！") ? useRotten.play() : null
+  if (log.value.includes("枚のカードが腐ってしまった！")) {
+    useRotten.play()
+  }
   log.value = ""
 })
 watch(myLog, () => {
@@ -102,7 +104,12 @@ watch(missions, (newVal) => {
 //Phaseが変わったら再生
 watch(phase, (newVal) => {
   if (newVal === 'battle') useBattlePhase.play()
-  if (newVal === 'shop') useShopping.play()
+  if (newVal === 'shop') {
+    useShopping.play()
+    setTimeout(async () => {
+      await getEnemyPlayer();
+    }, 2000);
+  }
 })
 
 //入場したらPlayer型としてIDが保管される
@@ -199,6 +206,9 @@ const wantCard = ref()//!test用
           <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
             "OFF"
           }}</span></button>
+          <button @click="status.hp -= 10">hp-10</button>
+          <button @click="status.hungry -= 10">hungry-10</button>
+          <button @click="status.contribution += 100">contribution+100</button>
         </div>
       </div>
 

@@ -250,11 +250,15 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
         myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
         if (card.id === 26) changeStatusValue("contribution", 20);
-        if (card.id === 29 || card.id === 31) enemy.status.hungry >= 100 ? (my.sumFields.tech += 30) : null;
+        if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) {
+          my.sumFields.tech += 30;
+          updateDoc(doc(playersRef, myId), { "sumFields.tech": my.sumFields.tech });
+        }
       },
       my.field,
       100
     );
+    await reflectStatus();
 
     let holdingTech = my.sumFields.tech;
     enemy.status.hp -= holdingTech;
@@ -478,6 +482,7 @@ async function postBattle(): Promise<void> {
     updateDoc(doc(playersRef, id.value), { hand: hand.value });
     updateDoc(doc(playersRef, id.value), { status: status.value });
   }
+
   //特殊効果用
   let defense = 0;
   let sumAtk = enemyField.value.map((card) => card.attribute).includes("atk")

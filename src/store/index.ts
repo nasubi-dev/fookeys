@@ -94,15 +94,6 @@ const usePlayerStore = defineStore("playerData", () => {
     field.splice(0, field.length);
     console.log(i, "fieldDelete");
   };
-  //ターン終了時に､Handのカードの腐り値を減らす(0になったら腐りカードにする)
-  const checkRotten = (): void => {
-    let { hand } = player.value;
-    hand.forEach((card) => {
-      if (card.waste > 0) return;
-      hand.splice(hand.indexOf(card), 1, allCards[0]);
-    });
-    hand = [...hand].sort((a, b) => a.id - b.id);
-  };
   //腐っている全てのカードを削除する
   const deleteAllWaste0 = (): number => {
     const { hand } = player.value;
@@ -116,6 +107,16 @@ const usePlayerStore = defineStore("playerData", () => {
       } else i++;
     }
     return num;
+  };
+  //wasteが0のカードを腐らせる
+  const checkRotten = (): void => {
+    let { hand } = player.value;
+    hand.forEach((card) => {
+      if (card.waste === 0) {
+        hand.splice(hand.indexOf(card), 1);
+        hand.unshift(allCards[0]);
+      }
+    });
   };
   //腐ったカードの枚数分、maxHungryを減らす
   const decMaxHungry = (num: number): void => {
