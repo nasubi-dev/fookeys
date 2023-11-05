@@ -601,7 +601,7 @@ const allCards: Card[] = [
     waste: 5,
     hungry: 50,
     company: "hanamie",
-    attribute: "sup",
+    attribute: "def",
     description: "このラウンド中､防御を+999する｡",
     def: 999,
   },

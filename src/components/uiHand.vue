@@ -21,23 +21,23 @@ const { pushHand, popHand } = playerStore;
 const { player, cardLock, log, sumCards } = storeToRefs(playerStore);
 const { hand, field, idEnemy, status, donate } = toRefs(player.value);
 
-const handSelected = ref([false, false, false, false, false, false, false, false, false]);
+const isHandSelected = ref([false, false, false, false, false, false, false, false, false]);
 watch(donate, () => {
-  handSelected.value = [false, false, false, false, false, false, false, false, false];
+  isHandSelected.value = [false, false, false, false, false, false, false, false, false];
   field.value = [];
 })
 //WatchでCardLockを監視して､trueになったら使用するカードを手札から削除する
 watch(cardLock, async (newVal) => {
   if (newVal) {
-    const deleteIndex = handSelected.value.reduce((acc: number[], bool, index) => {
+    const deleteIndex = isHandSelected.value.reduce((acc: number[], bool, index) => {
       if (bool) acc.unshift(index);
       return acc;
     }, []);
     deleteIndex.forEach((index) => {
       hand.value.splice(index, 1);
-      handSelected.value[index] = false;
     });
     console.log(i, "deleteHand: ", "hand: ", hand.value.map((card) => card.name));
+    isHandSelected.value = [false, false, false, false, false, false, false, false, false];
     await watchTurnEnd();
   }
 })
@@ -58,15 +58,15 @@ const pushCard = async (index: number) => {
     return;
   }
 
-  if (handSelected.value[index]) throw new Error("failed to pushCard");
-  handSelected.value[index] = !handSelected.value[index]
+  if (isHandSelected.value[index]) throw new Error("failed to pushCard");
+  isHandSelected.value[index] = !isHandSelected.value[index]
   pushHand(index)
 };
 //FieldからHandへ
 const popCard = (index: number, id: number) => {
   if (cardLock.value) return;
-  if (!handSelected.value[index]) throw new Error("failed to popCard");
-  handSelected.value[index] = !handSelected.value[index]
+  if (!isHandSelected.value[index]) throw new Error("failed to popCard");
+  isHandSelected.value[index] = !isHandSelected.value[index]
   popHand(index, id)
 };
 </script>
@@ -81,9 +81,9 @@ const popCard = (index: number, id: number) => {
       <div v-else v-for="(card, index) in hand" :key="card.id">
         <div v-if="!card.rotten">
           <button
-            @click="!handSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
-            :class="handSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
-            <UiCard :card="card" size="normal" :state="handSelected[index]" />
+            @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
+            :class="isHandSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
+            <UiCard :card="card" size="normal" :state="isHandSelected[index]" />
           </button>
         </div>
         <div v-else>
