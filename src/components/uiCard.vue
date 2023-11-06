@@ -35,13 +35,13 @@ const onKeyUpCallbackHook = (): void => {
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
-          <p v-if="card.waste" class="font-bold transform"
-            :class="size === 'normal' ? `text- -translate-x-[270%] translate-y-[90%] ` : `text-2xl -translate-x-[280%] translate-y-[110%]`">
+          <p v-if="card.waste" class="font-bold transform select-none"
+            :class="size === 'normal' ? `text- -translate-x-[290%] translate-y-[90%] ` : `text-2xl -translate-x-[280%] translate-y-[110%]`">
             {{ card.waste }}
           </p>
-          <img :src="`/img/foods/${card.id}.png`" />
+          <img v-if="card.waste" :src="`/img/foods/${card.id}.png`" class="transform" :class="size==='normal'?`-translate-x-[10%] translate-y-[10%]`:`-translate-x-[10%] translate-y-[10%]`" />
 
-          <div class="flex font-bold text-border-thin transform"
+          <div class="flex font-bold text-border-thin transform select-none"
             :class="size === 'normal' ? `text-xs -translate-x-[10%]  -translate-y-[60%]` : `text-lg -translate-x-[10%] -translate-y-[40%]`">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
             <p v-if="card.atk">{{ "⚔" + card.atk }}</p>

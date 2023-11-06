@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref, markRaw } from "vue";
 import { Notivue, Notifications, filledIcons } from 'notivue'
-import { usePush } from 'notivue'
+import { usePush, useNotivue } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -71,9 +71,14 @@ const customIcons = {
   promise: filledIcons.promise
 }
 const push = usePush()
+const config = useNotivue()
+
 watch(log, () => {
   if (log.value === "") return
-  push.info(log.value)
+  push.info({
+    message: log.value,
+    duration: 10000,
+  })
   if (log.value.includes("枚のカードが腐ってしまった！")) {
     useRotten.play()
   }
@@ -81,12 +86,18 @@ watch(log, () => {
 })
 watch(myLog, () => {
   if (myLog.value === "") return
-  push.success(myLog.value)
+  push.success({
+    message: myLog.value,
+    duration: 10000,
+  })
   myLog.value = ""
 })
 watch(enemyLog, () => {
   if (enemyLog.value === "") return
-  push.error(enemyLog.value)
+  push.error({
+    message: enemyLog.value,
+    duration: 10000,
+  })
   enemyLog.value = ""
 })
 

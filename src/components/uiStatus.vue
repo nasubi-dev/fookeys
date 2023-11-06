@@ -21,8 +21,6 @@ watch(() => p.player.status, (newVal, oldVal) => {
   if (newVal.hp > oldVal.hp) hpClass.value = "animate-jump"
   if (newVal.hungry > oldVal.hungry) hungryClass.value = "animate-jump"
   if (newVal.contribution > oldVal.contribution) contributionClass.value = "animate-jump"
-  //減ったらjump
-  // if (newVal.hp < oldVal.hp) hpClass.value = "animate-shake"
   if (newVal.hungry < oldVal.hungry) hungryClass.value = "animate-shake"
   if (newVal.contribution < oldVal.contribution) contributionClass.value = "animate-shake"
 }, { deep: true })
@@ -34,7 +32,7 @@ watch(() => p.player.status, (newVal, oldVal) => {
     <div class="overText w-full">
       <div class="flex justify-start w-full transform -translate-y-4">
         <Character status="my" @isWiggle="wiggleStatus" />
-        <div class="flex justify-start font-bold text-gray-900 text-3xl mt-auto ml-auto mr-6">
+        <div class="flex justify-start font-bold text-gray-900 text-3xl mt-auto ml-auto mr-6 select-none">
           <div :class="hpClass">❤:{{ player.status.hp + "/" + player.status.maxHp }}</div>
           <div :class="hungryClass">🍖:{{ player.status.hungry + "/" + player.status.maxHungry }}</div>
           <div :class="contributionClass">🪙:{{ player.status.contribution }}</div>

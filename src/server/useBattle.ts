@@ -178,12 +178,13 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 44 || card.id === 47 || card.id === 55)) return;
+        if (!((card.id === 44 || card.id === 47) && which === "second" || card.id === 55)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
-        if (card.id === 44 || card.id === 47) changeStatusValue("hungry", -card.hungry);
+        myLog.value = card.name + "の効果!" + card.description;
+        if ((card.id === 44 || card.id === 47) && which === "second") changeStatusValue("hungry", -card.hungry);
         if (card.id === 55) {
           my.sumFields.def += my.status.hungry;
           updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });
@@ -203,7 +204,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 10 || card.id === 49 || card.id === 64)) return;
+        if (!(card.id === 10 || (card.id === 49 && which === "second") || card.id === 64)) return;
         if (!attackOrder) enemyLog.value = card.name + "の効果!" + card.description;
         else myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 10) defense = 0;
@@ -240,7 +241,8 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 17 || card.id === 20 || card.id === 26 || card.id === 29 || card.id === 31)) return;
+        if (!(card.id === 17 || card.id === 20 || card.id === 26 || ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100)))
+          return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
