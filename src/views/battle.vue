@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted, toRefs, watch, ref, markRaw } from "vue";
+import { onMounted, toRefs, watch, ref, onUnmounted } from "vue";
 import { Notivue, Notifications, filledIcons } from 'notivue'
-import { usePush, useNotivue } from 'notivue'
+import { usePush } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { e, s, i } from "@/log";
 import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer, initPlayer } from "@/server/usePlayerData";
-import { deleteGame } from "@/server/useMatchMaking";
+import { deleteGame,watchDeleteGame } from "@/server/useMatchMaking";
 import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
 //components
@@ -71,7 +71,6 @@ const customIcons = {
   promise: filledIcons.promise
 }
 const push = usePush()
-const config = useNotivue()
 
 watch(log, () => {
   if (log.value === "") return
@@ -137,6 +136,7 @@ onMounted(async () => {
     enemyPlayer.value.character = sign.value !== 0 ? "blankiss" : "petit&spot"
     useBattleStart.play()
     await getEnemyPlayer();
+    await watchDeleteGame();
   }, 1700);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
@@ -150,6 +150,13 @@ onMounted(async () => {
     console.log(i, "turn: ", turn.value);
   });
 });
+//離脱したらGame､PlayerDataが削除される
+onUnmounted(() => {
+  //alert
+  window.alert("戦闘画面を離れます ");
+  useBGM.stop()
+  deleteGame();
+})
 
 
 const myTurnAnimation = ref(false);
@@ -195,13 +202,13 @@ const loadDeathGif = () => {
     deathAnimation.value = false;
   }, 1200);
 }
-const wantCard = ref()//!test用
 const startAnimation = ref(true);
 const loadStartGif = () => {
   setTimeout(() => {
     startAnimation.value = false;
   }, 1700);
 }
+const wantCard = ref()//!test用
 </script>
 
 <template>

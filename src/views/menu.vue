@@ -22,8 +22,13 @@ const push = usePush()
 const { player, log, id } = storeToRefs(playerStore);
 const { gifts, character } = toRefs(player.value);
 
-watch(log, (newVal) => {
-  if (newVal) push.info(newVal)
+watch(log, () => {
+  if (log.value === "") return
+  push.info({
+    message: log.value,
+    duration: 10000,
+  })
+  log.value = ""
 })
 
 const useTap1 = useSound(tap1);

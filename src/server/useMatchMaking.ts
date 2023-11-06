@@ -3,8 +3,9 @@ import { e, s, i } from "@/log";
 import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot,deleteDoc } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot, deleteDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
+import { initPlayer } from "./usePlayerData";
 import { router } from "@/router";
 import type { MatchStatus, PlayerData, GameData } from "@/types";
 
@@ -127,10 +128,36 @@ async function startMatchmaking(): Promise<void> {
   }
 }
 //gameを削除する
-async function deleteGame(): Promise<void>{
+async function deleteGame(): Promise<void> {
   const { idGame } = toRefs(playerStore.player);
   await deleteDoc(doc(gamesRef, idGame.value));
   console.log(i, "delete game: ", idGame.value);
 }
+//gameが削除されたら検知して、playerを初期化､ホームに戻る
+async function watchDeleteGame(): Promise<void> {
+  const { player, log } = storeToRefs(playerStore);
+  const { idGame } = toRefs(player.value);
 
-export { startMatchmaking, deleteGame };
+  console.log(i, "idGameを監視します");
+  const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
+    // 監視対象のDocumentが削除された場合に実行される処理
+    if (!snap.exists()) {
+      console.log(i, "idGameが削除されました");
+      // 監視を解除
+      unsubscribe();
+      console.log(i, "idGameの監視を解除しました");
+      //画面遷移
+      console.log(s, "敵が退出したのでゲーム終了");
+      setTimeout(() => {
+        log.value = "敵が退出したのでゲーム終了";
+        router.push({ name: "home" });
+      }, 1000);
+    } else {
+      // ドキュメントが存在する場合の処理
+      const data = snap.data();
+      console.log("Document data: ", data);
+    }
+  });
+}
+
+export { startMatchmaking, deleteGame, watchDeleteGame };
