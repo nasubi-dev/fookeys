@@ -156,6 +156,7 @@ onUnmounted(() => {
   window.alert("戦闘画面を離れます ");
   useBGM.stop()
   deleteGame();
+  initPlayer();
 })
 
 
