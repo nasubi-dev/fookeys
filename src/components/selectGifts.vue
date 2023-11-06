@@ -5,6 +5,7 @@ import { playerStore } from "@/main";
 import { useSound } from "@vueuse/sound";
 import { tap1 } from "@/assets/sounds";
 import allGifts from "@/assets/allGifts";
+import giftSelectBackground from "@/assets/img/ui/giftSelectBackground.png";
 
 const { player } = storeToRefs(playerStore);
 const { gifts } = toRefs(player.value);
@@ -23,20 +24,22 @@ function selectGift(gift: number): void {
 </script>
 
 <template>
-  <div class="flex flex-wrap my-3">
-    <div v-for="gift in allGifts" :key="gift.name">
-      <div class="">
-        <button @click="selectGift(gift.id); useTap1.play()" class="bg-white rounded-lg btn-pop p-1">
-          <div class="flex">
-            <img :src="`./img/gifts/${gift.id}.png`" class="w-10 h-10" />
-            <div>
-              <h2 class="text-lg font-medium text-gray-800 text-left">{{ gift.name + " 🪙" + gift.requireContribution }}
-              </h2>
-              <p class=" text-gray-500">{{ gift.description }}</p>
+  <div class="flex flex-wrap">
+    <div v-for="(gift, index) in allGifts" :key="gift.name">
+      <button @click="selectGift(gift.id); useTap1.play()" class="btn-pop transform h-full w-full -my-3"
+        :class="index % 2 ? `-translate-x-[30%]` : `translate-x-[30%]`">
+        <div class="flex items-center">
+          <img :src="`./img/gifts/${gift.id}.png`" class="w-20" />
+          <p class="fixed text-border text-xl font-bold left-0 -bottom-2">{{ gift.requireContribution }}</p>
+          <div class="overCard w-full">
+            <img :src="giftSelectBackground" style="width: 25vw;" />
+            <div class="overText flex flex-col justify-start text-left align-text-bottom ml-3">
+              <p class="w-full text-lg text-gray-800 break-words font-bold ml-5">{{ gift.name }}</p>
+              <p class="w-full text-xs text-gray-900 break-words">{{ gift.description }}</p>
             </div>
           </div>
-        </button>
-      </div>
+        </div>
+      </button>
     </div>
   </div>
 </template>

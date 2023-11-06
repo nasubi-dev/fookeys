@@ -3,28 +3,26 @@ import { toRefs } from "vue";
 import type { Character } from "@/types";
 import { storeToRefs } from "pinia";
 import { playerStore } from "@/main";
+import { useSound } from "@vueuse/sound";
+import { tap1 } from "@/assets/sounds";
 import allCharacters from "@/assets/allCharacters";
+import characterSelectBackground from "@/assets/img/ui/characterSelectBackground.png";
 
 const { player } = storeToRefs(playerStore);
 const { character } = toRefs(player.value);
 
-function selectCharacter(character: Character) {
-}
-
+const useTap1 = useSound(tap1);
 </script>
 
 <template>
-    <div class="justify-center">
-        <div v-for="character in allCharacters" :key="character.name">
-            <button @click="selectCharacter(character)" class="bg-white rounded-lg shadow-md overflow-hidden btn-pop px-4 py-2">
-                <div class="px-4 py-2">
-                    <h2 class="text-lg font-medium text-gray-800">{{ character.name }}</h2>
-                    <p class="text-sm text-gray-500">{{ character.company }}</p>
-                    <p class="text-sm text-gray-500">{{ character.description1 }}</p>
-                    <p class="text-sm text-gray-500">{{ character.description2 }}</p>
-                    <p class="text-sm text-gray-500">{{ character.description3 }}</p>
-                </div>
-            </button>
+  <div class="flex flex-col">
+    <div v-for="chara in allCharacters" :key="chara.name">
+      <button @click="character = chara.name; useTap1.play()" class="btn-pop transform h-full w-full -my-3">
+        <div class="overCard">
+          <img :src="characterSelectBackground" style="width: 25vw;" />
+          <img :src="`/img/characters/${chara.name}/normal.png`" class="overText w-full" />
         </div>
+      </button>
     </div>
+  </div>
 </template>

@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import { watch, ref } from "vue";
+import { watch, ref, onMounted } from "vue";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import type { PlayerData } from "@/types";
+import type { PlayerData, PlayerSign } from "@/types";
 import uiCardBehind from "./uiCardBehind.vue";
 import infoImg from "@/assets/img/ui/info.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
+import { getEnemyPlayer } from "@/server/usePlayerData";
 
 const { battleResult } = storeToRefs(playerStore);
 
 const p = defineProps<{
   player: PlayerData;
-  playerAllocation: boolean;
+  enemyCharacter: string;
+  firstAtkPlayer: PlayerSign | undefined;
 }>();
-const characterName = ref()
-if (p.playerAllocation) characterName.value = "blankiss"
-else characterName.value = "petit&spot"
+
+const characterName = ref("")
+onMounted(async () => {
+  await getEnemyPlayer();
+  characterName.value = p.firstAtkPlayer === 1 ? p.player.character : p.enemyCharacter
+})
 
 const isShowHeal = ref(true);
 const isShowSup = ref(true);

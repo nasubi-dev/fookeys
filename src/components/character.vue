@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { ref, toRefs, watch, onMounted } from "vue";
-import { playerStore, gameStore } from "@/main";
+import { playerStore, gameStore, enemyPlayerStore } from "@/main";
 import { wait, XOR } from "@/server/utils";
 import { storeToRefs } from "pinia";
+import { getEnemyPlayer } from "@/server/usePlayerData";
 
 const p = defineProps<{ status: "my" | "enemy" }>()
 const emit = defineEmits<{
   (event: "isWiggle", reactionImg: string): void
 }>()
 
-const { components, battleResult, sign } = storeToRefs(playerStore);
+const { components, battleResult, sign, player } = storeToRefs(playerStore);
+const { character } = toRefs(player.value)
+const { enemyPlayer } = storeToRefs(enemyPlayerStore)
 const { game } = storeToRefs(gameStore);
 const { firstAtkPlayer } = toRefs(game.value)
 
-const characterName = ref("blankiss")
-
+const characterName = ref("")
 onMounted(async () => {
-  await wait(1)
-  const characterAllocation = !XOR(p.status === "my", sign.value === 0)// X-NOR
-  characterName.value = characterAllocation ? "blankiss" : "petit&spot"
+  await getEnemyPlayer();
+  if (p.status === "my") characterName.value = character.value
+  if (p.status === "enemy") characterName.value = enemyPlayer.value.character
 })
 
 const retainedDef = ref<number>(0);

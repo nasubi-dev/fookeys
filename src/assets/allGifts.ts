@@ -75,14 +75,14 @@ const allGifts: Gift[] = [
   {
     id: 7,
     name: "筋トレ",
-    description: "このラウンド中与えるマッスルダメージを2倍にする。",
+    description: "このラウンド中マッスルダメージを2倍にする",
     requireContribution: 50,
     skill: () => {},
   },
   {
     id: 8,
     name: "おなべのふた",
-    description: "このラウンド中､防御を+999する｡",
+    description: "このラウンド中防御を+999する",
     requireContribution: 55,
     skill: () => {
       changeSumCardsValue("def", 999);

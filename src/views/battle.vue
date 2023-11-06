@@ -8,7 +8,7 @@ import { storeToRefs } from "pinia";
 import { e, s, i } from "@/log";
 import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer, initPlayer } from "@/server/usePlayerData";
-import { deleteGame,watchDeleteGame } from "@/server/useMatchMaking";
+import { deleteGame, watchDeleteGame } from "@/server/useMatchMaking";
 import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
 //components
@@ -132,8 +132,6 @@ watch(phase, (newVal) => {
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   setTimeout(async () => {
-    character.value = sign.value === 0 ? "blankiss" : "petit&spot";
-    enemyPlayer.value.character = sign.value !== 0 ? "blankiss" : "petit&spot"
     useBattleStart.play()
     await getEnemyPlayer();
     await watchDeleteGame();
@@ -272,10 +270,11 @@ const wantCard = ref()//!test用
         <div style="width: 40vw;" class="inset-0 top-1/3 left-0 fixed ml-2">
           {{ components }}
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
-            :playerAllocation="!XOR(sign === firstAtkPlayer, sign === 0) ? true : false"
-            v-show="components !== 'secondAtk'" />
+            :enemyCharacter="sign === firstAtkPlayer ? enemyPlayer.character : player.character"
+            :firstAtkPlayer="firstAtkPlayer" v-show="components !== 'secondAtk'" />
           <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer"
-            :playerAllocation="!XOR(sign !== firstAtkPlayer, sign === 0) ? true : false" />
+            :enemyCharacter="sign !== firstAtkPlayer ? enemyPlayer.character : player.character"
+            :firstAtkPlayer="firstAtkPlayer" />
         </div>
 
         <div class="overlay">

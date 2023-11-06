@@ -75,17 +75,24 @@ async function startMatch(): Promise<void> {
         </div>
 
         <div class="w-1/2 px-3 flex flex-col justify-center text-center items-center">
-          <SelectCharacter v-if="selectCharacter" />
-          <SelectGifts v-else-if="selectGift" />
-          <div v-else class="overCard">
+          <div class="overCard">
             <img :src="menuBackground" class="h-screen" />
-            <div class="overText w-full">
+            <div v-if="!selectCharacter && !selectGift" class="overText w-full">
               <button @click="startMatch(); useTap1.play()" class="btn-pop my-4">
                 <img src="@/assets/img/ui/entry.png" />
+              </button>
+              <button @click="selectCharacter = !selectCharacter; useTap1.play()" class="btn-pop my-4">
+                <img src="@/assets/img/ui/changeCharacter.png" />
               </button>
               <button @click="selectGift = !selectGift; useTap1.play()" class="btn-pop my-4">
                 <img src="@/assets/img/ui/changeGift.png" />
               </button>
+            </div>
+            <div v-else-if="selectCharacter" class="overText w-full">
+              <SelectCharacter />
+            </div>
+            <div v-else-if="selectGift" class="overText w-full">
+              <SelectGifts />
             </div>
           </div>
         </div>
