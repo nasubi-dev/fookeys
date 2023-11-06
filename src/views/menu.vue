@@ -26,7 +26,7 @@ watch(log, () => {
   if (log.value === "") return
   push.info({
     message: log.value,
-    duration: 10000,
+    duration: 8000,
   })
   log.value = ""
 })

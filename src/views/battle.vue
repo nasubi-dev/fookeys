@@ -76,7 +76,7 @@ watch(log, () => {
   if (log.value === "") return
   push.info({
     message: log.value,
-    duration: 10000,
+    duration: 8000,
   })
   if (log.value.includes("枚のカードが腐ってしまった！")) {
     useRotten.play()
@@ -87,7 +87,7 @@ watch(myLog, () => {
   if (myLog.value === "") return
   push.success({
     message: myLog.value,
-    duration: 10000,
+    duration: 8000,
   })
   myLog.value = ""
 })
@@ -95,7 +95,7 @@ watch(enemyLog, () => {
   if (enemyLog.value === "") return
   push.error({
     message: enemyLog.value,
-    duration: 10000,
+    duration: 8000,
   })
   enemyLog.value = ""
 })

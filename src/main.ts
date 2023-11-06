@@ -13,7 +13,7 @@ createApp(App)
   .use(router)
   .use(pinia)
   .use(notivue, {
-    limit: 3,
+    limit: 5,
   })
   .mount("#app");
 

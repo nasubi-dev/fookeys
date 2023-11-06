@@ -115,34 +115,6 @@ const allMissions: Mission[] = [
   },
   {
     id: 4,
-    name: "マーケティングbulbull★",
-    achieved: false,
-    description: "bulbullのカードを合計5枚使用する。",
-    reward: 30,
-    goalAchievement: 5,
-    nowAchievement: 0,
-    checker: (donate, sumFields, field) => {
-      if (donate) return;
-      if (field === undefined) return;
-      return field.filter((card) => card.company === "bulbull").length;
-    },
-  },
-  {
-    id: 4,
-    name: "マーケティングbulbull★★",
-    achieved: false,
-    description: "bulbullのカードを合計7枚使用する。",
-    reward: 40,
-    goalAchievement: 7,
-    nowAchievement: 0,
-    checker: (donate, sumFields, field) => {
-      if (donate) return;
-      if (field === undefined) return;
-      return field.filter((card) => card.company === "bulbull").length;
-    },
-  },
-  {
-    id: 5,
     name: "マーケティングgaldaybee★",
     achieved: false,
     description: "galdaybeeのカードを合計5枚使用する。",
@@ -156,7 +128,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 5,
+    id: 4,
     name: "マーケティングgaldaybee★★",
     achieved: false,
     description: "galdaybeeのカードを合計7枚使用する。",
@@ -170,7 +142,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 6,
+    id: 5,
     name: "マーケティングrapidpot★",
     achieved: false,
     description: "rapidpotのカードを合計5枚使用する。",
@@ -184,7 +156,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 6,
+    id: 5,
     name: "マーケティングrapidpot★★",
     achieved: false,
     description: "rapidpotのカードを合計7枚使用する。",
@@ -198,7 +170,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 7,
+    id: 6,
     name: "マーケティングunlimit★",
     achieved: false,
     description: "unlimitのカードを合計5枚使用する。",
@@ -212,7 +184,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 7,
+    id: 6,
     name: "マーケティングunlimit★★",
     achieved: false,
     description: "unlimitのカードを合計7枚使用する。",
@@ -226,7 +198,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 8,
+    id: 7,
     name: "セール品★",
     achieved: false,
     description: "消費期限が🦠3以下のカードを5枚以上使用する。",
@@ -240,7 +212,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 8,
+    id: 7,
     name: "セール品★★",
     achieved: false,
     description: "消費期限が🦠3以下のカードを8枚以上使用する。",
@@ -254,10 +226,10 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 9,
+    id: 8,
     name: "食べきり",
     achieved: false,
-    description: "手札を0枚にする。",
+    description: "カードを使用して手札を0枚にする",
     reward: 35,
     goalAchievement: 1,
     nowAchievement: 0,
@@ -268,7 +240,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 10,
+    id: 9,
     name: "買い物メモ",
     achieved: false,
     description: "自身の行動後、同じ会社のカードを持たない。",
@@ -283,7 +255,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 11,
+    id: 10,
     name: "余り物レシピ",
     achieved: false,
     description: "1ラウンドで3社以上のカードを使用する。",
@@ -299,7 +271,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 12,
+    id: 11,
     name: " 寄付★",
     achieved: false,
     description: "フードバンクに5枚以上寄付する。",
@@ -313,7 +285,7 @@ const allMissions: Mission[] = [
     },
   },
   {
-    id: 12,
+    id: 11,
     name: " 寄付★★",
     achieved: false,
     description: "フードバンクに8枚以上寄付する。",
