@@ -254,7 +254,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "unlimit",
     attribute: "tech",
-    description: "貢献度を🔔+20する。",
+    description: "貢献度を🔔+50する。",
     tech: 55,
   },
   {

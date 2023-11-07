@@ -4,7 +4,7 @@ import type { PlayerData } from "@/types";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import { wait } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
@@ -71,6 +71,7 @@ async function watchShopEnd(): Promise<void> {
 
   //Firestoreに保存する
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
+  if(isSelectedGift.value === undefined) updateDoc(doc(playersRef, id.value), { isSelectedGift: deleteField() });
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 
   //checkの値がtrueになっていたら､shopフェーズを終了する

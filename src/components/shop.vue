@@ -7,9 +7,10 @@ import ShopUseGifts from './shopUseGifts.vue';
 import drawCardImg from "@/assets/img/ui/drawCard.png";
 import useGiftImg from "@/assets/img/ui/useGift.png";
 import shoppingGif from "@/assets/gifs/shopping.gif";
+import back from "@/assets/img/ui/back.png";
 
 import { useSound } from "@vueuse/sound";
-import { tap2,shopping } from "@/assets/sounds";
+import { tap2, shopping } from "@/assets/sounds";
 const useTap2 = useSound(tap2);
 const useShopping = useSound(shopping);
 
@@ -38,6 +39,11 @@ const loadShoppingGif = () => {
     shopAnimation.value = false;
   }, 1000);
 }
+const returnShop = () => {
+  use.value = false;
+  draw.value = false;
+  useTap2.play();
+}
 </script>
 
 <template>
@@ -48,8 +54,8 @@ const loadShoppingGif = () => {
         <img @load="loadShoppingGif()" :src="shoppingGif" />
       </div>
       <div v-else class="overlay">
+        <ShopUseGifts v-show="use" @cancel="returnShop()" />
         <ShopOffer v-show="draw" />
-        <ShopUseGifts v-show="use" />
         <div v-if="!draw && !use">
           <button @click="draw = true; useTap2.play()" style="width: 20vw;">
             <img :src="drawCardImg" />

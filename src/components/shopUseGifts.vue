@@ -7,6 +7,7 @@ import { watchShopEnd } from "@/server/useShop";
 import decide from "@/assets/img/ui/decide.png";
 import allGifts from "@/assets/allGifts";
 import UiGiftsGift from "./uiGiftsGift.vue";
+import back from "@/assets/img/ui/back.png";
 
 import { useSound } from "@vueuse/sound";
 import { tap1, tap2 } from "@/assets/sounds";
@@ -20,6 +21,9 @@ const pushed = ref(false);
 onMounted(() => {
   pushed.value = false;
 })
+const emit = defineEmits<{
+  (event: "cancel"): void
+}>()
 
 const selectGift = (gift: number) => {
   if (status.value.contribution < allGifts[gift].requireContribution) {
@@ -40,17 +44,21 @@ const useGift = async () => {
   <div>
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-
-      <div v-if="!pushed" class="flex justify-center">
-        <button @click="useGift(); useTap2.play()">
-          <img :src="decide" style="width: 20vw;" />
+      <div v-if="!pushed">
+        <button @click="emit('cancel'); isSelectedGift = undefined; useTap2.play()" style="width: 20vw;">
+          <img :src="back" />
         </button>
-        <div class="flex items-center  w-1/3">
-          <div v-for="gift in gifts" :key="gift">
-            <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
-              <button @click="selectGift(gift); useTap1.play()">
-                <UiGiftsGift :gift="gift" />
-              </button>
+        <div class="flex justify-center">
+          <button @click="useGift(); useTap2.play()">
+            <img :src="decide" style="width: 20vw;" />
+          </button>
+          <div class="flex items-center  w-1/3">
+            <div v-for="gift in gifts" :key="gift">
+              <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
+                <button @click="selectGift(gift); useTap1.play()">
+                  <UiGiftsGift :gift="gift" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

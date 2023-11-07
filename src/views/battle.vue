@@ -40,16 +40,16 @@ import allGifts from "@/assets/allGifts";
 //sound
 import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
-const useBGM = useSound(bgm, { volume: 0.1, loop: true });
+const useBGM = useSound(bgm, { volume: 0.3, loop: true });
 const useTap2 = useSound(tap2);
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
-const useMissionSort = useSound(missionSort);
+const useMissionSort = useSound(missionSort,{ volume: 5.0 });
 const useShopping = useSound(shopping);
-const useRotten = useSound(rotten);
-const useDonate = useSound(donate);
+const useRotten = useSound(rotten, { volume: 0.5 });
+const useDonate = useSound(donate, { volume: 0.5 });
 const useHp = useSound(hp);
 const useSup = useSound(sup);
 const useDef = useSound(def);
@@ -269,12 +269,9 @@ const wantCard = ref()//!test用
       <div v-if="components !== 'postBattle'">
         <div style="width: 40vw;" class="inset-0 top-1/3 left-0 fixed ml-2">
           {{ components }}
-          <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer"
-            :enemyCharacter="sign === firstAtkPlayer ? enemyPlayer.character : player.character"
-            :firstAtkPlayer="firstAtkPlayer" v-show="components !== 'secondAtk'" />
-          <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer"
-            :enemyCharacter="sign !== firstAtkPlayer ? enemyPlayer.character : player.character"
-            :firstAtkPlayer="firstAtkPlayer" />
+          <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
+            v-show="components !== 'secondAtk'" />
+          <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer" />
         </div>
 
         <div class="overlay">

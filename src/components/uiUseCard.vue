@@ -14,14 +14,13 @@ const { battleResult } = storeToRefs(playerStore);
 
 const p = defineProps<{
   player: PlayerData;
-  enemyCharacter: string;
   firstAtkPlayer: PlayerSign | undefined;
 }>();
 
 const characterName = ref("")
 onMounted(async () => {
   await getEnemyPlayer();
-  characterName.value = p.firstAtkPlayer === 1 ? p.player.character : p.enemyCharacter
+  characterName.value = p.player.character
 })
 
 const isShowHeal = ref(true);
