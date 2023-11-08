@@ -21,8 +21,8 @@ defineProps<{
       <p v-if="after === 'donate' && value" class="animate-jump animate-once">{{ "🪙" + value }}</p>
       <p v-if="after === 'heal' && value" class="animate-jump animate-once">{{ "💖" + value }}</p>
       <p v-if="after === 'def' && value" class=" animate-jump animate-once">{{ "🛡" + value }}</p>
-      <p v-if="after === 'atk' && value" class="animate-jump animate-once">{{ "⚔" + value }}</p>
-      <p v-if="after === 'tech' && value" class="animate-jump animate-once">{{ "🏹" + value }}</p>
+      <p v-if="after === 'atk' && value" class="animate-jump animate-once">{{ "💪" + value }}</p>
+      <p v-if="after === 'tech' && value" class="animate-jump animate-once">{{ "⚡️" + value }}</p>
     </div>
     <div class="flex justify-start"
       v-for="card in (after === 'donate' ? cards : (cards.map((card) => { if (card.attribute === after) { return card } })))"

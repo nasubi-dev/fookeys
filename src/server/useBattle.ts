@@ -10,6 +10,7 @@ import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { changeHandValue, changeStatusValue, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
+import { logEvent } from "firebase/analytics";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -109,7 +110,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     my.check = false;
     updateDoc(doc(playersRef, myId), { check: my.check });
     //hungryの値が上限を超えていた場合､上限値にする
-    if (my.status.hungry > my.status.maxHungry) my.status.hungry = my.status.maxHungry;
+    my.status.hungry = my.status.maxHungry;
     await everyUtil(["hungry", 1]); //?行動不能
     battleResult.value = ["none", 0];
     return false;
@@ -178,13 +179,13 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!((card.id === 44 || card.id === 47) && which === "second" || card.id === 55)) return;
+        if (!(((card.id === 44 || card.id === 47) && which === "second") || card.id === 55)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
-        if ((card.id === 44 || card.id === 47) && which === "second") changeStatusValue("hungry", -card.hungry);
+        if ((card.id === 44 || card.id === 47) && which === "second") log.value = "できない!!!!";
         if (card.id === 55) {
           my.sumFields.def += my.status.hungry;
           updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });
@@ -245,6 +246,9 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
           return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
+          if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) {
+            my.sumFields.tech += 30;
+          }
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
@@ -252,7 +256,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
         if (card.id === 26) changeStatusValue("contribution", 50);
         if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) {
           my.sumFields.tech += 30;
-          updateDoc(doc(playersRef, myId), { "sumFields.tech": my.sumFields.tech });
         }
       },
       my.field,
@@ -423,7 +426,7 @@ async function battle() {
   await checkMission("primary");
 
   getEnemyPlayer(); //!
-  await wait(1000);
+  await wait(2000);
   components.value = "secondAtk";
 
   console.log(i, "後攻の攻撃");

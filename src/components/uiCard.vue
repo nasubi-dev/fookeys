@@ -44,9 +44,9 @@ const onKeyUpCallbackHook = (): void => {
           <div class="flex font-bold text-border-thin transform select-none"
             :class="size === 'normal' ? `text-xs -translate-x-[10%]  -translate-y-[60%]` : `text-lg -translate-x-[10%] -translate-y-[40%]`">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }} </p>
-            <p v-if="card.atk">{{ "⚔" + card.atk }}</p>
+            <p v-if="card.atk">{{ "💪" + card.atk }}</p>
             <p v-if="card.def">{{ "🛡" + card.def }}</p>
-            <p v-if="card.tech">{{ "🏹" + card.tech }}</p>
+            <p v-if="card.tech">{{ "⚡️" + card.tech }}</p>
             <p v-if="card.heal">{{ "💖" + card.heal }}</p>
           </div>
 
