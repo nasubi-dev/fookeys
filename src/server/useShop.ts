@@ -1,6 +1,6 @@
 import { toRefs } from "vue";
 import { e, s, i } from "@/log";
-import type { PlayerData } from "@/types";
+import type { Card, PlayerData } from "@/types";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
@@ -36,8 +36,26 @@ async function startShop(): Promise<void> {
 async function endShop(): Promise<void> {
   console.log(i, "endShopを実行しました");
   const { id, player, phase, myLog, enemyLog, cardLock } = storeToRefs(playerStore);
-  const { isSelectedGift, status, check, idEnemy } = toRefs(player.value);
+  const { isSelectedGift, status, check, idEnemy, hand, death } = toRefs(player.value);
 
+  //腐ったカードが9枚の場合、ゲームを終了する
+  if (hand.value.length === 9) {
+    const rottenCards = hand.value.reduce((acc: number, cur: Card) => {
+      if (cur.id === 0) acc++;
+      return acc;
+    }, 0);
+    if (rottenCards === 9) {
+      phase.value = "result";
+      death.value = true;
+      updateDoc(doc(playersRef, id.value), { death: true });
+      updateDoc(doc(playersRef, idEnemy.value), { death: true });
+      return;
+    }
+    setTimeout(async () => {
+      const deathData = (await getDoc(doc(playersRef, idEnemy.value))).data()?.death as boolean;
+      death.value = deathData;
+    }, 100);
+  }
   //自分のisSelectedGiftを実行する
   const myGift = isSelectedGift.value;
   if (myGift !== undefined) {
@@ -71,7 +89,7 @@ async function watchShopEnd(): Promise<void> {
 
   //Firestoreに保存する
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
-  if(isSelectedGift.value === undefined) updateDoc(doc(playersRef, id.value), { isSelectedGift: deleteField() });
+  if (isSelectedGift.value === undefined) updateDoc(doc(playersRef, id.value), { isSelectedGift: deleteField() });
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 
   //checkの値がtrueになっていたら､shopフェーズを終了する

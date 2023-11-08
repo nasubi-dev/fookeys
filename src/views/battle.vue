@@ -46,7 +46,7 @@ const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
 const useBattlePhase = useSound(battlePhase);
 const useBattleStart = useSound(battleStart);
-const useMissionSort = useSound(missionSort,{ volume: 5.0 });
+const useMissionSort = useSound(missionSort, { volume: 5.0 });
 const useShopping = useSound(shopping);
 const useRotten = useSound(rotten, { volume: 0.5 });
 const useDonate = useSound(donate, { volume: 0.5 });
@@ -218,7 +218,8 @@ const wantCard = ref()//!test用
     <div class="flex flex-col h-screen w-screen p-5 relative">
       <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
-        <div v-if="status.hp <= 0" class="flex flex-col items-center justify-center">
+        <div v-if="status.hp <= 0 || hand.reduce((acc, cur) => { if (cur.id === 0) acc++; return acc }, 0) >= 9"
+          class="flex flex-col items-center justify-center">
           <img @load="loadDeathGif()" :src="deathAnimation ? loseGif : loseImg" />
           <RouterLink to="/">
             <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
