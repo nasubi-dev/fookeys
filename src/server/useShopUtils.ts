@@ -1,4 +1,5 @@
 import { toRefs } from "vue";
+import _ from "lodash";
 import { e, s, i } from "@/log";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -6,7 +7,6 @@ import { db } from "./firebase";
 import { collection, deleteField, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
 import type { Card, GameData, PlayerData, Attribute, Status, SumCards } from "@/types";
-import allCharacters from "@/assets/allCharacters";
 import allMissions from "@/assets/allMissions";
 import allCards from "@/assets/allCards";
 
@@ -95,14 +95,16 @@ async function setMissions(): Promise<void> {
   const { game, missions } = storeToRefs(gameStore);
   const { missionsNum } = toRefs(game.value);
 
-  missions.value = [];
+  const copyAllMissions = _.cloneDeep(allMissions);
+  const oldMissions = missions.value;
   if (!sign.value) {
+    missions.value = [];
     for (let i = 0; i < 3; i++) {
       const selectMission = Math.floor(Math.random() * allMissions.length);
       missionsNum.value[i] = selectMission;
       //同じmissionがセットされないようにする
       for (let j = 0; j < i; j++) {
-        if (allMissions[missionsNum.value[i]].id === allMissions[missionsNum.value[j]].id) {
+        if (copyAllMissions[missionsNum.value[i]].id === copyAllMissions[missionsNum.value[j]].id) {
           i--;
           missions.value?.pop();
           break;
@@ -110,33 +112,25 @@ async function setMissions(): Promise<void> {
       }
     }
     updateDoc(doc(gamesRef, idGame.value), { missionsNum: missionsNum.value });
-    missions.value = missionsNum.value.map((num) => allMissions[num]).slice();
+    missions.value = [...missionsNum.value.map((num) => copyAllMissions[num])];
     console.log(
       i,
-      "missions: ",
-      allMissions[missionsNum.value[0]].name,
-      allMissions[missionsNum.value[1]].name,
-      allMissions[missionsNum.value[2]].name
+      missionsNum.value.map((num) => copyAllMissions[num].name)
     );
     updateDoc(doc(gamesRef, idGame.value), { firstAtkPlayer: deleteField() });
   } else {
     console.log(i, "ミッションを監視します");
     const unsubscribe = onSnapshot(doc(gamesRef, idGame.value), (snap) => {
-      const updateMissions = snap.data()?.missionsNum as number[] | undefined;
-      if (updateMissions?.length === 3) {
-        missionsNum.value = updateMissions;
-        missions.value = missionsNum.value.map((num) => allMissions[num]).slice();
-        console.log(
-          i,
-          "missions: ",
-          allMissions[missionsNum.value[0]].name,
-          allMissions[missionsNum.value[1]].name,
-          allMissions[missionsNum.value[2]].name
-        );
-        //監視を解除する
-        unsubscribe();
-        console.log(i, "missionsの監視を解除しました");
-      }
+      const updateMissionsNum = snap.data()?.missionsNum as number[] | undefined;
+      const updateMissions = updateMissionsNum?.map((num) => copyAllMissions[num]);
+      if (!updateMissionsNum) return;
+      if (_.isEqual(oldMissions, updateMissions)) return;
+      missionsNum.value = updateMissionsNum;
+      missions.value = updateMissions;
+      console.log(i, updateMissions?.map((mission) => mission.name));
+      //監視を解除する
+      unsubscribe();
+      console.log(i, "missionsの監視を解除しました");
     });
   }
 }

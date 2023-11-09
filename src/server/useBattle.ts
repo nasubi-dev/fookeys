@@ -106,15 +106,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   //自分がこのターン､行動不能の場合､ダメージ計算を行わない
   my.status.hungry += my.sumFields.hungry;
   if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
-  if (my.status.hungry > my.status.maxHungry) {
-    my.check = false;
-    updateDoc(doc(playersRef, myId), { check: my.check });
-    //hungryの値が上限を超えていた場合､上限値にする
-    my.status.hungry = my.status.maxHungry;
-    await everyUtil(["hungry", 1]); //?行動不能
-    battleResult.value = ["none", 0];
-    return false;
-  }
 
   //相手がこのターン､行動不能の場合､ダメージ計算を行わない
   let enemySumHungry = enemy.status.hungry;
@@ -185,7 +176,13 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
-        if ((card.id === 44 || card.id === 47) && which === "second") log.value = "できない!!!!";
+        if ((card.id === 44 || card.id === 47) && which === "second"){
+          console.log(card.hungry,my.status.hungry)
+          my.status.hungry -= card.hungry;
+          console.log(card.hungry,my.status.hungry)
+          updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
+          wait(100)
+        }
         if (card.id === 55) {
           my.sumFields.def += my.status.hungry;
           updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });

@@ -24,7 +24,6 @@ async function startShop(): Promise<void> {
   phase.value = "shop";
   console.log(i, "phase: ", phase.value);
   if (game.value.turn % 4 == 1) {
-    missions.value = undefined;
     setMissions();
   }
   if (game.value.turn === 1) {

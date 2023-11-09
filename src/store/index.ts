@@ -22,10 +22,10 @@ const usePlayerStore = defineStore("playerData", () => {
     hand: [],
     field: [],
     status: {
-      hp: 400,
+      hp: 500,
       hungry: 0,
       contribution: 0,
-      maxHp: 400,
+      maxHp: 500,
       maxHungry: 200,
     },
     sumFields: {
@@ -140,10 +140,10 @@ const usePlayerStore = defineStore("playerData", () => {
       hand: [],
       field: [],
       status: {
-        hp: 400,
+        hp: 500,
         hungry: 0,
         contribution: 0,
-        maxHp: 400,
+        maxHp: 500,
         maxHungry: 200,
       },
       sumFields: {
@@ -204,10 +204,10 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
     hand: [],
     field: [],
     status: {
-      hp: 400,
+      hp: 500,
       hungry: 0,
       contribution: 0,
-      maxHp: 400,
+      maxHp: 500,
       maxHungry: 200,
     },
     sumFields: {
@@ -235,10 +235,10 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       hand: [],
       field: [],
       status: {
-        hp: 400,
+        hp: 500,
         hungry: 0,
         contribution: 0,
-        maxHp: 400,
+        maxHp: 500,
         maxHungry: 200,
       },
       sumFields: {

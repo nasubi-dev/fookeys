@@ -37,6 +37,7 @@ import winGif from "@/assets/gifs/win.gif";
 import loseGif from "@/assets/gifs/lose.gif";
 //asset
 import allGifts from "@/assets/allGifts";
+import allMissions from "@/assets/allMissions";
 //sound
 import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
@@ -249,6 +250,7 @@ const wantCard = ref()//!test用
           <button @click="status.hp -= 10">hp-10</button>
           <button @click="status.hungry -= 10">hungry-10</button>
           <button @click="status.contribution += 100">contribution+100</button>
+          <button @click="console.log(allMissions)">allMissions</button>
         </div>
       </div>
 

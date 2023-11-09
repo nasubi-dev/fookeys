@@ -16,6 +16,7 @@
     "lint": "eslint --ext .vue,.ts src/"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.201",
     "@typescript-eslint/parser": "^5.58.0",
     "@vueuse/core": "^10.2.1",
     "@vueuse/sound": "^2.0.1",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toRefs, ref } from "vue";
+// import _ from "lodash";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -33,7 +34,7 @@ const offer2Hand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  // hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
+  // hand.value = _.sortBy(hand.value, "id");
 
   //offerを空にする
   offer.value = [];
