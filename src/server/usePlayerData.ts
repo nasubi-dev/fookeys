@@ -5,10 +5,11 @@ import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, doc, addDoc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import type { PlayerData } from "@/types";
+import type { PlayerData, GameData } from "@/types";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
+const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //player登録
 async function registerPlayer(): Promise<void> {
@@ -24,6 +25,9 @@ async function registerPlayer(): Promise<void> {
 //player情報初期化 残す情報はid,name,character,gifts
 async function initPlayer(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
+  const { idGame } = toRefs(player.value);
+  const { game } = storeToRefs(gameStore);
+
   let keepId = id.value;
   let keepName = player.value.name;
   let keepCharacter = player.value.character;
@@ -38,6 +42,7 @@ async function initPlayer(): Promise<void> {
   player.value.character = keepCharacter;
   player.value.gifts = keepGifts;
   await updateDoc(doc(playersRef, id.value), player.value);
+  await updateDoc(doc(gamesRef, idGame.value), game.value);
   console.log(i, "Player initialized: ", id.value, player.value);
 }
 //player削除

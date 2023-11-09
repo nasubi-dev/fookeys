@@ -27,7 +27,7 @@ watch(log, () => {
 const newName = ref("");
 async function register() {
   newName.value === "" ? (name.value = "No name") : (name.value = newName.value);
-  id.value == "" ? await registerPlayer() : log.value = "既に登録されています"
+  id.value == "" ? await registerPlayer() : log.value = "idは既に登録されています"
 }
 </script>
 
