@@ -42,7 +42,7 @@ function drawRandomOneCard(order?: Attribute | number): void {
   } else {
     hand.value.push(drawCard(order));
   }
-  hand.value =hand.value.slice().sort((a, b) => a.id - b.id);
+  hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
 //cardをHandに6枚セットする
@@ -70,7 +70,7 @@ async function setOffer(): Promise<void> {
   offer.value = [];
   for (let i = 0; i < 3; i++) {
     offer.value.push(drawCard());
-    offer.value =offer.value.slice().sort((a, b) => a.id - b.id);
+    offer.value = offer.value.slice().sort((a, b) => a.id - b.id);
   }
 }
 //Handをすべて入れ替える
@@ -110,7 +110,7 @@ async function setMissions(): Promise<void> {
       }
     }
     updateDoc(doc(gamesRef, idGame.value), { missionsNum: missionsNum.value });
-    missions.value = missionsNum.value.map((num) => allMissions[num]);
+    missions.value = missionsNum.value.map((num) => allMissions[num]).slice();
     console.log(
       i,
       "missions: ",
@@ -125,7 +125,7 @@ async function setMissions(): Promise<void> {
       const updateMissions = snap.data()?.missionsNum as number[] | undefined;
       if (updateMissions?.length === 3) {
         missionsNum.value = updateMissions;
-        missions.value = missionsNum.value.map((num) => allMissions[num]);
+        missions.value = missionsNum.value.map((num) => allMissions[num]).slice();
         console.log(
           i,
           "missions: ",
