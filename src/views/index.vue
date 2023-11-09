@@ -37,8 +37,8 @@ async function register() {
       <Notifications :item="item" />
     </Notivue>
     <div class="flex flex-col items-center justify-center h-screen">
-      このゲームはCSS初心者が作っているのでiPadのサイズに合わせて作られています｡<br />
-      そのため､PCでプレイする際は画面サイズを縮小してプレイしていただけると幸いです｡
+      このゲームはCSS初心者が作っているのでレスポンシブを理解していません｡<br />
+      iPadのサイズで作成しているため､PCでプレイする際は画面サイズを縮小してプレイしていただけると幸いです｡
       <img src="@/assets/img/ui/fookeys.png" class="w-60" />
       <form class="flex flex-col items-center">
         <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name"

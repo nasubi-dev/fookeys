@@ -17,7 +17,7 @@ const p = defineProps<{
   firstAtkPlayer: PlayerSign | undefined;
 }>();
 
-const characterName = ref("")
+const characterName = ref()
 onMounted(async () => {
   await getEnemyPlayer();
   characterName.value = p.player.character
@@ -52,7 +52,8 @@ watch(battleResult, (newVal) => {
         <img :src="infoImg" />
         <div class="overText">
           <div class="flex justify-start items-center font-bold text-base">
-            <img :src="`/img/characters/${characterName}/normal.png`" class="w-1/3  bottom-5 bg-clip-border" />
+            <img v-if="characterName" :src="`/img/characters/${characterName}/normal.png`"
+              class="w-1/3  bottom-5 bg-clip-border" />
             <p>{{ "🍖" + p.player.sumFields.hungry }} </p>
             <p v-if="p.player.sumFields.priority && !p.player.donate">{{ "🦶: " + p.player.sumFields.priority }}</p>
             <div class="ml-auto mr-3 w-5">

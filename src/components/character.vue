@@ -16,7 +16,7 @@ const { enemyPlayer } = storeToRefs(enemyPlayerStore)
 const { game } = storeToRefs(gameStore);
 const { firstAtkPlayer } = toRefs(game.value)
 
-const characterName = ref("")
+const characterName = ref()
 onMounted(async () => {
   await getEnemyPlayer();
   if (p.status === "my") characterName.value = character.value
@@ -60,7 +60,7 @@ watch(battleResult, (newVal) => {
 <template>
   <div class="overCard animate-rotate-y animate-once animate-delay-100"
     :class="p.status === 'my' ? `left-2` : `left-2 top-5`">
-    <img :src="`/img/characters/${characterName}/${reactionImg}.png`" class="scale-150" />
+    <img v-if="characterName" :src="`/img/characters/${characterName}/${reactionImg}.png`" class="scale-150" />
     <div v-if="retainedDef" class="fixed top-2/3 font-bold text-5xl text-border text-red-500"
       :class="[p.status === 'my' ? `text-3xl` : `text-xl`, reactionImg === 'def' ? `animate-jump` : null]">{{ "🛡" +
         retainedDef }}</div>

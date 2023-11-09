@@ -10,7 +10,6 @@ import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { changeHandValue, changeStatusValue, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
-import { logEvent } from "firebase/analytics";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -176,12 +175,19 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
-        if ((card.id === 44 || card.id === 47) && which === "second"){
-          console.log(card.hungry,my.status.hungry)
-          my.status.hungry -= card.hungry;
-          console.log(card.hungry,my.status.hungry)
+        if (card.id === 44 && which === "second") {
+          console.log(card.hungry, my.status.hungry);
+          my.status.hungry -= 50;
+          console.log(card.hungry, my.status.hungry);
           updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
-          wait(100)
+          wait(100);
+        }
+        if (card.id === 47 && which === "second") {
+          console.log(card.hungry, my.status.hungry);
+          my.status.hungry -= 60;
+          console.log(card.hungry, my.status.hungry);
+          updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
+          wait(100);
         }
         if (card.id === 55) {
           my.sumFields.def += my.status.hungry;

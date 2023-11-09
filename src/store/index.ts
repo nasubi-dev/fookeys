@@ -113,8 +113,7 @@ const usePlayerStore = defineStore("playerData", () => {
     let { hand } = player.value;
     hand.forEach((card) => {
       if (card.waste === 0) {
-        hand.splice(hand.indexOf(card), 1);
-        hand.unshift(allCards[0]);
+        hand.splice(hand.indexOf(card), 1, allCards[0]);
       }
     });
   };

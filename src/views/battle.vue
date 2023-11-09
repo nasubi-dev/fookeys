@@ -207,6 +207,7 @@ const loadStartGif = () => {
   }, 1700);
 }
 const wantCard = ref()//!test用
+const copy = ref()//!test用
 </script>
 
 <template>
@@ -250,7 +251,9 @@ const wantCard = ref()//!test用
           <button @click="status.hp -= 10">hp-10</button>
           <button @click="status.hungry -= 10">hungry-10</button>
           <button @click="status.contribution += 100">contribution+100</button>
-          <button @click="console.log(allMissions)">allMissions</button>
+          <button @click="copy = [...hand]">handCopy</button>
+          <button @click="hand = []">reset</button>
+          <button @click="hand = copy">paste</button>
         </div>
       </div>
 

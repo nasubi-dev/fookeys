@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { toRefs, ref } from "vue";
-// import _ from "lodash";
+import _sortBy from "lodash/sortBy";
 import { e, s, i } from "@/log";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
+import { wait } from "@/server/utils";
 import { watchShopEnd } from "@/server/useShop";
 import type { Card } from "@/types";
 import UiCard from "./uiCard.vue";
@@ -34,7 +35,8 @@ const offer2Hand = async () => {
   const offerHand: Card[] = offer.value.filter((card, index) => isOfferSelected.value[index]);
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
-  // hand.value = _.sortBy(hand.value, "id");
+  wait(100);
+  // hand.value = _sortBy(hand.value, ["id","waste"]);
 
   //offerを空にする
   offer.value = [];

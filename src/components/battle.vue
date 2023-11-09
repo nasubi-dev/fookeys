@@ -34,6 +34,7 @@ const battleAnimation = ref(false);
 onMounted(() => {
   if (game.value.turn === 1) return;
   battleAnimation.value = true;
+  donate.value = false;
 })
 const loadBattleGif = () => {
   useBattlePhase.play();

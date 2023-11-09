@@ -1,5 +1,6 @@
 import { toRefs } from "vue";
-import _ from "lodash";
+import _cloneDeep from "lodash/cloneDeep";
+import _isEqual from "lodash/isEqual";
 import { e, s, i } from "@/log";
 import { gameStore, playerStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -95,7 +96,7 @@ async function setMissions(): Promise<void> {
   const { game, missions } = storeToRefs(gameStore);
   const { missionsNum } = toRefs(game.value);
 
-  const copyAllMissions = _.cloneDeep(allMissions);
+  const copyAllMissions = _cloneDeep(allMissions);
   const oldMissions = missions.value;
   if (!sign.value) {
     missions.value = [];
@@ -124,7 +125,7 @@ async function setMissions(): Promise<void> {
       const updateMissionsNum = snap.data()?.missionsNum as number[] | undefined;
       const updateMissions = updateMissionsNum?.map((num) => copyAllMissions[num]);
       if (!updateMissionsNum) return;
-      if (_.isEqual(oldMissions, updateMissions)) return;
+      if (_isEqual(oldMissions, updateMissions)) return;
       missionsNum.value = updateMissionsNum;
       missions.value = updateMissions;
       console.log(i, updateMissions?.map((mission) => mission.name));
