@@ -38,7 +38,7 @@ import loseGif from "@/assets/gifs/lose.gif";
 //asset
 import allGifts from "@/assets/allGifts";
 //sound
-import { tap2, enemyTurn, myTurn, battlePhase, battleStart, shopping, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
+import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
 const useBGM = useSound(bgm, { volume: 0.3, loop: true });
 const useTap2 = useSound(tap2);
@@ -48,8 +48,8 @@ const useBattleStart = useSound(battleStart);
 const useMissionSort = useSound(missionSort, { volume: 5.0 });
 const useRotten = useSound(rotten, { volume: 0.5 });
 const useDonate = useSound(donate, { volume: 0.5 });
-const useHp = useSound(hp);
-const useSup = useSound(sup);
+const useHp = useSound(hp, { volume: 0.5 });
+const useSup = useSound(sup, { volume: 0.5 });
 const useDef = useSound(def);
 const useAtk = useSound(atk);
 const useTech = useSound(tech);
