@@ -95,8 +95,8 @@ async function setMissions(): Promise<void> {
   const { game, missions } = storeToRefs(gameStore);
   const { missionsNum } = toRefs(game.value);
 
+  missions.value = [];
   if (!sign.value) {
-    missions.value = [];
     for (let i = 0; i < 3; i++) {
       const selectMission = Math.floor(Math.random() * allMissions.length);
       missionsNum.value[i] = selectMission;
@@ -184,7 +184,7 @@ function changeStatusValue(key: keyof Status, value: number, isBreak?: boolean):
   status.value[key] += value;
   if (key === "hp" && status.value.hp > status.value.maxHp && !isBreak) status.value.hp = status.value.maxHp;
   if (key === "hungry" && status.value.hungry < 0 && !isBreak) status.value.hungry = 0;
-  if (key === "maxHp" && status.value.maxHp > 600 && !isBreak) status.value.maxHp = 600;
+  if (key === "maxHp" && status.value.maxHp > 400 && !isBreak) status.value.maxHp = 400;
   if (key === "maxHungry" && status.value.maxHungry > 200 && !isBreak) status.value.maxHungry = 200;
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);

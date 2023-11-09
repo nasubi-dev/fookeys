@@ -32,7 +32,7 @@ const allGifts: Gift[] = [
     id: 2,
     name: "冷凍保存",
     description: "手札の消費期限を🦠+1する",
-    requireContribution: 25,
+    requireContribution: 35,
     skill: () => {
       changeHandValue("waste", 1);
     },
@@ -40,24 +40,24 @@ const allGifts: Gift[] = [
   {
     id: 3,
     name: "ドクターストップ",
-    description: "このラウンド中相手は3枚までしかカードを使用できない",
-    requireContribution: 30,
+    description: "このラウンド中相手は1枚しかカードを使用できない",
+    requireContribution: 25,
     skill: () => {},
   },
   {
     id: 4,
     name: "栄養バランス",
-    description: "HPを❤️+200する",
-    requireContribution: 35,
+    description: "HPを❤️+150する",
+    requireContribution: 45,
     skill: () => {
-      changeStatusValue("hp", 200);
+      changeStatusValue("hp", 150);
     },
   },
   {
     id: 5,
     name: "リサイクル",
     description: "腐ったカードを手札から全部消す",
-    requireContribution: 40,
+    requireContribution: 35,
     skill: () => {
       const num = deleteAllRottenCard();
       changeStatusValue("maxHungry", num * 20);
