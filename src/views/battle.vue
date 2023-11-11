@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref, onUnmounted } from "vue";
-import { usePush,Notivue, Notifications, filledIcons } from 'notivue'
+import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -36,7 +36,6 @@ import winGif from "@/assets/gifs/win.gif";
 import loseGif from "@/assets/gifs/lose.gif";
 //asset
 import allGifts from "@/assets/allGifts";
-import allMissions from "@/assets/allMissions";
 //sound
 import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
@@ -69,7 +68,6 @@ const customIcons = {
   promise: filledIcons.promise
 }
 const push = usePush()
-
 watch(log, () => {
   if (log.value === "") return
   push.info({
@@ -85,7 +83,6 @@ watch(myLog, () => {
     message: myLog.value,
     duration: 8000,
   })
-  if (myLog.value.includes("改造焼き魚の効果")) useHp.play()
   myLog.value = ""
 })
 watch(enemyLog, () => {
@@ -94,7 +91,6 @@ watch(enemyLog, () => {
     message: enemyLog.value,
     duration: 8000,
   })
-  if (enemyLog.value.includes("改造焼き魚の効果")) useHp.play()
   enemyLog.value = ""
 })
 
@@ -154,27 +150,16 @@ onUnmounted(() => {
   initPlayer();
 })
 
-
 const myTurnAnimation = ref(false);
 const enemyTurnAnimation = ref(false);
 watch(components, (newVal) => {
-  if (newVal === "primaryAtk") {
-    if (sign.value === firstAtkPlayer.value) {
-      myTurnAnimation.value = true;
-      useMyTurn.play()
-    } else {
-      enemyTurnAnimation.value = true;
-      useEnemyTurn.play()
-    }
-  }
-  if (newVal === "secondAtk") {
-    if (sign.value !== firstAtkPlayer.value) {
-      myTurnAnimation.value = true;
-      useMyTurn.play()
-    } else {
-      enemyTurnAnimation.value = true;
-      useEnemyTurn.play()
-    }
+  if (newVal === "postBattle" || newVal === "afterDecideFirstAtkPlayer") return
+  if (!XOR(newVal === "primaryAtk", sign.value === firstAtkPlayer.value)) {
+    myTurnAnimation.value = true;
+    useMyTurn.play()
+  } else {
+    enemyTurnAnimation.value = true;
+    useEnemyTurn.play()
   }
 })
 const loadMyTurnImg = () => {
@@ -238,6 +223,10 @@ const wantCard = ref()//!test用
       <div class="flex flex-row-reverse z-20 fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
         <div class="flex flex-col">
+          <div class="overCard">
+            <div class="p-7 rounded-full bg-white"></div>
+            <div class="overText text-5xl font-bold text-left">{{ turn }}</div>
+          </div>
           <p> {{ "id: " + id }}</p>
           <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
           <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>

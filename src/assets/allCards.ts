@@ -229,16 +229,6 @@ const allCards: Card[] = [
   },
   {
     id: 24,
-    name: "改造焼き魚",
-    waste: 4,
-    hungry: 40,
-    company: "unlimit",
-    attribute: "tech",
-    description: "このカードが手札にあるときに❤️HPが0になった場合、❤️+250、🍖-300して復活する。",
-    tech: 40,
-  },
-  {
-    id: 25,
     name: "ワッフル",
     waste: 4,
     hungry: 40,
@@ -248,7 +238,7 @@ const allCards: Card[] = [
     tech: 50,
   },
   {
-    id: 26,
+    id: 25,
     name: "改造生ハム",
     waste: 4,
     hungry: 40,
@@ -258,7 +248,7 @@ const allCards: Card[] = [
     tech: 55,
   },
   {
-    id: 27,
+    id: 26,
     name: "フランスパン",
     waste: 4,
     hungry: 40,
@@ -267,7 +257,7 @@ const allCards: Card[] = [
     tech: 65,
   },
   {
-    id: 28,
+    id: 27,
     name: "フルーツタルト",
     waste: 3,
     hungry: 50,
@@ -276,7 +266,7 @@ const allCards: Card[] = [
     tech: 45,
   },
   {
-    id: 29,
+    id: 28,
     name: "ラザニア",
     waste: 3,
     hungry: 50,
@@ -286,7 +276,7 @@ const allCards: Card[] = [
     tech: 75,
   },
   {
-    id: 30,
+    id: 29,
     name: "グラタン",
     waste: 3,
     hungry: 50,
@@ -295,7 +285,7 @@ const allCards: Card[] = [
     tech: 85,
   },
   {
-    id: 31,
+    id: 30,
     name: "アクアパッツァ",
     waste: 3,
     hungry: 60,
@@ -305,7 +295,7 @@ const allCards: Card[] = [
     tech: 90,
   },
   {
-    id: 32,
+    id: 31,
     name: "ローストビーフ",
     waste: 3,
     hungry: 60,
@@ -314,7 +304,7 @@ const allCards: Card[] = [
     tech: 100,
   },
   {
-    id: 33,
+    id: 32,
     name: "かき氷",
     waste: 4,
     hungry: 5,
@@ -323,7 +313,7 @@ const allCards: Card[] = [
     def: 35,
   },
   {
-    id: 34,
+    id: 33,
     name: "プリン",
     waste: 5,
     hungry: 10,
@@ -332,7 +322,7 @@ const allCards: Card[] = [
     def: 30,
   },
   {
-    id: 35,
+    id: 34,
     name: "ラムネ",
     waste: 5,
     hungry: 10,
@@ -341,7 +331,7 @@ const allCards: Card[] = [
     def: 35,
   },
   {
-    id: 36,
+    id: 35,
     name: "りんご飴",
     waste: 4,
     hungry: 15,
@@ -350,7 +340,7 @@ const allCards: Card[] = [
     def: 70,
   },
   {
-    id: 37,
+    id: 36,
     name: "焼き鳥",
     waste: 5,
     hungry: 20,
@@ -359,7 +349,7 @@ const allCards: Card[] = [
     def: 70,
   },
   {
-    id: 38,
+    id: 37,
     name: "焼きとうもろこし",
     waste: 4,
     hungry: 30,
@@ -370,7 +360,7 @@ const allCards: Card[] = [
     def: 80,
   },
   {
-    id: 39,
+    id: 38,
     name: "モンブラン",
     waste: 4,
     hungry: 30,
@@ -379,7 +369,7 @@ const allCards: Card[] = [
     def: 105,
   },
   {
-    id: 40,
+    id: 39,
     name: "チョコバナナ",
     waste: 4,
     hungry: 30,
@@ -388,7 +378,7 @@ const allCards: Card[] = [
     def: 110,
   },
   {
-    id: 41,
+    id: 40,
     name: "おにぎり",
     waste: 4,
     hungry: 40,
@@ -399,7 +389,7 @@ const allCards: Card[] = [
     def: 115,
   },
   {
-    id: 42,
+    id: 41,
     name: "チョコケーキ",
     waste: 4,
     hungry: 40,
@@ -409,7 +399,7 @@ const allCards: Card[] = [
     def: 130,
   },
   {
-    id: 43,
+    id: 42,
     name: "イカ焼き",
     waste: 4,
     hungry: 40,
@@ -418,7 +408,7 @@ const allCards: Card[] = [
     def: 145,
   },
   {
-    id: 44,
+    id: 43,
     name: "たこ焼き",
     waste: 3,
     hungry: 50,
@@ -428,7 +418,7 @@ const allCards: Card[] = [
     def: 75,
   },
   {
-    id: 45,
+    id: 44,
     name: "ロールケーキ",
     waste: 3,
     hungry: 50,
@@ -437,7 +427,7 @@ const allCards: Card[] = [
     def: 180,
   },
   {
-    id: 46,
+    id: 45,
     name: "お好み焼き",
     waste: 3,
     hungry: 50,
@@ -446,7 +436,7 @@ const allCards: Card[] = [
     def: 185,
   },
   {
-    id: 47,
+    id: 46,
     name: "メンチカツ",
     waste: 3,
     hungry: 60,
@@ -456,7 +446,7 @@ const allCards: Card[] = [
     def: 110,
   },
   {
-    id: 48,
+    id: 47,
     name: "焼きそば",
     waste: 3,
     hungry: 60,
@@ -465,7 +455,7 @@ const allCards: Card[] = [
     def: 220,
   },
   {
-    id: 49,
+    id: 48,
     name: "ジャンボフランクフルト",
     waste: 4,
     hungry: 15,
@@ -474,7 +464,7 @@ const allCards: Card[] = [
     description: "このカードは後攻のとき、マッスルダメージを💪+75する。",
   },
   {
-    id: 50,
+    id: 49,
     name: "抹茶",
     waste: 5,
     hungry: 15,
@@ -484,7 +474,7 @@ const allCards: Card[] = [
     priority: 2,
   },
   {
-    id: 51,
+    id: 50,
     name: "おはぎ",
     waste: 4,
     hungry: 20,
@@ -493,7 +483,7 @@ const allCards: Card[] = [
     description: "次のラウンド開始時、マッスルカードを1枚ドローする。",
   },
   {
-    id: 52,
+    id: 51,
     name: "大福",
     waste: 4,
     hungry: 20,
@@ -502,7 +492,7 @@ const allCards: Card[] = [
     description: "次のラウンド開始時、テクニックカードを1枚ドローする。",
   },
   {
-    id: 53,
+    id: 52,
     name: "ようかん",
     waste: 4,
     hungry: 20,
@@ -511,7 +501,7 @@ const allCards: Card[] = [
     description: "次のラウンド開始時、シールドカードを1枚ドローする。",
   },
   {
-    id: 54,
+    id: 53,
     name: "八ツ橋",
     waste: 4,
     hungry: 20,
@@ -520,7 +510,7 @@ const allCards: Card[] = [
     description: "次のラウンド開始時、サポートカードを1枚ドローする。",
   },
   {
-    id: 55,
+    id: 54,
     name: "たい焼き",
     waste: 4,
     hungry: 25,
@@ -529,7 +519,7 @@ const allCards: Card[] = [
     description: "このカードは使用時の自身の満腹度と同じだけシールドを獲得する。",
   },
   {
-    id: 56,
+    id: 55,
     name: "茶碗蒸し",
     waste: 5,
     hungry: 25,
@@ -539,7 +529,7 @@ const allCards: Card[] = [
     priority: 3,
   },
   {
-    id: 57,
+    id: 56,
     name: "フライドポテト",
     waste: 4,
     hungry: 30,
@@ -548,7 +538,7 @@ const allCards: Card[] = [
     description: "ラウンド終了時、手札にあるマッスルカードのマッスルダメージを💪+10する。",
   },
   {
-    id: 58,
+    id: 57,
     name: "焼き芋",
     waste: 4,
     hungry: 30,
@@ -557,7 +547,7 @@ const allCards: Card[] = [
     description: "ラウンド終了時、手札にあるシールドカードのシールドを🛡️+20する。",
   },
   {
-    id: 59,
+    id: 58,
     name: "改造焼き芋",
     waste: 4,
     hungry: 40,
@@ -566,7 +556,7 @@ const allCards: Card[] = [
     description: "ラウンド終了時、手札にあるシールドカードのシールドを自身のシールドと同じだけを増やす。",
   },
   {
-    id: 60,
+    id: 59,
     name: "焼き魚",
     waste: 4,
     hungry: 40,
@@ -574,6 +564,15 @@ const allCards: Card[] = [
     attribute: "heal",
     description: "HPを❤️+50回復する。",
     heal: 50,
+  },
+  {
+    id:60,
+    name:"改造おはぎ",
+    waste:4,
+    hungry:40,
+    company:"unlimit",
+    attribute:"sup",
+    description:"次のラウンド開始時、満腹度を🍖0、消費期限を🦠7で固定したランダムなカードを2枚ドローする。",
   },
   {
     id: 61,

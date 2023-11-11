@@ -129,7 +129,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   if (my.field.map((card) => card.attribute).includes("sup")) {
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 50 || card.id === 56 || card.id === 62)) return;
+        if (!(card.id === 62)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
@@ -151,7 +151,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 60 || card.id === 61 || card.id === 63)) return;
+        if (!(card.id === 59 || card.id === 61 || card.id === 63)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
@@ -180,27 +180,27 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(((card.id === 44 || card.id === 47) && which === "second") || card.id === 55)) return;
+        if (!(((card.id === 43 || card.id === 46) && which === "second") || card.id === 54)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
-        if (card.id === 44 && which === "second") {
+        if (card.id === 43 && which === "second") {
           console.log(card.hungry, my.status.hungry);
           my.status.hungry -= 50;
           console.log(card.hungry, my.status.hungry);
           updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
           wait(100);
         }
-        if (card.id === 47 && which === "second") {
+        if (card.id === 46 && which === "second") {
           console.log(card.hungry, my.status.hungry);
           my.status.hungry -= 60;
           console.log(card.hungry, my.status.hungry);
           updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
           wait(100);
         }
-        if (card.id === 55) {
+        if (card.id === 54) {
           my.sumFields.def += my.status.hungry;
           updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });
         }
@@ -219,11 +219,11 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 10 || (card.id === 49 && which === "second") || card.id === 64)) return;
+        if (!(card.id === 10 || (card.id === 48 && which === "second") || card.id === 64)) return;
         if (!attackOrder) enemyLog.value = card.name + "の効果!" + card.description;
         else myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 10) defense = 0;
-        if (card.id === 49 && which === "second") my.sumFields.atk += 75;
+        if (card.id === 48 && which === "second") my.sumFields.atk += 75;
       },
       my.field,
       100
@@ -244,8 +244,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //死亡判定
     const isEnemyDeath = await checkDeath(enemy, attackOrder);
     const isMyDeath = await checkDeath(my, attackOrder);
-    await reflectStatus();
-    await getEnemyPlayer(); //!
     if (!isEnemyDeath || !isMyDeath) {
       battleResult.value = ["none", 0];
       return true;
@@ -259,19 +257,19 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //特殊効果を発動する
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 17 || card.id === 20 || card.id === 26 || ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100)))
+        if (!(card.id === 17 || card.id === 20 || card.id === 25 || ((card.id === 28 || card.id === 30) && enemy.status.hungry >= 100)))
           return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
-          if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) {
+          if ((card.id === 28 || card.id === 30) && enemy.status.hungry >= 100) {
             my.sumFields.tech += 30;
           }
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 17 || card.id === 20) changeStatusValue("contribution", 5);
-        if (card.id === 26) changeStatusValue("contribution", 50);
-        if ((card.id === 29 || card.id === 31) && enemy.status.hungry >= 100) {
+        if (card.id === 25) changeStatusValue("contribution", 50);
+        if ((card.id === 28 || card.id === 30) && enemy.status.hungry >= 100) {
           my.sumFields.tech += 30;
         }
       },
@@ -292,8 +290,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //死亡判定
     const isEnemyDeath = await checkDeath(enemy, attackOrder);
     const isMyDeath = await checkDeath(my, attackOrder);
-    await reflectStatus();
-    await getEnemyPlayer(); //!
     if (!isEnemyDeath || !isMyDeath) {
       battleResult.value = ["none", 0];
       return true;
@@ -477,16 +473,15 @@ async function postBattle(): Promise<void> {
     if (
       !(
         card.id === 7 ||
-        card.id === 25 ||
-        card.id === 42 ||
-        card.id === 59 ||
+        card.id === 24 ||
+        card.id === 41 ||
+        card.id === 50 ||
         card.id === 51 ||
         card.id === 52 ||
         card.id === 53 ||
-        card.id === 54 ||
+        card.id === 56 ||
         card.id === 57 ||
-        card.id === 58 ||
-        card.id === 59
+        card.id === 58
       )
     ) {
       return true;
@@ -541,14 +536,14 @@ async function postBattle(): Promise<void> {
     field.value.forEach((card: Card) => {
       if (judgeDrawCard(card)) return;
       myLog.value = card.name + "の効果!" + card.description;
-      if (card.id === 51) drawRandomOneCard("atk");
-      if (card.id === 52) drawRandomOneCard("tech");
-      if (card.id === 53) drawRandomOneCard("def");
-      if (card.id === 54) drawRandomOneCard("sup");
-      if (card.id === 7 || card.id === 25 || card.id === 42) status.value.hungry >= 100 ? (status.value.hungry -= 25) : null;
-      if (card.id === 57) changeHandValue("atk", 10, "atk");
-      if (card.id === 58) changeHandValue("def", 20, "def");
-      if (card.id === 59) changeHandValue("def", defense, "def");
+      if (card.id === 50) drawRandomOneCard("atk");
+      if (card.id === 51) drawRandomOneCard("tech");
+      if (card.id === 52) drawRandomOneCard("def");
+      if (card.id === 53) drawRandomOneCard("sup");
+      if (card.id === 7 || card.id === 24 || card.id === 41) status.value.hungry >= 100 ? (status.value.hungry -= 25) : null;
+      if (card.id === 56) changeHandValue("atk", 10, "atk");
+      if (card.id === 57) changeHandValue("def", 20, "def");
+      if (card.id === 58) changeHandValue("def", defense, "def");
     });
   }
   //手札にあるカードの効果を発動する
