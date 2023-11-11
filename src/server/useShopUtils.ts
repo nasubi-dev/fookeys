@@ -46,6 +46,25 @@ function drawRandomOneCard(order?: Attribute | number): void {
   hand.value = hand.value.slice().sort((a, b) => a.id - b.id);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
 }
+//cardをランダムに3枚引く
+async function draw2ExchangedCard() {
+  console.log(i, "draw3ExchangedCardを実行しました");
+  const { id, player, log } = storeToRefs(playerStore);
+  const { hand } = toRefs(player.value);
+
+  let selectCards: Card[] = [];
+  for (let i = 0; i < 2; i++) {
+    if (hand.value.length >= 9) return;
+    let selectCard = drawCard();
+    selectCard.waste = 8;
+    selectCard.hungry = 0;
+    selectCards[i] = selectCard;
+    hand.value.push(selectCard);
+    hand.value = [...hand.value].sort((a, b) => a.id - b.id);
+  }
+  updateDoc(doc(playersRef, id.value), { hand: hand.value });
+  console.log("draw3ExchangedCard: " + selectCards.map((card) => card.name));
+}
 //cardをHandに6枚セットする
 async function setHand(): Promise<void> {
   console.log(i, "setHandを実行しました");
@@ -128,7 +147,10 @@ async function setMissions(): Promise<void> {
       if (_isEqual(oldMissions, updateMissions)) return;
       missionsNum.value = updateMissionsNum;
       missions.value = updateMissions;
-      console.log(i, updateMissions?.map((mission) => mission.name));
+      console.log(
+        i,
+        updateMissions?.map((mission) => mission.name)
+      );
       //監視を解除する
       unsubscribe();
       console.log(i, "missionsの監視を解除しました");
@@ -186,6 +208,7 @@ function changeStatusValue(key: keyof Status, value: number, isBreak?: boolean):
 }
 export {
   drawRandomOneCard,
+  draw2ExchangedCard,
   setHand,
   setOffer,
   changeAllHand,
