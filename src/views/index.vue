@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
-import { Notivue, Notifications } from 'notivue'
+import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
+import { useSound } from "@vueuse/sound";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { registerPlayer } from "@/server/usePlayerData";
-import { useSound } from "@vueuse/sound";
 import { tap1 } from "@/assets/sounds";
-import { usePush } from 'notivue'
+import myLogImg from "@/components/myLog.vue";
+import enemyLogImg from "@/components/enemyLog.vue";
+
+const customIcons = {
+  success: myLogImg,
+  error: enemyLogImg,
+  info: filledIcons.info,
+  close: filledIcons.close,
+  promise: filledIcons.promise
+}
 const push = usePush()
 
 //storeの参照
@@ -34,7 +43,7 @@ async function register() {
 <template>
   <div>
     <Notivue v-slot="item">
-      <Notifications :item="item" />
+      <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col items-center justify-center h-screen">
       このゲームはCSS初心者が作っているのでレスポンシブを理解していません｡<br />

@@ -1,22 +1,30 @@
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
-import { Notivue, Notifications } from 'notivue'
-import { e, s, i } from "@/log";
+import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
+import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
 import { playerStore } from "@/main";
-import { useSound } from "@vueuse/sound";
-import { tap1, tap2 } from "@/assets/sounds";
+import { e, s, i } from "@/log";
 import { startMatchmaking } from "@/server/useMatchMaking";
+import { tap1, tap2 } from "@/assets/sounds";
 //components
 import SelectCharacter from "@/components/selectCharacter.vue";
 import SelectGifts from "@/components/selectGifts.vue";
 import UiGifts from "@/components/uiGifts.vue";
+import myLogImg from "@/components/myLog.vue";
+import enemyLogImg from "@/components/enemyLog.vue";
 //img
 import characterBackground from "@/assets/img/ui/characterBackground.png";
 import menuBackground from "@/assets/img/ui/menuBackground.png";
 import back from "@/assets/img/ui/back.png";
 
-import { usePush } from 'notivue'
+const customIcons = {
+  success: myLogImg,
+  error: enemyLogImg,
+  info: filledIcons.info,
+  close: filledIcons.close,
+  promise: filledIcons.promise
+}
 const push = usePush()
 
 const { player, log, id } = storeToRefs(playerStore);
@@ -48,7 +56,7 @@ async function startMatch(): Promise<void> {
 <template>
   <div>
     <Notivue v-slot="item">
-      <Notifications :item="item" />
+      <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="h-screen flex flex-col">
       <div class="z-10">

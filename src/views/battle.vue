@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref, onUnmounted } from "vue";
-import { Notivue, Notifications, filledIcons } from 'notivue'
-import { usePush } from 'notivue'
+import { usePush,Notivue, Notifications, filledIcons } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";

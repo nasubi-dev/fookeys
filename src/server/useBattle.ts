@@ -10,8 +10,6 @@ import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { changeHandValue, changeStatusValue, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
-import { update } from "lodash";
-
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
@@ -60,28 +58,24 @@ async function reflectStatus(): Promise<void> {
   death.value = myPlayerDeath;
 }
 //死亡判定
-async function checkDeath(p: PlayerData, enemyHand: Card[], attackOrder: boolean): Promise<boolean> {
+async function checkDeath(p: PlayerData, attackOrder: boolean): Promise<boolean> {
   console.log(s, "checkDeathを実行しました");
   const { id, player, myLog, enemyLog } = storeToRefs(playerStore);
-  const { idEnemy, status } = toRefs(player.value);
+  const { idEnemy } = toRefs(player.value);
 
   if (p.status.hp <= 0) {
-    let returnResurrection = false;
-    p.hand.forEach((card: Card) => {
-      if (card.id !== 24) return;
-      myLog.value = card.name + "の効果!" + card.description;
-      returnResurrection = true;
-      if (attackOrder) return;
-      status.value.hungry = 0;
-      status.value.hp = 250;
-      updateDoc(doc(playersRef, id.value), { status: status.value });
-    });
-    enemyHand.forEach((card: Card) => {
-      if (card.id !== 24) return;
-      enemyLog.value = card.name + "の効果!" + card.description;
-      returnResurrection = true;
-    });
-    if (returnResurrection) return true;
+    const existResurrection = p.hand.map((card) => card.id).includes(24);
+    if (existResurrection) {
+      if (!attackOrder) {
+        myLog.value = "改造焼き魚の効果!このカードが手札にあるときに❤️HPが0になった場合、❤️+250、🍖-300して復活する。";
+        p.status.hp = 250;
+        p.status.hungry = 0;
+        updateDoc(doc(playersRef, id.value), { status: p.status });
+      } else {
+        enemyLog.value = "改造焼き魚の効果!このカードが手札にあるときに❤️HPが0になった場合、❤️+250、🍖-300して復活する。";
+      }
+      return true;
+    }
     updateDoc(doc(playersRef, id.value), { death: true });
     updateDoc(doc(playersRef, idEnemy.value), { death: true });
     return false;
@@ -248,8 +242,10 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     await everyUtil(["atk", my.sumFields.atk]);
 
     //死亡判定
-    const isEnemyDeath = await checkDeath(enemy, my.hand, attackOrder);
-    const isMyDeath = await checkDeath(my, enemy.hand, attackOrder);
+    const isEnemyDeath = await checkDeath(enemy, attackOrder);
+    const isMyDeath = await checkDeath(my, attackOrder);
+    await reflectStatus();
+    await getEnemyPlayer(); //!
     if (!isEnemyDeath || !isMyDeath) {
       battleResult.value = ["none", 0];
       return true;
@@ -294,8 +290,10 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     await everyUtil(["tech", holdingTech]);
 
     //死亡判定
-    const isEnemyDeath = await checkDeath(enemy, my.hand, attackOrder);
-    const isMyDeath = await checkDeath(my, enemy.hand, attackOrder);
+    const isEnemyDeath = await checkDeath(enemy, attackOrder);
+    const isMyDeath = await checkDeath(my, attackOrder);
+    await reflectStatus();
+    await getEnemyPlayer(); //!
     if (!isEnemyDeath || !isMyDeath) {
       battleResult.value = ["none", 0];
       return true;
