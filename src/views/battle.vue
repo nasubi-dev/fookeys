@@ -77,9 +77,7 @@ watch(log, () => {
     message: log.value,
     duration: 8000,
   })
-  if (log.value.includes("枚のカードが腐ってしまった！")) {
-    useRotten.play()
-  }
+  if (log.value.includes("枚のカードが腐ってしまった！")) useRotten.play()
   log.value = ""
 })
 watch(myLog, () => {
@@ -88,6 +86,7 @@ watch(myLog, () => {
     message: myLog.value,
     duration: 8000,
   })
+  if (myLog.value.includes("改造焼き魚の効果")) useHp.play()
   myLog.value = ""
 })
 watch(enemyLog, () => {
@@ -96,6 +95,7 @@ watch(enemyLog, () => {
     message: enemyLog.value,
     duration: 8000,
   })
+  if (enemyLog.value.includes("改造焼き魚の効果")) useHp.play()
   enemyLog.value = ""
 })
 
@@ -149,8 +149,7 @@ onMounted(async () => {
 });
 //離脱したらGame､PlayerDataが削除される
 onUnmounted(() => {
-  //alert
-  window.alert("戦闘画面を離れます ");
+  window.alert("戦闘画面を離れます");  //alert
   useBGM.stop()
   deleteGame();
   initPlayer();
@@ -207,7 +206,6 @@ const loadStartGif = () => {
   }, 1700);
 }
 const wantCard = ref()//!test用
-const copy = ref()//!test用
 </script>
 
 <template>
@@ -248,12 +246,6 @@ const copy = ref()//!test用
           <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
             "OFF"
           }}</span></button>
-          <button @click="status.hp -= 10">hp-10</button>
-          <button @click="status.hungry -= 10">hungry-10</button>
-          <button @click="status.contribution += 100">contribution+100</button>
-          <button @click="copy = [...hand]">handCopy</button>
-          <button @click="hand = []">reset</button>
-          <button @click="hand = copy">paste</button>
         </div>
       </div>
 

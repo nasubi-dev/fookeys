@@ -147,9 +147,9 @@ async function watchDeleteGame(): Promise<void> {
       unsubscribe();
       console.log(i, "idGameの監視を解除しました");
       //画面遷移
-      console.log(s, "敵が退出したのでゲーム終了");
+      console.log(s, "ゲーム終了");
       setTimeout(() => {
-        log.value = "敵が退出したのでゲーム終了";
+        log.value = "ゲーム終了";
         router.push({ name: "home" });
       }, 1000);
     } else {

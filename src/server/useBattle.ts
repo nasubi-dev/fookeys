@@ -10,6 +10,7 @@ import { intervalForEach, wait, XOR } from "@/server/utils";
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { changeHandValue, changeStatusValue, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
+import { update } from "lodash";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -59,12 +60,28 @@ async function reflectStatus(): Promise<void> {
   death.value = myPlayerDeath;
 }
 //死亡判定
-async function checkDeath(p: PlayerData): Promise<boolean> {
+async function checkDeath(p: PlayerData, enemyHand: Card[], attackOrder: boolean): Promise<boolean> {
   console.log(s, "checkDeathを実行しました");
-  const { id, player } = storeToRefs(playerStore);
-  const { idEnemy } = toRefs(player.value);
+  const { id, player, myLog, enemyLog } = storeToRefs(playerStore);
+  const { idEnemy, status } = toRefs(player.value);
 
   if (p.status.hp <= 0) {
+    let returnResurrection = false;
+    p.hand.forEach((card: Card) => {
+      if (card.id !== 24) return;
+      myLog.value = card.name + "の効果!" + card.description;
+      returnResurrection = true;
+      if (attackOrder) return;
+      status.value.hungry = 0;
+      status.value.hp = 250;
+      updateDoc(doc(playersRef, id.value), { status: status.value });
+    });
+    enemyHand.forEach((card: Card) => {
+      if (card.id !== 24) return;
+      enemyLog.value = card.name + "の効果!" + card.description;
+      returnResurrection = true;
+    });
+    if (returnResurrection) return true;
     updateDoc(doc(playersRef, id.value), { death: true });
     updateDoc(doc(playersRef, idEnemy.value), { death: true });
     return false;
@@ -229,9 +246,10 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
 
     if (playerAllocation) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     await everyUtil(["atk", my.sumFields.atk]);
+
     //死亡判定
-    const isEnemyDeath = await checkDeath(enemy);
-    const isMyDeath = await checkDeath(my);
+    const isEnemyDeath = await checkDeath(enemy, my.hand, attackOrder);
+    const isMyDeath = await checkDeath(my, enemy.hand, attackOrder);
     if (!isEnemyDeath || !isMyDeath) {
       battleResult.value = ["none", 0];
       return true;
@@ -274,9 +292,10 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
 
     if (playerAllocation) updateDoc(doc(playersRef, enemyId), { "status.hp": enemy.status.hp });
     await everyUtil(["tech", holdingTech]);
+
     //死亡判定
-    const isEnemyDeath = await checkDeath(enemy);
-    const isMyDeath = await checkDeath(my);
+    const isEnemyDeath = await checkDeath(enemy, my.hand, attackOrder);
+    const isMyDeath = await checkDeath(my, enemy.hand, attackOrder);
     if (!isEnemyDeath || !isMyDeath) {
       battleResult.value = ["none", 0];
       return true;

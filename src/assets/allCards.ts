@@ -234,7 +234,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "unlimit",
     attribute: "tech",
-    description: "このカードが手札にあるときに❤️HPが0になった場合、❤️+300、🍖-300して復活する。",
+    description: "このカードが手札にあるときに❤️HPが0になった場合、❤️+250、🍖-300して復活する。",
     tech: 40,
   },
   {
