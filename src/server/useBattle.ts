@@ -276,7 +276,7 @@ async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
   const { checkRotten, deleteField, decMaxHungry } = playerStore;
   const { id, player, sign, log, myLog, enemyLog } = storeToRefs(playerStore);
-  const { check, idGame, isSelectedGift, hand, field, status, donate } = toRefs(player.value);
+  const { check, idGame, isSelectedGift, hand, rottenHand, field, status, donate } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
   const { field: enemyField, donate: enemyDonate, check: enemyCheck } = toRefs(enemyPlayer.value);
   const { nextTurn } = gameStore;
@@ -307,9 +307,9 @@ async function postBattle(): Promise<void> {
   changeHandValue("waste", -1);
   updateDoc(doc(playersRef, id.value), { hand: hand.value });
   //腐っているカードにする
-  const oldHandNum = hand.value.filter((card) => card.id === 0).length;
+  const oldHandNum = rottenHand.value.length;
   checkRotten();
-  const newHandNum = hand.value.filter((card) => card.id === 0).length;
+  const newHandNum = rottenHand.value.length;
   if (newHandNum - oldHandNum !== 0) {
     log.value = newHandNum - oldHandNum + "枚のカードが腐ってしまった！";
     decMaxHungry(newHandNum - oldHandNum);

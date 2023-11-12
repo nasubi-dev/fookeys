@@ -12,15 +12,23 @@ import { converter } from "@/server/converter";
 import { watchTurnEnd } from "@/server/useShop";
 import UiCard from "@/components/uiCard.vue";
 import allCards from "@/assets/allCards";
-
 const useTap1 = useSound(tap1);
 
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 
 const { pushHand, popHand } = playerStore;
 const { player, cardLock, log, sumCards } = storeToRefs(playerStore);
-const { hand, field, idEnemy, status, donate } = toRefs(player.value);
+const { hand, rottenHand, field, idEnemy, status, donate } = toRefs(player.value);
 
+const recoverRottenHand = ref(false)
+watch(() => rottenHand.value.length, (newVal, oldVal) => {
+  if (newVal > oldVal) {
+    recoverRottenHand.value = true
+    setTimeout(() => {
+      recoverRottenHand.value = false
+    }, 1000)
+  }
+})
 const isHandSelected = ref([false, false, false, false, false, false, false, false, false]);
 watch(donate, () => {
   isHandSelected.value = [false, false, false, false, false, false, false, false, false];
@@ -75,21 +83,27 @@ const popCard = (index: number, id: number) => {
   <div class=" flex justify-start overflow-x-visible">
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-      <div v-if="hand.length === 0" class="cardSize">
-        <img width="912" src="../assets/img/alpha.png" />
-      </div>
-      <div v-else v-for="(card, index) in hand" :key="card.id">
-        <div v-if="!card.rotten">
-          <button
-            @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
-            :class="isHandSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
-            <UiCard :card="card" size="normal" :state="isHandSelected[index]" />
-          </button>
+      <div class="flex justify-start">
+        <button @click="recoverRottenHand = true">test</button>
+        <div v-for="(card) in rottenHand" :key="card.id" :class="recoverRottenHand ? `animate-jump` : null">
+          <div>
+            <button @click="log = '腐ったカードは使えない'" class="cardSize relative">
+              <UiCard :card="card" size="normal" />
+            </button>
+          </div>
         </div>
-        <div v-else>
-          <button @click="log = '腐ったカードは使えない'" class="cardSize relative">
-            <UiCard :card="card" size="normal" />
-          </button>
+        <div class="p-2"></div>
+        <div v-if="hand.length === 0" class="cardSize">
+          <img width="912" src="../assets/img/alpha.png" />
+        </div>
+        <div v-for="(card, index) in hand" :key="card.id">
+          <div>
+            <button
+              @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
+              :class="isHandSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
+              <UiCard :card="card" size="normal" :state="isHandSelected[index]" />
+            </button>
+          </div>
         </div>
       </div>
     </transition-group>

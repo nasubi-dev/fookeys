@@ -64,6 +64,7 @@ type PlayerData = {
   gifts: number[];
   isSelectedGift: number | undefined;
   hand: Card[];
+  rottenHand: Card[];
   field: Card[];
   status: Status;
   sumFields: SumCards;

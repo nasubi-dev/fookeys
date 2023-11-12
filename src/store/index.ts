@@ -20,6 +20,7 @@ const usePlayerStore = defineStore("playerData", () => {
     gifts: [4, 5, 6],
     isSelectedGift: undefined,
     hand: [],
+    rottenHand: [],
     field: [],
     status: {
       hp: 10,
@@ -110,12 +111,19 @@ const usePlayerStore = defineStore("playerData", () => {
   };
   //wasteが0のカードを腐らせる
   const checkRotten = (): void => {
-    let { hand } = player.value;
+    let { hand, rottenHand } = player.value;
     hand.forEach((card) => {
       if (card.waste === 0) {
         hand.splice(hand.indexOf(card), 1, allCards[0]);
       }
     });
+    const num = hand.filter((card) => card.waste === 0).length;
+    for (let i = 0; i < num; i++) {
+      //handの中からallCards[0]を削除する //!こうしないと不具合が出る
+      hand.splice(hand.indexOf(allCards[0]), 1);
+      //numの数だけrottenHandにallCards[0]をpushする
+      rottenHand.push(allCards[0]);
+    }
   };
   //腐ったカードの枚数分、maxHungryを減らす
   const decMaxHungry = (num: number): void => {
@@ -137,6 +145,7 @@ const usePlayerStore = defineStore("playerData", () => {
       gifts: [4, 5, 6],
       isSelectedGift: undefined,
       hand: [],
+      rottenHand: [],
       field: [],
       status: {
         hp: 10,
@@ -201,6 +210,7 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
     gifts: [4, 5, 6],
     isSelectedGift: undefined,
     hand: [],
+    rottenHand: [],
     field: [],
     status: {
       hp: 10,
@@ -232,6 +242,7 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       gifts: [4, 5, 6],
       isSelectedGift: undefined,
       hand: [],
+      rottenHand: [],
       field: [],
       status: {
         hp: 10,
