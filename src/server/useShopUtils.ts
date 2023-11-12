@@ -189,13 +189,13 @@ function changeHandValue(key: keyof SumCards, value: number, attribute?: Attribu
 }
 //Handの腐ったカードを削除する
 function deleteAllRottenCard(): number {
-  console.log(i, "reduceWaste0を実行しました");
-  const { deleteAllWaste0 } = playerStore;
+  console.log(i, "deleteAllRottenCardを実行しました");
   const { id, player } = storeToRefs(playerStore);
-  const { hand } = toRefs(player.value);
+  const { rottenHand } = toRefs(player.value);
 
-  const num = deleteAllWaste0();
-  updateDoc(doc(playersRef, id.value), { hand: hand.value });
+  let num = rottenHand.value.length;
+  rottenHand.value = [];
+  updateDoc(doc(playersRef, id.value), { rottenHand: [] });
   return num;
 }
 //Statusの値を変更する
@@ -207,7 +207,7 @@ function changeStatusValue(key: keyof Status, value: number, isBreak?: boolean):
   status.value[key] += value;
   if (key === "hp" && status.value.hp > status.value.maxHp && !isBreak) status.value.hp = status.value.maxHp;
   if (key === "hungry" && status.value.hungry < 0 && !isBreak) status.value.hungry = 0;
-  if (key === "maxHp" && status.value.maxHp > 400 && !isBreak) status.value.maxHp = 400;
+  if (key === "maxHp" && status.value.maxHp > 500 && !isBreak) status.value.maxHp = 500;
   if (key === "maxHungry" && status.value.maxHungry > 200 && !isBreak) status.value.maxHungry = 200;
   updateDoc(doc(playersRef, id.value), { status: status.value });
   console.log(i, "changeStatusValue: ", key, status.value[key]);

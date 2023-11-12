@@ -23,7 +23,8 @@ const customIcons = {
   error: enemyLogImg,
   info: filledIcons.info,
   close: filledIcons.close,
-  promise: filledIcons.promise
+  promise: filledIcons.promise,
+  warning: filledIcons.warning,
 }
 const push = usePush()
 
@@ -46,7 +47,7 @@ const selectGift = ref(false);
 const selectCharacter = ref(false);
 async function startMatch(): Promise<void> {
   if (!id.value) {
-    push.error("IDがありません")
+    push.warning("IDがありません")
     return
   }
   await startMatchmaking();

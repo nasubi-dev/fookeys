@@ -8,7 +8,6 @@ import uiCardBehind from "./uiCardBehind.vue";
 import infoImg from "@/assets/img/ui/info.png";
 import battleImg from "@/assets/img/ui/battle.png"
 import donateImg from "@/assets/img/ui/donate.png"
-import { getEnemyPlayer } from "@/server/usePlayerData";
 
 const { battleResult } = storeToRefs(playerStore);
 
@@ -18,8 +17,7 @@ const p = defineProps<{
 }>();
 
 const characterName = ref()
-onMounted(async () => {
-  await getEnemyPlayer();
+onMounted(() => {
   characterName.value = p.player.character
 })
 

@@ -169,7 +169,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     const isMyDeath = await checkDeath(my);
     console.log(i, "死亡判定: ", isEnemyDeath, isMyDeath);
     if (isEnemyDeath || isMyDeath) {
-      console.log(i, "死亡判定: 2");
       battleResult.value = ["none", 0];
       return true;
     }
@@ -217,7 +216,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     const isMyDeath = await checkDeath(my);
     console.log(i, "死亡判定: ", isEnemyDeath, isMyDeath);
     if (isEnemyDeath || isMyDeath) {
-      console.log(i, "死亡判定: 2");
       battleResult.value = ["none", 0];
       return true;
     }
@@ -274,7 +272,7 @@ async function battle() {
 //戦闘後の処理
 async function postBattle(): Promise<void> {
   console.log(s, "postBattleを実行しました");
-  const { checkRotten, deleteField, decMaxHungry } = playerStore;
+  const { checkRotten, deleteField } = playerStore;
   const { id, player, sign, log, myLog, enemyLog } = storeToRefs(playerStore);
   const { check, idGame, isSelectedGift, hand, rottenHand, field, status, donate } = toRefs(player.value);
   const { enemyPlayer } = storeToRefs(enemyPlayerStore);
@@ -310,10 +308,11 @@ async function postBattle(): Promise<void> {
   const oldHandNum = rottenHand.value.length;
   checkRotten();
   const newHandNum = rottenHand.value.length;
-  if (newHandNum - oldHandNum !== 0) {
-    log.value = newHandNum - oldHandNum + "枚のカードが腐ってしまった！";
-    decMaxHungry(newHandNum - oldHandNum);
+  if (newHandNum !== oldHandNum) {
+    if (newHandNum > oldHandNum) log.value = newHandNum - oldHandNum + "枚のカードが腐ってしまった！";
+    changeStatusValue("maxHungry", -20 * (newHandNum - oldHandNum), false);
     updateDoc(doc(playersRef, id.value), { hand: hand.value });
+    updateDoc(doc(playersRef, id.value), { rottenHand: rottenHand.value });
     updateDoc(doc(playersRef, id.value), { status: status.value });
   }
 

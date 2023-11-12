@@ -152,10 +152,6 @@ async function watchDeleteGame(): Promise<void> {
         log.value = "ゲーム終了";
         router.push({ name: "home" });
       }, 1000);
-    } else {
-      // ドキュメントが存在する場合の処理
-      const data = snap.data();
-      console.log("Document data: ", data);
     }
   });
 }

@@ -36,7 +36,7 @@ const offer2Hand = async () => {
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
   wait(100);
-  // hand.value = _sortBy(hand.value, ["id","waste"]);
+  hand.value = _sortBy(hand.value, ["id","waste"]);
 
   //offerを空にする
   offer.value = [];

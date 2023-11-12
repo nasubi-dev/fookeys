@@ -84,7 +84,6 @@ const popCard = (index: number, id: number) => {
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div class="flex justify-start">
-        <button @click="recoverRottenHand = true">test</button>
         <div v-for="(card) in rottenHand" :key="card.id" :class="recoverRottenHand ? `animate-jump` : null">
           <div>
             <button @click="log = '腐ったカードは使えない'" class="cardSize relative">
@@ -93,17 +92,13 @@ const popCard = (index: number, id: number) => {
           </div>
         </div>
         <div class="p-2"></div>
-        <div v-if="hand.length === 0" class="cardSize">
-          <img width="912" src="../assets/img/alpha.png" />
-        </div>
+        <img v-if="hand.length === 0" width="912" src="../assets/img/alpha.png" class="cardSize" />
         <div v-for="(card, index) in hand" :key="card.id">
-          <div>
-            <button
-              @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
-              :class="isHandSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
-              <UiCard :card="card" size="normal" :state="isHandSelected[index]" />
-            </button>
-          </div>
+          <button
+            @click="!isHandSelected[index] ? pushCard(index) : popCard(index, card.id); cardLock ? null : useTap1.play()"
+            :class="isHandSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
+            <UiCard :card="card" size="normal" :state="isHandSelected[index]" />
+          </button>
         </div>
       </div>
     </transition-group>

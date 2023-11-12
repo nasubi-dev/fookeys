@@ -62,7 +62,6 @@ async function checkDeath(p: PlayerData): Promise<boolean> {
   const { idEnemy } = toRefs(player.value);
 
   if (p.status.hp <= 0) {
-    console.log(i, "死亡判定: 1");
     updateDoc(doc(playersRef, id.value), { death: true });
     updateDoc(doc(playersRef, idEnemy.value), { death: true });
     return true;

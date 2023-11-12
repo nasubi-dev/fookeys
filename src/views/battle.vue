@@ -54,7 +54,7 @@ const useAtk = useSound(atk);
 const useTech = useSound(tech);
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, match, character, gifts, status, hand, death, field, sumFields, name, check } = toRefs(player.value);
+const { idGame, match, character, gifts, status, hand, rottenHand, death, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);

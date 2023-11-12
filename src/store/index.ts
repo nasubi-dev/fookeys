@@ -23,7 +23,7 @@ const usePlayerStore = defineStore("playerData", () => {
     rottenHand: [],
     field: [],
     status: {
-      hp: 10,
+      hp: 500,
       hungry: 0,
       contribution: 0,
       maxHp: 500,
@@ -95,20 +95,6 @@ const usePlayerStore = defineStore("playerData", () => {
     field.splice(0, field.length);
     console.log(i, "fieldDelete");
   };
-  //腐っている全てのカードを削除する
-  const deleteAllWaste0 = (): number => {
-    const { hand } = player.value;
-    //forEachの中でspliceを使うとindexがずれるので、whileを使う
-    let i = 0;
-    let num = 0;
-    while (i < hand.length) {
-      if (hand[i].waste === 0) {
-        hand.splice(i, 1);
-        num++;
-      } else i++;
-    }
-    return num;
-  };
   //wasteが0のカードを腐らせる
   const checkRotten = (): void => {
     let { hand, rottenHand } = player.value;
@@ -124,11 +110,6 @@ const usePlayerStore = defineStore("playerData", () => {
       //numの数だけrottenHandにallCards[0]をpushする
       rottenHand.push(allCards[0]);
     }
-  };
-  //腐ったカードの枚数分、maxHungryを減らす
-  const decMaxHungry = (num: number): void => {
-    const { status } = player.value;
-    status.maxHungry -= num * 20;
   };
   const $reset = () => {
     id.value = "";
@@ -190,8 +171,6 @@ const usePlayerStore = defineStore("playerData", () => {
     popHand,
     deleteField,
     checkRotten,
-    deleteAllWaste0,
-    decMaxHungry,
     $reset,
   };
 });

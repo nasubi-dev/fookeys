@@ -64,11 +64,8 @@ async function endShop(): Promise<void> {
   }
   //相手のisSelectedGiftを実行する
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
-  if (enemyGift !== undefined) {
-    console.log(i, "enemyGift: ", allGifts[enemyGift].name);
-    //Logだけ
-    enemyLog.value = allGifts[enemyGift].name + "を使った！";
-  }
+  if (enemyGift !== undefined) enemyLog.value = allGifts[enemyGift].name + "を使った！";
+
   //終了時処理
   phase.value = "battle";
   check.value = false;

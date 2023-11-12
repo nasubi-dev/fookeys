@@ -33,13 +33,8 @@ watch(() => p.player.status, (newVal, oldVal) => {
 
 <template>
   <div class="flex flex-col ml-auto">
-    <div>
-      <div v-if="player.hand.length > 0" class="flex justify-end">
-        <uiCardBehind :cards="player.hand" />
-      </div>
-      <div v-else>
-        <div class="w-14 h-14"></div>
-      </div>
+    <div class="flex justify-end">
+      <uiCardBehind :cards="player.hand" :rottenCards="player.rottenHand" />
     </div>
 
     <div class="overCard ml-auto" style="width:35dvw;" :class="wiggleClass">
