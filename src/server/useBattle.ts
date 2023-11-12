@@ -167,7 +167,9 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //死亡判定
     const isEnemyDeath = await checkDeath(enemy);
     const isMyDeath = await checkDeath(my);
-    if (!isEnemyDeath || !isMyDeath) {
+    console.log(i, "死亡判定: ", isEnemyDeath, isMyDeath);
+    if (isEnemyDeath || isMyDeath) {
+      console.log(i, "死亡判定: 2");
       battleResult.value = ["none", 0];
       return true;
     }
@@ -213,7 +215,9 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     //死亡判定
     const isEnemyDeath = await checkDeath(enemy);
     const isMyDeath = await checkDeath(my);
-    if (!isEnemyDeath || !isMyDeath) {
+    console.log(i, "死亡判定: ", isEnemyDeath, isMyDeath);
+    if (isEnemyDeath || isMyDeath) {
+      console.log(i, "死亡判定: 2");
       battleResult.value = ["none", 0];
       return true;
     }
@@ -224,7 +228,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
 }
 
 //攻撃を行う
-async function attack(which: "primary" | "second") {
+async function attack(which: "primary" | "second"): Promise<boolean> {
   console.log(s, "attackを実行しました");
   const { components } = storeToRefs(playerStore);
 
@@ -232,10 +236,12 @@ async function attack(which: "primary" | "second") {
   getEnemyPlayer(); //!
   components.value = which + "Atk";
 
-  const isPrimaryDeath = await calcDamage(which);
+  const isDeath = await calcDamage(which);
   await reflectStatus();
-  if (isPrimaryDeath) return;
+  console.log(i, "isPrimaryDeath: ", isDeath);
+  if (isDeath) return true;
   await checkMission(which);
+  return false;
 }
 
 //戦闘処理を統括する
@@ -251,10 +257,12 @@ async function battle() {
   await decideFirstAtkPlayer();
 
   console.log(i, "先行の攻撃");
-  await attack("primary");
+  const isPrimaryDeath = await attack("primary");
+  if (isPrimaryDeath) return;
 
   console.log(i, "後攻の攻撃");
-  await attack("second");
+  const isSecondDeath = await attack("second");
+  if (isSecondDeath) return;
 
   getEnemyPlayer(); //!
   await wait(1000);

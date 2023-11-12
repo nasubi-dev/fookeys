@@ -168,7 +168,6 @@ const allCards: Card[] = [
     company: "bianca",
     attribute: "tech",
     description: "貢献度を🔔+5する。",
-    priority: 1,
     tech: 5,
   },
   {
@@ -197,7 +196,6 @@ const allCards: Card[] = [
     company: "bianca",
     attribute: "tech",
     description: "貢献度を🔔+5する。",
-    priority: 1,
     tech: 15,
   },
   {
