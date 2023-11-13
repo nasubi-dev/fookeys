@@ -36,7 +36,7 @@ const onKeyUpCallbackHook = (): void => {
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
           <p v-if="card.waste" class="font-bold text-center transform select-none"
-            :class="[size === 'normal' ? `text- -translate-x-[290%] translate-y-[120%] ` : `text-2xl -translate-x-[280%] translate-y-[140%]`, card.waste === 1 ? `-translate-x-[400%]` : null]">
+            :class="[size === 'normal' ? `text- -translate-x-[290%] translate-y-[120%] ` : `text-2xl -translate-x-[280%] translate-y-[140%]`, card.waste === 1 ? `-translate-x-[380%]` : null]">
             {{ card.waste }}
           </p>
           <img v-if="card.waste" :src="`/img/foods/${card.id}.png`" class="transform"
