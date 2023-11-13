@@ -11,6 +11,7 @@ import { deleteGame, watchDeleteGame } from "@/server/useMatchMaking";
 import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
 //components
+import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
@@ -34,7 +35,6 @@ import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, te
 import bgm from "@/assets/sounds/bgm.mp3";
 //components
 const Shop = defineAsyncComponent(() => import("@/components/shop.vue"));
-const UiEnemyInfo = defineAsyncComponent(() => import("@/components/uiEnemyInfo.vue"));
 const UiUseCard = defineAsyncComponent(() => import("@/components/uiUseCard.vue"));
 const UiUseCardDisplay = defineAsyncComponent(() => import("@/components/uiUseCardDisplay.vue"));
 const myLogImg = defineAsyncComponent(() => import("@/components/myLog.vue"));
