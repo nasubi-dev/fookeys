@@ -16,12 +16,6 @@ import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import Battle from "@/components/battle.vue";
-const Shop = defineAsyncComponent(() => import("@/components/shop.vue"));
-const UiEnemyInfo = defineAsyncComponent(() => import("@/components/uiEnemyInfo.vue"));
-const UiUseCard = defineAsyncComponent(() => import("@/components/uiUseCard.vue"));
-const UiUseCardDisplay = defineAsyncComponent(() => import("@/components/uiUseCardDisplay.vue"));
-const myLogImg = defineAsyncComponent(() => import("@/components/myLog.vue"));
-const enemyLogImg = defineAsyncComponent(() => import("@/components/enemyLog.vue"));
 //img
 import backImg from "@/assets/img/ui/back.png";
 import winImg from "@/assets/img/ui/win.png";
@@ -38,6 +32,14 @@ import allGifts from "@/assets/allGifts";
 //sound
 import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
+//components
+const Shop = defineAsyncComponent(() => import("@/components/shop.vue"));
+const UiEnemyInfo = defineAsyncComponent(() => import("@/components/uiEnemyInfo.vue"));
+const UiUseCard = defineAsyncComponent(() => import("@/components/uiUseCard.vue"));
+const UiUseCardDisplay = defineAsyncComponent(() => import("@/components/uiUseCardDisplay.vue"));
+const myLogImg = defineAsyncComponent(() => import("@/components/myLog.vue"));
+const enemyLogImg = defineAsyncComponent(() => import("@/components/enemyLog.vue"));
+
 const useBGM = useSound(bgm, { volume: 0.3, loop: true });
 const useTap2 = useSound(tap2);
 const useEnemyTurn = useSound(enemyTurn);
