@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, toRefs, watch, ref, onUnmounted } from "vue";
+import { onMounted, toRefs, watch, ref, onUnmounted, defineAsyncComponent } from "vue";
 import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
@@ -11,18 +11,17 @@ import { deleteGame, watchDeleteGame } from "@/server/useMatchMaking";
 import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
 //components
-import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
-import UiUseCard from "@/components/uiUseCard.vue";
-import UiCard from "@/components/uiCard.vue";
-import UiUseCardDisplay from "@/components/uiUseCardDisplay.vue";
-import Shop from "@/components/shop.vue";
 import Battle from "@/components/battle.vue";
-import myLogImg from "@/components/myLog.vue";
-import enemyLogImg from "@/components/enemyLog.vue";
+const Shop = defineAsyncComponent(() => import("@/components/shop.vue"));
+const UiEnemyInfo = defineAsyncComponent(() => import("@/components/uiEnemyInfo.vue"));
+const UiUseCard = defineAsyncComponent(() => import("@/components/uiUseCard.vue"));
+const UiUseCardDisplay = defineAsyncComponent(() => import("@/components/uiUseCardDisplay.vue"));
+const myLogImg = defineAsyncComponent(() => import("@/components/myLog.vue"));
+const enemyLogImg = defineAsyncComponent(() => import("@/components/enemyLog.vue"));
 //img
 import backImg from "@/assets/img/ui/back.png";
 import winImg from "@/assets/img/ui/win.png";
@@ -135,7 +134,7 @@ onMounted(async () => {
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
     console.log(i, "character: ", character.value);
-    console.log(i, "gift: ", allGifts[gifts.value[0]]?.name, allGifts[gifts.value[1]]?.name, allGifts[gifts.value[2]]?.name);
+    console.log(i, "gift: ", gifts.value.map((gift) => allGifts[gift].name));
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
     console.log(i, "hand: ", hand.value.map((card) => card.name));
     console.log(i, "mission: ", missions.value?.map((mission) => mission.name));
