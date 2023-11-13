@@ -35,8 +35,8 @@ const onKeyUpCallbackHook = (): void => {
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="`/img/companys/${card.company}.png`" />
         <div class="overText">
-          <p v-if="card.waste" class="font-bold transform select-none"
-            :class="size === 'normal' ? `text- -translate-x-[290%] translate-y-[100%] ` : `text-2xl -translate-x-[280%] translate-y-[130%]`">
+          <p v-if="card.waste" class="font-bold text-center transform select-none"
+            :class="size === 'normal' ? `text- -translate-x-[290%] translate-y-[120%] ` : `text-2xl -translate-x-[280%] translate-y-[140%]`">
             {{ card.waste }}
           </p>
           <img v-if="card.waste" :src="`/img/foods/${card.id}.png`" class="transform" :class="size==='normal'?`-translate-x-[10%] translate-y-[10%]`:`-translate-x-[10%] translate-y-[10%]`" />
