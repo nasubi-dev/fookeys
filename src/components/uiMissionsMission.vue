@@ -37,7 +37,7 @@ const onKeyUpCallbackHook = (): void => {
         <div class="overText ">
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">
             <span class="ml-auto font-bold">{{ "🪙" + mission.reward }}</span>
-            <span class="font-bold">{{ mission.name }}</span>
+            <span class="ml-1 font-bold">{{ mission.name }}</span>
           </span>
           <div class="gauge w-10/12">
             <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mr-2">✔</span>
