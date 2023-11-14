@@ -236,7 +236,7 @@ async function attack(which: "primary" | "second"): Promise<boolean> {
 
   const isDeath = await calcDamage(which);
   await reflectStatus();
-  console.log(i, "isPrimaryDeath: ", isDeath);
+  console.log(i, "isDeath: ", isDeath);
   if (isDeath) return true;
   await checkMission(which);
   return false;

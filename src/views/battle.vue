@@ -124,6 +124,7 @@ watch(phase, (newVal) => {
 })
 
 //入場したらPlayer型としてIDが保管される
+const loadGame = ref(true);
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   setTimeout(async () => {
@@ -141,6 +142,7 @@ onMounted(async () => {
     console.log(i, "hand: ", hand.value.map((card) => card.name));
     console.log(i, "mission: ", missions.value?.map((mission) => mission.name));
     console.log(i, "turn: ", turn.value);
+    loadGame.value = false;
   });
 });
 //離脱したらGame､PlayerDataが削除される
@@ -198,7 +200,8 @@ const wantCard = ref()//!test用
     <Notivue v-slot="item">
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
-    <div class="flex flex-col h-screen w-screen p-5 relative">
+    <div v-if="loadGame">now loading.....</div>
+    <div v-else class="flex flex-col h-screen w-screen p-5 relative">
       <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="status.hp <= 0 || hand.reduce((acc, cur) => { if (cur.id === 0) acc++; return acc }, 0) >= 9"
