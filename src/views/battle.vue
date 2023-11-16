@@ -23,6 +23,10 @@ import winImg from "@/assets/img/ui/win.png";
 import loseImg from "@/assets/img/ui/lose.png";
 import myTurnImg from "@/assets/gifs/myTurn.png";
 import enemyTurnImg from "@/assets/gifs/enemyTurn.png";
+import configImg from "@/assets/img/ui/config.png";
+import soundOnImg from "@/assets/img/ui/soundOn.png"
+import soundOffImg from "@/assets/img/ui/soundOff.png";
+import turnBackgroundImg from "@/assets/img/ui/turnBackground.png";
 //gifs
 import waitingGif from "@/assets/gifs/waiting.gif";
 import startGif from "@/assets/gifs/start.gif";
@@ -132,6 +136,7 @@ onMounted(async () => {
     await getEnemyPlayer();
     await watchDeleteGame();
     loadGame.value = false;
+    isBGM.value = true;
   }, 1700);
   await startShop().then(() => {
     console.log(i, "gameId: ", idGame.value);
@@ -193,6 +198,7 @@ const loadStartGif = () => {
   }, 1700);
 }
 const wantCard = ref()//!test用
+const devMode = ref(false)
 </script>
 
 <template>
@@ -200,8 +206,7 @@ const wantCard = ref()//!test用
     <Notivue v-slot="item">
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
-    <!-- <div v-if="loadGame">now loading.....</div> -->
-    <div  v-cloak class="flex flex-col h-screen w-screen p-5 relative">
+    <div v-cloak class="flex flex-col h-screen w-screen p-5 relative">
       <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="status.hp <= 0 || hand.reduce((acc, cur) => { if (cur.id === 0) acc++; return acc }, 0) >= 9"
@@ -223,21 +228,30 @@ const wantCard = ref()//!test用
         </div>
       </div>
 
-
       <div class="flex flex-row-reverse z-20 fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
         <div class="flex flex-col">
-          <div class="overCard">
-            <div class="p-7 rounded-full bg-white"></div>
-            <div class="overText text-5xl font-bold text-left">{{ turn }}</div>
+          <div class="flex justify-start">
+            <button @click="devMode = !devMode" class="btn-pop">
+              <img :src="configImg" class="w-12" />
+            </button>
+            <button @click="isBGM = !isBGM" class="btn-pop transform -translate-y-2">
+              <img v-if="isBGM" :src="soundOnImg" class="w-20" />
+              <img v-else :src="soundOffImg" class="w-20" />
+            </button>
+            <div class="overCard transform -translate-x-3">
+              <img :src="turnBackgroundImg" class="w-16 transform translate-y-3" />
+              <div class="overText text-4xl font-bold text-left">{{ turn }}</div>
+            </div>
           </div>
-          <p> {{ "id: " + id }}</p>
-          <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
-          <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
-          <input v-model="wantCard" type="number" />
-          <button @click="isBGM = !isBGM">bgm: <span :class="isBGM ? ` text-red-600` : `text-blue-600`">{{ isBGM ? "ON" :
-            "OFF"
-          }}</span></button>
+          <div v-if="devMode">
+            <div class="flex flex-col">
+              <p> {{ "id: " + id }}</p>
+              <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+              <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
+              <input v-model="wantCard" type="number" />
+            </div>
+          </div>
         </div>
       </div>
 
