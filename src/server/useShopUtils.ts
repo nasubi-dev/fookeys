@@ -17,7 +17,7 @@ const gamesRef = collection(db, "games").withConverter(converter<GameData>());
 
 //cardをランダムに1枚引く
 function drawCard(attribute?: Attribute): Card {
-  const { player } = storeToRefs(playerStore);
+  const { player, offer } = storeToRefs(playerStore);
   const { hand } = toRefs(player.value);
 
   let selectCard;
@@ -26,6 +26,7 @@ function drawCard(attribute?: Attribute): Card {
       const pickCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
       //すでに同じカードがある場合は引き直す
       if (hand.value.find((card) => card.id === pickCard.id)) continue;
+      if (offer.value.find((card) => card.id === pickCard.id)) continue;
       if (attribute === "atk" && pickCard.id >= 1 && pickCard.id <= 16) selectCard = pickCard;
       if (attribute === "tech" && pickCard.id >= 17 && pickCard.id <= 32) selectCard = pickCard;
       if (attribute === "def" && pickCard.id >= 33 && pickCard.id <= 49) selectCard = pickCard;
@@ -33,6 +34,7 @@ function drawCard(attribute?: Attribute): Card {
     } else {
       let pickCard = structuredClone(allCards[Math.floor(Math.random() * allCards.length)]);
       if (hand.value.find((card) => card.id === pickCard.id)) continue;
+      if (offer.value.find((card) => card.id === pickCard.id)) continue;
       if (pickCard.id !== 0) selectCard = pickCard;
     }
   }
@@ -62,7 +64,7 @@ async function draw2ExchangedCard() {
   for (let i = 0; i < 2; i++) {
     if (hand.value.length >= 9) return;
     let selectCard = drawCard();
-    selectCard.waste = 8;
+    selectCard.waste = 7;
     selectCard.hungry = 0;
     selectCards[i] = selectCard;
     hand.value.push(selectCard);
