@@ -82,7 +82,7 @@ const allGifts: Gift[] = [
   {
     id: 8,
     name: "おなべのふた",
-    description: "このラウンド中防御を+999する",
+    description: "このラウンド中防御を🛡+999する",
     requireContribution: 55,
     skill: () => {
       changeSumCardsValue("def", 999);
@@ -100,7 +100,7 @@ const allGifts: Gift[] = [
   {
     id: 10,
     name: "早食い",
-    description: "スピード🦶+2する",
+    description: "このラウンド中使用カード枚数分スピードを🦶+1する",
     requireContribution: 65,
     skill: () => {
       changeSumCardsValue("priority", 2);

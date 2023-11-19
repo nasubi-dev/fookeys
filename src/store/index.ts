@@ -3,6 +3,7 @@ import { i } from "@/log";
 import { defineStore } from "pinia";
 import type { Card, GameData, PlayerData, SumCards, Phase, PlayerSign, Mission } from "@/types";
 import allCards from "@/assets/allCards";
+import { sum } from "lodash";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State
@@ -17,7 +18,7 @@ const usePlayerStore = defineStore("playerData", () => {
     donate: false,
     match: "nothing",
     character: "blankiss",
-    gifts: [4, 5, 6],
+    gifts: [7, 8, 10],
     isSelectedGift: undefined,
     hand: [],
     rottenHand: [],
@@ -25,7 +26,7 @@ const usePlayerStore = defineStore("playerData", () => {
     status: {
       hp: 500,
       hungry: 0,
-      contribution: 0,
+      contribution: 100,
       maxHp: 500,
       maxHungry: 200,
     },
@@ -55,12 +56,12 @@ const usePlayerStore = defineStore("playerData", () => {
         (sum: SumCards, card: Card) => {
           sum.waste += card.waste;
           sum.hungry += card.hungry;
-          sum.priority += card.priority ?? 0;
+          sum.priority += (card.priority ?? 0) + (player.value.isSelectedGift === 10 ? 1 : 0);
           sum.atk +=
             (card.atk ?? 0) *
             (player.value.isSelectedGift === 7 ? 2 : 1) *
             (player.value.field.map((card) => card.id).includes(64) ? 2 : 1);
-          sum.def += card.def ?? 0;
+          sum.def = (card.def ?? 0) + (player.value.isSelectedGift === 8 ? 999 : 0);
           sum.tech += card.tech ?? 0;
           sum.heal += card.heal ?? 0;
           return sum;

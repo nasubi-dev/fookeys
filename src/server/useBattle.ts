@@ -91,14 +91,14 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
 
   //敵の防御力を計算する
   let defense = 0;
-  if (enemy.field.map((card) => card.attribute).includes("def")) {
+  if (enemy.field.map((card) => card.attribute).includes("def") || enemy.isSelectedGift === 8) {
     if (which === "primary") console.log(i, "先行なので防御できない");
     else if (enemy.check) console.log(i, "敵は行動不能なので防御できない");
     else defense = enemy.sumFields.def;
   }
 
   //自分の防御を行う//?エフェクトのみ
-  if (my.field.map((card) => card.attribute).includes("def")) {
+  if (my.field.map((card) => card.attribute).includes("def") || my.isSelectedGift === 8) {
     console.log(i, "防御!!!");
     //特殊効果を発動する
     intervalForEach(

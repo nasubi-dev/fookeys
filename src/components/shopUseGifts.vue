@@ -52,7 +52,7 @@ const useGift = async () => {
           <button @click="useGift(); useTap2.play()">
             <img :src="decide" style="width: 20vw;" />
           </button>
-          <div class="flex items-center  w-1/3">
+          <div class="flex items-center  w-1/3 text-left">
             <div v-for="gift in gifts" :key="gift">
               <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
                 <button @click="selectGift(gift); useTap1.play()">

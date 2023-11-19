@@ -70,7 +70,6 @@ async function endShop(): Promise<void> {
   phase.value = "battle";
   check.value = false;
   cardLock.value = false;
-  isSelectedGift.value = undefined;
   updateDoc(doc(playersRef, id.value), { check: check.value });
   updateDoc(doc(playersRef, id.value), { status: status.value });
   updateDoc(doc(playersRef, id.value), { isSelectedGift: isSelectedGift.value });
