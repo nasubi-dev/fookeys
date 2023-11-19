@@ -152,7 +152,13 @@ async function setMissions(): Promise<void> {
       const updateMissionsNum = snap.data()?.missionsNum as number[] | undefined;
       const updateMissions = updateMissionsNum?.map((num) => copyAllMissions[num]);
       if (!updateMissionsNum) return;
-      if (_isEqual(oldMissions, updateMissions)) return;
+      if (
+        _isEqual(
+          oldMissions?.map((mission) => mission.id),
+          updateMissions?.map((mission) => mission.id)
+        )
+      )
+        return;
       missionsNum.value = updateMissionsNum;
       missions.value = updateMissions;
       console.log(
