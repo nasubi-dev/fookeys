@@ -31,6 +31,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   if (my.donate) {
     my.status.contribution += my.field.length * 5;
     if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.contribution": my.status.contribution });
+    if (my.isSelectedGift === 8) battleResult.value = ["def", 999];
     await everyUtil(["donate", my.field.length * 5]);
     battleResult.value = ["none", 0];
     return false;
