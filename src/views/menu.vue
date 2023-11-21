@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRefs, watch } from "vue";
+import { ref, toRefs, watch, onMounted } from "vue";
 import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
@@ -52,6 +52,12 @@ async function startMatch(): Promise<void> {
   }
   await startMatchmaking();
 }
+const loadMenu = ref(true);
+onMounted(() => {
+  setTimeout(() => {
+    loadMenu.value = false
+  }, 1000);
+})
 </script>
 
 <template>
@@ -59,6 +65,9 @@ async function startMatch(): Promise<void> {
     <Notivue v-slot="item">
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
+    <div v-if="loadMenu"
+      class="fixed flex items-center justify-center w-full h-full z-30 m-auto p-10 text-8xl text-bold text-white gray">
+      loading....</div>
     <div class="h-screen flex flex-col">
       <div class="z-10">
         <router-link v-if="!selectCharacter && !selectGift" to="/">
