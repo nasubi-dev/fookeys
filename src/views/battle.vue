@@ -270,10 +270,10 @@ const devMode = ref(false)
 
       <div v-if="components !== 'postBattle'">
         <div style="width: 40vw;" class="inset-0 top-1/3 left-0 fixed ml-2">
-          {{ components }}
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
-            v-show="components !== 'secondAtk'" />
-          <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer" />
+            :components="components" which="primary" v-show="components !== 'secondAtk'" />
+          <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
+            :components="components" which="second" />
         </div>
 
         <div class="overlay">

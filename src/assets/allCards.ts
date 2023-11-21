@@ -560,7 +560,6 @@ const allCards: Card[] = [
     hungry: 40,
     company: "hanamie",
     attribute: "heal",
-    description: "HPを❤️+50回復する。",
     heal: 50,
   },
   {
@@ -579,7 +578,6 @@ const allCards: Card[] = [
     hungry: 50,
     company: "hanamie",
     attribute: "heal",
-    description: "HPを❤️+100回復する。",
     heal: 100,
   },
   {
@@ -598,7 +596,6 @@ const allCards: Card[] = [
     hungry: 60,
     company: "hanamie",
     attribute: "heal",
-    description: "HPを❤️+150回復する。",
     heal: 150,
   },
   {

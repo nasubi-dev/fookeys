@@ -73,18 +73,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   if (my.field.map((card) => card.attribute).includes("heal")) {
     my.status.hp += my.sumFields.heal;
     if (my.status.hp > my.status.maxHp) my.status.hp = my.status.maxHp;
-    intervalForEach(
-      (card: Card) => {
-        if (!(card.id === 59 || card.id === 61 || card.id === 63)) return;
-        if (!attackOrder) {
-          enemyLog.value = card.name + "の効果!" + card.description;
-          return;
-        }
-        myLog.value = card.name + "の効果!" + card.description;
-      },
-      my.field,
-      100
-    );
 
     if (playerAllocation) updateDoc(doc(playersRef, myId), { "status.hp": my.status.hp });
     await everyUtil(["heal", my.sumFields.heal]);
@@ -102,8 +90,9 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   if (my.field.map((card) => card.attribute).includes("def") || my.isSelectedGift === 8) {
     console.log(i, "防御!!!");
     //特殊効果を発動する
+    await wait(500);
     intervalForEach(
-      (card: Card) => {
+      async (card: Card) => {
         if (!(((card.id === 43 || card.id === 46) && which === "second") || card.id === 54)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
@@ -111,22 +100,16 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
         }
         myLog.value = card.name + "の効果!" + card.description;
         if (card.id === 43 && which === "second") {
-          console.log(card.hungry, my.status.hungry);
           my.status.hungry -= 50;
-          console.log(card.hungry, my.status.hungry);
-          updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
-          wait(100);
+          await updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
         }
         if (card.id === 46 && which === "second") {
-          console.log(card.hungry, my.status.hungry);
           my.status.hungry -= 60;
-          console.log(card.hungry, my.status.hungry);
-          updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
-          wait(100);
+          await updateDoc(doc(playersRef, myId), { "status.hungry": my.status.hungry });
         }
         if (card.id === 54) {
           my.sumFields.def += my.status.hungry;
-          updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });
+          await updateDoc(doc(playersRef, myId), { "sumFields.def": my.sumFields.def });
         }
       },
       my.field,

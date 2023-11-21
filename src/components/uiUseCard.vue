@@ -14,6 +14,8 @@ const { battleResult } = storeToRefs(playerStore);
 const p = defineProps<{
   player: PlayerData;
   firstAtkPlayer: PlayerSign | undefined;
+  components: string;
+  which: "primary" | "second";
 }>();
 
 const characterName = ref()
@@ -27,6 +29,7 @@ const isShowDef = ref(true);
 const isShowAtk = ref(true);
 const isShowTech = ref(true);
 watch(battleResult, (newVal) => {
+  if (!p.components.includes(p.which)) return
   if (newVal[0] === 'donate') {
     isShowHeal.value = false;
     isShowSup.value = false;
