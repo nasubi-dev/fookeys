@@ -57,7 +57,6 @@ async function register() {
           <button>Menu</button>
         </router-link>
       </form>
-      <button @click="log = 'test'">test</button>
     </div>
   </div>
 </template>

@@ -248,6 +248,7 @@ const devMode = ref(false)
             <div class="flex flex-col">
               <p> {{ "id: " + id }}</p>
               <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+              <p>{{ components }}</p>
               <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
               <input v-model="wantCard" type="number" />
             </div>
