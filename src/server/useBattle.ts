@@ -350,7 +350,7 @@ async function postBattle(): Promise<void> {
   });
 
   //満腹値を減らす
-  changeStatusValue("hungry", -30);
+  changeStatusValue("hungry", -40);
   deleteField();
   nextTurn();
   defense = 0;
