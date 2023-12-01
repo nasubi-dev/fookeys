@@ -30,6 +30,13 @@ const allGifts: Gift[] = [
   },
   {
     id: 2,
+    name: "飯テロ",
+    description: "このラウンド中相手はマッスルカードしか使えない",
+    requireContribution: 20,
+    skill: () => {},
+  },
+  {
+    id: 3,
     name: "冷凍保存",
     description: "手札の消費期限を🦠+1する",
     requireContribution: 35,
@@ -38,20 +45,11 @@ const allGifts: Gift[] = [
     },
   },
   {
-    id: 3,
+    id: 4,
     name: "ドクターストップ",
     description: "このラウンド中相手は1枚しかカードを使用できない",
-    requireContribution: 25,
+    requireContribution: 35,
     skill: () => {},
-  },
-  {
-    id: 4,
-    name: "栄養バランス",
-    description: "HPを❤️+150する",
-    requireContribution: 45,
-    skill: () => {
-      changeStatusValue("hp", 150);
-    },
   },
   {
     id: 5,
@@ -65,6 +63,15 @@ const allGifts: Gift[] = [
   },
   {
     id: 6,
+    name: "栄養バランス",
+    description: "HPを❤️+150する",
+    requireContribution: 45,
+    skill: () => {
+      changeStatusValue("hp", 150);
+    },
+  },
+  {
+    id: 7,
     name: "リサーチ",
     description: "自身の満腹度を🍖-100する",
     requireContribution: 45,
@@ -73,14 +80,14 @@ const allGifts: Gift[] = [
     },
   },
   {
-    id: 7,
+    id: 8,
     name: "筋トレ",
     description: "このラウンド中マッスルダメージを2倍にする",
     requireContribution: 50,
     skill: () => {},
   },
   {
-    id: 8,
+    id: 9,
     name: "おなべのふた",
     description: "このラウンド中使用カード枚数分防御を🛡+200する",
     requireContribution: 55,
@@ -89,7 +96,7 @@ const allGifts: Gift[] = [
     },
   },
   {
-    id: 9,
+    id: 10,
     name: "福袋",
     description: "カードを6枚ドローする",
     requireContribution: 60,
@@ -98,20 +105,13 @@ const allGifts: Gift[] = [
     },
   },
   {
-    id: 10,
+    id: 11,
     name: "早食い",
     description: "このラウンド中使用カード枚数分スピードを🦶+1する",
     requireContribution: 65,
     skill: () => {
       changeSumCardsValue("priority", 2);
     },
-  },
-  {
-    id: 11,
-    name: "飯テロ",
-    description: "このラウンド中相手はマッスルカードしか使えない",
-    requireContribution: 20,
-    skill: () => {},
   },
 ];
 export default allGifts;
