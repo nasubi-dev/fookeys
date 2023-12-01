@@ -57,11 +57,11 @@ const pushCard = async (index: number) => {
     return;
   }
   const enemyGift = (await getDoc(doc(playersRef, idEnemy.value))).data()?.isSelectedGift as number | undefined;
-  if (enemyGift === 3 && field.value.length >= 1) {
+  if (enemyGift === 4 && field.value.length >= 1) {
     log.value = "相手のギフトの効果により､このラウンド中1枚しか使えない"
     return;
   }
-  if (enemyGift === 11 && allCards[hand.value[index].id].attribute !== "atk") {
+  if (enemyGift === 2 && allCards[hand.value[index].id].attribute !== "atk") {
     log.value = "相手のギフトの効果により､このラウンド中マッスルカードしか使えない"
     return;
   }
