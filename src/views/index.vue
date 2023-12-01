@@ -47,7 +47,7 @@ async function register() {
     </Notivue>
     <div class="flex flex-col items-center justify-center h-screen">
       このゲームはCSS初心者が作っているのでレスポンシブを理解していません｡<br />
-      iPadのサイズで作成しているため､PCでプレイする際は画面サイズを縮小してプレイしていただけると幸いです｡
+      iPadのサイズで作成しているため､PCでプレイする際は画面サイズを縮小してプレイしていただけると幸いです｡<br />
       問題が発生した場合、一度この画面に戻ってサイトをリロードしてください。<br />
       <img src="@/assets/img/ui/fookeys.png" class="w-60" />
       <form class="flex flex-col items-center">

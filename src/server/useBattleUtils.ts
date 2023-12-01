@@ -72,7 +72,7 @@ async function checkDeath(p: PlayerData): Promise<boolean> {
 async function everyUtil(params: [string, number]): Promise<void> {
   const { battleResult } = storeToRefs(playerStore);
 
-  await wait(1000);
+  await wait(1500);
   await reflectStatus();
   await getEnemyPlayer(); //!
   battleResult.value = params;

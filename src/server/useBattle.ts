@@ -140,7 +140,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     let holdingAtk = my.sumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
     console.log(i, "mySumFields.atk: ", my.sumFields.atk);
-    enemy.status.hp -= holdingAtk;
+    if(playerAllocation) enemy.status.hp -= holdingAtk;
     if (enemy.status.hp < 0) enemy.status.hp = 0;
     if (defense !== 0) console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
     else console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
@@ -187,7 +187,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     await reflectStatus();
 
     let holdingTech = my.sumFields.tech;
-    enemy.status.hp -= holdingTech;
+    if(playerAllocation) enemy.status.hp -= holdingTech;
     console.log(i, "mySumFields.tech: ", my.sumFields.tech);
     if (enemy.status.hp < 0) enemy.status.hp = 0;
     console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
@@ -214,7 +214,7 @@ async function attack(which: "primary" | "second"): Promise<boolean> {
   console.log(s, "attackを実行しました");
   const { components } = storeToRefs(playerStore);
 
-  await wait(1000);
+  await wait(1500);
   getEnemyPlayer(); //!
   components.value = which + "Atk";
 
