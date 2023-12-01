@@ -346,7 +346,7 @@ async function postBattle(): Promise<void> {
   hand.value.forEach((card: Card) => {
     if (!(card.id === 6)) return;
     myLog.value = card.name + "の効果!" + card.description;
-    changeHandValue("hungry", -10);
+    changeHandValue("hungry", -5);
   });
 
   //満腹値を減らす

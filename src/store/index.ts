@@ -26,7 +26,7 @@ const usePlayerStore = defineStore("playerData", () => {
     status: {
       hp: 500,
       hungry: 0,
-      contribution: 100,
+      contribution: 0,
       maxHp: 500,
       maxHungry: 200,
     },

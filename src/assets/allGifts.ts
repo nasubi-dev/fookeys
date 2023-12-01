@@ -22,10 +22,10 @@ const allGifts: Gift[] = [
   {
     id: 1,
     name: "つまみ食い",
-    description: "手札のカードの満腹度を🍖-10する",
+    description: "手札のカードの満腹度を🍖-20する",
     requireContribution: 20,
     skill: () => {
-      changeHandValue("hungry", -10);
+      changeHandValue("hungry", -20);
     },
   },
   {
@@ -110,7 +110,7 @@ const allGifts: Gift[] = [
     id: 11,
     name: "飯テロ",
     description: "このラウンド中相手はマッスルカードしか使えない",
-    requireContribution: 70,
+    requireContribution: 20,
     skill: () => {},
   },
 ];

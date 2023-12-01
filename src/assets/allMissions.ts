@@ -35,7 +35,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "hanamieのカードを合計5枚使用する。",
     reward: 30,
-    goalAchievement: 5,
+    goalAchievement: 4,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -49,7 +49,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "hanamieのカードを合計7枚使用する。",
     reward: 40,
-    goalAchievement: 7,
+    goalAchievement: 6,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -63,7 +63,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "normaのカードを合計5枚使用する。",
     reward: 30,
-    goalAchievement: 5,
+    goalAchievement: 4,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -77,7 +77,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "normaのカードを合計7枚使用する。",
     reward: 40,
-    goalAchievement: 7,
+    goalAchievement: 6,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -91,7 +91,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "biancaのカードを合計5枚使用する。",
     reward: 30,
-    goalAchievement: 5,
+    goalAchievement: 4,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -105,7 +105,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "biancaのカードを合計7枚使用する。",
     reward: 40,
-    goalAchievement: 7,
+    goalAchievement: 6,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -119,7 +119,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "galdaybeeのカードを合計5枚使用する。",
     reward: 30,
-    goalAchievement: 5,
+    goalAchievement: 4,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -133,7 +133,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "galdaybeeのカードを合計7枚使用する。",
     reward: 40,
-    goalAchievement: 7,
+    goalAchievement: 6,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -147,7 +147,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "rapidpotのカードを合計5枚使用する。",
     reward: 30,
-    goalAchievement: 5,
+    goalAchievement: 4,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -161,7 +161,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "rapidpotのカードを合計7枚使用する。",
     reward: 40,
-    goalAchievement: 7,
+    goalAchievement: 6,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -175,7 +175,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "unlimitのカードを合計5枚使用する。",
     reward: 30,
-    goalAchievement: 5,
+    goalAchievement: 3,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -189,7 +189,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "unlimitのカードを合計7枚使用する。",
     reward: 40,
-    goalAchievement: 7,
+    goalAchievement: 5,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -203,7 +203,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "消費期限が🦠3以下のカードを5枚以上使用する。",
     reward: 35,
-    goalAchievement: 5,
+    goalAchievement: 4,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
@@ -217,7 +217,7 @@ const allMissions: Mission[] = [
     achieved: false,
     description: "消費期限が🦠3以下のカードを8枚以上使用する。",
     reward: 45,
-    goalAchievement: 8,
+    goalAchievement: 7,
     nowAchievement: 0,
     checker: (donate, sumFields, field) => {
       if (donate) return;
