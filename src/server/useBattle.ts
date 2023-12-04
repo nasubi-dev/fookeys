@@ -11,6 +11,7 @@ import { syncPlayer, reflectStatus, checkDeath, everyUtil, checkMission, decideF
 import { getEnemyPlayer } from "@/server/usePlayerData";
 import { changeHandValue, changeStatusValue, draw2ExchangedCard, drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "./useShop";
+
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
 const gamesRef = collection(db, "games").withConverter(converter<GameData>());
@@ -140,7 +141,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     let holdingAtk = my.sumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
     console.log(i, "mySumFields.atk: ", my.sumFields.atk);
-    if(playerAllocation) enemy.status.hp -= holdingAtk;
+    if (playerAllocation) enemy.status.hp -= holdingAtk;
     if (enemy.status.hp < 0) enemy.status.hp = 0;
     if (defense !== 0) console.log(i, "相手のdefが", enemy.sumFields.def, "なので", holdingAtk, "のダメージ");
     else console.log(i, "マッスル攻撃でenemyに", holdingAtk, "のダメージ");
@@ -187,7 +188,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     await reflectStatus();
 
     let holdingTech = my.sumFields.tech;
-    if(playerAllocation) enemy.status.hp -= holdingTech;
+    if (playerAllocation) enemy.status.hp -= holdingTech;
     console.log(i, "mySumFields.tech: ", my.sumFields.tech);
     if (enemy.status.hp < 0) enemy.status.hp = 0;
     console.log(i, "テクニック攻撃でenemyに", holdingTech, "のダメージ");
