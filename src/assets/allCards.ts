@@ -88,7 +88,7 @@ const allCards: Card[] = [
   {
     id: 9,
     name: "フライドチキン",
-    waste: 4,
+    waste: 5,
     hungry: 40,
     company: "galdaybee",
     attribute: "atk",
@@ -102,7 +102,7 @@ const allCards: Card[] = [
     company: "unlimit",
     attribute: "atk",
     description: "このラウンド中、相手のあらゆる効果を無視してマッスルダメージを与える。",
-    atk: 105,
+    atk: 135,
   },
   {
     id: 11,
@@ -538,7 +538,7 @@ const allCards: Card[] = [
   {
     id: 57,
     name: "焼き芋",
-    waste: 4,
+    waste: 5,
     hungry: 15,
     company: "norma",
     attribute: "sup",
@@ -547,11 +547,11 @@ const allCards: Card[] = [
   {
     id: 58,
     name: "改造焼き芋",
-    waste: 6,
+    waste: 4,
     hungry: 40,
     company: "unlimit",
     attribute: "sup",
-    description: "ラウンド終了時、手札にあるシールドカードのシールドを自身のシールドと同じだけを増やす。",
+    description: "手札のシールドカードの満腹度を🍖-20、消費期限を🦠+2、シールドを+50する。",
   },
   {
     id: 59,
@@ -601,7 +601,7 @@ const allCards: Card[] = [
   {
     id: 64,
     name: "プロテイン",
-    waste: 5,
+    waste: 4,
     hungry: 75,
     company: "galdaybee",
     attribute: "sup",
