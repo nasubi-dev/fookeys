@@ -150,7 +150,7 @@ async function watchDeleteGame(): Promise<void> {
       console.log(s, "ゲーム終了");
       setTimeout(() => {
         log.value = "ゲーム終了";
-        router.push({ name: "home" });
+        router.push({ name: "menu" });
       }, 1000);
     }
   });
