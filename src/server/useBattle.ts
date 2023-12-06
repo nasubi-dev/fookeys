@@ -301,25 +301,6 @@ async function postBattle(): Promise<void> {
     updateDoc(doc(playersRef, id.value), { status: status.value });
   }
 
-  //特殊効果用
-  let defense = 0;
-  let sumAtkEnemy =
-    enemyField.value
-      .map((card) => card.atk)
-      .reduce((acc, cur) => {
-        if (acc && cur) cur += acc;
-        return cur;
-      }, 0) ?? 0;
-  let sumDefMy =
-    field.value
-      .map((card) => card.def)
-      .reduce((acc, cur) => {
-        if (acc && cur) cur += acc;
-        return cur;
-      }, 0) ?? 0;
-  if (sign.value !== firstAtkPlayer.value) sumAtkEnemy = 0;
-  if (sumAtkEnemy !== undefined && sumDefMy !== undefined) defense = sumDefMy - sumAtkEnemy;
-  if (defense < 0) defense = 0;
 
   //このターン使用したカードの効果を発動する
   if (!enemyCheck.value && !enemyDonate.value) {
@@ -340,7 +321,11 @@ async function postBattle(): Promise<void> {
       if (card.id === 7 || card.id === 24 || card.id === 41) status.value.hungry >= 100 ? (status.value.hungry -= 25) : null;
       if (card.id === 56) changeHandValue("atk", 10, "atk");
       if (card.id === 57) changeHandValue("def", 20, "def");
-      if (card.id === 58) changeHandValue("def", defense, "def");
+      if (card.id === 58) {
+        changeHandValue("hungry", -20, "def");
+        changeHandValue("waste", 2, "def");
+        changeHandValue("def", 50, "def");
+      }
     });
   }
   //手札にあるカードの効果を発動する
@@ -354,7 +339,6 @@ async function postBattle(): Promise<void> {
   changeStatusValue("hungry", -40);
   deleteField();
   nextTurn();
-  defense = 0;
   check.value = false;
   isSelectedGift.value = undefined;
   firstAtkPlayer.value = undefined;

@@ -32,14 +32,14 @@ const allGifts: Gift[] = [
     id: 2,
     name: "飯テロ",
     description: "このラウンド中相手はマッスルカードしか使えない",
-    requireContribution: 20,
+    requireContribution: 35,
     skill: () => {},
   },
   {
     id: 3,
     name: "冷凍保存",
     description: "手札の消費期限を🦠+1する",
-    requireContribution: 35,
+    requireContribution: 30,
     skill: () => {
       changeHandValue("waste", 1);
     },
@@ -90,7 +90,7 @@ const allGifts: Gift[] = [
     id: 9,
     name: "おなべのふた",
     description: "このラウンド中使用カード枚数分防御を🛡+200する",
-    requireContribution: 55,
+    requireContribution: 25,
     skill: () => {
       changeSumCardsValue("def", 999);
     },
@@ -99,7 +99,7 @@ const allGifts: Gift[] = [
     id: 10,
     name: "福袋",
     description: "カードを6枚ドローする",
-    requireContribution: 60,
+    requireContribution: 40,
     skill: () => {
       setHand();
     },
@@ -108,7 +108,7 @@ const allGifts: Gift[] = [
     id: 11,
     name: "早食い",
     description: "このラウンド中使用カード枚数分スピードを🦶+1する",
-    requireContribution: 65,
+    requireContribution: 55,
     skill: () => {
       changeSumCardsValue("priority", 2);
     },

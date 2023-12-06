@@ -56,6 +56,7 @@ async function register() {
       このゲームはCSS初心者が作っているのでレスポンシブを理解していません｡<br />
       iPadのサイズで作成しているため､PCでプレイする際は画面サイズを縮小してプレイしていただけると幸いです｡<br />
       問題が発生した場合、一度この画面に戻ってサイトをリロードしてください。<br />
+      <a href="https://minimi-323.hatenablog.com/entry/2023/05/26/222715" target="_blank" class=" text-yellow-300">説明書リンク</a><br />
       <img src="@/assets/img/ui/fookeys.png" class="w-60" />
       <form class="flex flex-col items-center">
         <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name"
