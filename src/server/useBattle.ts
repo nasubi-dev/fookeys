@@ -52,14 +52,22 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
 
   //支援を行う
   if (my.field.map((card) => card.attribute).includes("sup")) {
+    await everyUtil(["sup", 0]);
     intervalForEach(
       (card: Card) => {
-        if (!(card.id === 62)) return;
+        if (!(card.id === 56 || card.id === 57 || card.id === 58 || card.id === 62)) return;
         if (!attackOrder) {
           enemyLog.value = card.name + "の効果!" + card.description;
           return;
         }
         myLog.value = card.name + "の効果!" + card.description;
+        if (card.id === 56) changeHandValue("atk", 10, "atk");
+        if (card.id === 57) changeHandValue("def", 20, "def");
+        if (card.id === 58) {
+          changeHandValue("hungry", -20, "def");
+          changeHandValue("waste", 2, "def");
+          changeHandValue("def", 50, "def");
+        }
         if (card.id === 62) changeStatusValue("maxHungry", 20, true);
       },
       my.field,
@@ -67,7 +75,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
     );
     await reflectStatus();
 
-    await everyUtil(["sup", 0]);
   }
 
   //回復を行う
@@ -275,9 +282,9 @@ async function postBattle(): Promise<void> {
         card.id === 51 ||
         card.id === 52 ||
         card.id === 53 ||
-        card.id === 56 ||
-        card.id === 57 ||
-        card.id === 58 ||
+        // card.id === 56 ||
+        // card.id === 57 ||
+        // card.id === 58 ||
         card.id === 60
       )
     ) {
@@ -319,13 +326,7 @@ async function postBattle(): Promise<void> {
       if (card.id === 53) drawRandomOneCard("sup");
       if (card.id === 60) draw2ExchangedCard();
       if (card.id === 7 || card.id === 24 || card.id === 41) status.value.hungry >= 100 ? (status.value.hungry -= 25) : null;
-      if (card.id === 56) changeHandValue("atk", 10, "atk");
-      if (card.id === 57) changeHandValue("def", 20, "def");
-      if (card.id === 58) {
-        changeHandValue("hungry", -20, "def");
-        changeHandValue("waste", 2, "def");
-        changeHandValue("def", 50, "def");
-      }
+
     });
   }
   //手札にあるカードの効果を発動する

@@ -3,11 +3,11 @@ import type { Mission } from "@/types";
 const allMissions: Mission[] = [
   {
     id: 0,
-    name: "育ち盛り★",
+    name: "食べ盛り★",
     achieved: false,
-    description: "合計🍖500分のカードを使用する。",
+    description: "合計🍖400分のカードを使用する。",
     reward: 35,
-    goalAchievement: 500,
+    goalAchievement: 400,
     nowAchievement: 0,
     checker: (donate, sumFields) => {
       if (donate) return;
@@ -17,11 +17,11 @@ const allMissions: Mission[] = [
   },
   {
     id: 0,
-    name: "育ち盛り★★",
+    name: "食べ盛り★★",
     achieved: false,
-    description: "合計🍖600分のカードを使用する。",
+    description: "合計🍖500分のカードを使用する。",
     reward: 40,
-    goalAchievement: 600,
+    goalAchievement: 500,
     nowAchievement: 0,
     checker: (donate, sumFields) => {
       if (donate) return;

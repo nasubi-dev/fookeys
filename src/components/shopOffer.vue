@@ -16,13 +16,13 @@ const useTap1 = useSound(tap1);
 const useTap2 = useSound(tap2);
 
 const { offer, player, phase, log } = storeToRefs(playerStore);
-const { hand } = toRefs(player.value);
+const { hand, rottenHand } = toRefs(player.value);
 
 const isOfferSelected = ref([false, false, false]);
 const pushed = ref(false);
 //カードを選択する
 const offerSelect = (index: number) => {
-  if ((hand.value.length + isOfferSelected.value.filter((bool) => bool).length) >= 9) {
+  if ((hand.value.length + rottenHand.value.length + isOfferSelected.value.filter((bool) => bool).length) >= 9) {
     if (!isOfferSelected.value[index]) {
       log.value = "手札がいっぱいでこれ以上買い物できない！"
       return
@@ -36,7 +36,7 @@ const offer2Hand = async () => {
   console.log(i, "offer2Hand: ", offerHand.map((card) => card.name));
   hand.value.push(...offerHand);
   wait(100);
-  hand.value = _sortBy(hand.value, ["id","waste"]);
+  hand.value = _sortBy(hand.value, ["id", "waste"]);
 
   //offerを空にする
   offer.value = [];

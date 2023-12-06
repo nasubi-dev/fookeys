@@ -34,10 +34,8 @@ watch(log, () => {
 })
 
 const newName = ref("");
-onMounted(async () => {
+onMounted(() => {
   newName.value = name.value;
-  await registerPlayer();
-  await reNamePlayer(name.value);
 })
 //アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name
 async function register() {
