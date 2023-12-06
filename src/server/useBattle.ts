@@ -282,9 +282,6 @@ async function postBattle(): Promise<void> {
         card.id === 51 ||
         card.id === 52 ||
         card.id === 53 ||
-        // card.id === 56 ||
-        // card.id === 57 ||
-        // card.id === 58 ||
         card.id === 60
       )
     ) {
@@ -326,7 +323,6 @@ async function postBattle(): Promise<void> {
       if (card.id === 53) drawRandomOneCard("sup");
       if (card.id === 60) draw2ExchangedCard();
       if (card.id === 7 || card.id === 24 || card.id === 41) status.value.hungry >= 100 ? (status.value.hungry -= 25) : null;
-
     });
   }
   //手札にあるカードの効果を発動する
