@@ -110,7 +110,7 @@ const allGifts: Gift[] = [
     description: "このラウンド中使用カード枚数分スピードを🦶+1する",
     requireContribution: 55,
     skill: () => {
-      changeSumCardsValue("priority", 2);
+      changeSumCardsValue("priority", 1);
     },
   },
 ];

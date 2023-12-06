@@ -55,12 +55,12 @@ const usePlayerStore = defineStore("playerData", () => {
         (sum: SumCards, card: Card) => {
           sum.waste += card.waste;
           sum.hungry += card.hungry;
-          sum.priority += (card.priority ?? 0) + (player.value.isSelectedGift === 10 ? 1 : 0);
+          sum.priority += (card.priority ?? 0) + (player.value.isSelectedGift === 11 ? 1 : 0);
           sum.atk +=
             (card.atk ?? 0) *
-            (player.value.isSelectedGift === 7 ? 2 : 1) *
+            (player.value.isSelectedGift === 8 ? 2 : 1) *
             (player.value.field.map((card) => card.id).includes(64) ? 2 : 1);
-          sum.def += (card.def ?? 0) + (player.value.isSelectedGift === 8 ? 200 : 0);
+          sum.def += (card.def ?? 0) + (player.value.isSelectedGift === 9 ? 100 : 0);
           sum.tech += card.tech ?? 0;
           sum.heal += card.heal ?? 0;
           return sum;
