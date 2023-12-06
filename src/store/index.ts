@@ -3,7 +3,6 @@ import { i } from "@/log";
 import { defineStore } from "pinia";
 import type { Card, GameData, PlayerData, SumCards, Phase, PlayerSign, Mission } from "@/types";
 import allCards from "@/assets/allCards";
-import { sum } from "lodash";
 
 const usePlayerStore = defineStore("playerData", () => {
   //?Const/State

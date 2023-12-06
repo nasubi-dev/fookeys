@@ -22,6 +22,16 @@ async function registerPlayer(): Promise<void> {
     console.error(e, "Error adding Your ID: ", error);
   }
 }
+async function reNamePlayer(name:string): Promise<void> {
+  const { id } = storeToRefs(playerStore);
+  try {
+    if (!id.value) return;
+    await updateDoc(doc(playersRef, id.value), { name: name });
+    console.log(i, "Player name changed: ", name);
+  } catch (error) {
+    console.error(e, "Error changing player name: ", error);
+  }
+}
 //player情報初期化 残す情報はid,name,character,gifts
 async function initPlayer(): Promise<void> {
   const { id, player } = storeToRefs(playerStore);
@@ -72,4 +82,4 @@ async function getEnemyPlayer(): Promise<void> {
   console.log(i, enemyPlayer.value);
 }
 
-export { registerPlayer, initPlayer, deletePlayer, getEnemyPlayer };
+export { registerPlayer, reNamePlayer, initPlayer, deletePlayer, getEnemyPlayer };

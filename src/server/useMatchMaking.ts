@@ -1,13 +1,14 @@
 import { toRefs } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore, gameStore } from "@/main";
+import { playerStore, gameStore, enemyPlayerStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot, deleteDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import { initPlayer } from "./usePlayerData";
+import { getEnemyPlayer, initPlayer } from "./usePlayerData";
 import { router } from "@/router";
 import type { MatchStatus, PlayerData, GameData } from "@/types";
+import { wait } from "./utils";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -44,7 +45,7 @@ function updatePlayerFields(
 }
 //matchの値がmatchingに変更されたら検知して、gameを開始する
 async function watchMatchField(): Promise<void> {
-  const { id, player, log } = storeToRefs(playerStore);
+  const { id, player } = storeToRefs(playerStore);
   const { idEnemy, idGame, match } = toRefs(player.value);
 
   const unsubscribe = onSnapshot(doc(playersRef, id.value), (snap) => {
@@ -62,9 +63,8 @@ async function watchMatchField(): Promise<void> {
       //プレイヤーのマッチング状況を更新する
       match.value = "battle";
       updateDoc(doc(playersRef, id.value), { match: match.value });
+
       //画面遷移
-      console.log(s, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
-      log.value = idGame.value + "にエントリー！";
       router.push({ name: "battle", params: { idGame: idGame.value } });
     }
   });
@@ -121,10 +121,9 @@ async function startMatchmaking(): Promise<void> {
         { field: "match", value: "matching" },
       ]),
     ]);
+
     //画面遷移
-    console.log(i, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
     router.push({ name: "battle", params: { idGame: idGame.value } });
-    log.value = idGame.value + "にエントリー！";
   }
 }
 //gameを削除する

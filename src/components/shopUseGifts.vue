@@ -44,21 +44,21 @@ const useGift = async () => {
   <div>
     <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
       leave-active-class="transition duration-300" enter-active-class="transition duration-300">
-      <div v-if="!pushed">
-        <button @click="emit('cancel'); isSelectedGift = undefined; useTap2.play()" style="width: 20vw;">
-          <img :src="back" />
-        </button>
-        <div class="flex justify-center">
-          <button @click="useGift(); useTap2.play()">
-            <img :src="decide" style="width: 20vw;" />
+      <div class="flex justify-center">
+        <div v-if="!pushed" class="ml-3">
+          <button @click="emit('cancel'); isSelectedGift = undefined; useTap2.play()"  style="width: 20vw;">
+            <img :src="back" />
           </button>
-          <div class="flex items-center  w-1/3 text-left">
-            <div v-for="gift in gifts" :key="gift">
-              <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
-                <button @click="selectGift(gift); useTap1.play()">
-                  <UiGiftsGift :gift="gift" />
-                </button>
-              </div>
+        </div>
+        <button @click="useGift(); useTap2.play()">
+          <img :src="decide" style="width: 20vw;" />
+        </button>
+        <div class="flex items-center  w-1/3 text-left">
+          <div v-for="gift in gifts" :key="gift">
+            <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
+              <button @click="selectGift(gift); useTap1.play()">
+                <UiGiftsGift :gift="gift" />
+              </button>
             </div>
           </div>
         </div>

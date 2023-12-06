@@ -59,7 +59,7 @@ const useAtk = useSound(atk);
 const useTech = useSound(tech);
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
-const { idGame, match, character, gifts, status, hand, rottenHand, death, field, sumFields, name, check } = toRefs(player.value);
+const { idGame, idEnemy, match, character, gifts, status, hand, rottenHand, death, field, sumFields, name, check } = toRefs(player.value);
 const { enemyPlayer } = storeToRefs(enemyPlayerStore);
 const { game, missions } = storeToRefs(gameStore);
 const { players, turn, firstAtkPlayer } = toRefs(game.value);
@@ -135,6 +135,8 @@ onMounted(async () => {
     useBattleStart.play()
     await getEnemyPlayer();
     await watchDeleteGame();
+    console.log(s, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
+    log.value = "マッチ成功!相手:" + enemyPlayer.value.name;
     loadGame.value = false;
     isBGM.value = true;
   }, 1700);

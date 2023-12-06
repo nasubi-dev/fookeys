@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, toRefs, watch } from "vue";
+import { ref, toRefs, watch,onMounted } from "vue";
 import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
 import { useSound } from "@vueuse/sound";
 import { playerStore } from "@/main";
 import { storeToRefs } from "pinia";
-import { registerPlayer } from "@/server/usePlayerData";
+import { registerPlayer,reNamePlayer } from "@/server/usePlayerData";
 import { tap1 } from "@/assets/sounds";
 import myLogImg from "@/components/myLog.vue";
 import enemyLogImg from "@/components/enemyLog.vue";
+import { tryOnMounted } from "@vueuse/core";
 
 const customIcons = {
   success: myLogImg,
@@ -32,10 +33,16 @@ watch(log, () => {
   log.value = ""
 })
 
-//アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name
 const newName = ref("");
+onMounted(async () => {
+  newName.value = name.value;
+  await registerPlayer();
+  await reNamePlayer(name.value);
+})
+//アプリが起動したらユーザーIDを取得する ユーザー名が空の場合はNo name
 async function register() {
   newName.value === "" ? (name.value = "No name") : (name.value = newName.value);
+  await reNamePlayer(name.value);
   id.value == "" ? await registerPlayer() : log.value = "idは既に登録されています"
 }
 </script>

@@ -27,12 +27,6 @@ watch(cardLock, (newVal) => {
 })
 
 const shopAnimation = ref(true);
-// onMounted(() => {
-//   shopAnimation.value = true;
-//   setTimeout(() => {
-//     shopAnimation.value = false;
-//   }, 1000);
-// })
 const loadShoppingGif = () => {
   useShopping.play();
   setTimeout(() => {
