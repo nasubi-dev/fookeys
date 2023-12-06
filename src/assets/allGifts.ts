@@ -38,10 +38,10 @@ const allGifts: Gift[] = [
   {
     id: 3,
     name: "冷凍保存",
-    description: "手札の消費期限を🦠+1する",
+    description: "手札の消費期限を🦠+2する",
     requireContribution: 30,
     skill: () => {
-      changeHandValue("waste", 1);
+      changeHandValue("waste", 2);
     },
   },
   {
@@ -89,10 +89,10 @@ const allGifts: Gift[] = [
   {
     id: 9,
     name: "おなべのふた",
-    description: "このラウンド中使用カード枚数分防御を🛡+200する",
+    description: "このラウンド中使用カード枚数分防御を🛡+100する",
     requireContribution: 25,
     skill: () => {
-      changeSumCardsValue("def", 999);
+      changeSumCardsValue("def", 100);
     },
   },
   {
