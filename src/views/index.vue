@@ -15,7 +15,8 @@ const customIcons = {
   error: enemyLogImg,
   info: filledIcons.info,
   close: filledIcons.close,
-  promise: filledIcons.promise
+  promise: filledIcons.promise,
+  warning: filledIcons.warning,
 }
 const push = usePush()
 

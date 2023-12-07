@@ -55,8 +55,8 @@ watch(battleResult, (newVal) => {
           <div class="flex justify-start items-center font-bold text-base">
             <img v-if="characterName" :src="`/img/characters/${characterName}/normal.png`"
               class="w-1/3  bottom-5 bg-clip-border" />
-            <p>{{ "🍖" + p.player.sumFields.hungry }} </p>
-            <p v-if="p.player.sumFields.priority && !p.player.donate">{{ "🦶: " + p.player.sumFields.priority }}</p>
+            <p v-if="!p.player.donate">{{ "🍖" + p.player.sumFields.hungry }} </p>
+            <p v-if="p.player.sumFields.priority && !p.player.donate">{{ "🦶" + p.player.sumFields.priority }}</p>
             <div class="ml-auto mr-3 w-5">
               <img v-if="p.player.donate" :src="donateImg" />
               <img v-else :src="battleImg" />
