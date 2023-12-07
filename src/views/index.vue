@@ -8,8 +8,6 @@ import { registerPlayer,reNamePlayer } from "@/server/usePlayerData";
 import { tap1 } from "@/assets/sounds";
 import myLogImg from "@/components/myLog.vue";
 import enemyLogImg from "@/components/enemyLog.vue";
-import { tryOnMounted } from "@vueuse/core";
-
 const customIcons = {
   success: myLogImg,
   error: enemyLogImg,
