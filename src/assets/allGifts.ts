@@ -23,7 +23,7 @@ const allGifts: Gift[] = [
     id: 1,
     name: "つまみ食い",
     description: "手札のカードの満腹度を🍖-20する",
-    requireContribution: 20,
+    requireContribution: 30,
     skill: () => {
       changeHandValue("hungry", -20);
     },
@@ -48,7 +48,7 @@ const allGifts: Gift[] = [
     id: 4,
     name: "ドクターストップ",
     description: "このラウンド中相手は1枚しかカードを使用できない",
-    requireContribution: 35,
+    requireContribution: 45,
     skill: () => {},
   },
   {
@@ -65,7 +65,7 @@ const allGifts: Gift[] = [
     id: 6,
     name: "栄養バランス",
     description: "HPを❤️+150する",
-    requireContribution: 45,
+    requireContribution: 40,
     skill: () => {
       changeStatusValue("hp", 150);
     },
@@ -74,7 +74,7 @@ const allGifts: Gift[] = [
     id: 7,
     name: "リサーチ",
     description: "自身の満腹度を🍖-100する",
-    requireContribution: 45,
+    requireContribution: 35,
     skill: () => {
       changeStatusValue("hungry", -100);
     },
@@ -83,14 +83,14 @@ const allGifts: Gift[] = [
     id: 8,
     name: "筋トレ",
     description: "このラウンド中マッスルダメージを2倍にする",
-    requireContribution: 50,
+    requireContribution: 60,
     skill: () => {},
   },
   {
     id: 9,
     name: "おなべのふた",
     description: "このラウンド中使用カード枚数分防御を🛡+100する",
-    requireContribution: 25,
+    requireContribution: 20,
     skill: () => {
       changeSumCardsValue("def", 100);
     },
