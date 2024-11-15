@@ -1,9 +1,7 @@
 {
   "recommendations": [
-    "vue.vscode-typescript-vue-plugin",
     "esbenp.prettier-vscode",
     "aaron-bond.better-comments",
-    "vue.volar",
     "bradlc.vscode-tailwindcss",
     "oderwat.indent-rainbow"
   ]
