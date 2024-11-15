@@ -6,29 +6,32 @@ import UiGifts from "@/components/uiGifts.vue";
 import uiCardBehind from "./uiCardBehind.vue";
 import enemyStatusImg from "@/assets/img/ui/enemyStatus.png";
 
-const p = defineProps<{ player: PlayerData }>()
+const p = defineProps<{ player: PlayerData }>();
 
-const wiggleClass = ref()
+const wiggleClass = ref();
 const wiggleStatus = (reactionImg: string) => {
-  wiggleClass.value = reactionImg === "damage" ? "animate-wiggle animate-once" : null
-}
+  wiggleClass.value = reactionImg === "damage" ? "animate-wiggle animate-once" : null;
+};
 
-const hpClass = ref()
-const hungryClass = ref()
-const contributionClass = ref()
-watch(() => p.player.status, (newVal, oldVal) => {
-  //初期化
-  hpClass.value = hungryClass.value = contributionClass.value = null
-  //増えたらshake
-  if (newVal.hp > oldVal.hp) hpClass.value = "animate-jump"
-  if (newVal.hungry > oldVal.hungry) hungryClass.value = "animate-jump"
-  if (newVal.contribution > oldVal.contribution) contributionClass.value = "animate-jump"
-  //減ったらjump
-  // if (newVal.hp < oldVal.hp) hpClass.value = "animate-shake"
-  if (newVal.hungry < oldVal.hungry) hungryClass.value = "animate-shake"
-  if (newVal.contribution < oldVal.contribution) contributionClass.value = "animate-shake"
-
-}, { deep: true })
+const hpClass = ref();
+const hungryClass = ref();
+const contributionClass = ref();
+watch(
+  () => p.player.status,
+  (newVal, oldVal) => {
+    //初期化
+    hpClass.value = hungryClass.value = contributionClass.value = null;
+    //増えたらshake
+    if (newVal.hp > oldVal.hp) hpClass.value = "animate-jump";
+    if (newVal.hungry > oldVal.hungry) hungryClass.value = "animate-jump";
+    if (newVal.contribution > oldVal.contribution) contributionClass.value = "animate-jump";
+    //減ったらjump
+    // if (newVal.hp < oldVal.hp) hpClass.value = "animate-shake"
+    if (newVal.hungry < oldVal.hungry) hungryClass.value = "animate-shake";
+    if (newVal.contribution < oldVal.contribution) contributionClass.value = "animate-shake";
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -37,7 +40,7 @@ watch(() => p.player.status, (newVal, oldVal) => {
       <uiCardBehind :cards="player.hand" :rottenCards="player.rottenHand" />
     </div>
 
-    <div class="overCard ml-auto" style="width:35dvw;" :class="wiggleClass">
+    <div class="overCard ml-auto" style="width: 35dvw" :class="wiggleClass">
       <img :src="enemyStatusImg" />
       <div class="overText w-full">
         <div class="flex flex-row-reverse justify-center items-center w-full">

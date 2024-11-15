@@ -6,7 +6,7 @@ const allCharacters: Character[] = [
     company: "rapidpot",
     description1: "最大満腹度を🍖+50する。",
     maxHungry: +50,
-    description2:"ラウンド終了時の減少満腹度を追加で🍖-20する",
+    description2: "ラウンド終了時の減少満腹度を追加で🍖-20する",
   },
   // {
   //   id: 1,
@@ -33,8 +33,8 @@ const allCharacters: Character[] = [
     name: "nabenabe",
     company: "norma",
     description1: "ギフトを使用したとき、シールドを🛡️+100する。",
-    description2:"ラウンド開始時、自身の満腹度🍖10ごとにシールドを🛡+5する。",
-    description3:"フードバンクに寄付したとき、シールドを🛡+寄付した枚数×50する。",
+    description2: "ラウンド開始時、自身の満腹度🍖10ごとにシールドを🛡+5する。",
+    description3: "フードバンクに寄付したとき、シールドを🛡+寄付した枚数×50する。",
   },
   // {
   //   id: 4,
@@ -49,7 +49,7 @@ const allCharacters: Character[] = [
     name: "blankiss",
     company: "bianca",
     description1: "自身の所持カードの会社を相手に公開しない。",
-    description2:"ミッションが配られたとき、ランダムな1つのミッションを自身しかクリアできないようにする。",
+    description2: "ミッションが配られたとき、ランダムな1つのミッションを自身しかクリアできないようにする。",
     //?mission作成後に追加
   },
   // {

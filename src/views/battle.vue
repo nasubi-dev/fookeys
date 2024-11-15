@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, toRefs, watch, ref, onUnmounted, defineAsyncComponent } from "vue";
-import { usePush, Notivue, Notifications, filledIcons } from 'notivue'
+import { usePush, Notivue, Notifications, filledIcons } from "notivue";
 import { useSound } from "@vueuse/sound";
 import { playerStore, enemyPlayerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
@@ -24,7 +24,7 @@ import loseImg from "@/assets/img/ui/lose.png";
 import myTurnImg from "@/assets/gifs/myTurn.png";
 import enemyTurnImg from "@/assets/gifs/enemyTurn.png";
 import configImg from "@/assets/img/ui/config.png";
-import soundOnImg from "@/assets/img/ui/soundOn.png"
+import soundOnImg from "@/assets/img/ui/soundOn.png";
 import soundOffImg from "@/assets/img/ui/soundOff.png";
 import turnBackgroundImg from "@/assets/img/ui/turnBackground.png";
 //gifs
@@ -70,69 +70,69 @@ const customIcons = {
   error: enemyLogImg,
   info: filledIcons.info,
   close: filledIcons.close,
-  promise: filledIcons.promise
-}
-const push = usePush()
+  promise: filledIcons.promise,
+};
+const push = usePush();
 watch(log, () => {
-  if (log.value === "") return
+  if (log.value === "") return;
   push.info({
     message: log.value,
     duration: 8000,
-  })
-  if (log.value.includes("枚のカードが腐ってしまった！")) useRotten.play()
-  log.value = ""
-})
+  });
+  if (log.value.includes("枚のカードが腐ってしまった！")) useRotten.play();
+  log.value = "";
+});
 watch(myLog, () => {
-  if (myLog.value === "") return
+  if (myLog.value === "") return;
   push.success({
     message: myLog.value,
     duration: 8000,
-  })
-  myLog.value = ""
-})
+  });
+  myLog.value = "";
+});
 watch(enemyLog, () => {
-  if (enemyLog.value === "") return
+  if (enemyLog.value === "") return;
   push.error({
     message: enemyLog.value,
     duration: 8000,
-  })
-  enemyLog.value = ""
-})
+  });
+  enemyLog.value = "";
+});
 
 //BGMの再生
-const isBGM = ref(false)
+const isBGM = ref(false);
 watch(isBGM, (newVal) => {
-  if (newVal) useBGM.play()
-  else useBGM.pause()
-})
+  if (newVal) useBGM.play();
+  else useBGM.pause();
+});
 //カード使用時に再生
 watch(battleResult, (newVal) => {
-  if (newVal[0] === "donate") useDonate.play()
-  if (newVal[0] === "heal") useHp.play()
-  if (newVal[0] === "sup") useSup.play()
-  if (newVal[0] === "def") useDef.play()
-  if (newVal[0] === "atk") useAtk.play()
-  if (newVal[0] === "tech") useTech.play()
-})
+  if (newVal[0] === "donate") useDonate.play();
+  if (newVal[0] === "heal") useHp.play();
+  if (newVal[0] === "sup") useSup.play();
+  if (newVal[0] === "def") useDef.play();
+  if (newVal[0] === "atk") useAtk.play();
+  if (newVal[0] === "tech") useTech.play();
+});
 //missionが入れ替わったら再生
 watch(missions, (newVal) => {
   if (newVal) useMissionSort.play();
-})
+});
 //Phaseが変わったら再生
 watch(phase, (newVal) => {
-  if (newVal === 'shop') {
+  if (newVal === "shop") {
     setTimeout(async () => {
       await getEnemyPlayer();
     }, 2000);
   }
-})
+});
 
 //入場したらPlayer型としてIDが保管される
 const loadGame = ref(true);
 onMounted(async () => {
   sign.value = id.value === players.value[0] ? 0 : 1;
   setTimeout(async () => {
-    useBattleStart.play()
+    useBattleStart.play();
     await getEnemyPlayer();
     await watchDeleteGame();
     console.log(s, "マッチ成功!相手ID:", idEnemy.value, "ゲームID:", idGame.value);
@@ -145,62 +145,74 @@ onMounted(async () => {
     console.log(i, "player1: ", players.value[0], "player2: ", players.value[1]);
     console.log(i, "your id: ", id.value, "your sign: ", sign.value);
     console.log(i, "character: ", character.value);
-    console.log(i, "gift: ", gifts.value.map((gift) => allGifts[gift].name));
+    console.log(
+      i,
+      "gift: ",
+      gifts.value.map((gift) => allGifts[gift].name)
+    );
     console.log(i, "status: ", "hp: ", status.value.hp, "hungry: ", status.value.hungry, "contribution: ", status.value.contribution);
-    console.log(i, "hand: ", hand.value.map((card) => card.name));
-    console.log(i, "mission: ", missions.value?.map((mission) => mission.name));
+    console.log(
+      i,
+      "hand: ",
+      hand.value.map((card) => card.name)
+    );
+    console.log(
+      i,
+      "mission: ",
+      missions.value?.map((mission) => mission.name)
+    );
     console.log(i, "turn: ", turn.value);
   });
 });
 //離脱したらGame､PlayerDataが削除される
 onUnmounted(() => {
-  window.alert("戦闘画面を離れます");  //alert
-  useBGM.stop()
+  window.alert("戦闘画面を離れます"); //alert
+  useBGM.stop();
   deleteGame();
   initPlayer();
-})
+});
 
 const myTurnAnimation = ref(false);
 const enemyTurnAnimation = ref(false);
 watch(components, (newVal) => {
-  if (newVal === "postBattle" || newVal === "afterDecideFirstAtkPlayer") return
+  if (newVal === "postBattle" || newVal === "afterDecideFirstAtkPlayer") return;
   if (!XOR(newVal === "primaryAtk", sign.value === firstAtkPlayer.value)) {
     myTurnAnimation.value = true;
-    useMyTurn.play()
+    useMyTurn.play();
   } else {
     enemyTurnAnimation.value = true;
-    useEnemyTurn.play()
+    useEnemyTurn.play();
   }
-})
+});
 const loadMyTurnImg = () => {
   setTimeout(() => {
     myTurnAnimation.value = false;
   }, 1000);
-}
+};
 const loadEnemyTurnImg = () => {
   setTimeout(() => {
     enemyTurnAnimation.value = false;
   }, 1000);
-}
+};
 const deathAnimation = ref(false);
 watch(death, (newVal) => {
   if (newVal) {
     deathAnimation.value = true;
   }
-})
+});
 const loadDeathGif = () => {
   setTimeout(() => {
     deathAnimation.value = false;
   }, 1200);
-}
+};
 const startAnimation = ref(true);
 const loadStartGif = () => {
   setTimeout(() => {
     startAnimation.value = false;
   }, 1700);
-}
-const wantCard = ref()//!test用
-const devMode = ref(false)
+};
+const wantCard = ref(); //!test用
+const devMode = ref(false);
 </script>
 
 <template>
@@ -211,11 +223,26 @@ const devMode = ref(false)
     <div v-cloak class="flex flex-col h-screen w-screen p-5 relative">
       <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
       <div v-if="death" class="flex flex-col overlay z-10">
-        <div v-if="status.hp <= 0 || hand.reduce((acc, cur) => { if (cur.id === 0) acc++; return acc }, 0) >= 9"
-          class="flex flex-col items-center justify-center">
+        <div
+          v-if="
+            status.hp <= 0 ||
+            hand.reduce((acc, cur) => {
+              if (cur.id === 0) acc++;
+              return acc;
+            }, 0) >= 9
+          "
+          class="flex flex-col items-center justify-center"
+        >
           <img @load="loadDeathGif()" :src="deathAnimation ? loseGif : loseImg" />
           <RouterLink to="/">
-            <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
+            <button
+              @click="
+                deleteGame();
+                initPlayer();
+                useTap2.play();
+              "
+              class="btn-pop transform -translate-y-24"
+            >
               <img :src="backImg" class="w-32" />
             </button>
           </RouterLink>
@@ -223,7 +250,14 @@ const devMode = ref(false)
         <div v-else class="flex flex-col items-center justify-center">
           <img @load="loadDeathGif()" :src="deathAnimation ? winGif : winImg" />
           <RouterLink to="/">
-            <button @click="deleteGame(); initPlayer(); useTap2.play()" class="btn-pop transform -translate-y-24">
+            <button
+              @click="
+                deleteGame();
+                initPlayer();
+                useTap2.play();
+              "
+              class="btn-pop transform -translate-y-24"
+            >
               <img :src="backImg" class="w-32" />
             </button>
           </RouterLink>
@@ -248,8 +282,8 @@ const devMode = ref(false)
           </div>
           <div v-if="devMode">
             <div class="flex flex-col">
-              <p> {{ "id: " + id }}</p>
-              <p> {{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
+              <p>{{ "id: " + id }}</p>
+              <p>{{ "sign: " + sign + " phase: " + phase + " turn: " + turn }}</p>
               <p>{{ components }}</p>
               <button @click="drawRandomOneCard(wantCard)">drawSelectCard</button>
               <input v-model="wantCard" type="number" />
@@ -258,8 +292,13 @@ const devMode = ref(false)
         </div>
       </div>
 
-      <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-        leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+      <transition
+        appear
+        enter-from-class="translate-y-[-150%] opacity-0"
+        leave-to-class="translate-y-[150%] opacity-0"
+        leave-active-class="transition duration-300"
+        enter-active-class="transition duration-300"
+      >
         <div class="overlay">
           <div v-if="phase === 'shop'">
             <Shop />
@@ -272,40 +311,65 @@ const devMode = ref(false)
       </transition>
 
       <div v-if="components !== 'postBattle'">
-        <div style="width: 40vw;" class="inset-0 top-1/3 left-0 fixed ml-2">
-          <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
-            :components="components" which="primary" v-show="components !== 'secondAtk'" />
-          <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
-            :components="components" which="second" />
+        <div style="width: 40vw" class="inset-0 top-1/3 left-0 fixed ml-2">
+          <UiUseCard
+            :player="sign === firstAtkPlayer ? player : enemyPlayer"
+            :firstAtkPlayer="firstAtkPlayer"
+            :components="components"
+            which="primary"
+            v-show="components !== 'secondAtk'"
+          />
+          <UiUseCard
+            :player="sign !== firstAtkPlayer ? player : enemyPlayer"
+            :firstAtkPlayer="firstAtkPlayer"
+            :components="components"
+            which="second"
+          />
         </div>
 
         <div class="overlay">
-          <transition appear enter-from-class="translate-y-[-150%] opacity-0"
-            leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
-            enter-active-class="transition duration-300" mode="out-in">
-            <img v-if="myTurnAnimation" @load="loadMyTurnImg()" :src="myTurnImg" style="width: 40vw;" />
-            <img v-else-if="enemyTurnAnimation" @load="loadEnemyTurnImg()" :src="enemyTurnImg" style="width: 40vw;" />
+          <transition
+            appear
+            enter-from-class="translate-y-[-150%] opacity-0"
+            leave-to-class="translate-y-[150%] opacity-0"
+            leave-active-class="transition duration-300"
+            enter-active-class="transition duration-300"
+            mode="out-in"
+          >
+            <img v-if="myTurnAnimation" @load="loadMyTurnImg()" :src="myTurnImg" style="width: 40vw" />
+            <img v-else-if="enemyTurnAnimation" @load="loadEnemyTurnImg()" :src="enemyTurnImg" style="width: 40vw" />
             <div v-else class="flex flex-col">
-              <UiUseCardDisplay v-if="sign === firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-                :cards="components === 'primaryAtk' ? field : enemyPlayer.field" />
-              <UiUseCardDisplay v-if="sign !== firstAtkPlayer" :after="battleResult[0]" :value="battleResult[1]"
-                :cards="components === 'primaryAtk' ? enemyPlayer.field : field" />
+              <UiUseCardDisplay
+                v-if="sign === firstAtkPlayer"
+                :after="battleResult[0]"
+                :value="battleResult[1]"
+                :cards="components === 'primaryAtk' ? field : enemyPlayer.field"
+              />
+              <UiUseCardDisplay
+                v-if="sign !== firstAtkPlayer"
+                :after="battleResult[0]"
+                :value="battleResult[1]"
+                :cards="components === 'primaryAtk' ? enemyPlayer.field : field"
+              />
             </div>
           </transition>
         </div>
       </div>
 
       <div class="bottom-0 fixed mb-3">
-        <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
-          :src="waitingGif" class="bottom-0 fixed mb-36" style="width: 40vw;" />
-        <div class="flex justify-start" style="width: 95vw;">
+        <img
+          v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
+          :src="waitingGif"
+          class="bottom-0 fixed mb-36"
+          style="width: 40vw"
+        />
+        <div class="flex justify-start" style="width: 95vw">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
           <UiMission class="ml-auto" />
         </div>
         <UiHand class="pt-5" />
       </div>
-
     </div>
   </div>
 </template>

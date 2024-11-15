@@ -23,7 +23,7 @@ const onKeyUpCallbackHook = (): void => {
 <template>
   <div class="mt-auto mx-1">
     <div v-if="dropDown" class="bg-white rounded fixed z-20 p-2 w-56 whitespace-pre-wrap transform -translate-y-20">
-      <div class="flex flex-row mb-1 font-bold  text-gray-900">
+      <div class="flex flex-row mb-1 font-bold text-gray-900">
         <p>{{ allGifts[gift]?.name }}</p>
         <p class="ml-auto">{{ "🪙 " + allGifts[gift]?.requireContribution }}</p>
       </div>

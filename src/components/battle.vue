@@ -6,20 +6,20 @@ import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
 //img
 import decideImg from "@/assets/img/ui/decide.png";
-import battleImg from "@/assets/img/ui/battle.png"
-import donateImg from "@/assets/img/ui/donate.png"
+import battleImg from "@/assets/img/ui/battle.png";
+import donateImg from "@/assets/img/ui/donate.png";
 import sumFieldImg from "@/assets/img/ui/info.png";
 //gif
 import eatingGif from "@/assets/gifs/eating.gif";
 //sound
-import { tap2,battlePhase, swipe } from "@/assets/sounds";
+import { tap2, battlePhase, swipe } from "@/assets/sounds";
 const useTap2 = useSound(tap2);
 const useBattlePhase = useSound(battlePhase);
 const useSwipe = useSound(swipe);
 
 const { player, cardLock, phase, sumCards } = storeToRefs(playerStore);
 const { donate, field } = toRefs(player.value);
-const { game } = storeToRefs(gameStore)
+const { game } = storeToRefs(gameStore);
 
 //ターンを終了時
 const turnEnd = () => {
@@ -35,33 +35,43 @@ onMounted(() => {
   if (game.value.turn === 1) return;
   battleAnimation.value = true;
   donate.value = false;
-})
+});
 const loadBattleGif = () => {
   useBattlePhase.play();
   setTimeout(() => {
     battleAnimation.value = false;
   }, 1500);
-}
+};
 </script>
 
 <template>
   <div>
-    <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+    <transition
+      appear
+      enter-from-class="translate-y-[-150%] opacity-0"
+      leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300"
+      enter-active-class="transition duration-300"
+    >
       <div v-if="battleAnimation" class="overlay">
         <img @load="loadBattleGif()" :src="eatingGif" />
       </div>
       <div v-else>
         <div v-if="phase === 'battle' && !cardLock" class="flex">
-          <button @click="turnEnd(); useTap2.play()">
-            <img :src="decideImg" style="width: 20vw;" />
+          <button
+            @click="
+              turnEnd();
+              useTap2.play();
+            "
+          >
+            <img :src="decideImg" style="width: 20vw" />
           </button>
 
-          <div class="overCard" style="width: 35dvw;">
+          <div class="overCard" style="width: 35dvw">
             <img :src="sumFieldImg" />
             <div class="overText text-lg font-bold">
               <div v-if="!donate" class="flex items-center mb-3 animate-rotate-x animate-duration-300">
-                <p>{{ "🍖" + sumCards.hungry }} </p>
+                <p>{{ "🍖" + sumCards.hungry }}</p>
                 <p>{{ "⚔" + sumCards.atk }}</p>
                 <p>{{ "🛡" + sumCards.def }}</p>
                 <p>{{ "🏹" + sumCards.tech }}</p>
@@ -69,13 +79,19 @@ const loadBattleGif = () => {
                 <p>{{ "💖" + sumCards.heal }}</p>
               </div>
               <div v-else class="flex items-center mb-3 animate-rotate-x animate-duration-300">
-                <p>{{ "🪙" + field.length * 5 }} </p>
+                <p>{{ "🪙" + field.length * 5 }}</p>
               </div>
             </div>
           </div>
-          <button @click="donate = !donate; useSwipe.play()" class="card-pop">
+          <button
+            @click="
+              donate = !donate;
+              useSwipe.play();
+            "
+            class="card-pop"
+          >
             <div class="overCard">
-              <div class="p-8 bg-white  border-gray-700 rounded-full border-2" />
+              <div class="p-8 bg-white border-gray-700 rounded-full border-2" />
               <div class="overText">
                 <img v-if="donate" :src="donateImg" />
                 <img v-else :src="battleImg" />

@@ -20,19 +20,24 @@ function selectGift(gift: number): void {
   gifts.value = gifts.value.slice(0, 3);
   console.log("gifts: " + allGifts[gifts.value[0]].name, allGifts[gifts.value[1]].name, allGifts[gifts.value[2]].name);
 }
-
 </script>
 
 <template>
   <div class="flex flex-wrap">
     <div v-for="(gift, index) in allGifts" :key="gift.name">
-      <button @click="selectGift(gift.id); useTap1.play()" class="btn-pop transform h-full w-full -my-3"
-        :class="index % 2 ? `-translate-x-[30%]` : `translate-x-[30%]`">
+      <button
+        @click="
+          selectGift(gift.id);
+          useTap1.play();
+        "
+        class="btn-pop transform h-full w-full -my-3"
+        :class="index % 2 ? `-translate-x-[30%]` : `translate-x-[30%]`"
+      >
         <div class="flex items-center">
           <img :src="`./img/gifts/${gift.id}.png`" class="w-20" />
           <p class="fixed text-border text-xl font-bold left-0 -bottom-2">{{ gift.requireContribution }}</p>
           <div class="overCard w-full">
-            <img :src="giftSelectBackground" style="width: 25vw;" />
+            <img :src="giftSelectBackground" style="width: 25vw" />
             <div class="overText flex flex-col justify-start text-left align-text-bottom ml-3">
               <p class="w-full text-lg text-gray-800 break-words font-bold ml-5">{{ gift.name }}</p>
               <p class="w-full text-xs text-gray-900 break-words">{{ gift.description }}</p>

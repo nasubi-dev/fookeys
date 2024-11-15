@@ -20,41 +20,63 @@ const { gifts, status, isSelectedGift } = toRefs(player.value);
 const pushed = ref(false);
 onMounted(() => {
   pushed.value = false;
-})
+});
 const emit = defineEmits<{
-  (event: "cancel"): void
-}>()
+  (event: "cancel"): void;
+}>();
 
 const selectGift = (gift: number) => {
   if (status.value.contribution < allGifts[gift].requireContribution) {
-    log.value = "貢献度が足りなくて" + allGifts[gift].name + "が使えない！"
+    log.value = "貢献度が足りなくて" + allGifts[gift].name + "が使えない！";
   } else if (isSelectedGift.value === gift) {
-    isSelectedGift.value = undefined
+    isSelectedGift.value = undefined;
   } else {
-    isSelectedGift.value = gift
+    isSelectedGift.value = gift;
   }
-}
+};
 const useGift = async () => {
   pushed.value = true;
   await watchShopEnd();
-}
+};
 </script>
 
 <template>
   <div>
-    <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+    <transition-group
+      enter-from-class="translate-y-[-150%] opacity-0"
+      leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300"
+      enter-active-class="transition duration-300"
+    >
       <div v-if="!pushed" class="flex justify-center">
-        <button @click="emit('cancel'); isSelectedGift = undefined; useTap2.play()" class="ml-3" style="width: 20vw;">
+        <button
+          @click="
+            emit('cancel');
+            isSelectedGift = undefined;
+            useTap2.play();
+          "
+          class="ml-3"
+          style="width: 20vw"
+        >
           <img :src="back" />
         </button>
-        <button @click="useGift(); useTap2.play()">
-          <img :src="decide" style="width: 20vw;" />
+        <button
+          @click="
+            useGift();
+            useTap2.play();
+          "
+        >
+          <img :src="decide" style="width: 20vw" />
         </button>
-        <div class="flex items-center  w-1/3 text-left">
+        <div class="flex items-center w-1/3 text-left">
           <div v-for="gift in gifts" :key="gift">
             <div :class="isSelectedGift === gift ? 'transform -translate-y-5' : null">
-              <button @click="selectGift(gift); useTap1.play()">
+              <button
+                @click="
+                  selectGift(gift);
+                  useTap1.play();
+                "
+              >
                 <UiGiftsGift :gift="gift" />
               </button>
             </div>

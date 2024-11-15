@@ -74,7 +74,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
       100
     );
     await reflectStatus();
-
   }
 
   //回復を行う
@@ -304,7 +303,6 @@ async function postBattle(): Promise<void> {
     updateDoc(doc(playersRef, id.value), { rottenHand: rottenHand.value });
     updateDoc(doc(playersRef, id.value), { status: status.value });
   }
-
 
   //このターン使用したカードの効果を発動する
   if (!enemyCheck.value && !enemyDonate.value) {

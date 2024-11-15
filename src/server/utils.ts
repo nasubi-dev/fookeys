@@ -16,5 +16,7 @@ const wait = async (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 };
 
-const XOR = (a: boolean, b: boolean) => { return (a || b) && !(a && b) }
+const XOR = (a: boolean, b: boolean) => {
+  return (a || b) && !(a && b);
+};
 export { intervalForEach, wait, XOR };

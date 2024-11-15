@@ -22,7 +22,7 @@ async function registerPlayer(): Promise<void> {
     console.error(e, "Error adding Your ID: ", error);
   }
 }
-async function reNamePlayer(name:string): Promise<void> {
+async function reNamePlayer(name: string): Promise<void> {
   const { id } = storeToRefs(playerStore);
   try {
     if (!id.value) return;
