@@ -25,18 +25,15 @@ function selectGift(gift: number): void {
 <template>
   <div class="flex flex-wrap">
     <div v-for="(gift, index) in allGifts" :key="gift.name">
-      <button
-        @click="
-          selectGift(gift.id);
-          useTap1.play();
-        "
-        class="btn-pop transform h-full w-full -my-3"
-        :class="index % 2 ? `-translate-x-[30%]` : `translate-x-[30%]`"
-      >
+      <button @click="
+        selectGift(gift.id);
+      useTap1.play();
+      " class="btn-pop transform h-full w-full -my-3"
+        :class="index % 2 ? `-translate-x-[30%]` : `translate-x-[30%]`">
         <div class="flex items-center">
           <img :src="`./img/gifts/${gift.id}.png`" class="w-20" />
           <p class="fixed text-border text-xl font-bold left-0 -bottom-2">{{ gift.requireContribution }}</p>
-          <div class="overCard w-full">
+          <div class="relative w-full">
             <img :src="giftSelectBackground" style="width: 25vw" />
             <div class="overText flex flex-col justify-start text-left align-text-bottom ml-3">
               <p class="w-full text-lg text-gray-800 break-words font-bold ml-5">{{ gift.name }}</p>

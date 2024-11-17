@@ -31,7 +31,7 @@ watch(
 </script>
 
 <template>
-  <div class="overCard mt-auto" style="width: 50dvw" :class="wiggleClass">
+  <div class="relative mt-auto" style="width: 50dvw" :class="wiggleClass">
     <img :src="statusImg" />
     <div class="overText w-full">
       <div class="flex justify-start w-full transform -translate-y-4">

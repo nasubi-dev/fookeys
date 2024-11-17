@@ -11,9 +11,6 @@
   transform: translate(0, 2px);
   border-bottom: none;
 }
-.overCard {
-  position: relative;
-}
 .overText {
   position: absolute;
   inset: 0;

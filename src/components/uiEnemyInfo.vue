@@ -40,7 +40,7 @@ watch(
       <uiCardBehind :cards="player.hand" :rottenCards="player.rottenHand" />
     </div>
 
-    <div class="overCard ml-auto" style="width: 35dvw" :class="wiggleClass">
+    <div class="relative ml-auto" style="width: 35dvw" :class="wiggleClass">
       <img :src="enemyStatusImg" />
       <div class="overText w-full">
         <div class="flex flex-row-reverse justify-center items-center w-full">

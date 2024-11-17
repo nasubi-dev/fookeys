@@ -34,7 +34,7 @@ const onKeyUpCallbackHook = (): void => {
     <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-10">
       {{ mission.description }}
     </div>
-    <div class="overCard">
+    <div class="relative">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="missionImg" style="width: 25vw" />
         <div class="overText">
@@ -44,8 +44,10 @@ const onKeyUpCallbackHook = (): void => {
           </span>
           <div class="gauge w-10/12">
             <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mr-2">✔</span>
-            <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/" + mission.goalAchievement }}</span>
-            <div class="bar" :style="{ width: 100 - (mission.nowAchievement / mission.goalAchievement) * 100 + '%' }"></div>
+            <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/" +
+              mission.goalAchievement }}</span>
+            <div class="bar" :style="{ width: 100 - (mission.nowAchievement / mission.goalAchievement) * 100 + '%' }">
+            </div>
           </div>
         </div>
       </VDuringPress>

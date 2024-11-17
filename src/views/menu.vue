@@ -65,7 +65,8 @@ onMounted(() => {
     <Notivue v-slot="item">
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
-    <div v-if="loadMenu" class="fixed flex items-center justify-center w-full h-full z-30 m-auto p-10 text-8xl text-bold text-white gray">
+    <div v-if="loadMenu"
+      class="fixed flex items-center justify-center w-full h-full z-30 m-auto p-10 text-8xl text-bold text-white gray">
       loading....
     </div>
     <div class="h-screen flex flex-col">
@@ -75,21 +76,17 @@ onMounted(() => {
             <img :src="back" class="w-32" />
           </button>
         </router-link>
-        <button
-          v-else
-          class="p-4 absolute top-4 left-4 btn-pop"
-          @click="
-            selectCharacter = false;
-            selectGift = false;
-            useTap2.play();
-          "
-        >
+        <button v-else class="p-4 absolute top-4 left-4 btn-pop" @click="
+          selectCharacter = false;
+        selectGift = false;
+        useTap2.play();
+        ">
           <img :src="back" class="w-32" />
         </button>
       </div>
 
       <div class="flex flex-1">
-        <div class="overCard w-1/2 p-8 flex flex-col justify-center items-center text-center">
+        <div class="relative w-1/2 p-8 flex flex-col justify-center items-center text-center">
           <img :src="characterBackground" />
           <div class="overText items-center">
             <img :src="`/img/characters/${character}/normal.png`" />
@@ -100,34 +97,25 @@ onMounted(() => {
         </div>
 
         <div class="w-1/2 px-3 flex flex-col justify-center text-center items-center">
-          <div class="overCard">
+          <div class="relative">
             <img :src="menuBackground" class="h-screen" />
             <div v-if="!selectCharacter && !selectGift" class="overText w-full">
-              <button
-                @click="
-                  startMatch();
-                  useTap1.play();
-                "
-                class="btn-pop my-4"
-              >
+              <button @click="
+                startMatch();
+              useTap1.play();
+              " class="btn-pop my-4">
                 <img src="@/assets/img/ui/entry.png" />
               </button>
-              <button
-                @click="
-                  selectCharacter = !selectCharacter;
-                  useTap1.play();
-                "
-                class="btn-pop my-4"
-              >
+              <button @click="
+                selectCharacter = !selectCharacter;
+              useTap1.play();
+              " class="btn-pop my-4">
                 <img src="@/assets/img/ui/changeCharacter.png" />
               </button>
-              <button
-                @click="
-                  selectGift = !selectGift;
-                  useTap1.play();
-                "
-                class="btn-pop my-4"
-              >
+              <button @click="
+                selectGift = !selectGift;
+              useTap1.play();
+              " class="btn-pop my-4">
                 <img src="@/assets/img/ui/changeGift.png" />
               </button>
             </div>

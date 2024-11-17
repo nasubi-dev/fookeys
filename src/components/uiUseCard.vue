@@ -46,19 +46,15 @@ watch(battleResult, (newVal) => {
 </script>
 
 <template>
-  <Transition
-    appear
-    enter-from-class="translate-y-[-150%] opacity-0"
-    leave-to-class="translate-x-[-150%] opacity-0"
-    leave-active-class="transition duration-300"
-    enter-active-class="transition duration-300"
-  >
+  <Transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-x-[-150%] opacity-0"
+    leave-active-class="transition duration-300" enter-active-class="transition duration-300">
     <div style="width: 20vw">
-      <div class="overCard flex justify-start">
+      <div class="relative flex justify-start">
         <img :src="infoImg" />
         <div class="overText">
           <div class="flex justify-start items-center font-bold text-base">
-            <img v-if="characterName" :src="`/img/characters/${characterName}/normal.png`" class="w-1/3 bottom-5 bg-clip-border" />
+            <img v-if="characterName" :src="`/img/characters/${characterName}/normal.png`"
+              class="w-1/3 bottom-5 bg-clip-border" />
             <p v-if="!p.player.donate">{{ "🍖" + p.player.sumFields.hungry }}</p>
             <p v-if="p.player.sumFields.priority && !p.player.donate">{{ "🦶" + p.player.sumFields.priority }}</p>
             <div class="ml-auto mr-3 w-5">

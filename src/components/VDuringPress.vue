@@ -1,17 +1,3 @@
-<template>
-  <div
-    @pointerdown="startPress"
-    @pointerup="endPress"
-    @pointermove="endPress"
-    @pointercancel="endPress"
-    @click="endPress"
-    @mouseenter="endPress"
-    @contextmenu.prevent
-  >
-    <slot />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from "vue";
 
@@ -34,3 +20,17 @@ function endPress(): void {
   pressTimer.value = null;
 }
 </script>
+
+<template>
+  <div
+    @pointerdown="startPress"
+    @pointerup="endPress"
+    @pointermove="endPress"
+    @pointercancel="endPress"
+    @click="endPress"
+    @mouseenter="endPress"
+    @contextmenu.prevent
+  >
+    <slot />
+  </div>
+</template>

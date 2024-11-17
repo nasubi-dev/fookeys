@@ -25,7 +25,7 @@ const onKeyUpCallbackHook = (): void => {
 </script>
 
 <template>
-  <div class="block">
+  <div class="min-w-[7rem]">
     <div
       v-if="dropDown"
       class="bg-white rounded w-56 z-20 mx-3 p-2 fixed text-gray-900 text-left"
@@ -34,10 +34,10 @@ const onKeyUpCallbackHook = (): void => {
       <p class="font-bold">{{ card.company + " : " + card.name }}</p>
       <p>{{ card.description }}</p>
     </div>
-    <div class="overCard">
+    <div class="relative">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
-        <img :src="`/img/companys/${card.company}.png`" />
-        <div class="overText">
+        <img :src="`/img/companys/${card.company}.png`" class="min-w-[7rem]" />
+        <div class="overText min-w-[7rem]">
           <p
             v-if="card.waste"
             class="font-bold text-center transform select-none"
@@ -56,7 +56,7 @@ const onKeyUpCallbackHook = (): void => {
           />
 
           <div
-            class="flex font-bold text-border-thin transform select-none"
+            class="flex font-black text-border-thin transform select-none"
             :class="size === 'normal' ? `text-xs -translate-x-[10%]  -translate-y-[60%]` : `text-lg -translate-x-[10%] -translate-y-[40%]`"
           >
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }}</p>
