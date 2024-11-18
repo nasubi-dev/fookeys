@@ -4,19 +4,16 @@ import { playerStore, gameStore } from "@/main";
 import { e, s, i } from "@/log";
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
-//img
 import decideImg from "@/assets/img/ui/decide.png";
 import battleImg from "@/assets/img/ui/battle.png";
 import donateImg from "@/assets/img/ui/donate.png";
 import sumFieldImg from "@/assets/img/ui/info.png";
-//gif
 import eatingGif from "@/assets/gifs/eating.gif";
-//sound
 import { tap2, battlePhase, swipe } from "@/assets/sounds";
+
 const useTap2 = useSound(tap2);
 const useBattlePhase = useSound(battlePhase);
 const useSwipe = useSound(swipe);
-
 const { player, cardLock, phase, sumCards } = storeToRefs(playerStore);
 const { donate, field } = toRefs(player.value);
 const { game } = storeToRefs(gameStore);

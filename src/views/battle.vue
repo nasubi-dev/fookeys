@@ -10,14 +10,12 @@ import { getEnemyPlayer, initPlayer } from "@/server/usePlayerData";
 import { deleteGame, watchDeleteGame } from "@/server/useMatchMaking";
 import { drawRandomOneCard } from "@/server/useShopUtils";
 import { startShop } from "@/server/useShop";
-//components
 import UiEnemyInfo from "@/components/uiEnemyInfo.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import UiMission from "@/components/uiMissions.vue";
 import UiStatus from "@/components/uiStatus.vue";
 import UiHand from "@/components/uiHand.vue";
 import Battle from "@/components/battle.vue";
-//img
 import backImg from "@/assets/img/ui/back.png";
 import winImg from "@/assets/img/ui/win.png";
 import loseImg from "@/assets/img/ui/lose.png";
@@ -27,17 +25,14 @@ import configImg from "@/assets/img/ui/config.png";
 import soundOnImg from "@/assets/img/ui/soundOn.png";
 import soundOffImg from "@/assets/img/ui/soundOff.png";
 import turnBackgroundImg from "@/assets/img/ui/turnBackground.png";
-//gifs
 import waitingGif from "@/assets/gifs/waiting.gif";
 import startGif from "@/assets/gifs/start.gif";
 import winGif from "@/assets/gifs/win.gif";
 import loseGif from "@/assets/gifs/lose.gif";
-//asset
 import allGifts from "@/assets/allGifts";
-//sound
 import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
-//components
+
 const Shop = defineAsyncComponent(() => import("@/components/shop.vue"));
 const UiUseCard = defineAsyncComponent(() => import("@/components/uiUseCard.vue"));
 const UiUseCardDisplay = defineAsyncComponent(() => import("@/components/uiUseCardDisplay.vue"));
@@ -222,6 +217,7 @@ const devMode = ref(false);
     </Notivue>
     <div v-cloak class="flex flex-col h-screen w-screen p-5 relative">
       <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
+      <!-- 死亡時 -->
       <div v-if="death" class="flex flex-col overlay z-10">
         <div v-if="
           status.hp <= 0 ||
@@ -255,6 +251,7 @@ const devMode = ref(false);
         </div>
       </div>
 
+      <!-- 敵の情報と設定系 -->
       <div class="flex flex-row-reverse z-20 fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
         <div class="flex flex-col">
@@ -283,6 +280,7 @@ const devMode = ref(false);
         </div>
       </div>
 
+      <!-- ショップとバトルのアニメーション -->
       <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
         leave-active-class="transition duration-300" enter-active-class="transition duration-300">
         <div class="overlay">
@@ -296,6 +294,7 @@ const devMode = ref(false);
         </div>
       </transition>
 
+      <!-- このターン両者が使用したカード -->
       <div v-if="components !== 'postBattle'">
         <div style="width: 40vw" class="inset-0 top-1/3 left-0 fixed ml-2">
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
@@ -304,6 +303,7 @@ const devMode = ref(false);
             :components="components" which="second" />
         </div>
 
+        <!-- 戦闘処理中のカード -->
         <div class="overlay">
           <transition appear enter-from-class="translate-y-[-150%] opacity-0"
             leave-to-class="translate-y-[150%] opacity-0" leave-active-class="transition duration-300"
@@ -320,6 +320,7 @@ const devMode = ref(false);
         </div>
       </div>
 
+      <!-- 自分のステータス&ギフト&ミッション&手札の表示 -->
       <div class="bottom-0 fixed mb-3">
         <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
           :src="waitingGif" class="bottom-0 fixed mb-36" style="width: 40vw" />
