@@ -36,7 +36,7 @@ const onKeyUpCallbackHook = (): void => {
         <img :src="`/img/companys/${card.company}.png`" class="min-w-[7rem]" />
         <div class="overText min-w-[7rem]">
           <p v-if="card.waste" class="font-bold text-center transform select-none" :class="[
-            size === 'normal' ? `text-[max(2vw,1rem)] -translate-x-[max(2.6vw,210%)] translate-y-[min(2.2vw,500px)] ` : `text-2xl -translate-x-[280%] translate-y-[140%]`,
+            size === 'normal' ? `text-[max(2vw,1rem)] -translate-x-[max(2.6vw,210%)] translate-y-[min(2.2vw,500px)] ` : `text-[max(2vw,1rem)] -translate-x-[280%] translate-y-[140%]`,
             card.waste === 1 ? `-translate-x-[380%]` : null,
           ]">
             {{ card.waste }}
