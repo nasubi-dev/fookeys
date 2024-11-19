@@ -54,10 +54,10 @@ const loadBattleGif = () => {
             turnEnd();
           useTap2.play();
           ">
-            <img :src="decideImg" style="width: 20vw" />
+            <img :src="decideImg" class="w-[max(20dvw,200px)]" />
           </button>
 
-          <div class="relative" style="width: 35dvw">
+          <div class="relative w-[max(35dvw,200px)]">
             <img :src="sumFieldImg" />
             <div class="overText text-lg font-bold">
               <div v-if="!donate" class="flex items-center mb-3 animate-rotate-x animate-duration-300">
