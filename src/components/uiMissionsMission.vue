@@ -36,7 +36,7 @@ const onKeyUpCallbackHook = (): void => {
     </div>
     <div class="relative">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
-        <img :src="missionImg" style="width: 25vw" />
+        <img :src="missionImg" class="w-[260px] " />
         <div class="overText">
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">
             <span class="ml-auto font-bold">{{ "🪙" + mission.reward }}</span>
