@@ -40,12 +40,12 @@ watch(
       <uiCardBehind :cards="player.hand" :rottenCards="player.rottenHand" />
     </div>
 
-    <div class="relative ml-auto" style="width: 35dvw" :class="wiggleClass">
+    <div class="relative ml-auto w-[400px]" :class="wiggleClass">
       <img :src="enemyStatusImg" />
       <div class="overText w-full">
         <div class="flex flex-row-reverse justify-center items-center w-full">
           <Character status="enemy" class="ml-auto" @isWiggle="wiggleStatus" />
-          <div class="flex justify-start font-bold text-xl text-gray-900 ml-3">
+          <div class="flex justify-start font-bold text-xl text-gray-900 ml-4">
             <div :class="hpClass">❤:{{ player.status.hp + "/" + player.status.maxHp }}</div>
             <div :class="hungryClass">🍖:{{ player.status.hungry + "/" + player.status.maxHungry }}</div>
             <div :class="contributionClass">🪙:{{ player.status.contribution }}</div>
