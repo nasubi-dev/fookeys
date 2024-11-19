@@ -323,7 +323,7 @@ const devMode = ref(false);
       <!-- 自分のステータス&ギフト&ミッション&手札の表示 -->
       <div class="bottom-0 fixed mb-3">
         <img v-if="(cardLock && phase === 'battle' && components === 'postBattle') || (phase === 'shop' && check)"
-          :src="waitingGif" class="bottom-0 fixed mb-36" style="width: 40vw" />
+          :src="waitingGif" class="bottom-0 fixed w-[max(50dvw,350px)] -translate-x-[100px] -translate-y-[125px]" />
         <div class="flex justify-start" style="width: 95vw">
           <UiStatus :player="player" />
           <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
