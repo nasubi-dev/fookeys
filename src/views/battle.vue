@@ -296,7 +296,7 @@ const devMode = ref(false);
 
       <!-- このターン両者が使用したカード -->
       <div v-if="components !== 'postBattle'">
-        <div style="width: 40vw" class="inset-0 top-1/3 left-0 fixed ml-2">
+        <div style="width: 40vw" class="inset-0 top-1/4 left-0 fixed ml-2">
           <UiUseCard :player="sign === firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
             :components="components" which="primary" v-show="components !== 'secondAtk'" />
           <UiUseCard :player="sign !== firstAtkPlayer ? player : enemyPlayer" :firstAtkPlayer="firstAtkPlayer"
