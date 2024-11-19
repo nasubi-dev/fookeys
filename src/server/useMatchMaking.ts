@@ -19,7 +19,6 @@ async function findWaitingPlayer(): Promise<void> {
   const { id, player, log } = storeToRefs(playerStore);
   const { idEnemy } = toRefs(player.value);
 
-  console.log(i, "Finding players...");
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
   // 自分を除外する

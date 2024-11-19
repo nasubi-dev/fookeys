@@ -23,7 +23,9 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   const { game } = toRefs(gameStore);
   const { firstAtkPlayer } = toRefs(game.value);
   const { myId, enemyId, my, enemy } = await syncPlayer(which);
+  // playerAllocation: 0=後攻, 1=先攻
   const playerAllocation = firstAtkPlayer.value === sign.value ? 1 : 0;
+  // attackOrder: true=先攻, false=後攻
   const attackOrder = XOR(playerAllocation === 0, which === "primary");
 
   //fieldが空の場合､ダメージ計算を行わない
