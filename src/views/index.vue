@@ -50,22 +50,22 @@ async function register() {
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div class="flex flex-col items-center justify-center h-screen">
-      <a href="https://minimi-323.hatenablog.com/entry/2023/05/26/222715" target="_blank" class="text-yellow-300">説明書リンク</a><br />
-      <img src="@/assets/img/ui/fookeys.png" class="w-60" />
-      <form class="flex flex-col items-center">
-        <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name" v-model="newName" />
-        <router-link
-          to="/menu"
-          @click="
+      <img src="@/assets/img/ui/fookeys.png" class="w-[min(40vw,700px)] mb-auto mt-32" />
+      <div class="absolute top-2/3 flex flex-col">
+        <form class="flex flex-col items-center">
+          <a href="https://minimi-323.hatenablog.com/entry/2023/05/26/222715" target="_blank" class="text-yellow-300">
+            説明書リンク
+          </a>
+          <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name"
+            v-model="newName" />
+          <router-link to="/menu" @click="
             register();
-            useTap1.play();
-          "
-          type="button"
-          class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop"
-        >
-          <button>Menu</button>
-        </router-link>
-      </form>
+          useTap1.play();
+          " type="button" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-4 py-2 btn-pop">
+            <button>Start</button>
+          </router-link>
+        </form>
+      </div>
     </div>
   </div>
 </template>
