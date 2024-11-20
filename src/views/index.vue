@@ -56,7 +56,7 @@ async function register() {
           <a href="https://minimi-323.hatenablog.com/entry/2023/05/26/222715" target="_blank" class="text-yellow-300">
             説明書リンク
           </a>
-          <input class="border border-gray-400 rounded-lg p-2 w-64" type="text" placeholder="please name"
+          <input class="border border-gray-400 rounded-lg p-2 w-72" type="text" placeholder="名前を入力"
             v-model="newName" />
           <router-link to="/menu" @click="
             register();

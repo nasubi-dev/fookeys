@@ -60,7 +60,7 @@ const loadBattleGif = () => {
           <div class="relative w-[max(35dvw,200px)]">
             <img :src="sumFieldImg" />
             <div class="overText text-lg font-bold">
-              <div v-if="!donate" class="flex items-center mb-3 animate-rotate-x animate-duration-300">
+              <div v-if="!donate" class="flex text-[max(2vw,1rem)] items-center mb-3 animate-rotate-x animate-duration-300">
                 <p>{{ "🍖" + sumCards.hungry }}</p>
                 <p>{{ "⚔" + sumCards.atk }}</p>
                 <p>{{ "🛡" + sumCards.def }}</p>
