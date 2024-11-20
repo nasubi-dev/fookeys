@@ -216,9 +216,10 @@ const devMode = ref(false);
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
     <div v-cloak class="flex flex-col h-screen w-screen p-5 relative">
-      <img v-if="startAnimation" @load="loadStartGif()" :src="startGif" class="flex flex-col overlay z-10" />
+      <img v-if="startAnimation" @load="loadStartGif()" :src="startGif"
+        class="fixed top-0 left-0 right-0 w-screen h-screen z-10 aspect-square" />
       <!-- 死亡時 -->
-      <div v-if="death" class="flex flex-col overlay z-10">
+      <div v-if="death" class="flex flex-col fixed top-0 left-0 right-0 w-screen h-screen z-10">
         <div v-if="
           status.hp <= 0 ||
           hand.reduce((acc, cur) => {
@@ -226,7 +227,8 @@ const devMode = ref(false);
             return acc;
           }, 0) >= 9
         " class="flex flex-col items-center justify-center">
-          <img @load="loadDeathGif()" :src="deathAnimation ? loseGif : loseImg" />
+          <img @load="loadDeathGif()" :src="deathAnimation ? loseGif : loseImg"
+            class="fixed top-0 left-0 right-0 w-screen h-screen" />
           <RouterLink to="/">
             <button @click="
               deleteGame();
