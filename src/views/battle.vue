@@ -208,10 +208,17 @@ const loadStartGif = () => {
 };
 const wantCard = ref(); //!test用
 const devMode = ref(false);
+
+//画面サイズがPC､タブレット端末であればバトル画面を表示
+const isMobile = ref(window.innerWidth >= 768);
+
+window.addEventListener("resize", () => {
+  isMobile.value = window.innerWidth >= 800;
+});
 </script>
 
 <template>
-  <div>
+  <div v-if="isMobile">
     <Notivue v-slot="item">
       <Notifications :item="item" :icons="customIcons" />
     </Notivue>
@@ -334,5 +341,8 @@ const devMode = ref(false);
         <UiHand class="pt-5" />
       </div>
     </div>
+  </div>
+  <div v-else class="fixed w-full h-full text-xl text-bold text-white gray">
+    PCやタブレット端末でプレイしてください
   </div>
 </template>
