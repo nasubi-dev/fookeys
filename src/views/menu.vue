@@ -47,7 +47,7 @@ const selectGift = ref(false);
 const selectCharacter = ref(false);
 async function startMatch(): Promise<void> {
   if (!id.value) {
-    push.warning("IDがありません");
+    push.warning("IDがありません｡一度トップページに戻ってください");
     return;
   }
   await startMatchmaking();
@@ -102,6 +102,7 @@ onMounted(() => {
             <div v-if="!selectCharacter && !selectGift" class="overText w-full">
               <button @click="
                 startMatch();
+              id ? loadMenu = true : null;
               useTap1.play();
               " class="btn-pop my-4">
                 <img src="@/assets/img/ui/entry.png" />

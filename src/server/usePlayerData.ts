@@ -17,7 +17,6 @@ async function registerPlayer(): Promise<void> {
   try {
     id.value = (await addDoc(playersRef, player.value)).id;
     console.log(i, "Create Your ID: ", id.value);
-    log.value = "Create Your ID: " + id.value;
   } catch (error) {
     console.error(e, "Error adding Your ID: ", error);
   }
