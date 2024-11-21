@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onClickOutside } from '@vueuse/core'
 import { ref } from "vue";
 
 const pressTimer = ref<ReturnType<typeof setTimeout> | null>(null);
@@ -7,6 +8,10 @@ const p = defineProps<{
   onKeyUp: () => void;
   delay: number;
 }>();
+
+const target = ref(null)
+
+onClickOutside(target, event => endPress())
 
 function startPress(): void {
   pressTimer.value = setTimeout(() => {
@@ -22,15 +27,7 @@ function endPress(): void {
 </script>
 
 <template>
-  <div
-    @pointerdown="startPress"
-    @pointerup="endPress"
-    @pointermove="endPress"
-    @pointercancel="endPress"
-    @click="endPress"
-    @mouseenter="endPress"
-    @contextmenu.prevent
-  >
+  <div ref="target" @pointerdown="startPress" @click="endPress" @contextmenu.prevent>
     <slot />
   </div>
 </template>
