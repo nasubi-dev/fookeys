@@ -54,13 +54,14 @@ const loadBattleGif = () => {
             turnEnd();
           useTap2.play();
           ">
-            <img :src="decideImg" class="w-[max(20dvw,200px)]" />
+            <img :src="decideImg" class="w-[max(15dvw,200px)]" />
           </button>
 
-          <div class="relative w-[max(35dvw,200px)]">
+          <div class="relative w-[max(30dvw,200px)]">
             <img :src="sumFieldImg" />
             <div class="overText text-lg font-bold">
-              <div v-if="!donate" class="flex text-[max(2vw,1rem)] items-center mb-3 animate-rotate-x animate-duration-300">
+              <div v-if="!donate"
+                class="flex text-[max(2vw,1rem)] items-center mb-3 animate-rotate-x animate-duration-300">
                 <p>{{ "🍖" + sumCards.hungry }}</p>
                 <p>{{ "⚔" + sumCards.atk }}</p>
                 <p>{{ "🛡" + sumCards.def }}</p>
@@ -68,7 +69,7 @@ const loadBattleGif = () => {
                 <p>{{ "🦶 " + sumCards.priority }}</p>
                 <p>{{ "💖" + sumCards.heal }}</p>
               </div>
-              <div v-else class="flex items-center mb-3 animate-rotate-x animate-duration-300">
+              <div v-else class="flex text-[max(2vw,1rem)] items-center mb-3 animate-rotate-x animate-duration-300">
                 <p>{{ "🪙" + field.length * 5 }}</p>
               </div>
             </div>
