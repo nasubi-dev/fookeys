@@ -60,6 +60,7 @@ type PlayerData = {
   death: boolean;
   donate: boolean;
   match: MatchStatus;
+  password: string;
   character: string;
   gifts: number[];
   isSelectedGift: number | undefined;

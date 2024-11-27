@@ -10,6 +10,7 @@ import { tap1, tap2 } from "@/assets/sounds";
 //components
 import SelectCharacter from "@/components/selectCharacter.vue";
 import SelectGifts from "@/components/selectGifts.vue";
+import SelectEntry from "@/components/selectEntry.vue";
 import UiGifts from "@/components/uiGifts.vue";
 import myLogImg from "@/components/myLog.vue";
 import enemyLogImg from "@/components/enemyLog.vue";
@@ -28,7 +29,7 @@ const customIcons = {
 };
 const push = usePush();
 
-const { player, log, id } = storeToRefs(playerStore);
+const { player, log } = storeToRefs(playerStore);
 const { gifts, character } = toRefs(player.value);
 
 watch(log, () => {
@@ -45,14 +46,13 @@ const useTap2 = useSound(tap2);
 
 const selectGift = ref(false);
 const selectCharacter = ref(false);
-async function startMatch(): Promise<void> {
-  if (!id.value) {
-    push.warning("IDがありません｡一度トップページに戻ってください");
-    return;
-  }
-  await startMatchmaking();
-}
+const selectEntry = ref(false);
 const loadMenu = ref(true);
+
+function changeLoadMenu(): void {
+  loadMenu.value = !loadMenu.value;
+}
+
 onMounted(() => {
   setTimeout(() => {
     loadMenu.value = false;
@@ -71,7 +71,7 @@ onMounted(() => {
     </div>
     <div class="h-screen flex flex-col">
       <div class="z-10">
-        <router-link v-if="!selectCharacter && !selectGift" to="/">
+        <router-link v-if="!selectCharacter && !selectGift && !selectEntry" to="/">
           <button @click="useTap2.play()" class="p-4 absolute top-4 left-4 btn-pop">
             <img :src="back" class="w-32" />
           </button>
@@ -79,6 +79,7 @@ onMounted(() => {
         <button v-else class="p-4 absolute top-4 left-4 btn-pop" @click="
           selectCharacter = false;
         selectGift = false;
+        selectEntry = false;
         useTap2.play();
         ">
           <img :src="back" class="w-32" />
@@ -99,10 +100,9 @@ onMounted(() => {
         <div class="w-1/2 px-3 flex flex-col justify-center text-center items-center">
           <div class="relative">
             <img :src="menuBackground" class="h-screen" />
-            <div v-if="!selectCharacter && !selectGift" class="overText w-full">
+            <div v-if="!selectCharacter && !selectGift && !selectEntry" class="overText w-full">
               <button @click="
-                startMatch();
-              id ? loadMenu = true : null;
+                selectEntry = !selectEntry;
               useTap1.play();
               " class="btn-pop my-4">
                 <img src="@/assets/img/ui/entry.png" />
@@ -119,6 +119,9 @@ onMounted(() => {
               " class="btn-pop my-4">
                 <img src="@/assets/img/ui/changeGift.png" />
               </button>
+            </div>
+            <div v-else-if="selectEntry" class="overText w-full">
+              <SelectEntry :changeLoadMenu="changeLoadMenu" />
             </div>
             <div v-else-if="selectCharacter" class="overText w-full">
               <SelectCharacter />
