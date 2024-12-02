@@ -1,14 +1,12 @@
 import { toRefs } from "vue";
 import { e, s, i } from "@/log";
-import { playerStore, gameStore, enemyPlayerStore } from "@/main";
+import { playerStore, gameStore } from "@/main";
 import { storeToRefs } from "pinia";
 import { db } from "./firebase";
 import { collection, doc, addDoc, updateDoc, getDocs, query, where, onSnapshot, deleteDoc } from "firebase/firestore";
 import { converter } from "@/server/converter";
-import { getEnemyPlayer, initPlayer } from "./usePlayerData";
 import { router } from "@/router";
 import type { MatchStatus, PlayerData, GameData } from "@/types";
-import { wait } from "./utils";
 
 //Collectionの参照
 const playersRef = collection(db, "players").withConverter(converter<PlayerData>());
@@ -20,6 +18,19 @@ async function findWaitingPlayer(): Promise<void> {
   const { idEnemy } = toRefs(player.value);
 
   const waitingPlayers = (await getDocs(query(playersRef, where("match", "==", "waiting")))).docs.map((doc) => doc.id);
+  console.log(i, "Found players: ", waitingPlayers);
+  // 自分を除外する
+  waitingPlayers.indexOf(id.value) ? undefined : waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
+  // ランダムに選択する
+  idEnemy.value = waitingPlayers[Math.floor(Math.random() * waitingPlayers.length)];
+  console.log(i, "Found players: ", waitingPlayers);
+  waitingPlayers[0] ? console.log(i, "Found player: ", idEnemy.value) : console.log(i, "Not enough players to start a game");
+}
+async function findPasswordPlayer(): Promise<void> {
+  const { id, player, log } = storeToRefs(playerStore);
+  const { idEnemy, password } = toRefs(player.value);
+
+  const waitingPlayers = (await getDocs(query(playersRef, where("password", "==", password.value)))).docs.map((doc) => doc.id);
   console.log(i, "Found players: ", waitingPlayers);
   // 自分を除外する
   waitingPlayers.indexOf(id.value) ? undefined : waitingPlayers.splice(waitingPlayers.indexOf(id.value), 1);
@@ -87,7 +98,7 @@ async function addGame(): Promise<string> {
   return "";
 }
 //マッチングを開始する
-async function startMatchmaking(): Promise<void> {
+async function startRandomMatchmaking(): Promise<void> {
   const { id, player, log } = storeToRefs(playerStore);
   const { idEnemy, idGame, match, gifts, character } = toRefs(player.value);
 
@@ -125,6 +136,46 @@ async function startMatchmaking(): Promise<void> {
     router.push({ name: "battle", params: { idGame: idGame.value } });
   }
 }
+
+async function startPasswordMatchmaking(): Promise<void> {
+  const { id, player, log } = storeToRefs(playerStore);
+  const { idEnemy, idGame, gifts, character, password } = toRefs(player.value);
+
+  updatePlayerFields(id.value, [
+    { field: "password", value: password.value },
+    { field: "gifts", value: gifts.value },
+    { field: "character", value: character.value },
+  ]);
+  // マッチング待機中のユーザーを検索する
+  await findPasswordPlayer();
+  // マッチング待機中のユーザーがいない場合は、マッチング待機中にする
+  if (!idEnemy.value) {
+    console.log(i, "マッチング待機中...");
+    log.value = "マッチング待機中...";
+    await watchMatchField();
+  } else {
+    idGame.value = await addGame();
+    //プレイヤーの情報を更新する
+    await Promise.all([
+      updatePlayerFields(idEnemy.value, [
+        { field: "password", value: "" },
+        { field: "idEnemy", value: id.value },
+        { field: "idGame", value: idGame.value },
+        { field: "match", value: "matching" },
+      ]),
+      updatePlayerFields(id.value, [
+        { field: "password", value: "" },
+        { field: "idEnemy", value: idEnemy.value },
+        { field: "idGame", value: idGame.value },
+        { field: "match", value: "matching" },
+      ]),
+    ]);
+
+    //画面遷移
+    router.push({ name: "battle", params: { idGame: idGame.value } });
+  }
+}
+
 //gameを削除する
 async function deleteGame(): Promise<void> {
   const { idGame } = toRefs(playerStore.player);
@@ -154,4 +205,4 @@ async function watchDeleteGame(): Promise<void> {
   });
 }
 
-export { startMatchmaking, deleteGame, watchDeleteGame };
+export { startRandomMatchmaking as startMatchmaking, deleteGame, watchDeleteGame, startPasswordMatchmaking };
