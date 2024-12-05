@@ -4,7 +4,7 @@ import { useSound } from "@vueuse/sound";
 import { popUp } from "@/assets/sounds";
 import type { Card } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
-import image from "@/assets/img/ui/22x.png"
+import bg from "@/assets/img/ui/22x.png"
 
 defineProps<{
   card: Card;
@@ -31,7 +31,7 @@ const onKeyUpCallbackHook = (): void => {
       :class="[card.description ? ' -translate-y-20  z-20' : '-translate-y-10', state ? `` : `max-w-fit`]">
       <div class="absolute w-[max(20vw,340px)]">
 
-        <img :src="image" class=" z-20 absolute" />
+        <img :src="bg" class=" z-20 absolute" />
         <div class="z-20 p-4 px-5 absolute">
           <p class="font-bold">{{ card.company + " : " + card.name }}</p>
           <p>{{ card.description }}</p>

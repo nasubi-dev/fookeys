@@ -335,7 +335,7 @@ window.addEventListener("resize", () => {
           :src="waitingGif" class="bottom-0 fixed w-[max(50dvw,350px)] -translate-x-[100px] -translate-y-[125px]" />
         <div class="flex justify-start" style="width: 95vw">
           <UiStatus :player="player" />
-          <UiGifts :gifts="gifts" :player="player" class="w-1/5" />
+          <UiGifts size="my" :gifts="gifts" :player="player" class="w-1/5" />
           <UiMission class="ml-auto" />
         </div>
         <UiHand class="pt-5" />

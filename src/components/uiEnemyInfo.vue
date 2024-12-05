@@ -52,7 +52,7 @@ watch(
           </div>
         </div>
         <div class="transform -translate-x-10 -translate-y-4 w-1/2">
-          <UiGifts :gifts="player.gifts" :player="player" />
+          <UiGifts size="enemy" :gifts="player.gifts" :player="player" />
         </div>
       </div>
     </div>
