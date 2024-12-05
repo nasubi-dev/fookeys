@@ -11,7 +11,6 @@ const p = defineProps<{
   changeLoadMenu: () => void;
 }>();
 
-
 const push = usePush();
 const { id, log, player } = storeToRefs(playerStore);
 const { password } = toRefs(player.value);
@@ -43,22 +42,21 @@ async function startPasswordMatch(): Promise<void> {
   p.changeLoadMenu();
   await startPasswordMatchmaking();
 }
-
 </script>
 
 <template>
   <div class="flex flex-col gap-20 justify-center align-center">
     <div>
       <p class="text-center text-white">入力しなければランダムマッチング</p>
-      <input class="border border-gray-400 m-auto rounded-lg p-2 w-72" type="text" placeholder="あいことばを入力"
-        v-model="password" />
+      <input class="border border-gray-400 m-auto rounded-lg p-2 w-72" type="text" placeholder="あいことばを入力" v-model="password" />
     </div>
-    <button @click="
-      useTap1.play();
-    password === ''
-      ? startRandomMatch()
-      : startPasswordMatch();
-    " class="btn-pop transform h-full w-full -my-3">
+    <button
+      @click="
+        useTap1.play();
+        password === '' ? startRandomMatch() : startPasswordMatch();
+      "
+      class="btn-pop transform h-full w-full -my-3"
+    >
       <div class="relative">
         <img src="@/assets/img/ui/entry.png" />
       </div>

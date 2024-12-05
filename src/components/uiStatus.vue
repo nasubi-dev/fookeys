@@ -35,7 +35,7 @@ watch(
     <img :src="statusImg" />
     <div class="overText w-full">
       <div class="flex justify-start w-full transform -translate-y-[max(1vw,60px)]">
-        <Character status="my" @isWiggle="wiggleStatus" class=" max-w-[300px]" />
+        <Character status="my" @isWiggle="wiggleStatus" class="max-w-[300px]" />
         <div class="flex justify-start font-bold text-gray-900 text-[min(2vw,300px)] mt-auto ml-auto mr-8 select-none">
           <div :class="hpClass">❤:{{ player.status.hp + "/" + player.status.maxHp }}</div>
           <div :class="hungryClass">🍖:{{ player.status.hungry + "/" + player.status.maxHungry }}</div>

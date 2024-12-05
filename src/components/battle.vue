@@ -43,25 +43,31 @@ const loadBattleGif = () => {
 
 <template>
   <div>
-    <transition appear enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
-      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
+    <transition
+      appear
+      enter-from-class="translate-y-[-150%] opacity-0"
+      leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300"
+      enter-active-class="transition duration-300"
+    >
       <div v-if="battleAnimation" class="overlay">
         <img @load="loadBattleGif()" :src="eatingGif" />
       </div>
       <div v-else>
         <div v-if="phase === 'battle' && !cardLock" class="flex">
-          <button @click="
-            turnEnd();
-          useTap2.play();
-          ">
+          <button
+            @click="
+              turnEnd();
+              useTap2.play();
+            "
+          >
             <img :src="decideImg" class="w-[max(15dvw,200px)]" />
           </button>
 
           <div class="relative w-[max(30dvw,200px)]">
             <img :src="sumFieldImg" />
             <div class="overText text-lg font-bold">
-              <div v-if="!donate"
-                class="flex text-[max(2vw,1rem)] items-center mb-3 animate-rotate-x animate-duration-300">
+              <div v-if="!donate" class="flex text-[max(2vw,1rem)] items-center mb-3 animate-rotate-x animate-duration-300">
                 <p>{{ "🍖" + sumCards.hungry }}</p>
                 <p>{{ "⚔" + sumCards.atk }}</p>
                 <p>{{ "🛡" + sumCards.def }}</p>
@@ -74,10 +80,13 @@ const loadBattleGif = () => {
               </div>
             </div>
           </div>
-          <button @click="
-            donate = !donate;
-          useSwipe.play();
-          " class="card-pop">
+          <button
+            @click="
+              donate = !donate;
+              useSwipe.play();
+            "
+            class="card-pop"
+          >
             <div class="relative">
               <div class="p-8 bg-white border-gray-700 rounded-full border-2" />
               <div class="overText">

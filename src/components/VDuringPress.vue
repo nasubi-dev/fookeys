@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside } from "@vueuse/core";
 import { ref } from "vue";
 
 const pressTimer = ref<ReturnType<typeof setTimeout> | null>(null);
@@ -9,9 +9,9 @@ const p = defineProps<{
   delay: number;
 }>();
 
-const target = ref(null)
+const target = ref(null);
 
-onClickOutside(target, event => endPress())
+onClickOutside(target, (event) => endPress());
 
 function startPress(): void {
   pressTimer.value = setTimeout(() => {
