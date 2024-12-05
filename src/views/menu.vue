@@ -95,7 +95,7 @@ onMounted(() => {
           <div class="overText items-center">
             <img :src="`/img/characters/${character}/normal.png`" />
             <div class="flex justify-start w-1/2">
-              <UiGifts :gifts="gifts" :player="player" />
+              <UiGifts size="my" :gifts="gifts" :player="player" />
             </div>
           </div>
         </div>
