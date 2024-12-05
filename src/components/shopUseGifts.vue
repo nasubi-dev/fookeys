@@ -77,7 +77,7 @@ const useGift = async () => {
                   useTap1.play();
                 "
               >
-                <UiGiftsGift :gift="gift" />
+                <UiGiftsGift size="my" :gift="gift" />
               </button>
             </div>
           </div>
