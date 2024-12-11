@@ -27,9 +27,9 @@ const onKeyUpCallbackHook = (): void => {
 
 <template>
   <div class="min-w-[7rem]">
-    <div v-if="dropDown" class="w-[max(20vw,340px)] z-20 mx-3 fixed text-gray-900 text-left -translate-y-28"
-      :class="[state ? `` : `max-w-fit`]">
-      <div class="absolute w-[max(20vw,340px)]">
+    <div v-if="dropDown" class=" z-20 mx-3 fixed text-gray-900 text-left"
+      :class="[card.description ? `w-[max(20vw,340px)] -translate-y-32` : `w-[max(15vw,180px)] -translate-y-24`, state ? `` : `max-w-fit`]">
+      <div :class="[card.description ? `w-[max(20vw,340px)]` : `w-[max(15vw,180px)]`]">
         <img :src="bg" class="z-20 absolute" />
         <div class="z-20 p-4 px-5 absolute">
           <p class="font-bold">{{ card.company + " : " + card.name }}</p>
@@ -53,8 +53,8 @@ const onKeyUpCallbackHook = (): void => {
             :class="size === 'normal' ? `-translate-x-[10%]` : `-translate-x-[10%] translate-y-[10%]`" />
 
           <div class="flex font-black text-border-thin transform select-none" :class="size === 'normal'
-              ? `text-[max(1vw,0.5rem)] -translate-x-[10%]  -translate-y-[60%]`
-              : `text-lg -translate-x-[10%] -translate-y-[40%]`
+            ? `text-[max(1vw,0.5rem)] -translate-x-[10%]  -translate-y-[60%]`
+            : `text-lg -translate-x-[10%] -translate-y-[40%]`
             ">
             <p v-if="card.hungry !== undefined && card.id !== 0">{{ "🍖" + card.hungry }}</p>
             <p v-if="card.atk">{{ "💪" + card.atk }}</p>
