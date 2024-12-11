@@ -5,6 +5,8 @@ import { popUp, success } from "@/assets/sounds";
 import type { Mission } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 import missionImg from "@/assets/img/ui/mission.png";
+import bg from "@/assets/img/ui/22x.png";
+
 
 const p = defineProps<{ mission: Mission }>();
 
@@ -31,9 +33,15 @@ const onKeyUpCallbackHook = (): void => {
 
 <template>
   <div style="user-select: none">
-    <div v-if="dropDown" class="bg-white rounded fixed z-10 p-2 text-left transform -translate-y-10">
-      {{ mission.description }}
+    <div v-if="dropDown" class="fixed w-[max(15vw,190px)]  z-10 text-left transform -translate-y-28 -translate-x-20">
+      <div class="absolute w-[max(15vw,340px)]">
+        <img :src="bg" class="z-20 absolute w-[max(15vw,340px)]" />
+        <div class="z-20 p-4 w-[max(20vw,340px)] text-ellipsis px-5 whitespace-pre-wrap absolute">
+          {{ mission.description }}
+        </div>
+      </div>
     </div>
+
     <div class="relative">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="missionImg" class="w-[260px]" />
@@ -44,8 +52,10 @@ const onKeyUpCallbackHook = (): void => {
           </span>
           <div class="gauge w-10/12">
             <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mr-2">✔</span>
-            <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/" + mission.goalAchievement }}</span>
-            <div class="bar" :style="{ width: 100 - (mission.nowAchievement / mission.goalAchievement) * 100 + '%' }"></div>
+            <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/" +
+              mission.goalAchievement }}</span>
+            <div class="bar" :style="{ width: 100 - (mission.nowAchievement / mission.goalAchievement) * 100 + '%' }">
+            </div>
           </div>
         </div>
       </VDuringPress>
