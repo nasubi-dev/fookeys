@@ -5,7 +5,7 @@ import { popUp, success } from "@/assets/sounds";
 import type { Mission } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 import missionImg from "@/assets/img/ui/mission.png";
-import bg from "@/assets/img/ui/22x.png";
+import bg from "@/assets/img/ui/42x.png";
 
 
 const p = defineProps<{ mission: Mission }>();
@@ -33,10 +33,10 @@ const onKeyUpCallbackHook = (): void => {
 
 <template>
   <div style="user-select: none">
-    <div v-if="dropDown" class="fixed w-[max(15vw,190px)]  z-10 text-left transform -translate-y-28 -translate-x-20">
-      <div class="absolute w-[max(15vw,340px)]">
-        <img :src="bg" class="z-20 absolute w-[max(15vw,340px)]" />
-        <div class="z-20 p-4 w-[max(20vw,340px)] text-ellipsis px-5 whitespace-pre-wrap absolute">
+    <div v-if="dropDown" class="fixed w-[max(15vw,190px)]  z-10 text-left transform -translate-y-16 -translate-x-20">
+      <div class="absolute w-[max(15vw,190px)]">
+        <img :src="bg" class="z-20 absolute w-[max(15vw,190px)]" />
+        <div class="z-20 p-4 w-[max(15vw,190px)] text-ellipsis  whitespace-pre-wrap absolute">
           {{ mission.description }}
         </div>
       </div>
