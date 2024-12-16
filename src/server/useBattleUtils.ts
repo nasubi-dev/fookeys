@@ -54,6 +54,7 @@ async function reflectStatus(): Promise<void> {
   sumFields.value = myPlayerSumFields;
   check.value = myPlayerCheck;
   death.value = myPlayerDeath;
+  console.log("reflectDamage end");
 }
 //死亡判定
 async function checkDeath(p: PlayerData): Promise<boolean> {
@@ -72,11 +73,10 @@ async function checkDeath(p: PlayerData): Promise<boolean> {
 async function everyUtil(params: [string, number]): Promise<void> {
   const { battleResult } = storeToRefs(playerStore);
 
-  await wait(1500);
   await reflectStatus();
   await getEnemyPlayer(); //!
   battleResult.value = params;
-  await wait(2000);
+  await wait(1500);
 }
 //missionの統括
 async function checkMission(which: "primary" | "second"): Promise<void> {
@@ -193,14 +193,13 @@ async function decideFirstAtkPlayer(): Promise<void> {
   const { firstAtkPlayer } = toRefs(game.value);
 
   await watchFirstAtkPlayerField();
-  await wait(1000);
   await compareSumField("hungry");
   await compareSumField("priority");
   await judgeDonate();
   if (firstAtkPlayer.value === undefined) throw new Error("firstAtkPlayerの値がundefinedです");
 
-  await wait(1500);
-  getEnemyPlayer(); //!
+  await wait(1000);
+  await getEnemyPlayer();
   components.value = "afterDecideFirstAtkPlayer";
 }
 

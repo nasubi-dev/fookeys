@@ -75,7 +75,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
       my.field,
       100
     );
-    await reflectStatus();
   }
 
   //回復を行う
@@ -99,7 +98,6 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
   if (my.field.map((card) => card.attribute).includes("def") || my.isSelectedGift === 8) {
     console.log(i, "防御!!!");
     //特殊効果を発動する
-    await wait(500);
     intervalForEach(
       async (card: Card) => {
         if (!(((card.id === 43 || card.id === 46) && which === "second") || card.id === 54)) return;
@@ -124,7 +122,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
       my.field,
       100
     );
-    await reflectStatus();
+    // await reflectStatus();
 
     await everyUtil(["def", my.sumFields.def]);
   }
@@ -144,7 +142,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
       my.field,
       100
     );
-    await reflectStatus();
+    // await reflectStatus();
 
     let holdingAtk = my.sumFields.atk - defense;
     if (holdingAtk < 0) holdingAtk = 0;
@@ -193,7 +191,7 @@ async function calcDamage(which: "primary" | "second"): Promise<boolean> {
       my.field,
       100
     );
-    await reflectStatus();
+    // await reflectStatus();
 
     let holdingTech = my.sumFields.tech;
     if (playerAllocation) enemy.status.hp -= holdingTech;
@@ -223,7 +221,6 @@ async function attack(which: "primary" | "second"): Promise<boolean> {
   console.log(s, "attackを実行しました");
   const { components } = storeToRefs(playerStore);
 
-  await wait(1500);
   getEnemyPlayer(); //!
   components.value = which + "Atk";
 
