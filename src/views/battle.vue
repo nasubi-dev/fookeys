@@ -213,7 +213,7 @@ const devMode = ref(false);
 const isMobile = ref(window.innerWidth >= 768);
 
 window.addEventListener("resize", () => {
-  isMobile.value = window.innerWidth >= 800;
+  isMobile.value = window.innerWidth >= 984;
 });
 </script>
 

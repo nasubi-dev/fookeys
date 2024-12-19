@@ -29,10 +29,23 @@ const onLongPressCallbackHook = (): void => {
 const onKeyUpCallbackHook = (): void => {
   dropDown.value = false;
 };
+
+const missionClass = ref("");
+watch(
+  () => p.mission.nowAchievement,
+  (newVal, oldVal) => {
+    // 初期化
+    missionClass.value = "";
+    //増えたらshake
+    console.log(newVal, oldVal);
+    if (newVal > oldVal) missionClass.value = "animate-jump";
+  },
+  { deep: true }
+);
 </script>
 
 <template>
-  <div style="user-select: none">
+  <div :class="missionClass" style="user-select: none">
     <div v-if="dropDown" class="fixed w-[max(15vw,190px)]  z-10 text-left transform -translate-y-16 -translate-x-20">
       <div class="absolute w-[max(15vw,190px)]">
         <img :src="bg" class="z-20 absolute w-[max(15vw,190px)]" />
