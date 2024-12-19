@@ -64,7 +64,7 @@ const onKeyUpCallbackHook = (): void => {
           </div>
         </div>
         <div v-if="card.description && card.id !== 0" class="absolute"
-          :class="size === 'normal' ? `top-5 right-5 w-[max(2vw,30px)]` : `top-7 right-8 w-[max(2vw,50px)]`">
+          :class="size === 'normal' ? `top-5 right-5 w-[max(2vw,30px)]` : `top-5 right-5 w-[max(4vw,30px)]`">
           <img :src="`/img/showSpecial/${card.company}.png`" class="absolute" />
         </div>
       </VDuringPress>
