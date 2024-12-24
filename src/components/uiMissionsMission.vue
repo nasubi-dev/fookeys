@@ -58,13 +58,13 @@ watch(
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="missionImg" class="w-[240px]" />
         <div class="overText">
-          <button @click="missionClass = 'animate-jump'">test</button>
+          <!-- <button @click="missionClass = 'animate-jump'">test</button> -->
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">
             <span class="ml-auto font-bold">{{ "🪙" + mission.reward }}</span>
             <span class="ml-1 font-bold">{{ mission.name }}</span>
           </span>
-          <div class="gauge w-[210px]">
-            <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mx-2">✔</span>
+          <div class="gauge w-[200px]">
+            <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 ml-4">✔</span>
             <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/" +
               mission.goalAchievement }}</span>
             <div class="bar" :style="{ width: 100 - (mission.nowAchievement / mission.goalAchievement) * 100 + '%' }">
