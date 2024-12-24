@@ -6,6 +6,7 @@ import type { Mission } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 import missionImg from "@/assets/img/ui/mission.png";
 import bg from "@/assets/img/ui/42x.png";
+import { wait } from "@/server/utils";
 
 
 const p = defineProps<{ mission: Mission }>();
@@ -34,10 +35,9 @@ const missionClass = ref("");
 watch(
   () => p.mission.nowAchievement,
   (newVal, oldVal) => {
-    // 初期化
-    missionClass.value = "";
     //増えたらshake
-    if (newVal >= oldVal) missionClass.value = "animate-jump";
+    if (newVal > oldVal) missionClass.value = "animate-jump animate-fill-forwards";
+    missionClass.value = "";
   },
   { deep: true }
 );
@@ -45,7 +45,7 @@ watch(
 
 <template>
   <div :class="missionClass" style="user-select: none">
-    <div v-if="dropDown" class="fixed w-[max(15vw,190px)]  z-10 text-left transform -translate-y-16 -translate-x-20">
+    <div v-if="dropDown" class="fixed w-[max(15vw,190px)] z-10 text-left transform -translate-y-16 -translate-x-20">
       <div class="absolute w-[max(15vw,190px)]">
         <img :src="bg" class="z-20 absolute w-[max(15vw,190px)]" />
         <div class="z-20 p-4 w-[max(15vw,190px)] text-ellipsis  whitespace-pre-wrap absolute">
@@ -54,16 +54,17 @@ watch(
       </div>
     </div>
 
-    <div class="relative">
+    <div class="relative m-3">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
-        <img :src="missionImg" class="w-[260px]" />
+        <img :src="missionImg" class="w-[240px]" />
         <div class="overText">
+          <button @click="missionClass = 'animate-jump'">test</button>
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">
             <span class="ml-auto font-bold">{{ "🪙" + mission.reward }}</span>
             <span class="ml-1 font-bold">{{ mission.name }}</span>
           </span>
-          <div class="gauge w-10/12">
-            <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mr-2">✔</span>
+          <div class="gauge w-[210px]">
+            <span v-if="mission.achieved" class="text-sm font-bold text-gray-900 mx-2">✔</span>
             <span v-else class="text-sm font-bold text-white fixed">{{ mission.nowAchievement + "/" +
               mission.goalAchievement }}</span>
             <div class="bar" :style="{ width: 100 - (mission.nowAchievement / mission.goalAchievement) * 100 + '%' }">
