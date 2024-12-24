@@ -193,6 +193,7 @@ async function decideFirstAtkPlayer(): Promise<void> {
   const { firstAtkPlayer } = toRefs(game.value);
 
   await watchFirstAtkPlayerField();
+  await wait(1000);
   await compareSumField("hungry");
   await compareSumField("priority");
   await judgeDonate();

@@ -37,8 +37,7 @@ watch(
     // 初期化
     missionClass.value = "";
     //増えたらshake
-    console.log(newVal, oldVal);
-    if (newVal > oldVal) missionClass.value = "animate-jump";
+    if (newVal >= oldVal) missionClass.value = "animate-jump";
   },
   { deep: true }
 );
