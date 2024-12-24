@@ -36,8 +36,12 @@ watch(
   () => p.mission.nowAchievement,
   (newVal, oldVal) => {
     //増えたらshake
-    if (newVal > oldVal) missionClass.value = "animate-jump animate-fill-forwards";
-    missionClass.value = "";
+    if (newVal > oldVal) {
+      missionClass.value = "animate-jump";
+      wait(1000).then(() => {
+        missionClass.value = "animate-stop";
+      });
+    }
   },
   { deep: true }
 );
@@ -58,7 +62,6 @@ watch(
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="missionImg" class="w-[250px]" />
         <div class="overText">
-          <!-- <button @click="missionClass = 'animate-jump'">test</button> -->
           <span class="flex flex-row-reverse w-full pl-5 pr-4 text-sm text-gray-900">
             <span class="ml-auto font-bold">{{ "🪙" + mission.reward }}</span>
             <span class="ml-1 font-bold">{{ mission.name }}</span>
