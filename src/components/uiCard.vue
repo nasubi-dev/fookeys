@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useSound } from "@vueuse/sound";
 import { popUp } from "@/assets/sounds";
 import type { Card } from "@/types";
 import VDuringPress from "./VDuringPress.vue";
 import bg from "@/assets/img/ui/22x.png";
+import { wait } from "@/server/utils";
 
-defineProps<{
+const p = defineProps<{
   card: Card;
   size: "normal" | "big";
   state?: boolean;
@@ -23,6 +24,21 @@ const onLongPressCallbackHook = (): void => {
 const onKeyUpCallbackHook = (): void => {
   dropDown.value = false;
 };
+
+const wastedClass = ref("");
+watch(
+  () => p.card.waste,
+  (newVal, oldVal) => {
+    //増えたらshake
+    if (newVal > oldVal) {
+      wastedClass.value = "animate-jump";
+      wait(1000).then(() => {
+        wastedClass.value = "animate-stop";
+      });
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -37,13 +53,14 @@ const onKeyUpCallbackHook = (): void => {
         </div>
       </div>
     </div>
+    <!-- <button @click="wastedClass = 'animate-jump'">Jump</button> -->
     <div class="relative">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="`/img/companys/${card.company}.png`" class="min-w-[7rem]" />
         <div class="overText min-w-[7rem]">
           <p v-if="card.waste" class="font-bold text-center transform select-none" :class="[
             size === 'normal'
-              ? `text-[max(2vw,1rem)] -translate-x-[max(2.6vw,210%)] translate-y-[min(2.2vw,500px)] `
+              ? `text-[max(2vw,1rem)] -translate-x-[max(2.6vw,30px)] translate-y-[max(2.2vw,0px)] `
               : `text-[max(2vw,1rem)] -translate-x-[280%] translate-y-[140%]`,
             card.waste === 1 ? `-translate-x-[380%]` : null,
           ]">
