@@ -30,7 +30,7 @@ watch(
   () => p.card.waste,
   (newVal, oldVal) => {
     //増えたらshake
-    if (newVal > oldVal) {
+    if (newVal < oldVal) {
       wastedClass.value = "animate-jump";
       wait(1000).then(() => {
         wastedClass.value = "animate-stop";
@@ -53,19 +53,21 @@ watch(
         </div>
       </div>
     </div>
-    <!-- <button @click="wastedClass = 'animate-jump'">Jump</button> -->
     <div class="relative">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="`/img/companys/${card.company}.png`" class="min-w-[7rem]" />
         <div class="overText min-w-[7rem]">
-          <p v-if="card.waste" class="font-bold text-center transform select-none" :class="[
+          <div v-if="card.waste" class="font-bold text-center select-none" :class="[
             size === 'normal'
-              ? `text-[max(2vw,1rem)] -translate-x-[max(2.6vw,30px)] translate-y-[max(2.2vw,0px)] `
-              : `text-[max(2vw,1rem)] -translate-x-[280%] translate-y-[140%]`,
+              ? `text-[max(2vw,1rem)] -translate-x-[min(3.2vw,220px)] translate-y-[max(2.2vw,0px)] `
+              : `text-[max(3vw,1rem)] -translate-x-[min(4.8vw,100px)] translate-y-[max(3.2vw,0px)]`,
             card.waste === 1 ? `-translate-x-[380%]` : null,
           ]">
-            {{ card.waste }}
-          </p>
+            <div :class="wastedClass" class="absolute">
+              {{ card.waste }}
+            </div>
+          </div>
+          <div class="p-6" />
           <img v-if="card.waste" :src="`/img/foods/${card.id}.png`" class="transform"
             :class="size === 'normal' ? `-translate-x-[10%]` : `-translate-x-[10%] translate-y-[10%]`" />
 
