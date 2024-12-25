@@ -58,7 +58,7 @@ watch(
       </div>
     </div>
 
-    <div class="relative m-3">
+    <div class="relative ">
       <VDuringPress :onKeyDown="onLongPressCallbackHook" :onKeyUp="onKeyUpCallbackHook" :delay="250">
         <img :src="missionImg" class="w-[250px]" />
         <div class="overText">
