@@ -49,10 +49,10 @@ watch(
 
 <template>
   <div :class="missionClass" style="user-select: none">
-    <div v-if="dropDown" class="fixed w-[max(15vw,190px)] z-10 text-left transform -translate-y-16 -translate-x-20">
-      <div class="absolute w-[max(15vw,190px)]">
-        <img :src="bg" class="z-20 absolute w-[max(15vw,190px)]" />
-        <div class="z-20 p-4 w-[max(15vw,190px)] text-ellipsis  whitespace-pre-wrap absolute">
+    <div v-if="dropDown" class="fixed w-[250px] z-10 text-left transform -translate-y-16 -translate-x-20">
+      <div class="absolute w-[250px]">
+        <img :src="bg" class="z-20 absolute w-[250px]" />
+        <div class="z-20 p-4 w-[250px] text-ellipsis  whitespace-pre-wrap absolute">
           {{ mission.description }}
         </div>
       </div>
