@@ -273,7 +273,7 @@ window.addEventListener("resize", () => {
       </div>
 
       <!-- 敵の情報と設定系 -->
-      <div class="flex flex-row-reverse z-20 fixed w-full">
+      <div class="flex flex-row-reverse fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
         <div class="flex flex-col">
           <div class="flex justify-start">
