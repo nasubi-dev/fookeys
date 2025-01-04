@@ -494,7 +494,7 @@ const allCards: Card[] = [
     name: "ようかん",
     waste: 4,
     hungry: 15,
-    company: "hanamie",ß
+    company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、シールドカードを1枚ドローする。",
   },
