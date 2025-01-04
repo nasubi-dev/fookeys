@@ -1,4 +1,5 @@
 import type { Card } from "@/types";
+
 const allCards: Card[] = [
   {
     id: 0,
@@ -6,8 +7,6 @@ const allCards: Card[] = [
     waste: 0,
     hungry: 0,
     company: "nothing",
-    description: "このカードは使用できない。",
-    rotten: true,
   },
   {
     id: 1,
@@ -73,7 +72,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "rapidpot",
     attribute: "atk",
-    description: "ラウンド終了時、自身の満腹度が🍖100以上のとき、自身の満腹度を🍖-25する。",
+    description: "自分の満腹度が🍖100以上のとき、このカードの満腹度を🍖-25する。",
     atk: 85,
   },
   {
@@ -88,7 +87,7 @@ const allCards: Card[] = [
   {
     id: 9,
     name: "フライドチキン",
-    waste: 5,
+    waste: 4,
     hungry: 40,
     company: "galdaybee",
     attribute: "atk",
@@ -167,7 +166,7 @@ const allCards: Card[] = [
     hungry: 10,
     company: "bianca",
     attribute: "tech",
-    description: "貢献度を🪙+5する。",
+    description: "自分の貢献度を🔔+5する。",
     tech: 5,
   },
   {
@@ -195,7 +194,7 @@ const allCards: Card[] = [
     hungry: 20,
     company: "bianca",
     attribute: "tech",
-    description: "貢献度を🪙+5する。",
+    description: "自分の貢献度を🔔+5する。",
     tech: 15,
   },
   {
@@ -232,8 +231,8 @@ const allCards: Card[] = [
     hungry: 40,
     company: "rapidpot",
     attribute: "tech",
-    description: "ラウンド終了時、自身の満腹度が🍖100以上のとき、自身の満腹度を🍖-25する。",
-    tech: 50,
+    description: "自分の満腹度が🍖100以上のとき、このカードの満腹度を🍖-25する。",
+    tech: 40,
   },
   {
     id: 25,
@@ -242,8 +241,8 @@ const allCards: Card[] = [
     hungry: 40,
     company: "unlimit",
     attribute: "tech",
-    description: "貢献度を🪙+50する。",
-    tech: 55,
+    description: "自分の貢献度を🔔+50する。",
+    tech: 50,
   },
   {
     id: 26,
@@ -252,7 +251,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "bianca",
     attribute: "tech",
-    tech: 65,
+    tech: 55,
   },
   {
     id: 27,
@@ -261,7 +260,7 @@ const allCards: Card[] = [
     hungry: 50,
     company: "rapidpot",
     attribute: "tech",
-    tech: 45,
+    tech: 65,
   },
   {
     id: 28,
@@ -270,8 +269,8 @@ const allCards: Card[] = [
     hungry: 50,
     company: "bianca",
     attribute: "tech",
-    description: "このカードは相手の満腹度が🍖100以上のとき、テクニックダメージを⚡️+30する。",
-    tech: 75,
+    description: "相手の満腹度が🍖100以上のとき、このカードのテクニックダメージを⚡️+30する。",
+    tech: 45,
   },
   {
     id: 29,
@@ -280,7 +279,7 @@ const allCards: Card[] = [
     hungry: 50,
     company: "bianca",
     attribute: "tech",
-    tech: 85,
+    tech: 75,
   },
   {
     id: 30,
@@ -289,8 +288,8 @@ const allCards: Card[] = [
     hungry: 60,
     company: "bianca",
     attribute: "tech",
-    description: "このカードは相手の満腹度が🍖100以上のとき、テクニックダメージを⚡️+30する。",
-    tech: 90,
+    description: "相手の満腹度が🍖100以上のとき、このカードのテクニックダメージを⚡️+30する。",
+    tech: 85,
   },
   {
     id: 31,
@@ -299,7 +298,7 @@ const allCards: Card[] = [
     hungry: 60,
     company: "bianca",
     attribute: "tech",
-    tech: 100,
+    tech: 90,
   },
   {
     id: 32,
@@ -308,7 +307,7 @@ const allCards: Card[] = [
     hungry: 5,
     company: "norma",
     attribute: "def",
-    def: 35,
+    tech: 100,
   },
   {
     id: 33,
@@ -317,7 +316,7 @@ const allCards: Card[] = [
     hungry: 10,
     company: "rapidpot",
     attribute: "def",
-    def: 30,
+    def: 35,
   },
   {
     id: 34,
@@ -326,7 +325,7 @@ const allCards: Card[] = [
     hungry: 10,
     company: "norma",
     attribute: "def",
-    def: 35,
+    def: 30,
   },
   {
     id: 35,
@@ -335,7 +334,7 @@ const allCards: Card[] = [
     hungry: 15,
     company: "norma",
     attribute: "def",
-    def: 70,
+    def: 35,
   },
   {
     id: 36,
@@ -355,7 +354,7 @@ const allCards: Card[] = [
     attribute: "def",
     description: "このラウンド中、スピード🦶+1で行動する。",
     priority: 1,
-    def: 80,
+    def: 70,
   },
   {
     id: 38,
@@ -364,7 +363,7 @@ const allCards: Card[] = [
     hungry: 30,
     company: "rapidpot",
     attribute: "def",
-    def: 105,
+    def: 80,
   },
   {
     id: 39,
@@ -373,7 +372,7 @@ const allCards: Card[] = [
     hungry: 30,
     company: "norma",
     attribute: "def",
-    def: 110,
+    def: 105,
   },
   {
     id: 40,
@@ -384,7 +383,7 @@ const allCards: Card[] = [
     attribute: "def",
     description: "このラウンド中、スピード🦶+1で行動する。",
     priority: 1,
-    def: 115,
+    def: 110,
   },
   {
     id: 41,
@@ -393,8 +392,8 @@ const allCards: Card[] = [
     hungry: 40,
     company: "rapidpot",
     attribute: "def",
-    description: "ラウンド終了時、自身の満腹度が🍖100以上のとき、自身の満腹度を🍖-25する。",
-    def: 130,
+    description: "自分の満腹度が🍖100以上のとき、このカードの満腹度を🍖-25する。",
+    def: 115,
   },
   {
     id: 42,
@@ -403,7 +402,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "norma",
     attribute: "def",
-    def: 145,
+    def: 130,
   },
   {
     id: 43,
@@ -412,8 +411,8 @@ const allCards: Card[] = [
     hungry: 50,
     company: "norma",
     attribute: "def",
-    description: "このカードは後攻のとき、満腹度が🍖0になる。",
-    def: 75,
+    description: "後攻のとき、このカードの満腹度は🍖0になる。",
+    def: 145,
   },
   {
     id: 44,
@@ -422,7 +421,7 @@ const allCards: Card[] = [
     hungry: 50,
     company: "rapidpot",
     attribute: "def",
-    def: 180,
+    def: 75,
   },
   {
     id: 45,
@@ -431,7 +430,7 @@ const allCards: Card[] = [
     hungry: 50,
     company: "norma",
     attribute: "def",
-    def: 185,
+    def: 180,
   },
   {
     id: 46,
@@ -440,8 +439,8 @@ const allCards: Card[] = [
     hungry: 60,
     company: "norma",
     attribute: "def",
-    description: "このカードは後攻のとき、満腹度が🍖0になる。",
-    def: 110,
+    description: "後攻のとき、このカードの満腹度は🍖0になる。",
+    def: 185,
   },
   {
     id: 47,
@@ -450,7 +449,7 @@ const allCards: Card[] = [
     hungry: 60,
     company: "norma",
     attribute: "def",
-    def: 220,
+    def: 110,
   },
   {
     id: 48,
@@ -459,7 +458,8 @@ const allCards: Card[] = [
     hungry: 15,
     company: "galdaybee",
     attribute: "atk",
-    description: "このカードは後攻のとき、マッスルダメージを💪+75する。",
+    description: "後攻のとき、このカードのマッスルダメージを💪+75する。",
+    def: 220,
   },
   {
     id: 49,
@@ -494,7 +494,7 @@ const allCards: Card[] = [
     name: "ようかん",
     waste: 4,
     hungry: 15,
-    company: "hanamie",
+    company: "hanamie",ß
     attribute: "sup",
     description: "次のラウンド開始時、シールドカードを1枚ドローする。",
   },
@@ -514,7 +514,7 @@ const allCards: Card[] = [
     hungry: 25,
     company: "norma",
     attribute: "def",
-    description: "このカードは使用時の自身の満腹度と同じだけシールドを獲得する。",
+    description: "このカードのシールドを自分の満腹度と同じだけ🛡️+する。",
   },
   {
     id: 55,
@@ -529,11 +529,11 @@ const allCards: Card[] = [
   {
     id: 56,
     name: "フライドポテト",
-    waste: 4,
+    waste: 5,
     hungry: 15,
     company: "galdaybee",
     attribute: "sup",
-    description: "手札のマッスルカードのマッスルダメージを💪+10する。",
+    description: "ラウンド終了時、自分の手札にあるマッスルカードのマッスルダメージを💪+10する。",
   },
   {
     id: 57,
@@ -542,7 +542,7 @@ const allCards: Card[] = [
     hungry: 15,
     company: "norma",
     attribute: "sup",
-    description: "手札のシールドカードのシールドを🛡️+20する。",
+    description: "ラウンド終了時、自分の手札にあるシールドカードのシールドを🛡️+20する。",
   },
   {
     id: 58,
@@ -551,7 +551,7 @@ const allCards: Card[] = [
     hungry: 40,
     company: "unlimit",
     attribute: "sup",
-    description: "手札のシールドカードの満腹度を🍖-20、消費期限を🦠+2、シールドを🛡️+50する。",
+    description: "ラウンド終了時、自分の手札にあるシールドカードのシールドを自分のシールドと同じだけ🛡️+する。",
   },
   {
     id: 59,
@@ -560,16 +560,17 @@ const allCards: Card[] = [
     hungry: 40,
     company: "hanamie",
     attribute: "heal",
-    heal: 50,
+    description: "自分のHPを❤️+50回復する。",
   },
   {
     id: 60,
     name: "改造おはぎ",
     waste: 4,
     hungry: 40,
-    company: "unlimit",
+    company: "hanamie",
     attribute: "sup",
     description: "次のラウンド開始時、満腹度を🍖0、消費期限を🦠7で固定したランダムなカードを2枚ドローする。",
+    heal: 50,
   },
   {
     id: 61,
@@ -578,6 +579,7 @@ const allCards: Card[] = [
     hungry: 50,
     company: "hanamie",
     attribute: "heal",
+    description: "自分のHPを❤️+100回復する。",
     heal: 100,
   },
   {
@@ -587,7 +589,7 @@ const allCards: Card[] = [
     hungry: 55,
     company: "rapidpot",
     attribute: "sup",
-    description: "最大満腹度を🍖+20する。",
+    description: "自分の最大満腹度を🍖+20する。",
   },
   {
     id: 63,
@@ -596,6 +598,7 @@ const allCards: Card[] = [
     hungry: 60,
     company: "hanamie",
     attribute: "heal",
+    description: "自分のHPを❤️+150回復する。",
     heal: 150,
   },
   {
@@ -604,8 +607,8 @@ const allCards: Card[] = [
     waste: 3,
     hungry: 75,
     company: "galdaybee",
-    attribute: "sup",
-    description: "このラウンド中、与えるマッスルダメージを2倍にする。",
+    attribute: "atk",
+    description: "このラウンド中、自分が与えるマッスルダメージを2倍にする。",
   },
 ];
 export default allCards;
