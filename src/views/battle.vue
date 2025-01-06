@@ -275,6 +275,8 @@ window.addEventListener("resize", () => {
       <!-- 敵の情報と設定系 -->
       <div class="flex flex-row-reverse fixed w-full">
         <UiEnemyInfo :player="enemyPlayer" :sign="sign" class="mr-12" />
+      </div>
+      <div class="flex fixed w-full z-30">
         <div class="flex flex-col">
           <div class="flex justify-start">
             <button @click="devMode = !devMode" class="btn-pop">
@@ -300,6 +302,7 @@ window.addEventListener("resize", () => {
           </div>
         </div>
       </div>
+
 
       <!-- ショップとバトルのアニメーション -->
       <transition
