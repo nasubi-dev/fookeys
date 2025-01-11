@@ -60,6 +60,10 @@ watch(cardLock, async (newVal) => {
 //HandからFieldへ
 const pushCard = async (index: number) => {
   if (cardLock.value) return;
+  if (field.value.length >= 3 && donate.value) {
+    log.value = "フードバンクがいっぱいでこれ以上寄付できない！";
+    return;
+  }
   if (!donate.value && status.value.hungry + sumCards.value.hungry + allCards[hand.value[index].id].hungry > status.value.maxHungry) {
     log.value = "お腹がいっぱいでこれ以上食べれない！";
     return;
@@ -89,12 +93,8 @@ const popCard = (index: number, id: number) => {
 
 <template>
   <div class="flex justify-start overflow-x-visible">
-    <transition-group
-      enter-from-class="translate-y-[-150%] opacity-0"
-      leave-to-class="translate-y-[150%] opacity-0"
-      leave-active-class="transition duration-300"
-      enter-active-class="transition duration-300"
-    >
+    <transition-group enter-from-class="translate-y-[-150%] opacity-0" leave-to-class="translate-y-[150%] opacity-0"
+      leave-active-class="transition duration-300" enter-active-class="transition duration-300">
       <div class="flex justify-start">
         <div v-for="card in rottenHand" :key="card.id" :class="recoverRottenHand ? `animate-jump` : null">
           <div>
@@ -106,14 +106,10 @@ const popCard = (index: number, id: number) => {
         <div class="p-2"></div>
         <img v-if="hand.length === 0" width="912" src="../assets/img/alpha.png" class="cardSize" />
         <div v-for="(card, index) in hand" :key="card.id">
-          <button
-            @click="
-              !isHandSelected[index] ? pushCard(index) : popCard(index, card.id);
-              cardLock ? null : useTap1.play();
-            "
-            :class="isHandSelected[index] ? 'transform -translate-y-4' : null"
-            class="cardSize relative"
-          >
+          <button @click="
+            !isHandSelected[index] ? pushCard(index) : popCard(index, card.id);
+          cardLock ? null : useTap1.play();
+          " :class="isHandSelected[index] ? 'transform -translate-y-4' : null" class="cardSize relative">
             <UiCard :card="card" size="normal" :state="isHandSelected[index]" />
           </button>
         </div>
