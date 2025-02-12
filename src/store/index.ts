@@ -24,7 +24,7 @@ const usePlayerStore = defineStore("playerData", () => {
     rottenHand: [],
     field: [],
     status: {
-      hp: 500,
+      hp: 10,
       hungry: 0,
       contribution: 0,
       maxHp: 500,
@@ -131,7 +131,7 @@ const usePlayerStore = defineStore("playerData", () => {
       rottenHand: [],
       field: [],
       status: {
-        hp: 500,
+        hp: 10,
         hungry: 0,
         contribution: 0,
         maxHp: 500,
@@ -195,7 +195,7 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
     rottenHand: [],
     field: [],
     status: {
-      hp: 500,
+      hp: 10,
       hungry: 0,
       contribution: 0,
       maxHp: 500,
@@ -228,7 +228,7 @@ const useEnemyPlayerStore = defineStore("enemyPlayerData", () => {
       rottenHand: [],
       field: [],
       status: {
-        hp: 500,
+        hp: 10,
         hungry: 0,
         contribution: 0,
         maxHp: 500,
