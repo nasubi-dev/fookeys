@@ -32,6 +32,8 @@ import loseGif from "@/assets/gifs/lose.gif";
 import allGifts from "@/assets/allGifts";
 import { tap2, enemyTurn, myTurn, battleStart, missionSort, donate, atk, def, tech, hp, sup, rotten } from "@/assets/sounds";
 import bgm from "@/assets/sounds/bgm.mp3";
+import win from "@/assets/sounds/win.mp3";
+import lose from "@/assets/sounds/lose.mp3";
 
 const Shop = defineAsyncComponent(() => import("@/components/shop.vue"));
 const UiUseCard = defineAsyncComponent(() => import("@/components/uiUseCard.vue"));
@@ -40,6 +42,8 @@ const myLogImg = defineAsyncComponent(() => import("@/components/myLog.vue"));
 const enemyLogImg = defineAsyncComponent(() => import("@/components/enemyLog.vue"));
 
 const useBGM = useSound(bgm, { volume: 0.3, loop: true });
+const useWin = useSound(win, { volume: 0.5 });
+const useLose = useSound(lose, { volume: 0.5 });
 const useTap2 = useSound(tap2);
 const useEnemyTurn = useSound(enemyTurn);
 const useMyTurn = useSound(myTurn);
@@ -51,7 +55,7 @@ const useHp = useSound(hp, { volume: 0.5 });
 const useSup = useSound(sup, { volume: 0.5 });
 const useDef = useSound(def);
 const useAtk = useSound(atk);
-const useTech = useSound(tech);
+const useTech = useSound(tech)
 
 const { id, player, cardLock, phase, offer, sign, log, myLog, enemyLog, sumCards, components, battleResult } = storeToRefs(playerStore);
 const { idGame, idEnemy, match, character, gifts, status, hand, rottenHand, death, field, sumFields, name, check } = toRefs(player.value);
@@ -100,6 +104,16 @@ watch(isBGM, (newVal) => {
   if (newVal) useBGM.play();
   else useBGM.pause();
 });
+
+//勝利時､敗北時に再生
+watch(death, (newVal) => {
+  if (!newVal || !isBGM.value) return;
+  useBGM.stop();
+
+  const isLose = status.value.hp <= 0 || hand.value.filter(card => card.id === 0).length >= 9;
+  isLose ? useLose.play() : useWin.play();
+});
+
 //カード使用時に再生
 watch(battleResult, (newVal) => {
   if (newVal[0] === "donate") useDonate.play();
@@ -163,6 +177,8 @@ onMounted(async () => {
 onUnmounted(() => {
   window.alert("戦闘画面を離れます"); //alert
   useBGM.stop();
+  useWin.stop();
+  useLose.stop();
   deleteGame();
   initPlayer();
 });
