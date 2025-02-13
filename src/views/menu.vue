@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRefs, watch, onMounted } from "vue";
+import { ref, toRefs, watch, onMounted, onUnmounted } from "vue";
 import { usePush, Notivue, Notifications, filledIcons } from "notivue";
 import { useSound } from "@vueuse/sound";
 import { storeToRefs } from "pinia";
@@ -65,6 +65,10 @@ onMounted(() => {
     UseLobbyBGM.play();
     loadMenu.value = false;
   }, 1000);
+});
+
+onUnmounted(() => {
+  UseLobbyBGM.stop();
 });
 </script>
 
